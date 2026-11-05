@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
 import { currentSource, getDataset } from "@/lib/server/data";
 import { signWithLocalKey } from "@/lib/server/receipts-store";
+import { rejectCrossSite } from "@/lib/server/guard";
 
 export async function POST(req: Request) {
+  const blocked = rejectCrossSite(req);
+  if (blocked) return blocked;
   const { week } = (await req.json()) as { week: string };
   const source = await currentSource();
   const d = getDataset(source);

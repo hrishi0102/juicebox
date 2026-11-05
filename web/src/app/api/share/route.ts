@@ -2,11 +2,14 @@ import { NextResponse } from "next/server";
 import { publishReceipt, ARKIV_EXPLORER } from "@/lib/receipts/arkiv";
 import { currentSource, getLocalTeamConfig } from "@/lib/server/data";
 import { loadSavedReceipt, saveReceipt } from "@/lib/server/receipts-store";
+import { rejectCrossSite } from "@/lib/server/guard";
 
 export const maxDuration = 120;
 
 // Publish a signed receipt to Arkiv so the team view can read it.
 export async function POST(req: Request) {
+  const blocked = rejectCrossSite(req);
+  if (blocked) return blocked;
   const { week, level } = (await req.json()) as { week: string; level: "totals" | "full" };
   const source = await currentSource();
   const r = loadSavedReceipt(source, week);

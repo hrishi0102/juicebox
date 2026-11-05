@@ -102,7 +102,7 @@ export default async function SharedReceipt({ params }: { params: Promise<{ key:
                     {e.changeKey}
                   </a>
                   <span className="text-muted-foreground">{e.reverted ? "reverted" : e.survivalBps === 65535 ? e.state : `${Math.round(e.survivalBps / 100)}% alive`}</span>
-                  <span className="tabular-nums">{usd(e.costCents / 100)}</span>
+                  <span>{usd(e.costCents / 100)}</span>
                 </li>
               ))}
             </ul>

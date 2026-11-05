@@ -89,7 +89,7 @@ export default async function ThisWeek({ searchParams }: { searchParams: Promise
             <p className="mt-4 max-w-[60ch] text-lg text-muted-foreground">
               {s.sessions} sessions this week.{" "}
               {s.wasteUsd > 0 ? `${usd(s.wasteUsd)} (${pct(s.wastePct)}) went to loops, dead ends and oversized runs.` : "Almost nothing went to loops or dead ends."}{" "}
-              {s.labelCounts.Pending > 0 && `${s.labelCounts.Pending} still in progress.`}
+              {s.labelCounts.Pending > 0 && `${s.labelCounts.Pending} still open.`}
             </p>
             {s.spendUsd > 0 && (
               <div className="mt-6 max-w-xl space-y-2">
@@ -168,7 +168,7 @@ export default async function ThisWeek({ searchParams }: { searchParams: Promise
               Cost per kept task, by difficulty
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">Compared only with tasks of the same difficulty{teamBuckets ? ", against your team's median" : ""}.</p>
-            <table className="mt-3 w-full max-w-xl text-sm tabular-nums">
+            <table className="mt-3 w-full max-w-xl text-sm">
               <thead className="text-left text-muted-foreground">
                 <tr>
                   <th className="py-1.5 font-normal">Difficulty</th>
@@ -234,7 +234,7 @@ function TaskRow({ t }: { t: Task }) {
           </div>
         )}
       </div>
-      <div className="ml-auto w-20 text-right font-medium tabular-nums">{usd(t.costUsd)}</div>
+      <div className="ml-auto w-20 text-right font-medium">{usd(t.costUsd)}</div>
     </li>
   );
 }

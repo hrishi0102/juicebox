@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
 import { runPipeline } from "@/lib/receipts/pipeline";
 import { SOURCE_COOKIE } from "@/lib/server/data";
+import { rejectCrossSite } from "@/lib/server/guard";
 
 export const maxDuration = 300;
 
 // Reads ~/.claude/projects on this machine. Only works when the app runs locally.
 export async function POST(req: Request) {
+  const blocked = rejectCrossSite(req);
+  if (blocked) return blocked;
   const body = (await req.json().catch(() => ({}))) as { days?: number };
   const log: string[] = [];
   try {

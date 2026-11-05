@@ -43,13 +43,13 @@ export default async function Sessions({ searchParams }: { searchParams: Promise
             {LABEL_COPY[l].name} {counts[l]}
           </Link>
         ))}
-        <span className="ml-auto text-muted-foreground tabular-nums">
+        <span className="ml-auto text-muted-foreground">
           {rows.length} sessions, {usd(total)}
         </span>
       </div>
 
       <div className="overflow-x-auto rounded-lg border border-border bg-card">
-        <table className="w-full min-w-[860px] text-sm tabular-nums">
+        <table className="w-full min-w-[860px] text-sm">
           <thead className="border-b border-border text-left text-muted-foreground">
             <tr>
               <th className="px-4 py-2.5 font-normal">Started</th>

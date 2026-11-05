@@ -3,6 +3,7 @@ import type { Address } from "viem";
 import { currentSource, getDataset } from "@/lib/server/data";
 import { buildWeekReceipt, loadSavedReceipt, saveReceipt } from "@/lib/server/receipts-store";
 import { verifyReceipt, type SignedReceipt } from "@/lib/receipts/receipt";
+import { rejectCrossSite } from "@/lib/server/guard";
 
 // GET: build the unsigned receipt for a week (the browser wallet signs it).
 export async function GET(req: Request) {
@@ -18,6 +19,8 @@ export async function GET(req: Request) {
 
 // POST: save a receipt signed in the browser, after checking the signature.
 export async function POST(req: Request) {
+  const blocked = rejectCrossSite(req);
+  if (blocked) return blocked;
   const { receipt } = (await req.json()) as { receipt: SignedReceipt };
   const v = await verifyReceipt(receipt);
   if (!v.ok) return NextResponse.json({ ok: false, error: "Signature or digest check failed", checks: v.checks }, { status: 400 });

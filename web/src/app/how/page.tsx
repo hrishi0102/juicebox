@@ -56,7 +56,7 @@ export default function How() {
         <ol className="mt-6 space-y-6">
           {STEPS.map((s, i) => (
             <li key={s.t} className="grid grid-cols-[2.5rem_1fr] gap-x-4">
-              <span className="text-2xl font-semibold tabular-nums text-primary">{i + 1}</span>
+              <span className="text-2xl font-semibold text-primary">{i + 1}</span>
               <div>
                 <h3 className="text-lg font-semibold">{s.t}</h3>
                 <p className="mt-1 max-w-[68ch] text-muted-foreground">{s.d}</p>

@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
 import { fetchReceiptByKey } from "@/lib/receipts/arkiv";
 import { verifyReceipt, type SignedReceipt } from "@/lib/receipts/receipt";
+import { rejectCrossSite } from "@/lib/server/guard";
 
 // Verify a receipt from pasted JSON, or load it from Arkiv by entity key and verify it.
 export async function POST(req: Request) {
+  const blocked = rejectCrossSite(req);
+  if (blocked) return blocked;
   const body = (await req.json()) as { receipt?: SignedReceipt; entityKey?: string };
   try {
     let receipt = body.receipt;

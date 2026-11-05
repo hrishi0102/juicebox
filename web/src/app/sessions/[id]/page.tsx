@@ -6,6 +6,9 @@ import { currentSource, getDataset } from "@/lib/server/data";
 import { sessionUsd, totalTokens } from "@/lib/receipts/pricing";
 import { loopScore } from "@/lib/receipts/heuristics";
 import { dayTime, shortHash, tokens, usd } from "@/lib/format";
+import { buildPrivateDigest, DEFAULT_LOG_ROOT } from "@/lib/receipts/parse";
+import { digestToUserMessage, outcomeText } from "@/lib/receipts/judge";
+import { linkedChanges } from "@/lib/receipts/heuristics";
 
 export default async function SessionDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -17,6 +20,13 @@ export default async function SessionDetail({ params }: { params: Promise<{ id: 
   const links = d.matches.filter((m) => m.sessionId === id).map((m) => ({ m, c: d.changes.find((c) => c.key === m.changeKey) }));
   const g = s.signals;
   const t = s.cost.tokens;
+  // Exactly what the private judge would receive for this session. Rendered only on this machine.
+  let preview: string | undefined;
+  if (source === "local") {
+    const byKey = new Map(d.changes.map((c) => [c.key, c]));
+    const digest = await buildPrivateDigest(s, d.meta.logRoot ?? DEFAULT_LOG_ROOT, outcomeText(linkedChanges(s, d.matches, byKey)));
+    preview = digestToUserMessage(digest, j ? `${j.label}, difficulty ${j.difficulty}, loop score ${loopScore(s)}` : "none");
+  }
 
   return (
     <div className="max-w-4xl space-y-8">
@@ -31,7 +41,7 @@ export default async function SessionDetail({ params }: { params: Promise<{ id: 
         <div className="mt-4 flex flex-wrap items-center gap-3">
           {j && <LabelBadge label={j.label} />}
           {j && <Difficulty value={j.difficulty} />}
-          <span className="text-2xl font-semibold tabular-nums">{usd(sessionUsd(s))}</span>
+          <span className="text-2xl font-semibold">{usd(sessionUsd(s))}</span>
           {source === "local" && <JudgeButton label="Ask the private judge about this session" sessionIds={[s.id]} judgeReady={!!process.env.ZG_API_KEY} />}
         </div>
         {j && <p className="mt-3 max-w-[70ch]">{j.reason}</p>}
@@ -62,7 +72,7 @@ export default async function SessionDetail({ params }: { params: Promise<{ id: 
       <section className="grid gap-8 sm:grid-cols-2">
         <div>
           <h2 className="text-lg font-semibold">Cost</h2>
-          <dl className="mt-2 space-y-1 text-sm tabular-nums">
+          <dl className="mt-2 space-y-1 text-sm">
             <Item k="Priced from tokens" v={usd(s.cost.usd, 2)} />
             {s.cost.claudeReportedUsd !== undefined && <Item k="Claude Code's own tracker" v={usd(s.cost.claudeReportedUsd, 2)} />}
             <Item k="Total tokens" v={tokens(totalTokens(t))} />
@@ -76,7 +86,7 @@ export default async function SessionDetail({ params }: { params: Promise<{ id: 
         </div>
         <div>
           <h2 className="text-lg font-semibold">How it went</h2>
-          <dl className="mt-2 space-y-1 text-sm tabular-nums">
+          <dl className="mt-2 space-y-1 text-sm">
             <Item k="Your prompts" v={String(g.userPrompts)} />
             <Item k="Tool calls" v={`${g.toolCalls} (${Math.round(g.readOnlyRatio * 100)}% read-only)`} />
             <Item k="Tool errors" v={`${g.toolErrors}, longest streak ${g.maxErrorStreak}`} />
@@ -89,6 +99,19 @@ export default async function SessionDetail({ params }: { params: Promise<{ id: 
           </dl>
         </div>
       </section>
+
+      {preview && (
+        <section>
+          <details>
+            <summary className="cursor-pointer text-lg font-semibold">What the private judge would see</summary>
+            <p className="mt-2 max-w-[70ch] text-sm text-muted-foreground">
+              This is the whole message sent to 0G when you ask the private judge about this session, plus a fixed instruction. Nothing else from
+              the transcript leaves your laptop. Only a model inside a TEE can read it.
+            </p>
+            <pre className="mt-3 max-h-96 overflow-auto whitespace-pre-wrap rounded-lg border border-border bg-card p-4 text-xs">{preview}</pre>
+          </details>
+        </section>
+      )}
 
       {j && (
         <section>

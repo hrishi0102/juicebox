@@ -3,11 +3,14 @@ import { judgeConfigFromEnv } from "@/lib/receipts/judge";
 import { reviewWeek } from "@/lib/receipts/review";
 import { writeJson } from "@/lib/receipts/store";
 import { currentSource, getDataset, weekView } from "@/lib/server/data";
+import { rejectCrossSite } from "@/lib/server/guard";
 
 export const maxDuration = 120;
 
 // Ask the private judge (0G) for a review of one week.
 export async function POST(req: Request) {
+  const blocked = rejectCrossSite(req);
+  if (blocked) return blocked;
   const { week } = (await req.json()) as { week: string };
   const cfg = judgeConfigFromEnv();
   if (cfg.engine === "heuristic" || (cfg.engine === "0g" && !cfg.apiKey)) {

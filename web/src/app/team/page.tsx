@@ -146,7 +146,7 @@ export default async function Team({ searchParams }: { searchParams: Promise<{ w
                           <li key={e.leaf} className="flex gap-2">
                             <span className="min-w-0 flex-1 truncate">{e.changeKey}</span>
                             <span className="text-muted-foreground">{e.reverted ? "reverted" : e.survivalBps === 65535 ? e.state : `${Math.round(e.survivalBps / 100)}% alive`}</span>
-                            <span className="tabular-nums">{usd(e.costCents / 100)}</span>
+                            <span>{usd(e.costCents / 100)}</span>
                           </li>
                         ))}
                       </ul>
@@ -177,7 +177,7 @@ function Stat({ k, v, note }: { k: string; v: string; note?: string }) {
   return (
     <div className="border-l-2 border-primary/60 pl-4">
       <div className="text-sm text-muted-foreground">{k}</div>
-      <div className="mt-1 text-3xl font-semibold tabular-nums tracking-tight">{v}</div>
+      <div className="mt-1 text-3xl font-semibold tracking-tight">{v}</div>
       {note && <div className="mt-1 text-sm text-muted-foreground">{note}</div>}
     </div>
   );

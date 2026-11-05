@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
 import { judgeConfigFromEnv } from "@/lib/receipts/judge";
 import { rejudge } from "@/lib/receipts/pipeline";
+import { rejectCrossSite } from "@/lib/server/guard";
 
 export const maxDuration = 300;
 
 // Sends private digests of the chosen sessions to the 0G Private Computer judge.
 export async function POST(req: Request) {
+  const blocked = rejectCrossSite(req);
+  if (blocked) return blocked;
   const body = (await req.json().catch(() => ({}))) as { sessionIds?: string[] };
   const cfg = judgeConfigFromEnv();
   if (cfg.engine !== "0g" || !cfg.apiKey) {
