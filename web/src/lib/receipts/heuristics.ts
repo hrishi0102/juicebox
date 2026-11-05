@@ -2,7 +2,7 @@
 // It is the fallback when the private AI judge (0G) is not configured, and the AI judge sees
 // these signals too.
 
-import { isPremiumModel, sessionUsd } from "./pricing";
+import { sessionUsd } from "./pricing";
 import type { Change, ChangeKind, Judgement, Session, SessionLabel, SessionMatch } from "./types";
 
 const DAY = 86400_000;

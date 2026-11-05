@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any -- query rows come back with SDK-generated shapes */
 // Shared receipts on Arkiv (testnet "Rabdi").
 //
 // When someone shares a receipt with their team, we write one Arkiv entity:

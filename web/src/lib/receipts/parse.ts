@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any -- log lines are untyped JSON written by Claude Code */
 // Reads Claude Code session logs (~/.claude/projects/<folder>/<sessionId>.jsonl plus
 // <sessionId>/subagents/**/agent-*.jsonl) and turns each session into a `Session` summary.
 //
@@ -29,9 +30,9 @@ const ACTIVE_GAP_MS = 15 * 60 * 1000;
 export type SessionFile = { sessionId: string; projectDir: string; main: string; subagents: string[]; mtimeMs: number; bytes: number };
 
 export function listSessionFiles(root = DEFAULT_LOG_ROOT): SessionFile[] {
-  if (!existsSync(root)) return [];
+  if (!existsSync(/*turbopackIgnore: true*/ root)) return [];
   const out: SessionFile[] = [];
-  for (const projectDir of readdirSync(root)) {
+  for (const projectDir of readdirSync(/*turbopackIgnore: true*/ root)) {
     const dir = join(root, projectDir);
     if (!safeIsDir(dir)) continue;
     for (const f of readdirSync(dir)) {

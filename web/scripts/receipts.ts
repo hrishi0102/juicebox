@@ -4,7 +4,11 @@
 //   npm run receipts -- judge [--engine 0g|heuristic|openai-compatible] [--limit 5]
 //   npm run receipts -- week [2026-W45]          print the summary for a week
 //   npm run receipts -- sign [2026-W45]          sign a receipt with RECEIPTS_SIGNER_KEY
+//   npm run receipts -- team <id> "Name"         set the team id used for sharing
+//   npm run receipts -- share 2026-W45 [--level full]   publish a signed receipt to Arkiv
 //   npm run receipts -- demo                     regenerate the synthetic demo dataset
+//   npm run receipts -- publish-demo             write the demo team's signed receipts to Arkiv
+//   npm run receipts -- arkiv [team]             read a team's shared receipts back from Arkiv
 //   npm run receipts -- doctor                   check config (GitHub, 0G, Arkiv)
 
 import { privateKeyToAccount } from "viem/accounts";
@@ -12,9 +16,10 @@ import type { Hex } from "viem";
 import { loadDataset, rejudge, runPipeline } from "../src/lib/receipts/pipeline";
 import { judgeConfigFromEnv } from "../src/lib/receipts/judge";
 import { headline, summarize, weekOf } from "../src/lib/receipts/score";
-import { buildReceipt, typedDataFor, verifyReceipt } from "../src/lib/receipts/receipt";
-import { writeJson } from "../src/lib/receipts/store";
-import { makeDemoDataset } from "../src/lib/receipts/demo";
+import { buildReceipt, typedDataFor, verifyReceipt, type SignedReceipt } from "../src/lib/receipts/receipt";
+import { readJson, writeJson } from "../src/lib/receipts/store";
+import { makeDemoDataset, type TeamData } from "../src/lib/receipts/demo";
+import { ARKIV_EXPLORER, arkivWriterAddress, exampleQuery, fetchTeamReceipts, publishReceipt } from "../src/lib/receipts/arkiv";
 import { resolveGithubToken } from "../src/lib/receipts/github";
 import { loadEnvLocal } from "../src/lib/receipts/env";
 
@@ -80,7 +85,8 @@ async function main() {
       r.signature = await account.signTypedData(typedDataFor(r));
       r.signedAt = new Date().toISOString();
       const v = await verifyReceipt(r);
-      const p = writeJson(flag("demo") ? "demo" : "local", `receipts/${w.id}.json`, r);
+      // Signed receipts always go to ~/.receipts (demo ones in their own folder), never into the repo.
+      const p = writeJson("local", `${flag("demo") ? "demo-receipts" : "receipts"}/${w.id}.json`, r);
       console.log(r.headline);
       console.log("digest", r.digest);
       console.log("verified", v.ok, v.checks.map((c) => `${c.ok ? "ok" : "FAIL"} ${c.name}`).join("; "));
@@ -104,8 +110,56 @@ async function main() {
       console.log("Arkiv writer key:", process.env.ARKIV_PRIVATE_KEY ? "set" : "missing (needed to publish shared receipts)");
       break;
     }
+    case "team": {
+      // npm run receipts -- team my-team-id "My team name"
+      const [id, ...name] = positional;
+      if (!id) throw new Error('Usage: team <team-id> "Team name"');
+      writeJson("local", "team.json", { id, name: name.join(" ") || id });
+      console.log(`Team set to ${id}. Shared receipts go to Arkiv under this team id.`);
+      break;
+    }
+    case "share": {
+      // npm run receipts -- share 2026-W45 [--level full]
+      const level = opt("level") === "full" ? "full" : "totals";
+      const week = positional[0];
+      if (!week) throw new Error("Usage: share <week> [--level totals|full]");
+      const r = readJson<SignedReceipt | null>("local", `receipts/${week}.json`, null);
+      if (!r) throw new Error(`No signed receipt for ${week}. Run: sign ${week}`);
+      const team = readJson<{ id: string }>("local", "team.json", { id: process.env.RECEIPTS_TEAM || "my-team" }).id;
+      const out = await publishReceipt(r, { team, level });
+      r.share = { level, team, arkivKey: out.entityKey, arkivTx: out.txHash, publishedAt: new Date().toISOString() };
+      writeJson("local", `receipts/${week}.json`, r);
+      console.log(`Shared ${week} (${level}) with team ${team}`);
+      console.log("entity", out.entityKey);
+      console.log("tx", out.txHash, `(${ARKIV_EXPLORER}/tx/${out.txHash})`);
+      console.log("writer", out.writer);
+      break;
+    }
+    case "publish-demo": {
+      // Writes the signed demo team receipts to Arkiv, so the team page reads them live.
+      const team = readJson<TeamData | null>("demo", "team.json", null);
+      if (!team) throw new Error("No demo team. Run: demo");
+      let n = 0;
+      for (const r of team.receipts) {
+        const level = r.share?.level === "full" ? "full" : "totals";
+        const out = await publishReceipt(r, { team: team.id, level });
+        n++;
+        console.log(`${r.message.period} ${r.message.owner.slice(0, 8)} ${level} -> ${out.entityKey} tx ${out.txHash}`);
+      }
+      console.log(`Published ${n} demo receipts to Arkiv for team ${team.id}. Writer: ${arkivWriterAddress()}`);
+      console.log("Query:", exampleQuery(team.id));
+      break;
+    }
+    case "arkiv": {
+      // Read back what is on Arkiv for a team: npm run receipts -- arkiv acme-payments
+      const team = positional[0] ?? readJson<{ id: string }>("local", "team.json", { id: "acme-payments" }).id;
+      const rs = await fetchTeamReceipts(team);
+      for (const r of rs) console.log(r.message.period, r.message.owner.slice(0, 10), r.share?.level, r.verified ? "verified" : "BAD SIGNATURE", r.headline, r.arkiv.key);
+      console.log(`${rs.length} receipts for team ${team}`);
+      break;
+    }
     default:
-      console.log("Commands: scan, judge, week, sign, demo, doctor. See scripts/receipts.ts for flags.");
+      console.log("Commands: scan, judge, week, sign, share, team, demo, publish-demo, arkiv, doctor. See scripts/receipts.ts for flags.");
   }
 }
 
