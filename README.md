@@ -96,6 +96,8 @@ flowchart LR
 | Arkiv read and write | `web/src/lib/receipts/arkiv.ts` |
 | Web app | `web/src/app` |
 | CLI | `web/scripts/receipts.ts` |
+| Monthly scoring job (Chainlink CRE, optional) | `cre/receipts-monthly/main.ts` |
+| On-chain team scores (CRE consumer, optional) | `contracts/src/TeamScoreboard.sol` |
 
 ## Partner tracks
 
@@ -121,6 +123,10 @@ arkiv.schema = str('receipts-ethglobal-mumbai.receipt.v1') AND type = str('recei
 ### Ethereum Foundation: Best CROPS App
 
 See the CROPS section below. The lead property is **Private**.
+
+### Optional: Chainlink CRE monthly scoring job
+
+Built but not submitted (three partners max). A CRE workflow reads a team's shared receipts straight from Arkiv, re-checks the evidence PRs on GitHub, takes the median across DON nodes and writes a verified monthly team score to `TeamScoreboard` on Arc testnet. See [cre/README.md](cre/README.md). Swap it in for one of the three tracks if you prefer; it needs `cre login` to simulate.
 
 ## CROPS
 

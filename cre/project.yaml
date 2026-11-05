@@ -1,0 +1,14 @@
+# Chainlink CRE project for the Receipts monthly scoring job.
+# Arc testnet and Ethereum Sepolia are both supported by CRE (simulation and production forwarders).
+staging-settings:
+  rpcs:
+    - chain-name: arc-testnet
+      url: https://rpc.testnet.arc.io
+    - chain-name: ethereum-testnet-sepolia
+      url: https://ethereum-sepolia-rpc.publicnode.com
+production-settings:
+  rpcs:
+    - chain-name: arc-testnet
+      url: https://rpc.testnet.arc.io
+    - chain-name: ethereum-testnet-sepolia
+      url: https://ethereum-sepolia-rpc.publicnode.com

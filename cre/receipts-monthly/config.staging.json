@@ -1,0 +1,12 @@
+{
+  "schedule": "0 0 0 1 * *",
+  "teamId": "acme-payments",
+  "arkivRpcUrl": "https://rpc.rabdi.db-chain.testnet.arkiv.network",
+  "schemaName": "receipts-ethglobal-mumbai.receipt.v1",
+  "trustedWriters": [],
+  "windowDays": 45,
+  "maxPrChecks": 10,
+  "chainSelectorName": "arc-testnet",
+  "consumerAddress": "0x0000000000000000000000000000000000000000",
+  "gasLimit": "500000"
+}

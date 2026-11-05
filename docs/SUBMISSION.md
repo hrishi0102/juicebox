@@ -55,7 +55,7 @@ Lead property: Private. Raw logs and prompts never leave the laptop; there is no
 
 Good, contained pieces of real work for you during the hackathon:
 
-- **Chainlink CRE monthly job** (only if you swap it in for one of the three partners): a cron workflow that reads the team's shared receipts from `/api/team`, re-checks each evidence PR on GitHub (still merged, not reverted), and writes a verified monthly team score on-chain. CRE supports Arc testnet (`arc-testnet`) and Sepolia. Needs `cre login` (free account). Notes in `docs/NEXT_STEPS.md`.
+- **Chainlink CRE monthly job**: the workflow and its consumer contract are written and tested in pieces (`cre/`, `contracts/`), but never simulated, because the CRE CLI needs your login. If you swap Chainlink in for one of the three partners, run the simulation (steps in `cre/README.md`), and add DON-side signature checks.
 - **Claude Code OpenTelemetry input**: a small OTLP/HTTP endpoint so a company can collect totals without touching laptops.
 - **Encrypted team payloads** on Arkiv (only team members can read evidence).
 - **Better matching** for deleted worktrees: read `git worktree add` commands from Bash calls.
