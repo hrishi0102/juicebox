@@ -112,25 +112,32 @@ export async function chat(cfg: JudgeConfig, system: string, user: string): Prom
   if (!cfg.baseUrl || !cfg.model) throw new Error("Judge endpoint not configured");
   if (cfg.engine === "0g" && !cfg.apiKey) throw new Error("ZG_API_KEY is not set");
   const is0g = cfg.engine === "0g";
-  const res = await fetch(`${cfg.baseUrl.replace(/\/$/, "")}/chat/completions`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      ...(cfg.apiKey ? { Authorization: `Bearer ${cfg.apiKey}` } : {}),
-      // private = only providers whose model runs inside a TEE. Never silently falls back.
-      ...(is0g ? { "X-0G-Provider-Trust-Mode": cfg.trustMode ?? "private" } : {}),
-    },
-    body: JSON.stringify({
-      model: cfg.model,
-      messages: [
-        { role: "system", content: system },
-        { role: "user", content: user },
-      ],
-      temperature: 0,
-      max_tokens: 1500, // 0GM thinks before answering
-      ...(is0g ? { verify_tee: true } : {}),
-    }),
-  });
+  // 0G answers 503 no_provider_for_trust_mode when every TEE provider is busy. It is transient.
+  let res: Response | undefined;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    if (attempt) await new Promise((r) => setTimeout(r, 1500 * attempt));
+    res = await fetch(`${cfg.baseUrl.replace(/\/$/, "")}/chat/completions`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(cfg.apiKey ? { Authorization: `Bearer ${cfg.apiKey}` } : {}),
+        // private = only providers whose model runs inside a TEE. Never silently falls back.
+        ...(is0g ? { "X-0G-Provider-Trust-Mode": cfg.trustMode ?? "private" } : {}),
+      },
+      body: JSON.stringify({
+        model: cfg.model,
+        messages: [
+          { role: "system", content: system },
+          { role: "user", content: user },
+        ],
+        temperature: 0,
+        max_tokens: 2500, // 0GM thinks before answering
+        ...(is0g ? { verify_tee: true } : {}),
+      }),
+    });
+    if (res.status !== 503) break;
+  }
+  if (!res) throw new Error("Judge call was not sent");
   const text = await res.text();
   if (!res.ok) throw new Error(`Judge call failed (${res.status}): ${text.slice(0, 300)}`);
   const json = JSON.parse(text);
