@@ -163,7 +163,9 @@ export type Task = {
   reverted: boolean;
   survival: number | null; // 0..1, null when unknown
   survivalMatured: boolean;
-  costUsd: number; // share of linked session cost
+  costUsd: number; // cost of this task in the period being shown (all time in a dataset)
+  totalCostUsd: number; // cost across every linked session, any week
+  costBySession: Record<string, number>; // how much each linked session contributed
   sessions: string[];
   keptWork: number; // 0..1
   mergedAt?: string;

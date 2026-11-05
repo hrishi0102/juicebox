@@ -124,15 +124,22 @@ export async function matchSessions(gh: GitHub, sessions: Session[], log: (m: st
   return { changes: [...changes.values()], matches };
 }
 
-/** Split each session's cost across the changes it matched, weighted by match confidence. */
+/**
+ * Split each session's cost across the changes it matched, weighted by match confidence.
+ * Returns, per change, how much each session contributed.
+ */
 export function attributeCost(sessions: { id: string; usd: number }[], matches: SessionMatch[]) {
-  const byChange = new Map<string, number>();
+  const byChange = new Map<string, Map<string, number>>();
   const bySession = new Map<string, SessionMatch[]>();
   for (const m of matches) bySession.set(m.sessionId, [...(bySession.get(m.sessionId) ?? []), m]);
   for (const s of sessions) {
     const ms = bySession.get(s.id) ?? [];
     const total = ms.reduce((a, m) => a + m.confidence, 0);
-    for (const m of ms) byChange.set(m.changeKey, (byChange.get(m.changeKey) ?? 0) + (s.usd * m.confidence) / total);
+    for (const m of ms) {
+      const per = byChange.get(m.changeKey) ?? new Map<string, number>();
+      per.set(s.id, (per.get(s.id) ?? 0) + (s.usd * m.confidence) / total);
+      byChange.set(m.changeKey, per);
+    }
   }
   return byChange;
 }

@@ -3903,6 +3903,10 @@
       "survival": 0.9242272213660181,
       "survivalMatured": false,
       "costUsd": 92.13,
+      "totalCostUsd": 92.13,
+      "costBySession": {
+        "01963bf0-2b7e-45a5-a83f-c0a34cd09fc1": 92.13
+      },
       "sessions": [
         "01963bf0-2b7e-45a5-a83f-c0a34cd09fc1"
       ],
@@ -3921,6 +3925,10 @@
       "survival": 0.980967096700333,
       "survivalMatured": false,
       "costUsd": 90.81,
+      "totalCostUsd": 90.81,
+      "costBySession": {
+        "d63e40d3-9038-40b2-a61c-45035d9070d6": 90.81
+      },
       "sessions": [
         "d63e40d3-9038-40b2-a61c-45035d9070d6"
       ],
@@ -3939,6 +3947,10 @@
       "survival": 0.5964983790181577,
       "survivalMatured": false,
       "costUsd": 67.01,
+      "totalCostUsd": 67.01,
+      "costBySession": {
+        "5dc90c28-2028-403d-a112-47c0b53b8d5f": 67.01
+      },
       "sessions": [
         "5dc90c28-2028-403d-a112-47c0b53b8d5f"
       ],
@@ -3957,6 +3969,10 @@
       "survival": 0.7547565150074661,
       "survivalMatured": false,
       "costUsd": 65.49,
+      "totalCostUsd": 65.49,
+      "costBySession": {
+        "7341d728-71cd-4dd0-af4a-7f7ad96230c7": 65.49
+      },
       "sessions": [
         "7341d728-71cd-4dd0-af4a-7f7ad96230c7"
       ],
@@ -3975,6 +3991,10 @@
       "survival": 0.6628349161008373,
       "survivalMatured": false,
       "costUsd": 46.07,
+      "totalCostUsd": 46.07,
+      "costBySession": {
+        "4550b1bb-f045-46f2-afca-86cef0f6de16": 46.07
+      },
       "sessions": [
         "4550b1bb-f045-46f2-afca-86cef0f6de16"
       ],
@@ -3993,6 +4013,10 @@
       "survival": 0.7304401782923379,
       "survivalMatured": false,
       "costUsd": 44.9,
+      "totalCostUsd": 44.9,
+      "costBySession": {
+        "f95a406f-cb53-41ec-a859-d53793723395": 44.9
+      },
       "sessions": [
         "f95a406f-cb53-41ec-a859-d53793723395"
       ],
@@ -4011,6 +4035,10 @@
       "survival": 0.8631266176328063,
       "survivalMatured": false,
       "costUsd": 41.27,
+      "totalCostUsd": 41.27,
+      "costBySession": {
+        "45ad1a3b-f543-4b56-aa9f-e44ea7b9a226": 41.27
+      },
       "sessions": [
         "45ad1a3b-f543-4b56-aa9f-e44ea7b9a226"
       ],
@@ -4029,6 +4057,10 @@
       "survival": 0.8700890326220543,
       "survivalMatured": false,
       "costUsd": 41.14,
+      "totalCostUsd": 41.14,
+      "costBySession": {
+        "2d617c03-061d-43e1-ac78-0aaa1ba5f58d": 41.14
+      },
       "sessions": [
         "2d617c03-061d-43e1-ac78-0aaa1ba5f58d"
       ],
@@ -4047,6 +4079,10 @@
       "survival": 0.7930432979669422,
       "survivalMatured": false,
       "costUsd": 37.14,
+      "totalCostUsd": 37.14,
+      "costBySession": {
+        "b1780c58-e840-4c2b-ad9a-05a71283cf86": 37.14
+      },
       "sessions": [
         "b1780c58-e840-4c2b-ad9a-05a71283cf86"
       ],
@@ -4065,6 +4101,10 @@
       "survival": null,
       "survivalMatured": false,
       "costUsd": 35.09,
+      "totalCostUsd": 35.09,
+      "costBySession": {
+        "b85148c2-724e-47e5-a2b4-9c84ca67685d": 35.09
+      },
       "sessions": [
         "b85148c2-724e-47e5-a2b4-9c84ca67685d"
       ],
@@ -4082,6 +4122,10 @@
       "survival": 0.9557267563929781,
       "survivalMatured": false,
       "costUsd": 30.1,
+      "totalCostUsd": 30.1,
+      "costBySession": {
+        "d5f29bfe-7c9a-472d-ad2c-6af1a4a9e85d": 30.1
+      },
       "sessions": [
         "d5f29bfe-7c9a-472d-ad2c-6af1a4a9e85d"
       ],
@@ -4100,6 +4144,10 @@
       "survival": 0.8547865836555139,
       "survivalMatured": false,
       "costUsd": 29.74,
+      "totalCostUsd": 29.74,
+      "costBySession": {
+        "350d783b-33dd-4a5d-ae33-58d1add6afc2": 29.74
+      },
       "sessions": [
         "350d783b-33dd-4a5d-ae33-58d1add6afc2"
       ],
@@ -4118,6 +4166,10 @@
       "survival": 0.9347264690324664,
       "survivalMatured": false,
       "costUsd": 27.58,
+      "totalCostUsd": 27.58,
+      "costBySession": {
+        "039c7100-014c-4ee9-ab8b-63e4e40dbdc8": 27.58
+      },
       "sessions": [
         "039c7100-014c-4ee9-ab8b-63e4e40dbdc8"
       ],
@@ -4136,6 +4188,10 @@
       "survival": 0.9126440608408302,
       "survivalMatured": false,
       "costUsd": 23.53,
+      "totalCostUsd": 23.53,
+      "costBySession": {
+        "1609e340-3ce4-42f9-a45d-ddb460cbe5fd": 23.53
+      },
       "sessions": [
         "1609e340-3ce4-42f9-a45d-ddb460cbe5fd"
       ],
@@ -4154,6 +4210,10 @@
       "survival": null,
       "survivalMatured": false,
       "costUsd": 22.19,
+      "totalCostUsd": 22.19,
+      "costBySession": {
+        "bb418c9b-0def-44c5-a774-607f97aecef9": 22.19
+      },
       "sessions": [
         "bb418c9b-0def-44c5-a774-607f97aecef9"
       ],
@@ -4171,6 +4231,10 @@
       "survival": 0.8661149448994547,
       "survivalMatured": false,
       "costUsd": 20.52,
+      "totalCostUsd": 20.52,
+      "costBySession": {
+        "635cd3b1-b8d8-47cf-aac9-8d441e4524bd": 20.52
+      },
       "sessions": [
         "635cd3b1-b8d8-47cf-aac9-8d441e4524bd"
       ],
@@ -4189,6 +4253,10 @@
       "survival": 0.919671355066821,
       "survivalMatured": false,
       "costUsd": 18.88,
+      "totalCostUsd": 18.88,
+      "costBySession": {
+        "66121899-ae5c-4b4c-a83b-d970cf88bd39": 18.88
+      },
       "sessions": [
         "66121899-ae5c-4b4c-a83b-d970cf88bd39"
       ],
@@ -4207,6 +4275,10 @@
       "survival": null,
       "survivalMatured": false,
       "costUsd": 18.61,
+      "totalCostUsd": 18.61,
+      "costBySession": {
+        "89871198-8b22-41ab-a99c-6eb31deef8aa": 18.61
+      },
       "sessions": [
         "89871198-8b22-41ab-a99c-6eb31deef8aa"
       ],
@@ -4224,6 +4296,10 @@
       "survival": 0.9946679102675989,
       "survivalMatured": false,
       "costUsd": 17.8,
+      "totalCostUsd": 17.8,
+      "costBySession": {
+        "da54bcfb-3128-4786-aa10-1c6985830e1c": 17.8
+      },
       "sessions": [
         "da54bcfb-3128-4786-aa10-1c6985830e1c"
       ],
@@ -4242,6 +4318,10 @@
       "survival": 0.9182359781861306,
       "survivalMatured": false,
       "costUsd": 17.52,
+      "totalCostUsd": 17.52,
+      "costBySession": {
+        "c94e83de-c601-4668-a091-d9cec2607bfd": 17.52
+      },
       "sessions": [
         "c94e83de-c601-4668-a091-d9cec2607bfd"
       ],
@@ -4260,6 +4340,10 @@
       "survival": null,
       "survivalMatured": false,
       "costUsd": 13.84,
+      "totalCostUsd": 13.84,
+      "costBySession": {
+        "46af98dc-4e18-4cd5-a931-e02543d0247c": 13.84
+      },
       "sessions": [
         "46af98dc-4e18-4cd5-a931-e02543d0247c"
       ],
@@ -4277,6 +4361,10 @@
       "survival": null,
       "survivalMatured": false,
       "costUsd": 12.03,
+      "totalCostUsd": 12.03,
+      "costBySession": {
+        "b4177adf-95d6-43e4-aa1e-17c18255c110": 12.03
+      },
       "sessions": [
         "b4177adf-95d6-43e4-aa1e-17c18255c110"
       ],
@@ -4294,6 +4382,10 @@
       "survival": null,
       "survivalMatured": false,
       "costUsd": 9.25,
+      "totalCostUsd": 9.25,
+      "costBySession": {
+        "2a262bf3-9288-469e-a9f0-e7ffa743a9b4": 9.25
+      },
       "sessions": [
         "2a262bf3-9288-469e-a9f0-e7ffa743a9b4"
       ],
@@ -4312,6 +4404,10 @@
       "survival": 0.9354605081817136,
       "survivalMatured": false,
       "costUsd": 7.6,
+      "totalCostUsd": 7.6,
+      "costBySession": {
+        "d3835486-3bc7-4afc-a7e5-025cb77f459a": 7.6
+      },
       "sessions": [
         "d3835486-3bc7-4afc-a7e5-025cb77f459a"
       ],
@@ -4330,6 +4426,10 @@
       "survival": 0.88180669689551,
       "survivalMatured": false,
       "costUsd": 6,
+      "totalCostUsd": 6,
+      "costBySession": {
+        "b1c73359-9b6c-4578-a363-ed13b87c9859": 6
+      },
       "sessions": [
         "b1c73359-9b6c-4578-a363-ed13b87c9859"
       ],

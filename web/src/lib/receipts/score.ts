@@ -36,7 +36,9 @@ export function buildTasks(sessions: Session[], matches: SessionMatch[], changes
         reverted: c.reverted,
         survival,
         survivalMatured: !!c.survival?.matured,
-        costUsd: round2(costByChange.get(c.key) ?? 0),
+        costUsd: round2(sumValues(costByChange.get(c.key))),
+        totalCostUsd: round2(sumValues(costByChange.get(c.key))),
+        costBySession: Object.fromEntries([...(costByChange.get(c.key) ?? new Map<string, number>())].map(([k, v]) => [k, round2(v)])),
         sessions: sids,
         keptWork: shipped ? (survival ?? 1) : 0,
         mergedAt: c.mergedAt,
@@ -62,7 +64,14 @@ export function summarize(opts: {
   });
   const ids = new Set(inPeriod.map((s) => s.id));
   const judgeBy = new Map(opts.judgements.map((j) => [j.sessionId, j]));
-  const tasks = opts.tasks.filter((t) => t.sessions.some((id) => ids.has(id)));
+  // A task counts in the period when one of its sessions does, at the cost spent in the period.
+  const tasks = opts.tasks
+    .filter((t) => t.sessions.some((id) => ids.has(id)))
+    .map((t) => ({
+      ...t,
+      costUsd: round2(Object.entries(t.costBySession ?? {}).reduce((a, [sid, v]) => a + (ids.has(sid) ? v : 0), 0)),
+    }))
+    .sort((a, b) => b.costUsd - a.costUsd);
   const changeBy = new Map(opts.changes.map((c) => [c.key, c]));
 
   const labelCounts = Object.fromEntries(ALL_LABELS.map((l) => [l, 0])) as Record<SessionLabel, number>;
@@ -210,6 +219,12 @@ export function weeksBetween(from: Date, to: Date) {
     cur = weekOf(new Date(Date.parse(cur.end) + 1000));
   }
   return out;
+}
+
+function sumValues(m?: Map<string, number>) {
+  let t = 0;
+  for (const v of m?.values() ?? []) t += v;
+  return t;
 }
 
 function round2(n: number) {
