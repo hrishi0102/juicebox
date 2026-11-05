@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Difficulty, LabelBadge } from "@/components/label-badge";
-import { currentSource, getDataset } from "@/lib/server/data";
+import { currentSource, getDataset, periodView } from "@/lib/server/data";
+import { headline } from "@/lib/receipts/score";
 import { sessionUsd } from "@/lib/receipts/pricing";
 import { LABEL_COPY, LABEL_ORDER, dayTime, usd } from "@/lib/format";
 import type { SessionLabel } from "@/lib/receipts/types";
@@ -24,6 +25,9 @@ export default async function Sessions({ searchParams }: { searchParams: Promise
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-semibold tracking-tight">Sessions</h1>
+        <p className="mt-1 text-lg">
+          Last {d.meta.days} days: {headline(periodView(d, d.meta.days))}.
+        </p>
         <p className="mt-2 max-w-[70ch] text-muted-foreground">
           Every Claude Code session from the last {d.meta.days} days, what it cost, and what it turned into. Titles come from your prompts and only
           ever show on this machine.

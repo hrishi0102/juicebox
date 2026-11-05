@@ -60,12 +60,46 @@ export async function runPipeline(opts: { days?: number; judge?: JudgeConfig; sk
     progress("match", "No GitHub token (set GITHUB_TOKEN or run `gh auth login`). Skipping outcomes.");
   }
 
+  // AI judgements cost money and time. Keep earlier ones for sessions that have not changed since
+  // (same end time and same number of model calls); only new or changed sessions get judged again.
+  // The outcome must not have changed either (an open PR that merged since needs a new verdict).
+  const previous = loadDataset("local");
+  const prevSession = new Map((previous?.sessions ?? []).map((s) => [s.id, s]));
+  const outcomeKey = (id: string, ms: SessionMatch[], cs: Change[]) => {
+    const byKey = new Map(cs.map((c) => [c.key, c]));
+    return ms
+      .filter((m) => m.sessionId === id)
+      .map((m) => `${m.changeKey}:${byKey.get(m.changeKey)?.state}:${byKey.get(m.changeKey)?.reverted}`)
+      .sort()
+      .join("|");
+  };
+  const keepAi = new Map(
+    (previous?.judgements ?? [])
+      .filter((j) => j.judge.engine !== "heuristic")
+      .filter((j) => {
+        const before = prevSession.get(j.sessionId);
+        const now = sessions.find((s) => s.id === j.sessionId);
+        return (
+          before &&
+          now &&
+          before.endedAt === now.endedAt &&
+          before.signals.assistantTurns === now.signals.assistantTurns &&
+          outcomeKey(j.sessionId, previous!.matches, previous!.changes) === outcomeKey(j.sessionId, matches, changes)
+        );
+      })
+      .map((j) => [j.sessionId, j]),
+  );
+
   const cfg = opts.skipJudge ? ({ engine: "heuristic" } as JudgeConfig) : (opts.judge ?? judgeConfigFromEnv());
   progress("judge", cfg.engine === "heuristic" ? "Labeling sessions with offline rules" : `Labeling sessions privately with ${cfg.engine} (${cfg.model})`);
-  const judgements = await judgeSessions(sessions, matches, changes, cfg, {
+  const toJudge = cfg.engine === "heuristic" ? undefined : new Set(sessions.filter((s) => !keepAi.has(s.id)).map((s) => s.id));
+  const fresh = await judgeSessions(sessions, matches, changes, cfg, {
     logRoot: opts.logRoot,
+    only: toJudge,
     onProgress: (d, t) => progress("judge", `${d}/${t}`),
   });
+  const judgements = fresh.map((j) => keepAi.get(j.sessionId) ?? j);
+  if (keepAi.size) progress("judge", `kept ${keepAi.size} earlier private judgements for unchanged sessions`);
 
   const tasks = buildTasks(sessions, matches, changes, judgements);
   const data: Dataset = {
