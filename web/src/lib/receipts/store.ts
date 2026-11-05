@@ -5,7 +5,8 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 
-export const DATA_DIR = process.env.RECEIPTS_DATA_DIR || join(homedir(), ".receipts");
+// On a serverless host (hosted demo) the home folder is read-only, so use /tmp there.
+export const DATA_DIR = process.env.RECEIPTS_DATA_DIR || (process.env.VERCEL ? "/tmp/receipts" : join(homedir(), ".receipts"));
 export const DEMO_DIR = join(process.cwd(), "fixtures", "demo");
 
 export type Source = "local" | "demo";
