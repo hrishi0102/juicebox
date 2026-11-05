@@ -106,7 +106,10 @@ export function ReceiptActions(p: Props) {
       )}
       {p.shared?.arkivKey && (
         <p className="text-xs text-muted-foreground">
-          Shared on Arkiv ({p.shared.level === "full" ? "with evidence" : "totals only"}). Entity {p.shared.arkivKey.slice(0, 18)}…
+          Shared on Arkiv ({p.shared.level === "full" ? "with evidence" : "totals only"}).{" "}
+          <a className="text-primary hover:underline" href={`/r/${p.shared.arkivKey}`}>
+            Link to this receipt
+          </a>
         </p>
       )}
     </div>

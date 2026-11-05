@@ -14,7 +14,7 @@ Any engineer who uses an AI coding agent and wants evidence of what that spend b
 ## Numbers from the first run
 
 - Author's own last 30 days: 49 Claude Code sessions, about $684 of usage, 39 linked pull requests or commits. That turns into 5 weekly receipts, so 5 entities a month for one person, each a few KB.
-- The demo team (5 people, 4 shared, 4 weeks) is 19 signed receipts.
+- The demo team (5 people, 4 of them sharing, 5 weeks) is 20 signed receipts: 15 with evidence, 5 totals only.
 
 ## Plan after the hackathon
 

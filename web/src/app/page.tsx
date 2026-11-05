@@ -208,8 +208,8 @@ export default async function ThisWeek({ searchParams }: { searchParams: Promise
 function TaskRow({ t }: { t: Task }) {
   const alive = t.survival === null ? null : Math.round(t.survival * 100);
   return (
-    <li className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-3">
-      <div className="min-w-0 flex-1">
+    <li className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3">
+      <div className="w-full min-w-0 sm:w-auto sm:flex-1">
         <a href={t.url} target="_blank" rel="noreferrer" className="font-medium hover:underline">
           {t.title}
         </a>
@@ -234,7 +234,7 @@ function TaskRow({ t }: { t: Task }) {
           </div>
         )}
       </div>
-      <div className="w-20 text-right font-medium tabular-nums">{usd(t.costUsd)}</div>
+      <div className="ml-auto w-20 text-right font-medium tabular-nums">{usd(t.costUsd)}</div>
     </li>
   );
 }

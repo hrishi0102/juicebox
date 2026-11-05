@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ReceiptPaper } from "@/components/receipt-paper";
 import { currentSource, getDemoTeam, getLocalTeamConfig } from "@/lib/server/data";
-import { ARKIV_EXPLORER, ARKIV_SCHEMA_NAME, exampleQuery, fetchTeamReceipts, type TeamReceipt } from "@/lib/receipts/arkiv";
+import { ARKIV_SCHEMA_NAME, exampleQuery, fetchTeamReceipts, type TeamReceipt } from "@/lib/receipts/arkiv";
 import { signedNumbers, verifyReceipt, type SignedReceipt } from "@/lib/receipts/receipt";
 import { pct, shortAddr, usd, weekRange } from "@/lib/format";
 import type { PeriodSummary } from "@/lib/receipts/types";
@@ -100,9 +100,9 @@ export default async function Team({ searchParams }: { searchParams: Promise<{ w
                   <div className="text-sm text-muted-foreground">{r.share?.level === "full" ? "with evidence" : "totals only"}</div>
                   <div className="text-sm text-muted-foreground">
                     {r.from === "arkiv" && r.arkivKey ? (
-                      <a className="hover:underline" href={`${ARKIV_EXPLORER}/entity/${r.arkivKey}`} target="_blank" rel="noreferrer">
+                      <Link className="hover:underline" href={`/r/${r.arkivKey}`}>
                         on Arkiv
-                      </a>
+                      </Link>
                     ) : (
                       "demo file"
                     )}
