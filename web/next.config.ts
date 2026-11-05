@@ -1,9 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  // Local-first app: pages read the user's own data on every request.
+  serverExternalPackages: ["@0gfoundation/0g-compute-ts-sdk", "ethers"],
   turbopack: {
     rules: {
       "*.css": {

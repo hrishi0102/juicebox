@@ -50,18 +50,26 @@
         "keptWorkMilli": 2660,
         "wasteBps": 0,
         "labels": [
-          2,
+          3,
           0,
           0,
           0,
-          1,
+          0,
           0
         ],
+        "labelSpendCents": [
+          "13395",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
         "evidenceRoot": "0x3803f15a484826e813d1697b14bccbfe520f9050fa627fa2909767060c891a6d",
-        "judgeRoot": "0xd56e66e67062e6aad54ec5a6ea7f968b822f3d045290ad03c8fc338fb5a02b53",
+        "judgeRoot": "0xe595ec97a90397f884fd593de577a240a63df7f698c0f3915436b55bab389433",
         "judge": "heuristic"
       },
-      "digest": "0x70644cc9ec0d528e56027293dffe573c60916de3e671b5410803b5913e6c1c02",
+      "digest": "0x0b78501e3483b2994a69fdeb4b10ff1841b5bb304590d5d093c4feb8f29d5512",
       "evidence": [
         {
           "changeKey": "acme-demo/payments-api#102",
@@ -123,7 +131,7 @@
         },
         {
           "sessionHash": "0x283d04b50b08d9430c07a682366a0bfe95dd7c76739ca892e023f6c0f9976d23",
-          "label": "Overkill",
+          "label": "Shipped",
           "difficulty": 1,
           "engine": "heuristic",
           "model": "",
@@ -132,7 +140,7 @@
           "requestHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
           "responseHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
           "verified": false,
-          "leaf": "0x206efa966d3b1b3b7736d8e42c38f53103738c6173e295f7aa76932d5d1ac03d"
+          "leaf": "0x476fde9e20296f5ea0f08d6eb06abc39f71fd130d0233f48fd8908827501a77d"
         }
       ],
       "summary": {
@@ -180,7 +188,7 @@
           }
         ]
       },
-      "signature": "0xdee4d5d5bf1640ecf8eb61a17d7c7afb5f613a5afff7f2d49c13878b2b28446e51e314dee433ddfd1d530e003a0fa9879c034af08ea31514b7dbd128c2ba1a011c",
+      "signature": "0x98aa8a0f2d587ac6c2a8c76514e85e7853677727c6490582216d45611366fd3f693047f14654cd073e754c384d42c92586fb6e9b8dcf66ebafbbf4baf819f25f1b",
       "signedAt": "2026-10-12T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -210,11 +218,19 @@
           0,
           1
         ],
+        "labelSpendCents": [
+          "8073",
+          "789",
+          "4607",
+          "0",
+          "0",
+          "3509"
+        ],
         "evidenceRoot": "0x85772c2510d03da0f0c54a28c4cad6e009de75c75de5042d0288053b9ef02ee6",
         "judgeRoot": "0x013cc82b5b7255b3c97621fd981e9dae144720a79e70c0c4c9746ffcec4d6c37",
         "judge": "heuristic"
       },
-      "digest": "0x281f533067c4a5e5c9438df39d0d919464bbe4ce0449643f987e9bf96e54145e",
+      "digest": "0xd21ecff10d9d747a282647b6d4bd19ee3f6832be0964a2d06aad109146c1b42a",
       "evidence": [
         {
           "changeKey": "acme-demo/web-app#106",
@@ -428,7 +444,7 @@
           }
         ]
       },
-      "signature": "0xa3ea1ee3221a4f9c722ead3df2e584ac16dd5e4d40e334dcb633c16c1914f0e024af53f181e72c93a6a95f3fe6d6fb219b62180ad1be35cd5b70516fd4d2029e1b",
+      "signature": "0x94c6e94e0b66807627726c46a006c2009329d10b91ad9f0d7c46db6f381de3fd41c89e054fa6fc89a6f0e88fcf814e7209a5e3585b2a7e529f40355602206a6c1c",
       "signedAt": "2026-10-19T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -458,11 +474,19 @@
           0,
           1
         ],
+        "labelSpendCents": [
+          "7124",
+          "587",
+          "0",
+          "3512",
+          "0",
+          "2219"
+        ],
         "evidenceRoot": "0x5534128b603b4057e0d4fbd29a0a6b269d9eb35f9241269e73733ef49b0df7d8",
         "judgeRoot": "0x146656a176c429cc6c85ee95e337e463e28a1079295d7689abec87e8130a4a3b",
         "judge": "heuristic"
       },
-      "digest": "0xb760a829ee212e38980e0bb73fdb708df07baaad99defbab990c66016fdcc72f",
+      "digest": "0x2c136851bb0392e9b692e6ea20c9db9e7cdb66d37a7b3a871b8c00bad3b0ce5c",
       "evidence": [
         {
           "changeKey": "acme-demo/web-app#113",
@@ -676,7 +700,7 @@
           }
         ]
       },
-      "signature": "0xf2c082018e34916d54e5b9151118cb73f98acf0ad4eb6b6c43fc0403f849827447625c3056e5b9d56afdb1af34fe8c791ef9cb3e36643c2cbbb772f6e6efd84f1b",
+      "signature": "0xf889d97fc34a3f21f79ba0059bdb58ee75542ae990dfe48605a76191a8e997752830371b45042d15c7d596e667aa94e1af7f1ee4b5f066c370e00215f00b50e01b",
       "signedAt": "2026-10-26T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -706,11 +730,19 @@
           0,
           0
         ],
+        "labelSpendCents": [
+          "5270",
+          "212",
+          "11039",
+          "1861",
+          "0",
+          "0"
+        ],
         "evidenceRoot": "0xcc617e229cb6c0fc94ecd671165daf91382cb8b9bc09f0125cdf8300d27dd9a7",
         "judgeRoot": "0x65d7e78f91417b000e66141936594310b373a7ea2c774e380ac58b21d2f374d0",
         "judge": "heuristic"
       },
-      "digest": "0x71622253b95af94096350d1f57d6b46930728d02447fba450de8f66cd349907f",
+      "digest": "0x86a0ccb2346cb8f046c8e5b48874a8e24f24d837ce9f077a2f9f98987acd0682",
       "evidence": [
         {
           "changeKey": "acme-demo/payments-api#117",
@@ -911,7 +943,7 @@
           }
         ]
       },
-      "signature": "0xaa6656011ebc9587b0192ff96a64e868526b921d59152d275f21b6dac2cbd4c61fe7a32ef22394521ff2eba4aa8e8e8af59f1c8cca4849f3c0c68432d68e997b1b",
+      "signature": "0x43931d03b2909c26b390b7b330073cdc635fe0cc99384cea390375a92f52c75e6574c7c6f18fd3c366976b455ab0d4f2c11f9b65f39fa35d9ddeb37b9a8a09a41b",
       "signedAt": "2026-11-02T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -932,20 +964,28 @@
         "shippedTasks": 4,
         "survivalBps": 8123,
         "keptWorkMilli": 3240,
-        "wasteBps": 2969,
+        "wasteBps": 2912,
         "labels": [
-          2,
+          3,
           0,
           1,
           0,
-          1,
+          0,
           0
         ],
+        "labelSpendCents": [
+          "16314",
+          "0",
+          "6701",
+          "0",
+          "0",
+          "0"
+        ],
         "evidenceRoot": "0x3b1ebe75caeb9605f5d2dfb40bf8a8ab6980af6efeac45cdec46ede19e33340d",
-        "judgeRoot": "0xe2510d5e4d8b3b5155e02db935110dfb3b4f0c176b09d54b87a9e45e8b767d16",
+        "judgeRoot": "0x6a26c9cb32e700a3889cda02e7f5e897509b85ad74bd3d8a68f7ef2dd2242f51",
         "judge": "heuristic"
       },
-      "digest": "0xf0b090ea0ddee5a655439a95e1b344952518e44e1131f6ad59f6bbfe4502efa5",
+      "digest": "0xef5407ac3a498ac8af84559e974ed9ea7ba21911b10d40049a391992a8c663d3",
       "evidence": [
         {
           "changeKey": "acme-demo/payments-api#123",
@@ -1017,7 +1057,7 @@
         },
         {
           "sessionHash": "0x932d88b3b94477b3966a108d468ede4065ef85a722f38ff8482bbfe9da403721",
-          "label": "Overkill",
+          "label": "Shipped",
           "difficulty": 1,
           "engine": "heuristic",
           "model": "",
@@ -1026,7 +1066,7 @@
           "requestHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
           "responseHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
           "verified": false,
-          "leaf": "0x80bf49d4fc82b0d8cad773d70c695721ebb5141f3657e7ac0457c2595c388ad6"
+          "leaf": "0x969c730b30a85360830de90d575528cb3644f454e9bb262c0bd67aa6cd7c01ba"
         },
         {
           "sessionHash": "0xde065df0d1dc44bda9aaeee71a3db60ca65135b899338785d26976efa9421154",
@@ -1048,7 +1088,7 @@
         "survivalPct": 81.23,
         "keptWork": 3.24,
         "keptWorkPer100Usd": 1.41,
-        "wastePct": 29.69,
+        "wastePct": 29.12,
         "buckets": [
           {
             "difficulty": 1,
@@ -1087,7 +1127,7 @@
           }
         ]
       },
-      "signature": "0xb4c8d91c442f97b3b43487af3aa62716ee689e385d34b66d5ab9fdb75e9297e25fb3e561a7d53a12da4104b39a7a81b790f8dc8d2a2d273905cd993ed9c57ea71b",
+      "signature": "0x0919abae0a74052f8e9308b15cda56811131a02c05bed676259164b1651777b2799174157c2b7516a098e7489c745cbbc979d4ab3fd94ff8d41060d17876ee161c",
       "signedAt": "2026-11-06T12:00:00.000Z",
       "share": {
         "level": "full",
@@ -1117,11 +1157,19 @@
           0,
           0
         ],
+        "labelSpendCents": [
+          "4501",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
         "evidenceRoot": "0x8c7a3e6a0290c16b8e020a2d8a4e24491da5086fb2b4c56bc30ab5ed91699432",
         "judgeRoot": "0x2b85384d2a2463d1b7da0129295903a72dc88e9c33bc2ed748eff8a772f0dcd5",
         "judge": "heuristic"
       },
-      "digest": "0x32767141e565a65c239cee6fb5a66a90355b27259022650bc6c3ce775bf9efc0",
+      "digest": "0x6fb4b38f9a8917c43b1dc8187ab57a491915bfd10114f042133a0d68461a90db",
       "evidence": [
         {
           "changeKey": "acme-demo/web-app#127",
@@ -1240,7 +1288,7 @@
           }
         ]
       },
-      "signature": "0x27cd1eb88f8501ab42b848a69faaec26c874d92fb1ff8fc37e9482cd1f08d107783b8469873c970de78fe63f96c8f3815b71006047a4229f0b09a249124f3a511b",
+      "signature": "0x02e31dc5442aae300832ce4990c6d0a79d4800eea34f4961557e312c0f9263dd055b20c0fa4618db0c0663ed8bed315cf2c9eef52487daa79d4b59edabbbaddb1c",
       "signedAt": "2026-10-12T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -1270,11 +1318,19 @@
           1,
           0
         ],
+        "labelSpendCents": [
+          "9204",
+          "539",
+          "0",
+          "0",
+          "5709",
+          "0"
+        ],
         "evidenceRoot": "0x87cc685e9558018044d701fb301c7d9b9a24bbccdb76e9d02f3aed890cc75d53",
         "judgeRoot": "0xc67c469d788a80ed087627c10864fcb07e63c13a6aa4c1e49306d660e50cca5a",
         "judge": "heuristic"
       },
-      "digest": "0x1bdf0c4e9214777abf65697e2035c384a35c6d080e3610118f1a71a86be0f6ce",
+      "digest": "0x731914fcb1cf57181bf4c170337f0787b490952c5b94408e30438a4fffd9503c",
       "evidence": [
         {
           "changeKey": "acme-demo/web-app#131",
@@ -1452,7 +1508,7 @@
           }
         ]
       },
-      "signature": "0xd162f95d468c2b651b75648605ec43b25728302a0ed4e77addfb1e38a2b999cb31affeba312a03df64fd42dfa3a4ae06a9a250682668b70f79c74b56c58942e91b",
+      "signature": "0x20d5268a18abf78004771304558f49b76bc6b210664f53b764fdfefc2c5b0bb9576cfd86314ff872e700e8ea67123d618ae4940bb96fd2e0568c6140899e6e9f1b",
       "signedAt": "2026-10-19T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -1482,11 +1538,19 @@
           0,
           1
         ],
+        "labelSpendCents": [
+          "8252",
+          "861",
+          "0",
+          "0",
+          "0",
+          "381"
+        ],
         "evidenceRoot": "0x8c96b6aad0cb3bd952b2ba7f23fa17706ffde0f45c4a33430b0659ec214bf4ac",
         "judgeRoot": "0x97eb382eb668ae21874be09ac8817fc8d19280b0aae1394cdd3ee31490512f34",
         "judge": "heuristic"
       },
-      "digest": "0x36f6b57526ef9560026a25f49b161abd5892c9977f7e10ba283066683a86ba0e",
+      "digest": "0x426f652c0268970d05d319897ceb627dd723aeadcb66e54ff6b754177500b0e9",
       "evidence": [
         {
           "changeKey": "acme-demo/payments-api#136",
@@ -1667,7 +1731,7 @@
           }
         ]
       },
-      "signature": "0x4d8773f9fdbec62c0915d3a1ac1a4853b1ba9615e553103a7745b43556da829d3812ec247f716a70c3d3d49535084f65d5b7b039af990cc5f6b67944f69c85791c",
+      "signature": "0x858ae516f5c9709a4ec8af4f6a042f56381c448c084c39eea11d85d1782a6d70797ae8bc4e2ad80f3d35cfff060459baa7c858fc42bff4fc9300bf29a123749c1c",
       "signedAt": "2026-10-26T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -1697,11 +1761,19 @@
           0,
           1
         ],
+        "labelSpendCents": [
+          "8489",
+          "0",
+          "6950",
+          "2353",
+          "0",
+          "1403"
+        ],
         "evidenceRoot": "0x89ac4f62e2256d6436b9d805957be7cea0fb4ffdb666e2e96c0e868a88d0e2b1",
         "judgeRoot": "0x80cf04216d6e07a92e90297afc8ef4964ffbc3e4d6dd1046be43bbce58f58d6c",
         "judge": "heuristic"
       },
-      "digest": "0x1cc739615923ea91e81b6bf88608af89c67c0cd96799821d92ce6c4984c7d744",
+      "digest": "0xeea5db85a2843569d2c7c1002fe93f7d8121d6ba30a127e4348e8de3d5bbd928",
       "evidence": [
         {
           "changeKey": "acme-demo/payments-api#140",
@@ -1879,7 +1951,7 @@
           }
         ]
       },
-      "signature": "0x06abd39bb97ca0b1327f3c4447fd883494521e6d450120151cb25b0a5d588dc13eda52db804a620504f83aff416fd567764270d1539bbbfd1067a7bf99a79cb51b",
+      "signature": "0xcc376d421c63aa28485d4318ee505c13c8eab24949df6ca710972b52da9d4cac11305ae8085f6ab7852b0f382aa526cbc7cd831bbed208215318079a36430ae51b",
       "signedAt": "2026-11-02T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -1909,11 +1981,19 @@
           0,
           0
         ],
+        "labelSpendCents": [
+          "5065",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
         "evidenceRoot": "0xc0bf1c9c40de6de2f4c13547dc03cdc08cf39026e0deea05033af3a4bbfff5fc",
         "judgeRoot": "0x6cd3524cd55153990781b90e66ec9e8d1ebdb6efad7d85070bd2236614217586",
         "judge": "heuristic"
       },
-      "digest": "0x978453c2e09502707bb25c0cf57af600da1f230088fca35046b27c588a94cefa",
+      "digest": "0x1649b06c7bda1e3cbbf415b69b7d0d49907df439180d926514a5cb9d5fa84ba1",
       "evidence": [
         {
           "changeKey": "acme-demo/payments-api#142",
@@ -2032,7 +2112,7 @@
           }
         ]
       },
-      "signature": "0x7fde5d3c1ff2ef7b9ed4f062bcb2e1d078af89c4ae1e6101001ddc5c48c2e525660b347ce2d3938ca7677803cba1b3701372feeca8bdd292c5cb91b40c0f28fe1b",
+      "signature": "0xbb5ec7c03ed2343c07d6761c2f0658bd437f377900176613da2203a8c96b28084a7ea4934c1116f68bee85ea36cee7252401809ebae6edaff1fb93bd6289a80a1b",
       "signedAt": "2026-11-06T12:00:00.000Z",
       "share": {
         "level": "full",
@@ -2062,11 +2142,19 @@
           0,
           0
         ],
+        "labelSpendCents": [
+          "4059",
+          "0",
+          "3587",
+          "0",
+          "0",
+          "0"
+        ],
         "evidenceRoot": "0x5dcf66eaaa1daa89b9e9ce39ad8c87d3310c4b462da38ed1d7395dccfb9ea95b",
         "judgeRoot": "0x8a7ac34a2e5953c3fba9f290f4c18d2ab542c9d4fc00566f92ca9934aa66fa18",
         "judge": "heuristic"
       },
-      "digest": "0x8b89e9ca7bfe664d7b3be9339f761ebb6fbbe496c41c1b956bc112233808d8b5",
+      "digest": "0x912d447b2d6dd4d918cf1bba4f1edd1de9cfd25a0203501eae3dd8801dbff3b6",
       "evidence": [],
       "judges": [],
       "summary": {
@@ -2114,7 +2202,7 @@
           }
         ]
       },
-      "signature": "0x963f313410dcb67e1d99fb6f7d4f360fc9d7756ec87f7964fd73f25289e57bd5094c7e12e6a6180d5cd72f28a8cd26e85dcad6cd1bb63919fd49f779bf7d3d081c",
+      "signature": "0x11edc4d8a766d1f5fb7eb2b919f974e8e19e3b81aeea59e7d1eb99e4854ad7053bdb657a17d39e02916d0bb3e9709cc7689ed49f530d38b91800f9cd6362aa911b",
       "signedAt": "2026-10-12T00:00:00.000Z",
       "share": {
         "level": "totals",
@@ -2144,11 +2232,19 @@
           0,
           0
         ],
+        "labelSpendCents": [
+          "7212",
+          "395",
+          "5602",
+          "736",
+          "0",
+          "0"
+        ],
         "evidenceRoot": "0x66099feaad04ca043859852ddac3266ccd6ac628bc04f88d7fc02066224f2a5c",
         "judgeRoot": "0xe78897ca52ae054d13cb125f3fb35fcec049167d59c2884b41316aa8810ebac5",
         "judge": "heuristic"
       },
-      "digest": "0xe8185616a3a4f2b32b165fe3c1fdb318e3398af8da9ae23a2c52e712d0fed720",
+      "digest": "0x38031b878aba1967d4151f8fe772967c4c19bc90457c8e7291e2b57ee7e1931a",
       "evidence": [],
       "judges": [],
       "summary": {
@@ -2196,7 +2292,7 @@
           }
         ]
       },
-      "signature": "0x909ffeb0de55a10347f651489c8b9535ca0633fbebb8ce6469d9865ae6bb34041c9e42476e49571f45a458da6e5fcafd3c9e13ec3fc770cd1723e2c215cfa4a31c",
+      "signature": "0x02295740c11a66fb0c3edac61ff1c4c58fb0f58a41960f8ab1d35914db0f51d37ba4668b135f62b5c27505269fa3ff79404354bb69d6d6f75a883814fee9307e1c",
       "signedAt": "2026-10-19T00:00:00.000Z",
       "share": {
         "level": "totals",
@@ -2226,11 +2322,19 @@
           1,
           0
         ],
+        "labelSpendCents": [
+          "4150",
+          "0",
+          "8153",
+          "2508",
+          "5192",
+          "0"
+        ],
         "evidenceRoot": "0xe8e79136d8f83080705b974fa400cd6081a881ab88349e1fd17143885f433569",
         "judgeRoot": "0xfcbf8289627730c04daca45349cbffc90caf1c5b218b17869ea856828c17371c",
         "judge": "heuristic"
       },
-      "digest": "0x99422812f7f52441a8cff3c2b7203506bd74f7bf4095bec86dc093a17b1adeaa",
+      "digest": "0x0dcd767c8f1a98dacba9170b957c7f34337a7d939a9be50f7feb759969442384",
       "evidence": [],
       "judges": [],
       "summary": {
@@ -2278,7 +2382,7 @@
           }
         ]
       },
-      "signature": "0xe5894044eebbb93846ab8508620b67473083b02c7319cdb21b78b2501267a5865fe60186f5e9f5bbbb5f3b131e7e7e59fef6c58a8f89a0d3189915aada0369d91c",
+      "signature": "0x0f98159b181f38c4a6276c2ac73416596d130b9d8a5937db084e34bdd7b6d89d0d1c64de25b647a6fefc6f59f2347c3606259fabac8135cd1428abbdf11ee87d1b",
       "signedAt": "2026-10-26T00:00:00.000Z",
       "share": {
         "level": "totals",
@@ -2308,11 +2412,19 @@
           0,
           0
         ],
+        "labelSpendCents": [
+          "3278",
+          "215",
+          "5962",
+          "2745",
+          "0",
+          "0"
+        ],
         "evidenceRoot": "0x72307fceebb5902ac64f4b1806758108684ef8619ca5bf00b31deecc7be9805e",
         "judgeRoot": "0xb4a0ac095158b0f86619a169acb2c5bd7bc9caf8ca63d2308c38d83f3ab9a786",
         "judge": "heuristic"
       },
-      "digest": "0xab587d847bb11194fa2b1705607839c7b8f965c5fee69481c1bdb02a927dce7a",
+      "digest": "0xecdc6104e6b48c418ae7944c38dd8d994e049f11bdd79338b99984d33cd3aff9",
       "evidence": [],
       "judges": [],
       "summary": {
@@ -2360,7 +2472,7 @@
           }
         ]
       },
-      "signature": "0xc7b8933aa59f0c92ec1fd9d061d04cb987b223ab90ac3b013a144cc417b17d6b7f864efc77ae064b11455cdc6d5008f39627e40448022b7ffffa38ce3cbeedc31c",
+      "signature": "0xd514f87c49f69bb5f36b5f39ef1921cd12354a63eafe5e29cd2881faa684a258656bc4df7b3593febbe890d373332ea9f5ab49fbda764b4a6e09215b006833371b",
       "signedAt": "2026-11-02T00:00:00.000Z",
       "share": {
         "level": "totals",
@@ -2390,11 +2502,19 @@
           0,
           1
         ],
+        "labelSpendCents": [
+          "0",
+          "0",
+          "7109",
+          "0",
+          "0",
+          "1861"
+        ],
         "evidenceRoot": "0xb579079685121d09cffee92626b75c58acc0d3644074666ac59bf03586f4ed0d",
         "judgeRoot": "0x03412b173c958fbb57bf1a41c2411ed3aa49a61f1080f64634192e21b9bb6dec",
         "judge": "heuristic"
       },
-      "digest": "0x654a335827b3b4198cbdc08f6f0f363e59895ea48965c70183737acc0fa4ad65",
+      "digest": "0x4dfa6104fcc3305b35fdfe0494d6360f16d795a1a37b6617d1863920960b8938",
       "evidence": [],
       "judges": [],
       "summary": {
@@ -2442,7 +2562,7 @@
           }
         ]
       },
-      "signature": "0xd0393b1dbe0ab284bf652914aef75683c0d6478286669515af02afe96459c9835f3259de7245947b843114b56f52dc47f1a13f8b32ce874c4473409b394708641b",
+      "signature": "0x9001860aa9b5b4340e5f7eb13f20739691b4d8852ba71c87bcbaa7ffed546fb245896a30b3ba8a3600df1164b05fc48b5e959d31f74dee0445fc7a03c8580a5b1c",
       "signedAt": "2026-11-06T12:00:00.000Z",
       "share": {
         "level": "totals",
@@ -2472,11 +2592,19 @@
           0,
           0
         ],
+        "labelSpendCents": [
+          "2161",
+          "484",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
         "evidenceRoot": "0xeed87aa745eaec833241b8e66cd38d973d60904f537392e126aea6de7d382948",
         "judgeRoot": "0x32348eae3e104f2a1d8ec5138f193945ecb1d481a4f62ffc5ef206ae666bc827",
         "judge": "heuristic"
       },
-      "digest": "0x63878947954df7d423e418be06e6ab3d64b74444aed449d542ec2b9eb3479532",
+      "digest": "0xf3e3c3b5e9c054ef9cbe8876b467a84cb30626bb4747192b18cceaa7b7f13ebc",
       "evidence": [
         {
           "changeKey": "acme-demo/infra#133",
@@ -2562,7 +2690,7 @@
           }
         ]
       },
-      "signature": "0x0b558c56faded0da723285b6dc8298a270df00fe02d5a2d3931c61273cb40adc208b68489b53aacab35a688445d5d64cf097fd084a21e6877186f88517f363131b",
+      "signature": "0x5fd4a2bea3ae578fd8177cc4ab15fc3fb7924be20deb1cdb491786f44fa21fb944373e17a3c404ca9d259b96cc5f097100ee2571f9f78ed6c82e584a206efc7b1b",
       "signedAt": "2026-10-12T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -2592,11 +2720,19 @@
           0,
           0
         ],
+        "labelSpendCents": [
+          "6352",
+          "842",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
         "evidenceRoot": "0x25f1ba935652940df46abd9b0abcee9920a7befdbc1febf113849fd5876aa9a4",
         "judgeRoot": "0x617ce28338a409e225c45ec7f45791e9e7c8bae90782bbda7fef39266c7402cb",
         "judge": "heuristic"
       },
-      "digest": "0xaeaedac8f2a9f1436b8eaed18782333a7e8a2873bc6a8f48f403be7d6d51cbda",
+      "digest": "0xeab5808d996788327b17f7eb69fe2def64aa7da2370a48e709ceab0d10b6c8a8",
       "evidence": [
         {
           "changeKey": "acme-demo/infra#135",
@@ -2764,7 +2900,7 @@
           }
         ]
       },
-      "signature": "0xc8695daaaad4ce3bd97ec862f454291dc4d6188270f4b6e0b41ba464844187ae5bdcd4386230c61eb654ac2b396ae548b78b1b05a4cf5d3064ee1ac76f7836551c",
+      "signature": "0x0b27e470e05365d2a462a49862bfb290b644c285f9cf84869f8444ad02ad2c6f7d71807daa99fa8b32e4cda6b09cd763038bdfd47c3c288079ead49f360be5ab1c",
       "signedAt": "2026-10-19T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -2794,11 +2930,19 @@
           0,
           1
         ],
+        "labelSpendCents": [
+          "5467",
+          "519",
+          "0",
+          "0",
+          "0",
+          "419"
+        ],
         "evidenceRoot": "0x8f480338c2e4827e653d38de5ac28e136eb7789dcce0156be29cf5096ed2a76f",
         "judgeRoot": "0x2745d7b91ef8a529b2a0d00b3b9267fde477539ed0ff396858b293fe7df2c955",
         "judge": "heuristic"
       },
-      "digest": "0x42d4cde6625a485b984dd2423c9e5000ed1fdcbe9fd6819b55cd1615f2e88113",
+      "digest": "0xef2dfdaab0253c2aa8509f840bf5f57b57909cf63d9529b83b30b62353513ec6",
       "evidence": [
         {
           "changeKey": "acme-demo/web-app#140",
@@ -2943,7 +3087,7 @@
           }
         ]
       },
-      "signature": "0xc99909be19e6ece5405a27fc6bb783f88f24895f41d30028ca517283a3aadade5a33c26e6f140ae44542e7d7d5d41a34375f980c967eca8b2e2c82c79f086b321c",
+      "signature": "0xf7cfc0b63ecab6fbc51828a3a2ad7d2d5cb46c7205ffade49ced3da4eb65d1d5163413e08095e7810c65b751c76e658f7a35a40a28489293956f8b1f59ec84e11b",
       "signedAt": "2026-10-26T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -2973,11 +3117,19 @@
           0,
           0
         ],
+        "labelSpendCents": [
+          "1942",
+          "1101",
+          "4208",
+          "2768",
+          "0",
+          "0"
+        ],
         "evidenceRoot": "0x13d8d580570bfb9f34bab1d7859cfa911b1c903094d37131844fc4c811a363a8",
         "judgeRoot": "0x93c398f4b0eeea80667570410211eac3cdb514aa699a4a310b6ecb3a9adf49ed",
         "judge": "heuristic"
       },
-      "digest": "0xf4aa443c3a61bd2d6b70096caeed41e9bb98e05ff7c86d454e5c28449059f77e",
+      "digest": "0x70e71647d8a7fdf53a43f178e829a4b5afd74738b0a6bfa6ae9f4a1707d6b269",
       "evidence": [
         {
           "changeKey": "acme-demo/infra#142",
@@ -3125,7 +3277,7 @@
           }
         ]
       },
-      "signature": "0xea4fe046993413c4255b386cb4aa32050e40b6671a9f69588d9bff98991829a36fb1dc63607e091ec69759504fe23b4aa2874350fa6e7c9ec08ae2e99594dd421c",
+      "signature": "0x92a6a70fc87798ea54b06453c25b36b17fed88241132c3789d471a5eeb2a275c27c4c8d3341bea03f29f5dced17270d68863147bc185c3294e16f8e056c2609a1c",
       "signedAt": "2026-11-02T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -3155,11 +3307,19 @@
           0,
           1
         ],
+        "labelSpendCents": [
+          "0",
+          "565",
+          "0",
+          "0",
+          "0",
+          "1837"
+        ],
         "evidenceRoot": "0x2d9ad677823753e147b66d518caba54f10b04052b6e0bd4209a383a3f6f15074",
         "judgeRoot": "0xf939dc21e75d84a4332c11758e8ea158e106917fd88588173f443dd60c68607e",
         "judge": "heuristic"
       },
-      "digest": "0x29f3c4d0b087c5968a6208454fe66e5c1845a3c53d2484fb186f97f987f533a7",
+      "digest": "0x05c673b34daf3e69dc7b8b8ede04a804b10a7b04b3a19d238aba3bc133d45194",
       "evidence": [
         {
           "changeKey": "acme-demo/infra#143",
@@ -3245,7 +3405,7 @@
           }
         ]
       },
-      "signature": "0x154231e201c21cd78ccb2f0417494611ce1ba8880efc9cc1bc9b47790227936b10c3ecf7e14b9b5ee2296c57e44ae0b2b98872daef6204bc06b97623ed527bca1c",
+      "signature": "0x29cf3118cc07eaae08205d104e6398909de3a8300aea0c2df688704e03211fc8167850f86b6592bef32845d853bf2f17a39eabd30070f4b83af9e7517dfa6e161c",
       "signedAt": "2026-11-06T12:00:00.000Z",
       "share": {
         "level": "full",

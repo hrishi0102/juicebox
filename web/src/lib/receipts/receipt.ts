@@ -28,6 +28,7 @@ export const RECEIPT_TYPES = {
     { name: "keptWorkMilli", type: "uint32" },
     { name: "wasteBps", type: "uint16" },
     { name: "labels", type: "uint32[6]" }, // Shipped, Learned, Looped, Abandoned, Overkill, Pending
+    { name: "labelSpendCents", type: "uint64[6]" }, // spend per label, same order
     { name: "evidenceRoot", type: "bytes32" },
     { name: "judgeRoot", type: "bytes32" },
     { name: "judge", type: "string" },
@@ -46,6 +47,7 @@ export type ReceiptMessage = {
   keptWorkMilli: number;
   wasteBps: number;
   labels: readonly [number, number, number, number, number, number];
+  labelSpendCents: readonly [bigint, bigint, bigint, bigint, bigint, bigint];
   evidenceRoot: Hex;
   judgeRoot: Hex;
   judge: string;
@@ -80,7 +82,12 @@ export type JudgeLeaf = {
 export type SignedReceipt = {
   kind: "receipts.v1";
   headline: string;
-  message: Omit<ReceiptMessage, "periodStart" | "periodEnd" | "spendCents"> & { periodStart: string; periodEnd: string; spendCents: string };
+  message: Omit<ReceiptMessage, "periodStart" | "periodEnd" | "spendCents" | "labelSpendCents"> & {
+    periodStart: string;
+    periodEnd: string;
+    spendCents: string;
+    labelSpendCents: string[];
+  };
   digest: Hex;
   signature?: Hex;
   signedAt?: string;
@@ -191,6 +198,8 @@ export function buildReceipt(opts: { owner: Address; periodId: string; summary: 
   const judged = opts.judgements;
   const judges = judged.map(judgeLeaf);
   const lc = summary.labelCounts;
+  const ls = summary.labelSpend;
+  const cents = (x: number) => BigInt(Math.round(x * 100));
   const message: ReceiptMessage = {
     owner: opts.owner,
     period: opts.periodId,
@@ -203,6 +212,7 @@ export function buildReceipt(opts: { owner: Address; periodId: string; summary: 
     keptWorkMilli: Math.round(summary.keptWork * 1000),
     wasteBps: Math.round(summary.wastePct * 100),
     labels: [lc.Shipped, lc.Learned, lc.Looped, lc.Abandoned, lc.Overkill, lc.Pending] as const,
+    labelSpendCents: [cents(ls.Shipped), cents(ls.Learned), cents(ls.Looped), cents(ls.Abandoned), cents(ls.Overkill), cents(ls.Pending)] as const,
     evidenceRoot: merkleRoot(evidence.map((e) => e.leaf)),
     judgeRoot: merkleRoot(judges.map((j) => j.leaf)),
     judge: judgeLabel(judged),
@@ -227,11 +237,42 @@ export function buildReceipt(opts: { owner: Address; periodId: string; summary: 
 }
 
 export function toJsonMessage(m: ReceiptMessage): SignedReceipt["message"] {
-  return { ...m, periodStart: m.periodStart.toString(), periodEnd: m.periodEnd.toString(), spendCents: m.spendCents.toString() };
+  return {
+    ...m,
+    periodStart: m.periodStart.toString(),
+    periodEnd: m.periodEnd.toString(),
+    spendCents: m.spendCents.toString(),
+    labelSpendCents: m.labelSpendCents.map((x) => x.toString()),
+  };
 }
 
 export function fromJsonMessage(m: SignedReceipt["message"]): ReceiptMessage {
-  return { ...m, periodStart: BigInt(m.periodStart), periodEnd: BigInt(m.periodEnd), spendCents: BigInt(m.spendCents), labels: [...m.labels] as unknown as ReceiptMessage["labels"] };
+  return {
+    ...m,
+    periodStart: BigInt(m.periodStart),
+    periodEnd: BigInt(m.periodEnd),
+    spendCents: BigInt(m.spendCents),
+    labels: [...m.labels] as unknown as ReceiptMessage["labels"],
+    labelSpendCents: (m.labelSpendCents ?? ["0", "0", "0", "0", "0", "0"]).map((x) => BigInt(x)) as unknown as ReceiptMessage["labelSpendCents"],
+  };
+}
+
+/** Headline numbers taken only from the signed message (the `summary` block is not signed). */
+export function signedNumbers(r: SignedReceipt) {
+  const m = r.message;
+  const spendUsd = Number(m.spendCents) / 100;
+  const order = ["Shipped", "Learned", "Looped", "Abandoned", "Overkill", "Pending"] as const;
+  return {
+    spendUsd,
+    sessions: m.sessions,
+    shippedTasks: m.shippedTasks,
+    survivalPct: m.survivalBps === 65535 ? null : m.survivalBps / 100,
+    keptWork: m.keptWorkMilli / 1000,
+    wastePct: m.wasteBps / 100,
+    wasteUsd: (spendUsd * m.wasteBps) / 10000,
+    labelCounts: Object.fromEntries(order.map((l, i) => [l, m.labels[i] ?? 0])) as Record<(typeof order)[number], number>,
+    labelSpend: Object.fromEntries(order.map((l, i) => [l, Number(m.labelSpendCents?.[i] ?? 0) / 100])) as Record<(typeof order)[number], number>,
+  };
 }
 
 export function receiptDigest(m: ReceiptMessage): Hex {

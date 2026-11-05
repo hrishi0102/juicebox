@@ -2,8 +2,7 @@
 // It is the fallback when the private AI judge (0G) is not configured, and the AI judge sees
 // these signals too.
 
-import { isPremiumModel } from "./pricing";
-import { sessionUsd } from "./parse";
+import { isPremiumModel, sessionUsd } from "./pricing";
 import type { Change, ChangeKind, Judgement, Session, SessionLabel, SessionMatch } from "./types";
 
 const DAY = 86400_000;
@@ -70,8 +69,10 @@ export function heuristicLabel(s: Session, linked: Linked[], now = Date.now()): 
   if (loops >= 3) return { label: "Looped", reason: `Repeated failing steps (loop score ${loops}) and nothing shipped.`, confidence: 0.6 };
   if (dead.length) return { label: "Abandoned", reason: `Linked change was closed or reverted.`, confidence: 0.7 };
   if (edits) {
-    if (now - Date.parse(s.endedAt) < 3 * DAY) return { label: "Pending", reason: "Edits not linked to a PR yet.", confidence: 0.4 };
-    return { label: "Abandoned", reason: "Edited code, but no PR or commit shipped it.", confidence: 0.5 };
+    if (now - Date.parse(s.endedAt) < 3 * DAY) return { label: "Pending", reason: "Fresh edits, not linked to a PR yet.", confidence: 0.4 };
+    // Without a known repo we could not check GitHub, so we do not call it abandoned.
+    if (!s.repos.length) return { label: "Pending", reason: "Edited code in a folder with no GitHub repo we could find, so it is not judged.", confidence: 0.3 };
+    return { label: "Abandoned", reason: "Edited code, but no PR or commit in the repo shipped it.", confidence: 0.5 };
   }
   return { label: "Learned", reason: "Mostly reading and questions, no code changes.", confidence: 0.55 };
 }
@@ -85,22 +86,19 @@ export function judgeAllHeuristic(sessions: Session[], matches: SessionMatch[], 
     return { s, linked, ...l, difficulty: estimateDifficulty(s, linked), kind: pickKind(linked) };
   });
 
-  // Median cost of shipped sessions per difficulty: the yardstick for "similar tasks".
-  const medians = medianShippedCost(first.map((f) => ({ label: f.label, difficulty: f.difficulty, usd: sessionUsd(f.s) })));
+  // Overkill only makes sense for small work: a sledgehammer for a small nail. The yardstick is the
+  // median cost of other shipped sessions whose linked work was also small (difficulty 1 or 2).
+  const small = first.filter((f) => f.label === "Shipped" && f.difficulty <= 2).map((f) => sessionUsd(f.s));
+  const smallMedian = small.length >= 3 ? median(small) : 4;
+  const overkillAt = Math.max(12, 4 * smallMedian);
 
   return first.map((f): Judgement => {
     let label = f.label;
     let reason = f.reason;
     const usd = sessionUsd(f.s);
-    if (label === "Shipped") {
-      const med = medians[f.difficulty];
-      const premium = f.s.models.some(isPremiumModel);
-      if ((med && usd > 3 * med && usd > 5) || (f.difficulty <= 2 && usd > 25 && premium)) {
-        label = "Overkill";
-        reason = med
-          ? `Shipped, but cost $${usd.toFixed(2)} vs a $${med.toFixed(2)} median for difficulty ${f.difficulty} work.`
-          : `Shipped a small change for $${usd.toFixed(2)} on a premium model.`;
-      }
+    if (label === "Shipped" && f.difficulty <= 2 && usd > overkillAt) {
+      label = "Overkill";
+      reason = `Shipped small work (difficulty ${f.difficulty}) for $${usd.toFixed(2)}; similar small tasks cost about $${smallMedian.toFixed(2)}.`;
     }
     return {
       sessionId: f.s.id,

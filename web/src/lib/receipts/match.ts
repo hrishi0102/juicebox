@@ -111,7 +111,10 @@ export async function matchSessions(gh: GitHub, sessions: Session[], log: (m: st
         const overlap = s.filesEdited.filter((f) => c.files.some((pf) => f === pf || f.endsWith("/" + pf))).length;
         if (overlap === 0) continue;
         const shareOfPr = overlap / c.files.length;
-        if (overlap >= 3 || shareOfPr >= 0.3) add(s, c, "files-time", Math.min(0.7, 0.35 + 0.35 * shareOfPr + 0.05 * overlap));
+        const shareOfSession = overlap / s.filesEdited.length;
+        // Giant PRs (vendored code, generated files) overlap with everything; require a real share.
+        if (c.files.length > 100 && shareOfPr < 0.3) continue;
+        if (shareOfPr >= 0.3 || (overlap >= 3 && shareOfSession >= 0.3)) add(s, c, "files-time", Math.min(0.7, 0.35 + 0.35 * shareOfPr + 0.05 * overlap));
       }
     }
   });

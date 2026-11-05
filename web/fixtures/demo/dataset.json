@@ -3555,11 +3555,11 @@
     },
     {
       "sessionId": "d63e40d3-9038-40b2-a61c-45035d9070d6",
-      "label": "Overkill",
+      "label": "Shipped",
       "difficulty": 1,
       "kind": "fix",
       "confidence": 0.75,
-      "reason": "Shipped, but cost $90.81 vs a $90.81 median for difficulty 1 work.",
+      "reason": "Linked to 1 merged change(s).",
       "judge": {
         "engine": "heuristic",
         "at": "2026-11-06T12:00:00.000Z"
@@ -3867,11 +3867,11 @@
     },
     {
       "sessionId": "01963bf0-2b7e-45a5-a83f-c0a34cd09fc1",
-      "label": "Overkill",
+      "label": "Shipped",
       "difficulty": 1,
       "kind": "fix",
       "confidence": 0.75,
-      "reason": "Shipped, but cost $92.13 vs a $90.81 median for difficulty 1 work.",
+      "reason": "Linked to 1 merged change(s).",
       "judge": {
         "engine": "heuristic",
         "at": "2026-11-06T12:00:00.000Z"

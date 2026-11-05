@@ -3,7 +3,7 @@
 // Reverted, closed or unmerged work counts 0. Comparisons only happen inside a difficulty bucket.
 
 import { attributeCost } from "./match";
-import { sessionUsd } from "./parse";
+import { sessionUsd } from "./pricing";
 import { median, medianShippedCost } from "./heuristics";
 import type { BucketStat, Change, Judgement, PeriodSummary, Session, SessionLabel, SessionMatch, Task } from "./types";
 
@@ -102,7 +102,7 @@ export function summarize(opts: {
   let overkillExcess = 0;
   for (const s of inPeriod) {
     const j = judgeBy.get(s.id);
-    if (j?.label === "Overkill") overkillExcess += Math.max(0, sessionUsd(s) - (medians[j.difficulty] ?? 0));
+    if (j?.label === "Overkill") overkillExcess += Math.max(0, sessionUsd(s) - (medians[j.difficulty] ?? medians[2] ?? medians[1] ?? 0));
   }
   const wasteUsd = labelSpend.Looped + labelSpend.Abandoned + overkillExcess;
 

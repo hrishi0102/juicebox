@@ -3,7 +3,7 @@
 // Cache reads differ per model. Fast mode doubles the price on the Opus models that support it.
 // Checked against Claude Code's own `cost-state` records: the numbers match to the cent.
 
-import type { ModelCost, TokenCounts } from "./types";
+import type { ModelCost, Session, TokenCounts } from "./types";
 
 type Price = { input: number; output: number; cacheRead: number; longContext?: { over: number; input: number; output: number } };
 
@@ -131,4 +131,9 @@ export function totalTokens(t: TokenCounts) {
 export function isPremiumModel(model: string) {
   const m = normalizeModel(model);
   return m.includes("opus") || m.includes("fable") || m.includes("mythos");
+}
+
+/** The number we bill a session at: our own token pricing, or Claude Code's tracker if it saw more. */
+export function sessionUsd(s: Pick<Session, "cost">) {
+  return Math.max(s.cost.usd, s.cost.claudeReportedUsd ?? 0);
 }

@@ -10,10 +10,11 @@
 
 import { createReadStream, existsSync, readdirSync, statSync } from "node:fs";
 import { homedir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { createInterface } from "node:readline";
 import { execFileSync } from "node:child_process";
 import { addTokens, emptyModelCost, emptyTokens, priceUsage } from "./pricing";
+export { sessionUsd } from "./pricing";
 import type { GitPrRef, PrivateDigest, Session } from "./types";
 
 export const DEFAULT_LOG_ROOT = join(homedir(), ".claude", "projects");
@@ -356,11 +357,6 @@ export async function parseSession(sf: SessionFile): Promise<Session | undefined
   };
 }
 
-/** The number we bill a session at: our own token pricing, or Claude Code's tracker if it saw more. */
-export function sessionUsd(s: Pick<Session, "cost">) {
-  return Math.max(s.cost.usd, s.cost.claudeReportedUsd ?? 0);
-}
-
 function round(n: number, d: number) {
   const f = 10 ** d;
   return Math.round(n * f) / f;
@@ -409,6 +405,16 @@ function gitRemoteFor(cwd: string): string | null {
   return repo;
 }
 
+/** Find the GitHub repo of a file path by walking up to the nearest existing folder. */
+function repoForPath(file: string): string | null {
+  let dir = dirname(file);
+  for (let i = 0; i < 12 && dir.length > 1; i++) {
+    if (existsSync(dir)) return gitRemoteFor(dir);
+    dir = dirname(dir);
+  }
+  return null;
+}
+
 /**
  * Fill `session.repos` when the session itself did not record a PR URL:
  * 1. the git remote of the session's folder, if the folder still exists
@@ -431,8 +437,21 @@ export function resolveRepos(sessions: Session[]) {
       byCwd.set(s.cwd, set);
     }
   }
+  const knownByName = new Map<string, string>();
+  for (const r of known) knownByName.set(r.split("/")[1].toLowerCase(), r);
   for (const s of sessions) {
     if (s.repos.length) continue;
+    // The folder may hold several repos (or be gone). Edited files point at the real repo.
+    const fromFiles = new Map<string, number>();
+    for (const f of s.filesEdited.slice(0, 40)) {
+      // Folders get moved after the fact, so also match path segments against known repo names.
+      const r = repoForPath(f) ?? f.split("/").map((seg) => knownByName.get(seg.toLowerCase())).find(Boolean) ?? null;
+      if (r) fromFiles.set(r, (fromFiles.get(r) ?? 0) + 1);
+    }
+    if (fromFiles.size) {
+      s.repos = [...fromFiles.entries()].sort((x, y) => y[1] - x[1]).map(([r]) => r);
+      continue;
+    }
     const fromCwd = byCwd.get(s.cwd);
     if (fromCwd?.size === 1) {
       s.repos = [...fromCwd];
