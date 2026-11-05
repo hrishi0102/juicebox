@@ -13,7 +13,7 @@ In order. Items marked (you) need a sign-up, a captcha or a decision, so the ove
    - `npm run receipts -- arkiv acme-payments` (reads them back)
    - Open `/team` in demo mode: rows now say "on Arkiv".
    - Put the writer address (`npm run receipts -- doctor` shows whether the key is set; the publish command prints the address) into the README under "Arkiv".
-4. **Your own receipt**: in "My logs", go to a week with shipped work, click "Sign with wallet" (or set `RECEIPTS_SIGNER_KEY`), then "Share totals with team". Set your team id first: `npm run receipts -- team payman "Payman"`.
+4. **Your own receipt**: in "My logs", go to a week with shipped work, click "Sign with wallet" (or set `RECEIPTS_SIGNER_KEY`), then "Share totals with team". Set your team id first: `npm run receipts -- team my-team "My team"`.
 5. **Repo (you)**: create a public GitHub repo and push. Check `git log` first; nothing under `~/.receipts` or any `.jsonl` can be committed (a pre-commit hook blocks them), but read the diff anyway.
 6. **Live demo link (you, optional but 0G asks for one)**: deploy `web/` to Vercel in demo mode. Set `RECEIPTS_DATA_DIR=/tmp/receipts`. Scanning will not work there (no logs on a server), the demo team, signing with a wallet, verify and team pages will.
 7. **Video (you)**: 2:00 to 2:59, at least 720p, your own voice (no AI voiceover, no speed-up). Script below.

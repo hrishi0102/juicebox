@@ -64,7 +64,8 @@ export async function publishReceipt(r: SignedReceipt, opts: { team: string; lev
     shared.judges = [];
   }
   const m = r.message;
-  const { entityKey, txHash } = await wallet.createEntity(
+  const { entityKey, txHash } = await wallet
+    .createEntity(
     ReceiptSchema,
     {
       type: "receipt",
@@ -80,8 +81,22 @@ export async function publishReceipt(r: SignedReceipt, opts: { team: string; lev
       payload: stringToBytes(JSON.stringify(shared)),
     },
     { expiration: ExpirationTime.fromDays(opts.days ?? 120) },
-  );
+    )
+    .catch((e: unknown) => {
+      throw new Error(explainArkivError(e, account.address));
+    });
   return { entityKey: entityKey as string, txHash: txHash as string, writer: account.address };
+}
+
+/** The SDK wraps the real cause (often an empty wallet) in a vague message; dig it out. */
+export function explainArkivError(e: unknown, writer: string): string {
+  const parts: string[] = [];
+  let c: any = e;
+  for (let i = 0; c && i < 8; i++, c = c.cause) parts.push(String(c.details ?? ""), String(c.shortMessage ?? c.message ?? ""));
+  const text = parts.join(" ");
+  if (/insufficient funds/i.test(text)) return `The Arkiv writer wallet ${writer} has no tGLM for gas. Claim some at https://hub.arkiv.network/faucet and try again.`;
+  if (/rate limit|429/i.test(text)) return "The public Arkiv endpoint is rate limited. Add ARKIV_ACCESS_KEY (https://hub.arkiv.network/access-keys) and try again.";
+  return `Arkiv write failed: ${(parts.find((p) => p && p !== "undefined") ?? "unknown error").slice(0, 200)}`;
 }
 
 export type TeamReceipt = SignedReceipt & { arkiv: { key: string; owner?: string; expiresAt?: string }; verified: boolean };
