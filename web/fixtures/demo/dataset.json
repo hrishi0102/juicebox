@@ -1,0 +1,4344 @@
+{
+  "generatedAt": "2026-11-06T12:00:00.000Z",
+  "source": "demo",
+  "owner": "0xfFC57B874f841B7B849Ff3F194907A2e903F7a74",
+  "sessions": [
+    {
+      "id": "b1c73359-9b6c-4578-a363-ed13b87c9859",
+      "projectDir": "-Users-you-code-web-app",
+      "cwd": "/Users/you/code/web-app",
+      "repos": [
+        "acme-demo/web-app"
+      ],
+      "branches": [
+        "you/CI-cache"
+      ],
+      "startedAt": "2026-10-09T13:51:46.561Z",
+      "endedAt": "2026-10-09T15:38:46.561Z",
+      "activeMinutes": 107,
+      "title": "CI cache",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "cost": {
+        "usd": 6,
+        "tokens": {
+          "input": 7233,
+          "output": 180114,
+          "cacheRead": 13508554,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 375238
+        },
+        "byModel": {
+          "claude-sonnet-5-5": {
+            "input": 7233,
+            "output": 180114,
+            "cacheRead": 13508554,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 375238,
+            "usd": 6,
+            "requests": 114,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [
+        "/Users/you/code/web-app/src/chore/CI-cache-0.ts",
+        "/Users/you/code/web-app/src/chore/CI-cache-1.ts"
+      ],
+      "linesAdded": 87,
+      "linesRemoved": 11,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": [
+          {
+            "repo": "acme-demo/web-app",
+            "number": 100,
+            "url": "https://github.com/acme-demo/web-app/pull/100",
+            "action": "created"
+          }
+        ]
+      },
+      "signals": {
+        "userPrompts": 20,
+        "assistantTurns": 114,
+        "toolCalls": 104,
+        "toolErrors": 6,
+        "maxErrorStreak": 1,
+        "repeatedCommands": 1,
+        "maxEditsSameFile": 6,
+        "testRuns": 2,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 0,
+        "readOnlyRatio": 0.21913191687781364,
+        "subagents": 0
+      },
+      "tools": {
+        "Bash": 52,
+        "Edit": 26,
+        "Read": 26
+      }
+    },
+    {
+      "id": "b1780c58-e840-4c2b-ad9a-05a71283cf86",
+      "projectDir": "-Users-you-code-payments-api",
+      "cwd": "/Users/you/code/payments-api",
+      "repos": [
+        "acme-demo/payments-api"
+      ],
+      "branches": [
+        "you/rate-limit-per-API-key"
+      ],
+      "startedAt": "2026-10-10T11:52:17.940Z",
+      "endedAt": "2026-10-10T13:29:17.940Z",
+      "activeMinutes": 97,
+      "title": "rate limit per API key",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "cost": {
+        "usd": 37.14,
+        "tokens": {
+          "input": 6313,
+          "output": 1114339,
+          "cacheRead": 83575455,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 2321540
+        },
+        "byModel": {
+          "claude-sonnet-5-5": {
+            "input": 6313,
+            "output": 1114339,
+            "cacheRead": 83575455,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 2321540,
+            "usd": 37.14,
+            "requests": 129,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [
+        "/Users/you/code/payments-api/src/feature/rate-limit-per-API-key-0.ts",
+        "/Users/you/code/payments-api/src/feature/rate-limit-per-API-key-1.ts",
+        "/Users/you/code/payments-api/src/feature/rate-limit-per-API-key-2.ts",
+        "/Users/you/code/payments-api/src/feature/rate-limit-per-API-key-3.ts",
+        "/Users/you/code/payments-api/src/feature/rate-limit-per-API-key-4.ts",
+        "/Users/you/code/payments-api/src/feature/rate-limit-per-API-key-5.ts",
+        "/Users/you/code/payments-api/src/feature/rate-limit-per-API-key-6.ts",
+        "/Users/you/code/payments-api/src/feature/rate-limit-per-API-key-7.ts",
+        "/Users/you/code/payments-api/src/feature/rate-limit-per-API-key-8.ts"
+      ],
+      "linesAdded": 466,
+      "linesRemoved": 164,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": [
+          {
+            "repo": "acme-demo/payments-api",
+            "number": 101,
+            "url": "https://github.com/acme-demo/payments-api/pull/101",
+            "action": "created"
+          }
+        ]
+      },
+      "signals": {
+        "userPrompts": 21,
+        "assistantTurns": 129,
+        "toolCalls": 117,
+        "toolErrors": 4,
+        "maxErrorStreak": 1,
+        "repeatedCommands": 1,
+        "maxEditsSameFile": 4,
+        "testRuns": 5,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 0,
+        "readOnlyRatio": 0.301578480261378,
+        "subagents": 0
+      },
+      "tools": {
+        "Bash": 59,
+        "Edit": 29,
+        "Read": 29
+      }
+    },
+    {
+      "id": "d63e40d3-9038-40b2-a61c-45035d9070d6",
+      "projectDir": "-Users-you-code-payments-api",
+      "cwd": "/Users/you/code/payments-api",
+      "repos": [
+        "acme-demo/payments-api"
+      ],
+      "branches": [
+        "you/null-merchant-name-in-receipts"
+      ],
+      "startedAt": "2026-10-11T09:07:28.833Z",
+      "endedAt": "2026-10-11T10:15:28.833Z",
+      "activeMinutes": 68,
+      "title": "null merchant name in receipts",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "cost": {
+        "usd": 90.81,
+        "tokens": {
+          "input": 779,
+          "output": 1362153,
+          "cacheRead": 204322909,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 2837818
+        },
+        "byModel": {
+          "claude-opus-5-5": {
+            "input": 779,
+            "output": 1362153,
+            "cacheRead": 204322909,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 2837818,
+            "usd": 90.81,
+            "requests": 142,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [
+        "/Users/you/code/payments-api/src/fix/null-merchant-name-in-receipts-0.ts"
+      ],
+      "linesAdded": 13,
+      "linesRemoved": 4,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": [
+          {
+            "repo": "acme-demo/payments-api",
+            "number": 102,
+            "url": "https://github.com/acme-demo/payments-api/pull/102",
+            "action": "created"
+          }
+        ]
+      },
+      "signals": {
+        "userPrompts": 14,
+        "assistantTurns": 142,
+        "toolCalls": 129,
+        "toolErrors": 5,
+        "maxErrorStreak": 1,
+        "repeatedCommands": 0,
+        "maxEditsSameFile": 4,
+        "testRuns": 4,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 0,
+        "readOnlyRatio": 0.46513623169157653,
+        "subagents": 0
+      },
+      "tools": {
+        "Bash": 65,
+        "Edit": 32,
+        "Read": 32
+      }
+    },
+    {
+      "id": "da54bcfb-3128-4786-aa10-1c6985830e1c",
+      "projectDir": "-Users-you-code-payments-api",
+      "cwd": "/Users/you/code/payments-api",
+      "repos": [
+        "acme-demo/payments-api"
+      ],
+      "branches": [
+        "you/add-refund-status-webhook"
+      ],
+      "startedAt": "2026-10-12T10:02:10.302Z",
+      "endedAt": "2026-10-12T11:39:10.302Z",
+      "activeMinutes": 97,
+      "title": "add refund status webhook",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "cost": {
+        "usd": 17.8,
+        "tokens": {
+          "input": 19427,
+          "output": 267007,
+          "cacheRead": 40050975,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 556264
+        },
+        "byModel": {
+          "claude-opus-5-5": {
+            "input": 19427,
+            "output": 267007,
+            "cacheRead": 40050975,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 556264,
+            "usd": 17.8,
+            "requests": 190,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [
+        "/Users/you/code/payments-api/src/feature/add-refund-status-webhook-0.ts",
+        "/Users/you/code/payments-api/src/feature/add-refund-status-webhook-1.ts",
+        "/Users/you/code/payments-api/src/feature/add-refund-status-webhook-2.ts",
+        "/Users/you/code/payments-api/src/feature/add-refund-status-webhook-3.ts",
+        "/Users/you/code/payments-api/src/feature/add-refund-status-webhook-4.ts",
+        "/Users/you/code/payments-api/src/feature/add-refund-status-webhook-5.ts"
+      ],
+      "linesAdded": 242,
+      "linesRemoved": 33,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": [
+          {
+            "repo": "acme-demo/payments-api",
+            "number": 103,
+            "url": "https://github.com/acme-demo/payments-api/pull/103",
+            "action": "created"
+          }
+        ]
+      },
+      "signals": {
+        "userPrompts": 21,
+        "assistantTurns": 190,
+        "toolCalls": 173,
+        "toolErrors": 2,
+        "maxErrorStreak": 0,
+        "repeatedCommands": 0,
+        "maxEditsSameFile": 3,
+        "testRuns": 3,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 0,
+        "readOnlyRatio": 0.34814600278623403,
+        "subagents": 0
+      },
+      "tools": {
+        "Bash": 87,
+        "Edit": 43,
+        "Read": 43
+      }
+    },
+    {
+      "id": "66121899-ae5c-4b4c-a83b-d970cf88bd39",
+      "projectDir": "-Users-you-code-infra",
+      "cwd": "/Users/you/code/infra",
+      "repos": [
+        "acme-demo/infra"
+      ],
+      "branches": [
+        "you/bump-dependencies"
+      ],
+      "startedAt": "2026-10-13T03:11:50.532Z",
+      "endedAt": "2026-10-13T04:39:50.532Z",
+      "activeMinutes": 88,
+      "title": "bump dependencies",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "cost": {
+        "usd": 18.88,
+        "tokens": {
+          "input": 5898,
+          "output": 283177,
+          "cacheRead": 42476479,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 589951
+        },
+        "byModel": {
+          "claude-opus-5-5": {
+            "input": 5898,
+            "output": 283177,
+            "cacheRead": 42476479,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 589951,
+            "usd": 18.88,
+            "requests": 86,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [
+        "/Users/you/code/infra/src/chore/bump-dependencies-0.ts",
+        "/Users/you/code/infra/src/chore/bump-dependencies-1.ts",
+        "/Users/you/code/infra/src/chore/bump-dependencies-2.ts",
+        "/Users/you/code/infra/src/chore/bump-dependencies-3.ts",
+        "/Users/you/code/infra/src/chore/bump-dependencies-4.ts"
+      ],
+      "linesAdded": 162,
+      "linesRemoved": 72,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": [
+          {
+            "repo": "acme-demo/infra",
+            "number": 104,
+            "url": "https://github.com/acme-demo/infra/pull/104",
+            "action": "created"
+          }
+        ]
+      },
+      "signals": {
+        "userPrompts": 10,
+        "assistantTurns": 86,
+        "toolCalls": 78,
+        "toolErrors": 6,
+        "maxErrorStreak": 2,
+        "repeatedCommands": 0,
+        "maxEditsSameFile": 1,
+        "testRuns": 1,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 0,
+        "readOnlyRatio": 0.45650978782214224,
+        "subagents": 0
+      },
+      "tools": {
+        "Bash": 39,
+        "Edit": 20,
+        "Read": 20
+      }
+    },
+    {
+      "id": "f9efa6e7-3fc3-484c-a893-61b07499ad69",
+      "projectDir": "-Users-you-code-infra",
+      "cwd": "/Users/you/code/infra",
+      "repos": [
+        "acme-demo/infra"
+      ],
+      "branches": [],
+      "startedAt": "2026-10-14T01:45:21.929Z",
+      "endedAt": "2026-10-14T02:18:21.929Z",
+      "activeMinutes": 33,
+      "title": "Compare queue options for payouts",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "cost": {
+        "usd": 2.03,
+        "tokens": {
+          "input": 11030,
+          "output": 30400,
+          "cacheRead": 4560051,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 63334
+        },
+        "byModel": {
+          "claude-opus-5-5": {
+            "input": 11030,
+            "output": 30400,
+            "cacheRead": 4560051,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 63334,
+            "usd": 2.03,
+            "requests": 66,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [],
+      "linesAdded": 0,
+      "linesRemoved": 0,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": []
+      },
+      "signals": {
+        "userPrompts": 4,
+        "assistantTurns": 66,
+        "toolCalls": 60,
+        "toolErrors": 3,
+        "maxErrorStreak": 1,
+        "repeatedCommands": 0,
+        "maxEditsSameFile": 4,
+        "testRuns": 4,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 0,
+        "readOnlyRatio": 0.85,
+        "subagents": 0
+      },
+      "tools": {
+        "Read": 20,
+        "Grep": 9,
+        "WebSearch": 3
+      }
+    },
+    {
+      "id": "1609e340-3ce4-42f9-a45d-ddb460cbe5fd",
+      "projectDir": "-Users-you-code-web-app",
+      "cwd": "/Users/you/code/web-app",
+      "repos": [
+        "acme-demo/web-app"
+      ],
+      "branches": [
+        "you/webhook-signature-check"
+      ],
+      "startedAt": "2026-10-14T21:47:59.612Z",
+      "endedAt": "2026-10-14T23:36:59.612Z",
+      "activeMinutes": 109,
+      "title": "webhook signature check",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "cost": {
+        "usd": 23.53,
+        "tokens": {
+          "input": 2608,
+          "output": 352937,
+          "cacheRead": 52940476,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 735284
+        },
+        "byModel": {
+          "claude-opus-5-5": {
+            "input": 2608,
+            "output": 352937,
+            "cacheRead": 52940476,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 735284,
+            "usd": 23.53,
+            "requests": 196,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [
+        "/Users/you/code/web-app/src/fix/webhook-signature-check-0.ts",
+        "/Users/you/code/web-app/src/fix/webhook-signature-check-1.ts"
+      ],
+      "linesAdded": 143,
+      "linesRemoved": 16,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": [
+          {
+            "repo": "acme-demo/web-app",
+            "number": 105,
+            "url": "https://github.com/acme-demo/web-app/pull/105",
+            "action": "created"
+          }
+        ]
+      },
+      "signals": {
+        "userPrompts": 14,
+        "assistantTurns": 196,
+        "toolCalls": 178,
+        "toolErrors": 2,
+        "maxErrorStreak": 1,
+        "repeatedCommands": 1,
+        "maxEditsSameFile": 3,
+        "testRuns": 2,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 0,
+        "readOnlyRatio": 0.4244413576088846,
+        "subagents": 1
+      },
+      "tools": {
+        "Bash": 89,
+        "Edit": 45,
+        "Read": 45
+      }
+    },
+    {
+      "id": "56d3d011-804a-4fd6-a1c5-ba2c34a5d20b",
+      "projectDir": "-Users-you-code-web-app",
+      "cwd": "/Users/you/code/web-app",
+      "repos": [
+        "acme-demo/web-app"
+      ],
+      "branches": [],
+      "startedAt": "2026-10-15T21:25:59.285Z",
+      "endedAt": "2026-10-15T22:04:59.285Z",
+      "activeMinutes": 39,
+      "title": "Why is the webhook test slow?",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "cost": {
+        "usd": 5.86,
+        "tokens": {
+          "input": 17838,
+          "output": 87918,
+          "cacheRead": 13187640,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 183162
+        },
+        "byModel": {
+          "claude-opus-5-5": {
+            "input": 17838,
+            "output": 87918,
+            "cacheRead": 13187640,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 183162,
+            "usd": 5.86,
+            "requests": 54,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [],
+      "linesAdded": 0,
+      "linesRemoved": 0,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": []
+      },
+      "signals": {
+        "userPrompts": 5,
+        "assistantTurns": 54,
+        "toolCalls": 49,
+        "toolErrors": 2,
+        "maxErrorStreak": 0,
+        "repeatedCommands": 0,
+        "maxEditsSameFile": 2,
+        "testRuns": 5,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 0,
+        "readOnlyRatio": 0.85,
+        "subagents": 2
+      },
+      "tools": {
+        "Read": 20,
+        "Grep": 9,
+        "WebSearch": 3
+      }
+    },
+    {
+      "id": "4550b1bb-f045-46f2-afca-86cef0f6de16",
+      "projectDir": "-Users-you-code-web-app",
+      "cwd": "/Users/you/code/web-app",
+      "repos": [
+        "acme-demo/web-app"
+      ],
+      "branches": [
+        "you/timezone-bug-in-settlement-rep"
+      ],
+      "startedAt": "2026-10-16T18:21:09.908Z",
+      "endedAt": "2026-10-16T20:22:09.908Z",
+      "activeMinutes": 121,
+      "title": "timezone bug in settlement report",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "cost": {
+        "usd": 46.07,
+        "tokens": {
+          "input": 7636,
+          "output": 690986,
+          "cacheRead": 103647904,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 1439554
+        },
+        "byModel": {
+          "claude-opus-5-5": {
+            "input": 7636,
+            "output": 690986,
+            "cacheRead": 103647904,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 1439554,
+            "usd": 46.07,
+            "requests": 187,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [
+        "/Users/you/code/web-app/src/fix/timezone-bug-in-settlement-report-0.ts",
+        "/Users/you/code/web-app/src/fix/timezone-bug-in-settlement-report-1.ts",
+        "/Users/you/code/web-app/src/fix/timezone-bug-in-settlement-report-2.ts",
+        "/Users/you/code/web-app/src/fix/timezone-bug-in-settlement-report-3.ts",
+        "/Users/you/code/web-app/src/fix/timezone-bug-in-settlement-report-4.ts",
+        "/Users/you/code/web-app/src/fix/timezone-bug-in-settlement-report-5.ts"
+      ],
+      "linesAdded": 355,
+      "linesRemoved": 79,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": [
+          {
+            "repo": "acme-demo/web-app",
+            "number": 106,
+            "url": "https://github.com/acme-demo/web-app/pull/106",
+            "action": "created"
+          }
+        ]
+      },
+      "signals": {
+        "userPrompts": 21,
+        "assistantTurns": 187,
+        "toolCalls": 170,
+        "toolErrors": 68,
+        "maxErrorStreak": 7,
+        "repeatedCommands": 4,
+        "maxEditsSameFile": 20,
+        "testRuns": 12,
+        "apiErrors": 0,
+        "compactions": 1,
+        "interruptions": 3,
+        "readOnlyRatio": 0.4105923859635368,
+        "subagents": 0
+      },
+      "tools": {
+        "Bash": 85,
+        "Edit": 43,
+        "Read": 43
+      }
+    },
+    {
+      "id": "b85148c2-724e-47e5-a2b4-9c84ca67685d",
+      "projectDir": "-Users-you-code-payments-api",
+      "cwd": "/Users/you/code/payments-api",
+      "repos": [
+        "acme-demo/payments-api"
+      ],
+      "branches": [
+        "you/rate-limit-per-API-key"
+      ],
+      "startedAt": "2026-10-17T20:13:20.766Z",
+      "endedAt": "2026-10-17T21:38:20.766Z",
+      "activeMinutes": 85,
+      "title": "rate limit per API key",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "cost": {
+        "usd": 35.09,
+        "tokens": {
+          "input": 4482,
+          "output": 1052721,
+          "cacheRead": 78954081,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 2193169
+        },
+        "byModel": {
+          "claude-sonnet-5-5": {
+            "input": 4482,
+            "output": 1052721,
+            "cacheRead": 78954081,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 2193169,
+            "usd": 35.09,
+            "requests": 85,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [
+        "/Users/you/code/payments-api/src/feature/rate-limit-per-API-key-0.ts",
+        "/Users/you/code/payments-api/src/feature/rate-limit-per-API-key-1.ts",
+        "/Users/you/code/payments-api/src/feature/rate-limit-per-API-key-2.ts",
+        "/Users/you/code/payments-api/src/feature/rate-limit-per-API-key-3.ts",
+        "/Users/you/code/payments-api/src/feature/rate-limit-per-API-key-4.ts",
+        "/Users/you/code/payments-api/src/feature/rate-limit-per-API-key-5.ts",
+        "/Users/you/code/payments-api/src/feature/rate-limit-per-API-key-6.ts",
+        "/Users/you/code/payments-api/src/feature/rate-limit-per-API-key-7.ts",
+        "/Users/you/code/payments-api/src/feature/rate-limit-per-API-key-8.ts",
+        "/Users/you/code/payments-api/src/feature/rate-limit-per-API-key-9.ts"
+      ],
+      "linesAdded": 314,
+      "linesRemoved": 49,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": [
+          {
+            "repo": "acme-demo/payments-api",
+            "number": 107,
+            "url": "https://github.com/acme-demo/payments-api/pull/107",
+            "action": "created"
+          }
+        ]
+      },
+      "signals": {
+        "userPrompts": 17,
+        "assistantTurns": 85,
+        "toolCalls": 77,
+        "toolErrors": 4,
+        "maxErrorStreak": 2,
+        "repeatedCommands": 1,
+        "maxEditsSameFile": 5,
+        "testRuns": 4,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 0,
+        "readOnlyRatio": 0.4774004180449992,
+        "subagents": 0
+      },
+      "tools": {
+        "Bash": 39,
+        "Edit": 19,
+        "Read": 19
+      }
+    },
+    {
+      "id": "635cd3b1-b8d8-47cf-aac9-8d441e4524bd",
+      "projectDir": "-Users-you-code-payments-api",
+      "cwd": "/Users/you/code/payments-api",
+      "repos": [
+        "acme-demo/payments-api"
+      ],
+      "branches": [
+        "you/bump-dependencies"
+      ],
+      "startedAt": "2026-10-18T13:32:50.034Z",
+      "endedAt": "2026-10-18T14:10:50.034Z",
+      "activeMinutes": 38,
+      "title": "bump dependencies",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "cost": {
+        "usd": 20.52,
+        "tokens": {
+          "input": 15067,
+          "output": 615697,
+          "cacheRead": 46177298,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 1282703
+        },
+        "byModel": {
+          "claude-sonnet-5-5": {
+            "input": 15067,
+            "output": 615697,
+            "cacheRead": 46177298,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 1282703,
+            "usd": 20.52,
+            "requests": 81,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [
+        "/Users/you/code/payments-api/src/chore/bump-dependencies-0.ts",
+        "/Users/you/code/payments-api/src/chore/bump-dependencies-1.ts",
+        "/Users/you/code/payments-api/src/chore/bump-dependencies-2.ts",
+        "/Users/you/code/payments-api/src/chore/bump-dependencies-3.ts",
+        "/Users/you/code/payments-api/src/chore/bump-dependencies-4.ts"
+      ],
+      "linesAdded": 333,
+      "linesRemoved": 98,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": [
+          {
+            "repo": "acme-demo/payments-api",
+            "number": 108,
+            "url": "https://github.com/acme-demo/payments-api/pull/108",
+            "action": "created"
+          }
+        ]
+      },
+      "signals": {
+        "userPrompts": 8,
+        "assistantTurns": 81,
+        "toolCalls": 74,
+        "toolErrors": 4,
+        "maxErrorStreak": 1,
+        "repeatedCommands": 1,
+        "maxEditsSameFile": 2,
+        "testRuns": 4,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 0,
+        "readOnlyRatio": 0.3452264370629564,
+        "subagents": 0
+      },
+      "tools": {
+        "Bash": 37,
+        "Edit": 19,
+        "Read": 19
+      }
+    },
+    {
+      "id": "46af98dc-4e18-4cd5-a931-e02543d0247c",
+      "projectDir": "-Users-you-code-infra",
+      "cwd": "/Users/you/code/infra",
+      "repos": [
+        "acme-demo/infra"
+      ],
+      "branches": [
+        "you/cover-payout-edge-cases"
+      ],
+      "startedAt": "2026-10-19T12:31:39.543Z",
+      "endedAt": "2026-10-19T13:13:39.543Z",
+      "activeMinutes": 42,
+      "title": "cover payout edge cases",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "cost": {
+        "usd": 13.84,
+        "tokens": {
+          "input": 14895,
+          "output": 207590,
+          "cacheRead": 31138549,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 432480
+        },
+        "byModel": {
+          "claude-opus-5-5": {
+            "input": 14895,
+            "output": 207590,
+            "cacheRead": 31138549,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 432480,
+            "usd": 13.84,
+            "requests": 79,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [
+        "/Users/you/code/infra/src/test/cover-payout-edge-cases-0.ts",
+        "/Users/you/code/infra/src/test/cover-payout-edge-cases-1.ts",
+        "/Users/you/code/infra/src/test/cover-payout-edge-cases-2.ts",
+        "/Users/you/code/infra/src/test/cover-payout-edge-cases-3.ts",
+        "/Users/you/code/infra/src/test/cover-payout-edge-cases-4.ts",
+        "/Users/you/code/infra/src/test/cover-payout-edge-cases-5.ts",
+        "/Users/you/code/infra/src/test/cover-payout-edge-cases-6.ts"
+      ],
+      "linesAdded": 340,
+      "linesRemoved": 113,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": [
+          {
+            "repo": "acme-demo/infra",
+            "number": 109,
+            "url": "https://github.com/acme-demo/infra/pull/109",
+            "action": "created"
+          }
+        ]
+      },
+      "signals": {
+        "userPrompts": 5,
+        "assistantTurns": 79,
+        "toolCalls": 72,
+        "toolErrors": 2,
+        "maxErrorStreak": 1,
+        "repeatedCommands": 0,
+        "maxEditsSameFile": 6,
+        "testRuns": 5,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 0,
+        "readOnlyRatio": 0.3346072553656996,
+        "subagents": 0
+      },
+      "tools": {
+        "Bash": 36,
+        "Edit": 18,
+        "Read": 18
+      }
+    },
+    {
+      "id": "a6e712fe-5174-4695-a0b5-0d548d5ec95b",
+      "projectDir": "-Users-you-code-infra",
+      "cwd": "/Users/you/code/infra",
+      "repos": [
+        "acme-demo/infra"
+      ],
+      "branches": [],
+      "startedAt": "2026-10-20T09:27:03.651Z",
+      "endedAt": "2026-10-20T09:41:03.651Z",
+      "activeMinutes": 14,
+      "title": "How does settlement batching work?",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "cost": {
+        "usd": 1.2,
+        "tokens": {
+          "input": 19490,
+          "output": 17926,
+          "cacheRead": 2688846,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 37345
+        },
+        "byModel": {
+          "claude-opus-5-5": {
+            "input": 19490,
+            "output": 17926,
+            "cacheRead": 2688846,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 37345,
+            "usd": 1.2,
+            "requests": 18,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [],
+      "linesAdded": 0,
+      "linesRemoved": 0,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": []
+      },
+      "signals": {
+        "userPrompts": 3,
+        "assistantTurns": 18,
+        "toolCalls": 16,
+        "toolErrors": 1,
+        "maxErrorStreak": 1,
+        "repeatedCommands": 1,
+        "maxEditsSameFile": 3,
+        "testRuns": 3,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 0,
+        "readOnlyRatio": 0.85,
+        "subagents": 1
+      },
+      "tools": {
+        "Read": 20,
+        "Grep": 9,
+        "WebSearch": 3
+      }
+    },
+    {
+      "id": "b4177adf-95d6-43e4-aa1e-17c18255c110",
+      "projectDir": "-Users-you-code-web-app",
+      "cwd": "/Users/you/code/web-app",
+      "repos": [
+        "acme-demo/web-app"
+      ],
+      "branches": [
+        "you/flaky-login-redirect"
+      ],
+      "startedAt": "2026-10-21T08:56:34.534Z",
+      "endedAt": "2026-10-21T09:26:34.534Z",
+      "activeMinutes": 30,
+      "title": "flaky login redirect",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "cost": {
+        "usd": 12.03,
+        "tokens": {
+          "input": 14165,
+          "output": 180459,
+          "cacheRead": 27068892,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 375957
+        },
+        "byModel": {
+          "claude-opus-5-5": {
+            "input": 14165,
+            "output": 180459,
+            "cacheRead": 27068892,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 375957,
+            "usd": 12.03,
+            "requests": 66,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [
+        "/Users/you/code/web-app/src/fix/flaky-login-redirect-0.ts",
+        "/Users/you/code/web-app/src/fix/flaky-login-redirect-1.ts",
+        "/Users/you/code/web-app/src/fix/flaky-login-redirect-2.ts",
+        "/Users/you/code/web-app/src/fix/flaky-login-redirect-3.ts",
+        "/Users/you/code/web-app/src/fix/flaky-login-redirect-4.ts",
+        "/Users/you/code/web-app/src/fix/flaky-login-redirect-5.ts",
+        "/Users/you/code/web-app/src/fix/flaky-login-redirect-6.ts",
+        "/Users/you/code/web-app/src/fix/flaky-login-redirect-7.ts"
+      ],
+      "linesAdded": 213,
+      "linesRemoved": 71,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": [
+          {
+            "repo": "acme-demo/web-app",
+            "number": 110,
+            "url": "https://github.com/acme-demo/web-app/pull/110",
+            "action": "created"
+          }
+        ]
+      },
+      "signals": {
+        "userPrompts": 5,
+        "assistantTurns": 66,
+        "toolCalls": 60,
+        "toolErrors": 3,
+        "maxErrorStreak": 2,
+        "repeatedCommands": 0,
+        "maxEditsSameFile": 1,
+        "testRuns": 4,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 0,
+        "readOnlyRatio": 0.4330928266281262,
+        "subagents": 0
+      },
+      "tools": {
+        "Bash": 30,
+        "Edit": 15,
+        "Read": 15
+      }
+    },
+    {
+      "id": "2a262bf3-9288-469e-a9f0-e7ffa743a9b4",
+      "projectDir": "-Users-you-code-web-app",
+      "cwd": "/Users/you/code/web-app",
+      "repos": [
+        "acme-demo/web-app"
+      ],
+      "branches": [
+        "you/double-charge-on-retry"
+      ],
+      "startedAt": "2026-10-22T07:57:31.805Z",
+      "endedAt": "2026-10-22T09:32:31.805Z",
+      "activeMinutes": 95,
+      "title": "double charge on retry",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "cost": {
+        "usd": 9.25,
+        "tokens": {
+          "input": 3240,
+          "output": 277416,
+          "cacheRead": 20806178,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 577949
+        },
+        "byModel": {
+          "claude-sonnet-5-5": {
+            "input": 3240,
+            "output": 277416,
+            "cacheRead": 20806178,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 577949,
+            "usd": 9.25,
+            "requests": 195,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [
+        "/Users/you/code/web-app/src/fix/double-charge-on-retry-0.ts",
+        "/Users/you/code/web-app/src/fix/double-charge-on-retry-1.ts",
+        "/Users/you/code/web-app/src/fix/double-charge-on-retry-2.ts",
+        "/Users/you/code/web-app/src/fix/double-charge-on-retry-3.ts",
+        "/Users/you/code/web-app/src/fix/double-charge-on-retry-4.ts",
+        "/Users/you/code/web-app/src/fix/double-charge-on-retry-5.ts",
+        "/Users/you/code/web-app/src/fix/double-charge-on-retry-6.ts"
+      ],
+      "linesAdded": 333,
+      "linesRemoved": 91,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": [
+          {
+            "repo": "acme-demo/web-app",
+            "number": 111,
+            "url": "https://github.com/acme-demo/web-app/pull/111",
+            "action": "created"
+          }
+        ]
+      },
+      "signals": {
+        "userPrompts": 14,
+        "assistantTurns": 195,
+        "toolCalls": 177,
+        "toolErrors": 3,
+        "maxErrorStreak": 1,
+        "repeatedCommands": 0,
+        "maxEditsSameFile": 3,
+        "testRuns": 4,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 0,
+        "readOnlyRatio": 0.3354917585616931,
+        "subagents": 0
+      },
+      "tools": {
+        "Bash": 89,
+        "Edit": 44,
+        "Read": 44
+      }
+    },
+    {
+      "id": "bb418c9b-0def-44c5-a774-607f97aecef9",
+      "projectDir": "-Users-you-code-web-app",
+      "cwd": "/Users/you/code/web-app",
+      "repos": [
+        "acme-demo/web-app"
+      ],
+      "branches": [
+        "you/runbook-for-incidents"
+      ],
+      "startedAt": "2026-10-23T00:02:49.958Z",
+      "endedAt": "2026-10-23T01:34:49.958Z",
+      "activeMinutes": 92,
+      "title": "runbook for incidents",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "cost": {
+        "usd": 22.19,
+        "tokens": {
+          "input": 2239,
+          "output": 332905,
+          "cacheRead": 49935746,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 693552
+        },
+        "byModel": {
+          "claude-opus-5-5": {
+            "input": 2239,
+            "output": 332905,
+            "cacheRead": 49935746,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 693552,
+            "usd": 22.19,
+            "requests": 97,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [
+        "/Users/you/code/web-app/src/docs/runbook-for-incidents-0.ts",
+        "/Users/you/code/web-app/src/docs/runbook-for-incidents-1.ts",
+        "/Users/you/code/web-app/src/docs/runbook-for-incidents-2.ts",
+        "/Users/you/code/web-app/src/docs/runbook-for-incidents-3.ts",
+        "/Users/you/code/web-app/src/docs/runbook-for-incidents-4.ts",
+        "/Users/you/code/web-app/src/docs/runbook-for-incidents-5.ts",
+        "/Users/you/code/web-app/src/docs/runbook-for-incidents-6.ts",
+        "/Users/you/code/web-app/src/docs/runbook-for-incidents-7.ts",
+        "/Users/you/code/web-app/src/docs/runbook-for-incidents-8.ts",
+        "/Users/you/code/web-app/src/docs/runbook-for-incidents-9.ts",
+        "/Users/you/code/web-app/src/docs/runbook-for-incidents-10.ts",
+        "/Users/you/code/web-app/src/docs/runbook-for-incidents-11.ts",
+        "/Users/you/code/web-app/src/docs/runbook-for-incidents-12.ts"
+      ],
+      "linesAdded": 469,
+      "linesRemoved": 203,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": [
+          {
+            "repo": "acme-demo/web-app",
+            "number": 112,
+            "url": "https://github.com/acme-demo/web-app/pull/112",
+            "action": "created"
+          }
+        ]
+      },
+      "signals": {
+        "userPrompts": 19,
+        "assistantTurns": 97,
+        "toolCalls": 88,
+        "toolErrors": 6,
+        "maxErrorStreak": 2,
+        "repeatedCommands": 1,
+        "maxEditsSameFile": 5,
+        "testRuns": 3,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 0,
+        "readOnlyRatio": 0.2930344462860376,
+        "subagents": 0
+      },
+      "tools": {
+        "Bash": 44,
+        "Edit": 22,
+        "Read": 22
+      }
+    },
+    {
+      "id": "de404fe5-8b13-40a5-ad0e-93064a03f0f1",
+      "projectDir": "-Users-you-code-infra",
+      "cwd": "/Users/you/code/infra",
+      "repos": [
+        "acme-demo/infra"
+      ],
+      "branches": [],
+      "startedAt": "2026-10-24T01:24:49.471Z",
+      "endedAt": "2026-10-24T01:39:49.471Z",
+      "activeMinutes": 15,
+      "title": "How does settlement batching work?",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "cost": {
+        "usd": 4.67,
+        "tokens": {
+          "input": 15989,
+          "output": 69995,
+          "cacheRead": 10499235,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 145823
+        },
+        "byModel": {
+          "claude-opus-5-5": {
+            "input": 15989,
+            "output": 69995,
+            "cacheRead": 10499235,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 145823,
+            "usd": 4.67,
+            "requests": 31,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [],
+      "linesAdded": 0,
+      "linesRemoved": 0,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": []
+      },
+      "signals": {
+        "userPrompts": 3,
+        "assistantTurns": 31,
+        "toolCalls": 28,
+        "toolErrors": 0,
+        "maxErrorStreak": 0,
+        "repeatedCommands": 1,
+        "maxEditsSameFile": 4,
+        "testRuns": 4,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 0,
+        "readOnlyRatio": 0.85,
+        "subagents": 0
+      },
+      "tools": {
+        "Read": 20,
+        "Grep": 9,
+        "WebSearch": 3
+      }
+    },
+    {
+      "id": "2d617c03-061d-43e1-ac78-0aaa1ba5f58d",
+      "projectDir": "-Users-you-code-web-app",
+      "cwd": "/Users/you/code/web-app",
+      "repos": [
+        "acme-demo/web-app"
+      ],
+      "branches": [
+        "you/add-refund-status-webhook"
+      ],
+      "startedAt": "2026-10-24T23:48:07.827Z",
+      "endedAt": "2026-10-25T01:33:07.827Z",
+      "activeMinutes": 105,
+      "title": "add refund status webhook",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "cost": {
+        "usd": 41.14,
+        "tokens": {
+          "input": 4267,
+          "output": 1234282,
+          "cacheRead": 92571129,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 2571420
+        },
+        "byModel": {
+          "claude-sonnet-5-5": {
+            "input": 4267,
+            "output": 1234282,
+            "cacheRead": 92571129,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 2571420,
+            "usd": 41.14,
+            "requests": 212,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [
+        "/Users/you/code/web-app/src/feature/add-refund-status-webhook-0.ts",
+        "/Users/you/code/web-app/src/feature/add-refund-status-webhook-1.ts",
+        "/Users/you/code/web-app/src/feature/add-refund-status-webhook-2.ts",
+        "/Users/you/code/web-app/src/feature/add-refund-status-webhook-3.ts",
+        "/Users/you/code/web-app/src/feature/add-refund-status-webhook-4.ts",
+        "/Users/you/code/web-app/src/feature/add-refund-status-webhook-5.ts",
+        "/Users/you/code/web-app/src/feature/add-refund-status-webhook-6.ts",
+        "/Users/you/code/web-app/src/feature/add-refund-status-webhook-7.ts"
+      ],
+      "linesAdded": 447,
+      "linesRemoved": 70,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": [
+          {
+            "repo": "acme-demo/web-app",
+            "number": 113,
+            "url": "https://github.com/acme-demo/web-app/pull/113",
+            "action": "created"
+          }
+        ]
+      },
+      "signals": {
+        "userPrompts": 13,
+        "assistantTurns": 212,
+        "toolCalls": 193,
+        "toolErrors": 12,
+        "maxErrorStreak": 1,
+        "repeatedCommands": 0,
+        "maxEditsSameFile": 5,
+        "testRuns": 2,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 0,
+        "readOnlyRatio": 0.35758440154604615,
+        "subagents": 0
+      },
+      "tools": {
+        "Bash": 97,
+        "Edit": 48,
+        "Read": 48
+      }
+    },
+    {
+      "id": "d5f29bfe-7c9a-472d-ad2c-6af1a4a9e85d",
+      "projectDir": "-Users-you-code-infra",
+      "cwd": "/Users/you/code/infra",
+      "repos": [
+        "acme-demo/infra"
+      ],
+      "branches": [
+        "you/webhook-signature-check"
+      ],
+      "startedAt": "2026-10-25T21:17:49.066Z",
+      "endedAt": "2026-10-25T23:07:49.066Z",
+      "activeMinutes": 110,
+      "title": "webhook signature check",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "cost": {
+        "usd": 30.1,
+        "tokens": {
+          "input": 18558,
+          "output": 451554,
+          "cacheRead": 67733085,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 940737
+        },
+        "byModel": {
+          "claude-opus-5-5": {
+            "input": 18558,
+            "output": 451554,
+            "cacheRead": 67733085,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 940737,
+            "usd": 30.1,
+            "requests": 165,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [
+        "/Users/you/code/infra/src/fix/webhook-signature-check-0.ts",
+        "/Users/you/code/infra/src/fix/webhook-signature-check-1.ts",
+        "/Users/you/code/infra/src/fix/webhook-signature-check-2.ts",
+        "/Users/you/code/infra/src/fix/webhook-signature-check-3.ts",
+        "/Users/you/code/infra/src/fix/webhook-signature-check-4.ts",
+        "/Users/you/code/infra/src/fix/webhook-signature-check-5.ts",
+        "/Users/you/code/infra/src/fix/webhook-signature-check-6.ts",
+        "/Users/you/code/infra/src/fix/webhook-signature-check-7.ts",
+        "/Users/you/code/infra/src/fix/webhook-signature-check-8.ts",
+        "/Users/you/code/infra/src/fix/webhook-signature-check-9.ts"
+      ],
+      "linesAdded": 592,
+      "linesRemoved": 292,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": [
+          {
+            "repo": "acme-demo/infra",
+            "number": 114,
+            "url": "https://github.com/acme-demo/infra/pull/114",
+            "action": "created"
+          }
+        ]
+      },
+      "signals": {
+        "userPrompts": 13,
+        "assistantTurns": 165,
+        "toolCalls": 150,
+        "toolErrors": 5,
+        "maxErrorStreak": 1,
+        "repeatedCommands": 1,
+        "maxEditsSameFile": 5,
+        "testRuns": 4,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 0,
+        "readOnlyRatio": 0.2468141396995634,
+        "subagents": 0
+      },
+      "tools": {
+        "Bash": 75,
+        "Edit": 38,
+        "Read": 38
+      }
+    },
+    {
+      "id": "c94e83de-c601-4668-a091-d9cec2607bfd",
+      "projectDir": "-Users-you-code-infra",
+      "cwd": "/Users/you/code/infra",
+      "repos": [
+        "acme-demo/infra"
+      ],
+      "branches": [
+        "you/rate-limit-per-API-key"
+      ],
+      "startedAt": "2026-10-26T17:52:21.930Z",
+      "endedAt": "2026-10-26T19:28:21.930Z",
+      "activeMinutes": 96,
+      "title": "rate limit per API key",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "cost": {
+        "usd": 17.52,
+        "tokens": {
+          "input": 2108,
+          "output": 525744,
+          "cacheRead": 39430819,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 1095301
+        },
+        "byModel": {
+          "claude-sonnet-5-5": {
+            "input": 2108,
+            "output": 525744,
+            "cacheRead": 39430819,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 1095301,
+            "usd": 17.52,
+            "requests": 136,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [
+        "/Users/you/code/infra/src/feature/rate-limit-per-API-key-0.ts",
+        "/Users/you/code/infra/src/feature/rate-limit-per-API-key-1.ts",
+        "/Users/you/code/infra/src/feature/rate-limit-per-API-key-2.ts",
+        "/Users/you/code/infra/src/feature/rate-limit-per-API-key-3.ts",
+        "/Users/you/code/infra/src/feature/rate-limit-per-API-key-4.ts",
+        "/Users/you/code/infra/src/feature/rate-limit-per-API-key-5.ts",
+        "/Users/you/code/infra/src/feature/rate-limit-per-API-key-6.ts",
+        "/Users/you/code/infra/src/feature/rate-limit-per-API-key-7.ts",
+        "/Users/you/code/infra/src/feature/rate-limit-per-API-key-8.ts",
+        "/Users/you/code/infra/src/feature/rate-limit-per-API-key-9.ts",
+        "/Users/you/code/infra/src/feature/rate-limit-per-API-key-10.ts",
+        "/Users/you/code/infra/src/feature/rate-limit-per-API-key-11.ts"
+      ],
+      "linesAdded": 430,
+      "linesRemoved": 154,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": [
+          {
+            "repo": "acme-demo/infra",
+            "number": 115,
+            "url": "https://github.com/acme-demo/infra/pull/115",
+            "action": "created"
+          }
+        ]
+      },
+      "signals": {
+        "userPrompts": 22,
+        "assistantTurns": 136,
+        "toolCalls": 124,
+        "toolErrors": 1,
+        "maxErrorStreak": 2,
+        "repeatedCommands": 1,
+        "maxEditsSameFile": 3,
+        "testRuns": 3,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 0,
+        "readOnlyRatio": 0.23640479594469072,
+        "subagents": 0
+      },
+      "tools": {
+        "Bash": 62,
+        "Edit": 31,
+        "Read": 31
+      }
+    },
+    {
+      "id": "f95a406f-cb53-41ec-a859-d53793723395",
+      "projectDir": "-Users-you-code-web-app",
+      "cwd": "/Users/you/code/web-app",
+      "repos": [
+        "acme-demo/web-app"
+      ],
+      "branches": [
+        "you/retry-queue-for-payouts"
+      ],
+      "startedAt": "2026-10-27T12:16:24.835Z",
+      "endedAt": "2026-10-27T14:11:24.835Z",
+      "activeMinutes": 115,
+      "title": "retry queue for payouts",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "cost": {
+        "usd": 44.9,
+        "tokens": {
+          "input": 16949,
+          "output": 1347096,
+          "cacheRead": 101032212,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 2806450
+        },
+        "byModel": {
+          "claude-sonnet-5-5": {
+            "input": 16949,
+            "output": 1347096,
+            "cacheRead": 101032212,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 2806450,
+            "usd": 44.9,
+            "requests": 246,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [
+        "/Users/you/code/web-app/src/feature/retry-queue-for-payouts-0.ts",
+        "/Users/you/code/web-app/src/feature/retry-queue-for-payouts-1.ts",
+        "/Users/you/code/web-app/src/feature/retry-queue-for-payouts-2.ts",
+        "/Users/you/code/web-app/src/feature/retry-queue-for-payouts-3.ts",
+        "/Users/you/code/web-app/src/feature/retry-queue-for-payouts-4.ts",
+        "/Users/you/code/web-app/src/feature/retry-queue-for-payouts-5.ts",
+        "/Users/you/code/web-app/src/feature/retry-queue-for-payouts-6.ts",
+        "/Users/you/code/web-app/src/feature/retry-queue-for-payouts-7.ts",
+        "/Users/you/code/web-app/src/feature/retry-queue-for-payouts-8.ts",
+        "/Users/you/code/web-app/src/feature/retry-queue-for-payouts-9.ts",
+        "/Users/you/code/web-app/src/feature/retry-queue-for-payouts-10.ts",
+        "/Users/you/code/web-app/src/feature/retry-queue-for-payouts-11.ts",
+        "/Users/you/code/web-app/src/feature/retry-queue-for-payouts-12.ts",
+        "/Users/you/code/web-app/src/feature/retry-queue-for-payouts-13.ts",
+        "/Users/you/code/web-app/src/feature/retry-queue-for-payouts-14.ts"
+      ],
+      "linesAdded": 597,
+      "linesRemoved": 286,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": [
+          {
+            "repo": "acme-demo/web-app",
+            "number": 116,
+            "url": "https://github.com/acme-demo/web-app/pull/116",
+            "action": "created"
+          }
+        ]
+      },
+      "signals": {
+        "userPrompts": 15,
+        "assistantTurns": 246,
+        "toolCalls": 224,
+        "toolErrors": 75,
+        "maxErrorStreak": 9,
+        "repeatedCommands": 6,
+        "maxEditsSameFile": 17,
+        "testRuns": 15,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 2,
+        "readOnlyRatio": 0.42775822477415204,
+        "subagents": 2
+      },
+      "tools": {
+        "Bash": 112,
+        "Edit": 56,
+        "Read": 56
+      }
+    },
+    {
+      "id": "3c196431-12ec-4530-ab49-29fac6d348c3",
+      "projectDir": "-Users-you-code-infra",
+      "cwd": "/Users/you/code/infra",
+      "repos": [
+        "acme-demo/infra"
+      ],
+      "branches": [],
+      "startedAt": "2026-10-28T13:39:05.605Z",
+      "endedAt": "2026-10-28T14:28:05.605Z",
+      "activeMinutes": 49,
+      "title": "Why is the webhook test slow?",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "cost": {
+        "usd": 2.12,
+        "tokens": {
+          "input": 19960,
+          "output": 31809,
+          "cacheRead": 4771392,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 66269
+        },
+        "byModel": {
+          "claude-opus-5-5": {
+            "input": 19960,
+            "output": 31809,
+            "cacheRead": 4771392,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 66269,
+            "usd": 2.12,
+            "requests": 68,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [],
+      "linesAdded": 0,
+      "linesRemoved": 0,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": []
+      },
+      "signals": {
+        "userPrompts": 6,
+        "assistantTurns": 68,
+        "toolCalls": 62,
+        "toolErrors": 1,
+        "maxErrorStreak": 2,
+        "repeatedCommands": 0,
+        "maxEditsSameFile": 3,
+        "testRuns": 3,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 0,
+        "readOnlyRatio": 0.85,
+        "subagents": 0
+      },
+      "tools": {
+        "Read": 20,
+        "Grep": 9,
+        "WebSearch": 3
+      }
+    },
+    {
+      "id": "7341d728-71cd-4dd0-af4a-7f7ad96230c7",
+      "projectDir": "-Users-you-code-payments-api",
+      "cwd": "/Users/you/code/payments-api",
+      "repos": [
+        "acme-demo/payments-api"
+      ],
+      "branches": [
+        "you/flaky-login-redirect"
+      ],
+      "startedAt": "2026-10-29T08:20:16.224Z",
+      "endedAt": "2026-10-29T09:53:16.224Z",
+      "activeMinutes": 93,
+      "title": "flaky login redirect",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "cost": {
+        "usd": 65.49,
+        "tokens": {
+          "input": 19034,
+          "output": 1964790,
+          "cacheRead": 147359228,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 4093312
+        },
+        "byModel": {
+          "claude-sonnet-5-5": {
+            "input": 19034,
+            "output": 1964790,
+            "cacheRead": 147359228,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 4093312,
+            "usd": 65.49,
+            "requests": 166,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [
+        "/Users/you/code/payments-api/src/fix/flaky-login-redirect-0.ts",
+        "/Users/you/code/payments-api/src/fix/flaky-login-redirect-1.ts"
+      ],
+      "linesAdded": 111,
+      "linesRemoved": 44,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": [
+          {
+            "repo": "acme-demo/payments-api",
+            "number": 117,
+            "url": "https://github.com/acme-demo/payments-api/pull/117",
+            "action": "created"
+          }
+        ]
+      },
+      "signals": {
+        "userPrompts": 13,
+        "assistantTurns": 166,
+        "toolCalls": 151,
+        "toolErrors": 56,
+        "maxErrorStreak": 9,
+        "repeatedCommands": 6,
+        "maxEditsSameFile": 17,
+        "testRuns": 11,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 1,
+        "readOnlyRatio": 0.2626094996230677,
+        "subagents": 3
+      },
+      "tools": {
+        "Bash": 76,
+        "Edit": 38,
+        "Read": 38
+      }
+    },
+    {
+      "id": "039c7100-014c-4ee9-ab8b-63e4e40dbdc8",
+      "projectDir": "-Users-you-code-infra",
+      "cwd": "/Users/you/code/infra",
+      "repos": [
+        "acme-demo/infra"
+      ],
+      "branches": [
+        "you/retry-queue-for-payouts"
+      ],
+      "startedAt": "2026-10-30T06:52:25.854Z",
+      "endedAt": "2026-10-30T08:25:25.854Z",
+      "activeMinutes": 93,
+      "title": "retry queue for payouts",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "cost": {
+        "usd": 27.58,
+        "tokens": {
+          "input": 1165,
+          "output": 413767,
+          "cacheRead": 62065079,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 862015
+        },
+        "byModel": {
+          "claude-opus-5-5": {
+            "input": 1165,
+            "output": 413767,
+            "cacheRead": 62065079,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 862015,
+            "usd": 27.58,
+            "requests": 145,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [
+        "/Users/you/code/infra/src/feature/retry-queue-for-payouts-0.ts",
+        "/Users/you/code/infra/src/feature/retry-queue-for-payouts-1.ts",
+        "/Users/you/code/infra/src/feature/retry-queue-for-payouts-2.ts",
+        "/Users/you/code/infra/src/feature/retry-queue-for-payouts-3.ts",
+        "/Users/you/code/infra/src/feature/retry-queue-for-payouts-4.ts",
+        "/Users/you/code/infra/src/feature/retry-queue-for-payouts-5.ts",
+        "/Users/you/code/infra/src/feature/retry-queue-for-payouts-6.ts",
+        "/Users/you/code/infra/src/feature/retry-queue-for-payouts-7.ts",
+        "/Users/you/code/infra/src/feature/retry-queue-for-payouts-8.ts",
+        "/Users/you/code/infra/src/feature/retry-queue-for-payouts-9.ts",
+        "/Users/you/code/infra/src/feature/retry-queue-for-payouts-10.ts",
+        "/Users/you/code/infra/src/feature/retry-queue-for-payouts-11.ts",
+        "/Users/you/code/infra/src/feature/retry-queue-for-payouts-12.ts"
+      ],
+      "linesAdded": 524,
+      "linesRemoved": 168,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": [
+          {
+            "repo": "acme-demo/infra",
+            "number": 118,
+            "url": "https://github.com/acme-demo/infra/pull/118",
+            "action": "created"
+          }
+        ]
+      },
+      "signals": {
+        "userPrompts": 12,
+        "assistantTurns": 145,
+        "toolCalls": 132,
+        "toolErrors": 5,
+        "maxErrorStreak": 2,
+        "repeatedCommands": 1,
+        "maxEditsSameFile": 6,
+        "testRuns": 1,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 0,
+        "readOnlyRatio": 0.37314515458419917,
+        "subagents": 0
+      },
+      "tools": {
+        "Bash": 66,
+        "Edit": 33,
+        "Read": 33
+      }
+    },
+    {
+      "id": "89871198-8b22-41ab-a99c-6eb31deef8aa",
+      "projectDir": "-Users-you-code-infra",
+      "cwd": "/Users/you/code/infra",
+      "repos": [
+        "acme-demo/infra"
+      ],
+      "branches": [
+        "you/rate-limit-per-API-key"
+      ],
+      "startedAt": "2026-10-31T06:43:39.061Z",
+      "endedAt": "2026-10-31T07:45:39.061Z",
+      "activeMinutes": 62,
+      "title": "rate limit per API key",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "cost": {
+        "usd": 18.61,
+        "tokens": {
+          "input": 18886,
+          "output": 558310,
+          "cacheRead": 41873270,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 1163146
+        },
+        "byModel": {
+          "claude-sonnet-5-5": {
+            "input": 18886,
+            "output": 558310,
+            "cacheRead": 41873270,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 1163146,
+            "usd": 18.61,
+            "requests": 58,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [
+        "/Users/you/code/infra/src/feature/rate-limit-per-API-key-0.ts"
+      ],
+      "linesAdded": 58,
+      "linesRemoved": 16,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": [
+          {
+            "repo": "acme-demo/infra",
+            "number": 119,
+            "url": "https://github.com/acme-demo/infra/pull/119",
+            "action": "created"
+          }
+        ]
+      },
+      "signals": {
+        "userPrompts": 13,
+        "assistantTurns": 58,
+        "toolCalls": 53,
+        "toolErrors": 2,
+        "maxErrorStreak": 1,
+        "repeatedCommands": 0,
+        "maxEditsSameFile": 1,
+        "testRuns": 4,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 0,
+        "readOnlyRatio": 0.4216995656257495,
+        "subagents": 0
+      },
+      "tools": {
+        "Bash": 27,
+        "Edit": 13,
+        "Read": 13
+      }
+    },
+    {
+      "id": "d3835486-3bc7-4afc-a7e5-025cb77f459a",
+      "projectDir": "-Users-you-code-payments-api",
+      "cwd": "/Users/you/code/payments-api",
+      "repos": [
+        "acme-demo/payments-api"
+      ],
+      "branches": [
+        "you/bump-dependencies"
+      ],
+      "startedAt": "2026-11-01T01:45:52.757Z",
+      "endedAt": "2026-11-01T02:08:52.757Z",
+      "activeMinutes": 23,
+      "title": "bump dependencies",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "cost": {
+        "usd": 7.6,
+        "tokens": {
+          "input": 18113,
+          "output": 228009,
+          "cacheRead": 17100660,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 475018
+        },
+        "byModel": {
+          "claude-sonnet-5-5": {
+            "input": 18113,
+            "output": 228009,
+            "cacheRead": 17100660,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 475018,
+            "usd": 7.6,
+            "requests": 47,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [
+        "/Users/you/code/payments-api/src/chore/bump-dependencies-0.ts"
+      ],
+      "linesAdded": 32,
+      "linesRemoved": 5,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": [
+          {
+            "repo": "acme-demo/payments-api",
+            "number": 120,
+            "url": "https://github.com/acme-demo/payments-api/pull/120",
+            "action": "created"
+          }
+        ]
+      },
+      "signals": {
+        "userPrompts": 3,
+        "assistantTurns": 47,
+        "toolCalls": 43,
+        "toolErrors": 2,
+        "maxErrorStreak": 1,
+        "repeatedCommands": 0,
+        "maxEditsSameFile": 2,
+        "testRuns": 4,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 0,
+        "readOnlyRatio": 0.2350326299201697,
+        "subagents": 0
+      },
+      "tools": {
+        "Bash": 22,
+        "Edit": 11,
+        "Read": 11
+      }
+    },
+    {
+      "id": "45ad1a3b-f543-4b56-aa9f-e44ea7b9a226",
+      "projectDir": "-Users-you-code-web-app",
+      "cwd": "/Users/you/code/web-app",
+      "repos": [
+        "acme-demo/web-app"
+      ],
+      "branches": [
+        "you/split-payments-service"
+      ],
+      "startedAt": "2026-11-02T03:22:07.139Z",
+      "endedAt": "2026-11-02T04:24:07.139Z",
+      "activeMinutes": 62,
+      "title": "split payments service",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "cost": {
+        "usd": 41.27,
+        "tokens": {
+          "input": 877,
+          "output": 619062,
+          "cacheRead": 92859237,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 1289712
+        },
+        "byModel": {
+          "claude-opus-5-5": {
+            "input": 877,
+            "output": 619062,
+            "cacheRead": 92859237,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 1289712,
+            "usd": 41.27,
+            "requests": 124,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [
+        "/Users/you/code/web-app/src/refactor/split-payments-service-0.ts",
+        "/Users/you/code/web-app/src/refactor/split-payments-service-1.ts",
+        "/Users/you/code/web-app/src/refactor/split-payments-service-2.ts",
+        "/Users/you/code/web-app/src/refactor/split-payments-service-3.ts",
+        "/Users/you/code/web-app/src/refactor/split-payments-service-4.ts",
+        "/Users/you/code/web-app/src/refactor/split-payments-service-5.ts",
+        "/Users/you/code/web-app/src/refactor/split-payments-service-6.ts",
+        "/Users/you/code/web-app/src/refactor/split-payments-service-7.ts",
+        "/Users/you/code/web-app/src/refactor/split-payments-service-8.ts",
+        "/Users/you/code/web-app/src/refactor/split-payments-service-9.ts",
+        "/Users/you/code/web-app/src/refactor/split-payments-service-10.ts",
+        "/Users/you/code/web-app/src/refactor/split-payments-service-11.ts",
+        "/Users/you/code/web-app/src/refactor/split-payments-service-12.ts",
+        "/Users/you/code/web-app/src/refactor/split-payments-service-13.ts",
+        "/Users/you/code/web-app/src/refactor/split-payments-service-14.ts"
+      ],
+      "linesAdded": 528,
+      "linesRemoved": 201,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": [
+          {
+            "repo": "acme-demo/web-app",
+            "number": 121,
+            "url": "https://github.com/acme-demo/web-app/pull/121",
+            "action": "created"
+          }
+        ]
+      },
+      "signals": {
+        "userPrompts": 11,
+        "assistantTurns": 124,
+        "toolCalls": 113,
+        "toolErrors": 1,
+        "maxErrorStreak": 0,
+        "repeatedCommands": 0,
+        "maxEditsSameFile": 3,
+        "testRuns": 3,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 0,
+        "readOnlyRatio": 0.24585257153958084,
+        "subagents": 0
+      },
+      "tools": {
+        "Bash": 57,
+        "Edit": 28,
+        "Read": 28
+      }
+    },
+    {
+      "id": "350d783b-33dd-4a5d-ae33-58d1add6afc2",
+      "projectDir": "-Users-you-code-payments-api",
+      "cwd": "/Users/you/code/payments-api",
+      "repos": [
+        "acme-demo/payments-api"
+      ],
+      "branches": [
+        "you/invoice-PDF-preview"
+      ],
+      "startedAt": "2026-11-02T23:43:56.701Z",
+      "endedAt": "2026-11-03T00:08:56.701Z",
+      "activeMinutes": 25,
+      "title": "invoice PDF preview",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "cost": {
+        "usd": 29.74,
+        "tokens": {
+          "input": 17622,
+          "output": 446155,
+          "cacheRead": 66923210,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 929489
+        },
+        "byModel": {
+          "claude-opus-5-5": {
+            "input": 17622,
+            "output": 446155,
+            "cacheRead": 66923210,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 929489,
+            "usd": 29.74,
+            "requests": 40,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [
+        "/Users/you/code/payments-api/src/feature/invoice-PDF-preview-0.ts",
+        "/Users/you/code/payments-api/src/feature/invoice-PDF-preview-1.ts",
+        "/Users/you/code/payments-api/src/feature/invoice-PDF-preview-2.ts",
+        "/Users/you/code/payments-api/src/feature/invoice-PDF-preview-3.ts",
+        "/Users/you/code/payments-api/src/feature/invoice-PDF-preview-4.ts",
+        "/Users/you/code/payments-api/src/feature/invoice-PDF-preview-5.ts",
+        "/Users/you/code/payments-api/src/feature/invoice-PDF-preview-6.ts"
+      ],
+      "linesAdded": 299,
+      "linesRemoved": 99,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": [
+          {
+            "repo": "acme-demo/payments-api",
+            "number": 122,
+            "url": "https://github.com/acme-demo/payments-api/pull/122",
+            "action": "created"
+          }
+        ]
+      },
+      "signals": {
+        "userPrompts": 3,
+        "assistantTurns": 40,
+        "toolCalls": 36,
+        "toolErrors": 3,
+        "maxErrorStreak": 1,
+        "repeatedCommands": 1,
+        "maxEditsSameFile": 2,
+        "testRuns": 2,
+        "apiErrors": 0,
+        "compactions": 0,
+        "interruptions": 0,
+        "readOnlyRatio": 0.2397739568958059,
+        "subagents": 3
+      },
+      "tools": {
+        "Bash": 18,
+        "Edit": 9,
+        "Read": 9
+      }
+    },
+    {
+      "id": "01963bf0-2b7e-45a5-a83f-c0a34cd09fc1",
+      "projectDir": "-Users-you-code-payments-api",
+      "cwd": "/Users/you/code/payments-api",
+      "repos": [
+        "acme-demo/payments-api"
+      ],
+      "branches": [
+        "you/webhook-signature-check"
+      ],
+      "startedAt": "2026-11-03T21:26:52.316Z",
+      "endedAt": "2026-11-03T23:57:52.316Z",
+      "activeMinutes": 151,
+      "title": "webhook signature check",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "cost": {
+        "usd": 92.13,
+        "tokens": {
+          "input": 10898,
+          "output": 1382004,
+          "cacheRead": 207300644,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 2879176
+        },
+        "byModel": {
+          "claude-opus-5-5": {
+            "input": 10898,
+            "output": 1382004,
+            "cacheRead": 207300644,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 2879176,
+            "usd": 92.13,
+            "requests": 173,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [
+        "/Users/you/code/payments-api/src/fix/webhook-signature-check-0.ts"
+      ],
+      "linesAdded": 7,
+      "linesRemoved": 1,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": [
+          {
+            "repo": "acme-demo/payments-api",
+            "number": 123,
+            "url": "https://github.com/acme-demo/payments-api/pull/123",
+            "action": "created"
+          }
+        ]
+      },
+      "signals": {
+        "userPrompts": 22,
+        "assistantTurns": 173,
+        "toolCalls": 157,
+        "toolErrors": 1,
+        "maxErrorStreak": 1,
+        "repeatedCommands": 1,
+        "maxEditsSameFile": 3,
+        "testRuns": 0,
+        "apiErrors": 0,
+        "compactions": 1,
+        "interruptions": 0,
+        "readOnlyRatio": 0.4403529592324048,
+        "subagents": 0
+      },
+      "tools": {
+        "Bash": 79,
+        "Edit": 39,
+        "Read": 39
+      }
+    },
+    {
+      "id": "5dc90c28-2028-403d-a112-47c0b53b8d5f",
+      "projectDir": "-Users-you-code-infra",
+      "cwd": "/Users/you/code/infra",
+      "repos": [
+        "acme-demo/infra"
+      ],
+      "branches": [
+        "you/move-fees-into-pure-functions"
+      ],
+      "startedAt": "2026-11-04T18:11:26.917Z",
+      "endedAt": "2026-11-04T20:25:26.917Z",
+      "activeMinutes": 134,
+      "title": "move fees into pure functions",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "cost": {
+        "usd": 67.01,
+        "tokens": {
+          "input": 12922,
+          "output": 1005120,
+          "cacheRead": 150767987,
+          "cacheWrite5m": 0,
+          "cacheWrite1h": 2094000
+        },
+        "byModel": {
+          "claude-opus-5-5": {
+            "input": 12922,
+            "output": 1005120,
+            "cacheRead": 150767987,
+            "cacheWrite5m": 0,
+            "cacheWrite1h": 2094000,
+            "usd": 67.01,
+            "requests": 264,
+            "webSearches": 0
+          }
+        },
+        "webSearches": 0,
+        "unknownModels": []
+      },
+      "filesEdited": [
+        "/Users/you/code/infra/src/refactor/move-fees-into-pure-functions-0.ts",
+        "/Users/you/code/infra/src/refactor/move-fees-into-pure-functions-1.ts",
+        "/Users/you/code/infra/src/refactor/move-fees-into-pure-functions-2.ts"
+      ],
+      "linesAdded": 189,
+      "linesRemoved": 86,
+      "git": {
+        "commits": [],
+        "pushes": [],
+        "prs": [
+          {
+            "repo": "acme-demo/infra",
+            "number": 124,
+            "url": "https://github.com/acme-demo/infra/pull/124",
+            "action": "created"
+          }
+        ]
+      },
+      "signals": {
+        "userPrompts": 21,
+        "assistantTurns": 264,
+        "toolCalls": 240,
+        "toolErrors": 113,
+        "maxErrorStreak": 10,
+        "repeatedCommands": 5,
+        "maxEditsSameFile": 23,
+        "testRuns": 21,
+        "apiErrors": 0,
+        "compactions": 1,
+        "interruptions": 2,
+        "readOnlyRatio": 0.24413001828361303,
+        "subagents": 3
+      },
+      "tools": {
+        "Bash": 120,
+        "Edit": 60,
+        "Read": 60
+      }
+    }
+  ],
+  "changes": [
+    {
+      "key": "acme-demo/web-app#100",
+      "repo": "acme-demo/web-app",
+      "type": "pr",
+      "number": 100,
+      "url": "https://github.com/acme-demo/web-app/pull/100",
+      "title": "chore: CI cache",
+      "author": "you",
+      "kind": "chore",
+      "state": "merged",
+      "createdAt": "2026-10-09T15:38:46.561Z",
+      "mergedAt": "2026-10-11T07:32:44.215Z",
+      "baseRef": "main",
+      "headRef": "you/CI-cache",
+      "additions": 87,
+      "deletions": 11,
+      "files": [
+        "src/chore/CI-cache-0.ts",
+        "src/chore/CI-cache-1.ts"
+      ],
+      "commitShas": [
+        "b5947085d0976fe6fbe014f0ee1406b29fd32187"
+      ],
+      "reverted": false,
+      "survival": {
+        "measuredAt": "2026-11-06T12:00:00.000Z",
+        "matured": false,
+        "linesAdded": 87,
+        "linesAlive": 77,
+        "ratio": 0.88180669689551,
+        "filesChecked": 2,
+        "method": "blame"
+      }
+    },
+    {
+      "key": "acme-demo/payments-api#101",
+      "repo": "acme-demo/payments-api",
+      "type": "pr",
+      "number": 101,
+      "url": "https://github.com/acme-demo/payments-api/pull/101",
+      "title": "feat: rate limit per API key",
+      "author": "you",
+      "kind": "feature",
+      "state": "merged",
+      "createdAt": "2026-10-10T13:29:17.940Z",
+      "mergedAt": "2026-10-12T20:30:36.438Z",
+      "baseRef": "main",
+      "headRef": "you/rate-limit-per-API-key",
+      "additions": 466,
+      "deletions": 164,
+      "files": [
+        "src/feature/rate-limit-per-API-key-0.ts",
+        "src/feature/rate-limit-per-API-key-1.ts",
+        "src/feature/rate-limit-per-API-key-2.ts",
+        "src/feature/rate-limit-per-API-key-3.ts",
+        "src/feature/rate-limit-per-API-key-4.ts",
+        "src/feature/rate-limit-per-API-key-5.ts",
+        "src/feature/rate-limit-per-API-key-6.ts",
+        "src/feature/rate-limit-per-API-key-7.ts",
+        "src/feature/rate-limit-per-API-key-8.ts"
+      ],
+      "commitShas": [
+        "f5f5503b6a5ab16e95574fd8a64ef7121056645b"
+      ],
+      "reverted": false,
+      "survival": {
+        "measuredAt": "2026-11-06T12:00:00.000Z",
+        "matured": false,
+        "linesAdded": 466,
+        "linesAlive": 370,
+        "ratio": 0.7930432979669422,
+        "filesChecked": 8,
+        "method": "blame"
+      }
+    },
+    {
+      "key": "acme-demo/payments-api#102",
+      "repo": "acme-demo/payments-api",
+      "type": "pr",
+      "number": 102,
+      "url": "https://github.com/acme-demo/payments-api/pull/102",
+      "title": "fix: null merchant name in receipts",
+      "author": "you",
+      "kind": "fix",
+      "state": "merged",
+      "createdAt": "2026-10-11T10:15:28.833Z",
+      "mergedAt": "2026-10-11T23:05:49.411Z",
+      "baseRef": "main",
+      "headRef": "you/null-merchant-name-in-receipts",
+      "additions": 13,
+      "deletions": 4,
+      "files": [
+        "src/fix/null-merchant-name-in-receipts-0.ts"
+      ],
+      "commitShas": [
+        "283d04b50b08d9430c07a682366a0bfe95dd7c76"
+      ],
+      "reverted": false,
+      "survival": {
+        "measuredAt": "2026-11-06T12:00:00.000Z",
+        "matured": false,
+        "linesAdded": 13,
+        "linesAlive": 13,
+        "ratio": 0.980967096700333,
+        "filesChecked": 1,
+        "method": "blame"
+      }
+    },
+    {
+      "key": "acme-demo/payments-api#103",
+      "repo": "acme-demo/payments-api",
+      "type": "pr",
+      "number": 103,
+      "url": "https://github.com/acme-demo/payments-api/pull/103",
+      "title": "feat: add refund status webhook",
+      "author": "you",
+      "kind": "feature",
+      "state": "merged",
+      "createdAt": "2026-10-12T11:39:10.302Z",
+      "mergedAt": "2026-10-13T11:56:38.250Z",
+      "baseRef": "main",
+      "headRef": "you/add-refund-status-webhook",
+      "additions": 242,
+      "deletions": 33,
+      "files": [
+        "src/feature/add-refund-status-webhook-0.ts",
+        "src/feature/add-refund-status-webhook-1.ts",
+        "src/feature/add-refund-status-webhook-2.ts",
+        "src/feature/add-refund-status-webhook-3.ts",
+        "src/feature/add-refund-status-webhook-4.ts",
+        "src/feature/add-refund-status-webhook-5.ts"
+      ],
+      "commitShas": [
+        "921e5ed69f7021d0966b371958fab92fce80213b"
+      ],
+      "reverted": false,
+      "survival": {
+        "measuredAt": "2026-11-06T12:00:00.000Z",
+        "matured": false,
+        "linesAdded": 242,
+        "linesAlive": 241,
+        "ratio": 0.9946679102675989,
+        "filesChecked": 6,
+        "method": "blame"
+      }
+    },
+    {
+      "key": "acme-demo/infra#104",
+      "repo": "acme-demo/infra",
+      "type": "pr",
+      "number": 104,
+      "url": "https://github.com/acme-demo/infra/pull/104",
+      "title": "chore: bump dependencies",
+      "author": "you",
+      "kind": "chore",
+      "state": "merged",
+      "createdAt": "2026-10-13T04:39:50.532Z",
+      "mergedAt": "2026-10-13T23:24:43.562Z",
+      "baseRef": "main",
+      "headRef": "you/bump-dependencies",
+      "additions": 162,
+      "deletions": 72,
+      "files": [
+        "src/chore/bump-dependencies-0.ts",
+        "src/chore/bump-dependencies-1.ts",
+        "src/chore/bump-dependencies-2.ts",
+        "src/chore/bump-dependencies-3.ts",
+        "src/chore/bump-dependencies-4.ts"
+      ],
+      "commitShas": [
+        "d258ba4487a8e43f61cb5afb24610ff584f83b84"
+      ],
+      "reverted": false,
+      "survival": {
+        "measuredAt": "2026-11-06T12:00:00.000Z",
+        "matured": false,
+        "linesAdded": 162,
+        "linesAlive": 149,
+        "ratio": 0.919671355066821,
+        "filesChecked": 5,
+        "method": "blame"
+      }
+    },
+    {
+      "key": "acme-demo/web-app#105",
+      "repo": "acme-demo/web-app",
+      "type": "pr",
+      "number": 105,
+      "url": "https://github.com/acme-demo/web-app/pull/105",
+      "title": "fix: webhook signature check",
+      "author": "you",
+      "kind": "fix",
+      "state": "merged",
+      "createdAt": "2026-10-14T23:36:59.612Z",
+      "mergedAt": "2026-10-15T15:51:16.282Z",
+      "baseRef": "main",
+      "headRef": "you/webhook-signature-check",
+      "additions": 143,
+      "deletions": 16,
+      "files": [
+        "src/fix/webhook-signature-check-0.ts",
+        "src/fix/webhook-signature-check-1.ts"
+      ],
+      "commitShas": [
+        "8da2804b5c9ae29cd5f7b7bd098c305b67d0af3d"
+      ],
+      "reverted": false,
+      "survival": {
+        "measuredAt": "2026-11-06T12:00:00.000Z",
+        "matured": false,
+        "linesAdded": 143,
+        "linesAlive": 131,
+        "ratio": 0.9126440608408302,
+        "filesChecked": 2,
+        "method": "blame"
+      }
+    },
+    {
+      "key": "acme-demo/web-app#106",
+      "repo": "acme-demo/web-app",
+      "type": "pr",
+      "number": 106,
+      "url": "https://github.com/acme-demo/web-app/pull/106",
+      "title": "fix: timezone bug in settlement report",
+      "author": "you",
+      "kind": "fix",
+      "state": "merged",
+      "createdAt": "2026-10-16T20:22:09.908Z",
+      "mergedAt": "2026-10-18T20:01:09.648Z",
+      "baseRef": "main",
+      "headRef": "you/timezone-bug-in-settlement-rep",
+      "additions": 355,
+      "deletions": 79,
+      "files": [
+        "src/fix/timezone-bug-in-settlement-report-0.ts",
+        "src/fix/timezone-bug-in-settlement-report-1.ts",
+        "src/fix/timezone-bug-in-settlement-report-2.ts",
+        "src/fix/timezone-bug-in-settlement-report-3.ts",
+        "src/fix/timezone-bug-in-settlement-report-4.ts",
+        "src/fix/timezone-bug-in-settlement-report-5.ts"
+      ],
+      "commitShas": [
+        "31307df3ab2332c81d0d78487170be1e5a9b2154"
+      ],
+      "reverted": false,
+      "survival": {
+        "measuredAt": "2026-11-06T12:00:00.000Z",
+        "matured": false,
+        "linesAdded": 355,
+        "linesAlive": 235,
+        "ratio": 0.6628349161008373,
+        "filesChecked": 6,
+        "method": "blame"
+      }
+    },
+    {
+      "key": "acme-demo/payments-api#107",
+      "repo": "acme-demo/payments-api",
+      "type": "pr",
+      "number": 107,
+      "url": "https://github.com/acme-demo/payments-api/pull/107",
+      "title": "feat: rate limit per API key",
+      "author": "you",
+      "kind": "feature",
+      "state": "open",
+      "createdAt": "2026-10-17T21:38:20.766Z",
+      "baseRef": "main",
+      "headRef": "you/rate-limit-per-API-key",
+      "additions": 314,
+      "deletions": 49,
+      "files": [
+        "src/feature/rate-limit-per-API-key-0.ts",
+        "src/feature/rate-limit-per-API-key-1.ts",
+        "src/feature/rate-limit-per-API-key-2.ts",
+        "src/feature/rate-limit-per-API-key-3.ts",
+        "src/feature/rate-limit-per-API-key-4.ts",
+        "src/feature/rate-limit-per-API-key-5.ts",
+        "src/feature/rate-limit-per-API-key-6.ts",
+        "src/feature/rate-limit-per-API-key-7.ts",
+        "src/feature/rate-limit-per-API-key-8.ts",
+        "src/feature/rate-limit-per-API-key-9.ts"
+      ],
+      "commitShas": [
+        "5fed5aab24df8a7fc02f29a3db4437d978269164"
+      ],
+      "reverted": false
+    },
+    {
+      "key": "acme-demo/payments-api#108",
+      "repo": "acme-demo/payments-api",
+      "type": "pr",
+      "number": 108,
+      "url": "https://github.com/acme-demo/payments-api/pull/108",
+      "title": "chore: bump dependencies",
+      "author": "you",
+      "kind": "chore",
+      "state": "merged",
+      "createdAt": "2026-10-18T14:10:50.034Z",
+      "mergedAt": "2026-10-20T09:23:03.441Z",
+      "baseRef": "main",
+      "headRef": "you/bump-dependencies",
+      "additions": 333,
+      "deletions": 98,
+      "files": [
+        "src/chore/bump-dependencies-0.ts",
+        "src/chore/bump-dependencies-1.ts",
+        "src/chore/bump-dependencies-2.ts",
+        "src/chore/bump-dependencies-3.ts",
+        "src/chore/bump-dependencies-4.ts"
+      ],
+      "commitShas": [
+        "a2b6129cc9d916765a8763fd12f9974d7fc03f58"
+      ],
+      "reverted": false,
+      "survival": {
+        "measuredAt": "2026-11-06T12:00:00.000Z",
+        "matured": false,
+        "linesAdded": 333,
+        "linesAlive": 288,
+        "ratio": 0.8661149448994547,
+        "filesChecked": 5,
+        "method": "blame"
+      }
+    },
+    {
+      "key": "acme-demo/infra#109",
+      "repo": "acme-demo/infra",
+      "type": "pr",
+      "number": 109,
+      "url": "https://github.com/acme-demo/infra/pull/109",
+      "title": "test: cover payout edge cases",
+      "author": "you",
+      "kind": "test",
+      "state": "closed",
+      "createdAt": "2026-10-19T13:13:39.543Z",
+      "baseRef": "main",
+      "headRef": "you/cover-payout-edge-cases",
+      "additions": 340,
+      "deletions": 113,
+      "files": [
+        "src/test/cover-payout-edge-cases-0.ts",
+        "src/test/cover-payout-edge-cases-1.ts",
+        "src/test/cover-payout-edge-cases-2.ts",
+        "src/test/cover-payout-edge-cases-3.ts",
+        "src/test/cover-payout-edge-cases-4.ts",
+        "src/test/cover-payout-edge-cases-5.ts",
+        "src/test/cover-payout-edge-cases-6.ts"
+      ],
+      "commitShas": [
+        "e5e77447841d6affcec45441210b4e331c539e46"
+      ],
+      "reverted": false
+    },
+    {
+      "key": "acme-demo/web-app#110",
+      "repo": "acme-demo/web-app",
+      "type": "pr",
+      "number": 110,
+      "url": "https://github.com/acme-demo/web-app/pull/110",
+      "title": "fix: flaky login redirect",
+      "author": "you",
+      "kind": "fix",
+      "state": "closed",
+      "createdAt": "2026-10-21T09:26:34.534Z",
+      "baseRef": "main",
+      "headRef": "you/flaky-login-redirect",
+      "additions": 213,
+      "deletions": 71,
+      "files": [
+        "src/fix/flaky-login-redirect-0.ts",
+        "src/fix/flaky-login-redirect-1.ts",
+        "src/fix/flaky-login-redirect-2.ts",
+        "src/fix/flaky-login-redirect-3.ts",
+        "src/fix/flaky-login-redirect-4.ts",
+        "src/fix/flaky-login-redirect-5.ts",
+        "src/fix/flaky-login-redirect-6.ts",
+        "src/fix/flaky-login-redirect-7.ts"
+      ],
+      "commitShas": [
+        "9d72cea40733ad290720a90d9418c501bac0d2b2"
+      ],
+      "reverted": false
+    },
+    {
+      "key": "acme-demo/web-app#111",
+      "repo": "acme-demo/web-app",
+      "type": "pr",
+      "number": 111,
+      "url": "https://github.com/acme-demo/web-app/pull/111",
+      "title": "fix: double charge on retry",
+      "author": "you",
+      "kind": "fix",
+      "state": "merged",
+      "createdAt": "2026-10-22T09:32:31.805Z",
+      "mergedAt": "2026-10-24T04:56:07.350Z",
+      "baseRef": "main",
+      "headRef": "you/double-charge-on-retry",
+      "additions": 333,
+      "deletions": 91,
+      "files": [
+        "src/fix/double-charge-on-retry-0.ts",
+        "src/fix/double-charge-on-retry-1.ts",
+        "src/fix/double-charge-on-retry-2.ts",
+        "src/fix/double-charge-on-retry-3.ts",
+        "src/fix/double-charge-on-retry-4.ts",
+        "src/fix/double-charge-on-retry-5.ts",
+        "src/fix/double-charge-on-retry-6.ts"
+      ],
+      "commitShas": [
+        "7837b3b205e28a049a97756f942b2c635f18fa10"
+      ],
+      "reverted": true,
+      "revertedBy": "https://github.com/acme-demo/web-app/commit/ba6cebcd5a1c846064c8a038fb450afc607f5fce"
+    },
+    {
+      "key": "acme-demo/web-app#112",
+      "repo": "acme-demo/web-app",
+      "type": "pr",
+      "number": 112,
+      "url": "https://github.com/acme-demo/web-app/pull/112",
+      "title": "docs: runbook for incidents",
+      "author": "you",
+      "kind": "docs",
+      "state": "open",
+      "createdAt": "2026-10-23T01:34:49.958Z",
+      "baseRef": "main",
+      "headRef": "you/runbook-for-incidents",
+      "additions": 469,
+      "deletions": 203,
+      "files": [
+        "src/docs/runbook-for-incidents-0.ts",
+        "src/docs/runbook-for-incidents-1.ts",
+        "src/docs/runbook-for-incidents-2.ts",
+        "src/docs/runbook-for-incidents-3.ts",
+        "src/docs/runbook-for-incidents-4.ts",
+        "src/docs/runbook-for-incidents-5.ts",
+        "src/docs/runbook-for-incidents-6.ts",
+        "src/docs/runbook-for-incidents-7.ts",
+        "src/docs/runbook-for-incidents-8.ts",
+        "src/docs/runbook-for-incidents-9.ts",
+        "src/docs/runbook-for-incidents-10.ts",
+        "src/docs/runbook-for-incidents-11.ts",
+        "src/docs/runbook-for-incidents-12.ts"
+      ],
+      "commitShas": [
+        "64764d507b10f89958bf26d159b49609166ea17b"
+      ],
+      "reverted": false
+    },
+    {
+      "key": "acme-demo/web-app#113",
+      "repo": "acme-demo/web-app",
+      "type": "pr",
+      "number": 113,
+      "url": "https://github.com/acme-demo/web-app/pull/113",
+      "title": "feat: add refund status webhook",
+      "author": "you",
+      "kind": "feature",
+      "state": "merged",
+      "createdAt": "2026-10-25T01:33:07.827Z",
+      "mergedAt": "2026-10-25T23:09:55.413Z",
+      "baseRef": "main",
+      "headRef": "you/add-refund-status-webhook",
+      "additions": 447,
+      "deletions": 70,
+      "files": [
+        "src/feature/add-refund-status-webhook-0.ts",
+        "src/feature/add-refund-status-webhook-1.ts",
+        "src/feature/add-refund-status-webhook-2.ts",
+        "src/feature/add-refund-status-webhook-3.ts",
+        "src/feature/add-refund-status-webhook-4.ts",
+        "src/feature/add-refund-status-webhook-5.ts",
+        "src/feature/add-refund-status-webhook-6.ts",
+        "src/feature/add-refund-status-webhook-7.ts"
+      ],
+      "commitShas": [
+        "3ec79f9ef4ed35bec0a1ded2774e5dab3ecb1f3c"
+      ],
+      "reverted": false,
+      "survival": {
+        "measuredAt": "2026-11-06T12:00:00.000Z",
+        "matured": false,
+        "linesAdded": 447,
+        "linesAlive": 389,
+        "ratio": 0.8700890326220543,
+        "filesChecked": 8,
+        "method": "blame"
+      }
+    },
+    {
+      "key": "acme-demo/infra#114",
+      "repo": "acme-demo/infra",
+      "type": "pr",
+      "number": 114,
+      "url": "https://github.com/acme-demo/infra/pull/114",
+      "title": "fix: webhook signature check",
+      "author": "you",
+      "kind": "fix",
+      "state": "merged",
+      "createdAt": "2026-10-25T23:07:49.066Z",
+      "mergedAt": "2026-10-27T14:00:38.285Z",
+      "baseRef": "main",
+      "headRef": "you/webhook-signature-check",
+      "additions": 592,
+      "deletions": 292,
+      "files": [
+        "src/fix/webhook-signature-check-0.ts",
+        "src/fix/webhook-signature-check-1.ts",
+        "src/fix/webhook-signature-check-2.ts",
+        "src/fix/webhook-signature-check-3.ts",
+        "src/fix/webhook-signature-check-4.ts",
+        "src/fix/webhook-signature-check-5.ts",
+        "src/fix/webhook-signature-check-6.ts",
+        "src/fix/webhook-signature-check-7.ts",
+        "src/fix/webhook-signature-check-8.ts",
+        "src/fix/webhook-signature-check-9.ts"
+      ],
+      "commitShas": [
+        "5ebe92cf3ca0033e41dcd29f00b4b0cb44fb84aa"
+      ],
+      "reverted": false,
+      "survival": {
+        "measuredAt": "2026-11-06T12:00:00.000Z",
+        "matured": false,
+        "linesAdded": 592,
+        "linesAlive": 566,
+        "ratio": 0.9557267563929781,
+        "filesChecked": 8,
+        "method": "blame"
+      }
+    },
+    {
+      "key": "acme-demo/infra#115",
+      "repo": "acme-demo/infra",
+      "type": "pr",
+      "number": 115,
+      "url": "https://github.com/acme-demo/infra/pull/115",
+      "title": "feat: rate limit per API key",
+      "author": "you",
+      "kind": "feature",
+      "state": "merged",
+      "createdAt": "2026-10-26T19:28:21.930Z",
+      "mergedAt": "2026-10-27T07:20:11.996Z",
+      "baseRef": "main",
+      "headRef": "you/rate-limit-per-API-key",
+      "additions": 430,
+      "deletions": 154,
+      "files": [
+        "src/feature/rate-limit-per-API-key-0.ts",
+        "src/feature/rate-limit-per-API-key-1.ts",
+        "src/feature/rate-limit-per-API-key-2.ts",
+        "src/feature/rate-limit-per-API-key-3.ts",
+        "src/feature/rate-limit-per-API-key-4.ts",
+        "src/feature/rate-limit-per-API-key-5.ts",
+        "src/feature/rate-limit-per-API-key-6.ts",
+        "src/feature/rate-limit-per-API-key-7.ts",
+        "src/feature/rate-limit-per-API-key-8.ts",
+        "src/feature/rate-limit-per-API-key-9.ts",
+        "src/feature/rate-limit-per-API-key-10.ts",
+        "src/feature/rate-limit-per-API-key-11.ts"
+      ],
+      "commitShas": [
+        "0fc0c9593d8408035832184c18771019b38b1a23"
+      ],
+      "reverted": false,
+      "survival": {
+        "measuredAt": "2026-11-06T12:00:00.000Z",
+        "matured": false,
+        "linesAdded": 430,
+        "linesAlive": 395,
+        "ratio": 0.9182359781861306,
+        "filesChecked": 8,
+        "method": "blame"
+      }
+    },
+    {
+      "key": "acme-demo/web-app#116",
+      "repo": "acme-demo/web-app",
+      "type": "pr",
+      "number": 116,
+      "url": "https://github.com/acme-demo/web-app/pull/116",
+      "title": "feat: retry queue for payouts",
+      "author": "you",
+      "kind": "feature",
+      "state": "merged",
+      "createdAt": "2026-10-27T14:11:24.835Z",
+      "mergedAt": "2026-10-29T18:51:23.302Z",
+      "baseRef": "main",
+      "headRef": "you/retry-queue-for-payouts",
+      "additions": 597,
+      "deletions": 286,
+      "files": [
+        "src/feature/retry-queue-for-payouts-0.ts",
+        "src/feature/retry-queue-for-payouts-1.ts",
+        "src/feature/retry-queue-for-payouts-2.ts",
+        "src/feature/retry-queue-for-payouts-3.ts",
+        "src/feature/retry-queue-for-payouts-4.ts",
+        "src/feature/retry-queue-for-payouts-5.ts",
+        "src/feature/retry-queue-for-payouts-6.ts",
+        "src/feature/retry-queue-for-payouts-7.ts",
+        "src/feature/retry-queue-for-payouts-8.ts",
+        "src/feature/retry-queue-for-payouts-9.ts",
+        "src/feature/retry-queue-for-payouts-10.ts",
+        "src/feature/retry-queue-for-payouts-11.ts",
+        "src/feature/retry-queue-for-payouts-12.ts",
+        "src/feature/retry-queue-for-payouts-13.ts",
+        "src/feature/retry-queue-for-payouts-14.ts"
+      ],
+      "commitShas": [
+        "eab97386678bde1796ee83a12c79c60344561f1d"
+      ],
+      "reverted": false,
+      "survival": {
+        "measuredAt": "2026-11-06T12:00:00.000Z",
+        "matured": false,
+        "linesAdded": 597,
+        "linesAlive": 436,
+        "ratio": 0.7304401782923379,
+        "filesChecked": 8,
+        "method": "blame"
+      }
+    },
+    {
+      "key": "acme-demo/payments-api#117",
+      "repo": "acme-demo/payments-api",
+      "type": "pr",
+      "number": 117,
+      "url": "https://github.com/acme-demo/payments-api/pull/117",
+      "title": "fix: flaky login redirect",
+      "author": "you",
+      "kind": "fix",
+      "state": "merged",
+      "createdAt": "2026-10-29T09:53:16.224Z",
+      "mergedAt": "2026-10-31T19:55:15.277Z",
+      "baseRef": "main",
+      "headRef": "you/flaky-login-redirect",
+      "additions": 111,
+      "deletions": 44,
+      "files": [
+        "src/fix/flaky-login-redirect-0.ts",
+        "src/fix/flaky-login-redirect-1.ts"
+      ],
+      "commitShas": [
+        "ff6292c1853ea91c9b4b76b16ef9680b37ff97d4"
+      ],
+      "reverted": false,
+      "survival": {
+        "measuredAt": "2026-11-06T12:00:00.000Z",
+        "matured": false,
+        "linesAdded": 111,
+        "linesAlive": 84,
+        "ratio": 0.7547565150074661,
+        "filesChecked": 2,
+        "method": "blame"
+      }
+    },
+    {
+      "key": "acme-demo/infra#118",
+      "repo": "acme-demo/infra",
+      "type": "pr",
+      "number": 118,
+      "url": "https://github.com/acme-demo/infra/pull/118",
+      "title": "feat: retry queue for payouts",
+      "author": "you",
+      "kind": "feature",
+      "state": "merged",
+      "createdAt": "2026-10-30T08:25:25.854Z",
+      "mergedAt": "2026-10-31T07:26:52.058Z",
+      "baseRef": "main",
+      "headRef": "you/retry-queue-for-payouts",
+      "additions": 524,
+      "deletions": 168,
+      "files": [
+        "src/feature/retry-queue-for-payouts-0.ts",
+        "src/feature/retry-queue-for-payouts-1.ts",
+        "src/feature/retry-queue-for-payouts-2.ts",
+        "src/feature/retry-queue-for-payouts-3.ts",
+        "src/feature/retry-queue-for-payouts-4.ts",
+        "src/feature/retry-queue-for-payouts-5.ts",
+        "src/feature/retry-queue-for-payouts-6.ts",
+        "src/feature/retry-queue-for-payouts-7.ts",
+        "src/feature/retry-queue-for-payouts-8.ts",
+        "src/feature/retry-queue-for-payouts-9.ts",
+        "src/feature/retry-queue-for-payouts-10.ts",
+        "src/feature/retry-queue-for-payouts-11.ts",
+        "src/feature/retry-queue-for-payouts-12.ts"
+      ],
+      "commitShas": [
+        "93daf8273aeaec9692cf06dd4dd58bef3d588580"
+      ],
+      "reverted": false,
+      "survival": {
+        "measuredAt": "2026-11-06T12:00:00.000Z",
+        "matured": false,
+        "linesAdded": 524,
+        "linesAlive": 490,
+        "ratio": 0.9347264690324664,
+        "filesChecked": 8,
+        "method": "blame"
+      }
+    },
+    {
+      "key": "acme-demo/infra#119",
+      "repo": "acme-demo/infra",
+      "type": "pr",
+      "number": 119,
+      "url": "https://github.com/acme-demo/infra/pull/119",
+      "title": "feat: rate limit per API key",
+      "author": "you",
+      "kind": "feature",
+      "state": "closed",
+      "createdAt": "2026-10-31T07:45:39.061Z",
+      "baseRef": "main",
+      "headRef": "you/rate-limit-per-API-key",
+      "additions": 58,
+      "deletions": 16,
+      "files": [
+        "src/feature/rate-limit-per-API-key-0.ts"
+      ],
+      "commitShas": [
+        "49e793ce2cbe9852abd3b36022b12aa82824ede7"
+      ],
+      "reverted": false
+    },
+    {
+      "key": "acme-demo/payments-api#120",
+      "repo": "acme-demo/payments-api",
+      "type": "pr",
+      "number": 120,
+      "url": "https://github.com/acme-demo/payments-api/pull/120",
+      "title": "chore: bump dependencies",
+      "author": "you",
+      "kind": "chore",
+      "state": "merged",
+      "createdAt": "2026-11-01T02:08:52.757Z",
+      "mergedAt": "2026-11-02T11:10:42.495Z",
+      "baseRef": "main",
+      "headRef": "you/bump-dependencies",
+      "additions": 32,
+      "deletions": 5,
+      "files": [
+        "src/chore/bump-dependencies-0.ts"
+      ],
+      "commitShas": [
+        "3ca12a3cfea56964453534c908ae65a6e078b5fa"
+      ],
+      "reverted": false,
+      "survival": {
+        "measuredAt": "2026-11-06T12:00:00.000Z",
+        "matured": false,
+        "linesAdded": 32,
+        "linesAlive": 30,
+        "ratio": 0.9354605081817136,
+        "filesChecked": 1,
+        "method": "blame"
+      }
+    },
+    {
+      "key": "acme-demo/web-app#121",
+      "repo": "acme-demo/web-app",
+      "type": "pr",
+      "number": 121,
+      "url": "https://github.com/acme-demo/web-app/pull/121",
+      "title": "refactor: split payments service",
+      "author": "you",
+      "kind": "refactor",
+      "state": "merged",
+      "createdAt": "2026-11-02T04:24:07.139Z",
+      "mergedAt": "2026-11-03T21:15:15.119Z",
+      "baseRef": "main",
+      "headRef": "you/split-payments-service",
+      "additions": 528,
+      "deletions": 201,
+      "files": [
+        "src/refactor/split-payments-service-0.ts",
+        "src/refactor/split-payments-service-1.ts",
+        "src/refactor/split-payments-service-2.ts",
+        "src/refactor/split-payments-service-3.ts",
+        "src/refactor/split-payments-service-4.ts",
+        "src/refactor/split-payments-service-5.ts",
+        "src/refactor/split-payments-service-6.ts",
+        "src/refactor/split-payments-service-7.ts",
+        "src/refactor/split-payments-service-8.ts",
+        "src/refactor/split-payments-service-9.ts",
+        "src/refactor/split-payments-service-10.ts",
+        "src/refactor/split-payments-service-11.ts",
+        "src/refactor/split-payments-service-12.ts",
+        "src/refactor/split-payments-service-13.ts",
+        "src/refactor/split-payments-service-14.ts"
+      ],
+      "commitShas": [
+        "9687f5ad3fbf4c4fac46c4f1aea3b2c522c89da0"
+      ],
+      "reverted": false,
+      "survival": {
+        "measuredAt": "2026-11-06T12:00:00.000Z",
+        "matured": false,
+        "linesAdded": 528,
+        "linesAlive": 456,
+        "ratio": 0.8631266176328063,
+        "filesChecked": 8,
+        "method": "blame"
+      }
+    },
+    {
+      "key": "acme-demo/payments-api#122",
+      "repo": "acme-demo/payments-api",
+      "type": "pr",
+      "number": 122,
+      "url": "https://github.com/acme-demo/payments-api/pull/122",
+      "title": "feat: invoice PDF preview",
+      "author": "you",
+      "kind": "feature",
+      "state": "merged",
+      "createdAt": "2026-11-03T00:08:56.701Z",
+      "mergedAt": "2026-11-05T07:58:53.101Z",
+      "baseRef": "main",
+      "headRef": "you/invoice-PDF-preview",
+      "additions": 299,
+      "deletions": 99,
+      "files": [
+        "src/feature/invoice-PDF-preview-0.ts",
+        "src/feature/invoice-PDF-preview-1.ts",
+        "src/feature/invoice-PDF-preview-2.ts",
+        "src/feature/invoice-PDF-preview-3.ts",
+        "src/feature/invoice-PDF-preview-4.ts",
+        "src/feature/invoice-PDF-preview-5.ts",
+        "src/feature/invoice-PDF-preview-6.ts"
+      ],
+      "commitShas": [
+        "a45f4dca2a8bc4e2b5511637f0dc2ba45155ecdb"
+      ],
+      "reverted": false,
+      "survival": {
+        "measuredAt": "2026-11-06T12:00:00.000Z",
+        "matured": false,
+        "linesAdded": 299,
+        "linesAlive": 256,
+        "ratio": 0.8547865836555139,
+        "filesChecked": 7,
+        "method": "blame"
+      }
+    },
+    {
+      "key": "acme-demo/payments-api#123",
+      "repo": "acme-demo/payments-api",
+      "type": "pr",
+      "number": 123,
+      "url": "https://github.com/acme-demo/payments-api/pull/123",
+      "title": "fix: webhook signature check",
+      "author": "you",
+      "kind": "fix",
+      "state": "merged",
+      "createdAt": "2026-11-03T23:57:52.316Z",
+      "mergedAt": "2026-11-05T18:55:52.527Z",
+      "baseRef": "main",
+      "headRef": "you/webhook-signature-check",
+      "additions": 7,
+      "deletions": 1,
+      "files": [
+        "src/fix/webhook-signature-check-0.ts"
+      ],
+      "commitShas": [
+        "932d88b3b94477b3966a108d468ede4065ef85a7"
+      ],
+      "reverted": false,
+      "survival": {
+        "measuredAt": "2026-11-06T12:00:00.000Z",
+        "matured": false,
+        "linesAdded": 7,
+        "linesAlive": 6,
+        "ratio": 0.9242272213660181,
+        "filesChecked": 1,
+        "method": "blame"
+      }
+    },
+    {
+      "key": "acme-demo/infra#124",
+      "repo": "acme-demo/infra",
+      "type": "pr",
+      "number": 124,
+      "url": "https://github.com/acme-demo/infra/pull/124",
+      "title": "refactor: move fees into pure functions",
+      "author": "you",
+      "kind": "refactor",
+      "state": "merged",
+      "createdAt": "2026-11-04T20:25:26.917Z",
+      "mergedAt": "2026-11-06T07:20:54.017Z",
+      "baseRef": "main",
+      "headRef": "you/move-fees-into-pure-functions",
+      "additions": 189,
+      "deletions": 86,
+      "files": [
+        "src/refactor/move-fees-into-pure-functions-0.ts",
+        "src/refactor/move-fees-into-pure-functions-1.ts",
+        "src/refactor/move-fees-into-pure-functions-2.ts"
+      ],
+      "commitShas": [
+        "de065df0d1dc44bda9aaeee71a3db60ca65135b8"
+      ],
+      "reverted": false,
+      "survival": {
+        "measuredAt": "2026-11-06T12:00:00.000Z",
+        "matured": false,
+        "linesAdded": 189,
+        "linesAlive": 113,
+        "ratio": 0.5964983790181577,
+        "filesChecked": 3,
+        "method": "blame"
+      }
+    }
+  ],
+  "matches": [
+    {
+      "sessionId": "b1c73359-9b6c-4578-a363-ed13b87c9859",
+      "changeKey": "acme-demo/web-app#100",
+      "reason": "pr-link",
+      "confidence": 0.97
+    },
+    {
+      "sessionId": "b1780c58-e840-4c2b-ad9a-05a71283cf86",
+      "changeKey": "acme-demo/payments-api#101",
+      "reason": "pr-link",
+      "confidence": 0.97
+    },
+    {
+      "sessionId": "d63e40d3-9038-40b2-a61c-45035d9070d6",
+      "changeKey": "acme-demo/payments-api#102",
+      "reason": "pr-link",
+      "confidence": 0.97
+    },
+    {
+      "sessionId": "da54bcfb-3128-4786-aa10-1c6985830e1c",
+      "changeKey": "acme-demo/payments-api#103",
+      "reason": "pr-link",
+      "confidence": 0.97
+    },
+    {
+      "sessionId": "66121899-ae5c-4b4c-a83b-d970cf88bd39",
+      "changeKey": "acme-demo/infra#104",
+      "reason": "pr-link",
+      "confidence": 0.97
+    },
+    {
+      "sessionId": "1609e340-3ce4-42f9-a45d-ddb460cbe5fd",
+      "changeKey": "acme-demo/web-app#105",
+      "reason": "pr-link",
+      "confidence": 0.97
+    },
+    {
+      "sessionId": "4550b1bb-f045-46f2-afca-86cef0f6de16",
+      "changeKey": "acme-demo/web-app#106",
+      "reason": "pr-link",
+      "confidence": 0.97
+    },
+    {
+      "sessionId": "b85148c2-724e-47e5-a2b4-9c84ca67685d",
+      "changeKey": "acme-demo/payments-api#107",
+      "reason": "pr-link",
+      "confidence": 0.97
+    },
+    {
+      "sessionId": "635cd3b1-b8d8-47cf-aac9-8d441e4524bd",
+      "changeKey": "acme-demo/payments-api#108",
+      "reason": "pr-link",
+      "confidence": 0.97
+    },
+    {
+      "sessionId": "46af98dc-4e18-4cd5-a931-e02543d0247c",
+      "changeKey": "acme-demo/infra#109",
+      "reason": "pr-link",
+      "confidence": 0.97
+    },
+    {
+      "sessionId": "b4177adf-95d6-43e4-aa1e-17c18255c110",
+      "changeKey": "acme-demo/web-app#110",
+      "reason": "pr-link",
+      "confidence": 0.97
+    },
+    {
+      "sessionId": "2a262bf3-9288-469e-a9f0-e7ffa743a9b4",
+      "changeKey": "acme-demo/web-app#111",
+      "reason": "pr-link",
+      "confidence": 0.97
+    },
+    {
+      "sessionId": "bb418c9b-0def-44c5-a774-607f97aecef9",
+      "changeKey": "acme-demo/web-app#112",
+      "reason": "pr-link",
+      "confidence": 0.97
+    },
+    {
+      "sessionId": "2d617c03-061d-43e1-ac78-0aaa1ba5f58d",
+      "changeKey": "acme-demo/web-app#113",
+      "reason": "pr-link",
+      "confidence": 0.97
+    },
+    {
+      "sessionId": "d5f29bfe-7c9a-472d-ad2c-6af1a4a9e85d",
+      "changeKey": "acme-demo/infra#114",
+      "reason": "pr-link",
+      "confidence": 0.97
+    },
+    {
+      "sessionId": "c94e83de-c601-4668-a091-d9cec2607bfd",
+      "changeKey": "acme-demo/infra#115",
+      "reason": "pr-link",
+      "confidence": 0.97
+    },
+    {
+      "sessionId": "f95a406f-cb53-41ec-a859-d53793723395",
+      "changeKey": "acme-demo/web-app#116",
+      "reason": "pr-link",
+      "confidence": 0.97
+    },
+    {
+      "sessionId": "7341d728-71cd-4dd0-af4a-7f7ad96230c7",
+      "changeKey": "acme-demo/payments-api#117",
+      "reason": "pr-link",
+      "confidence": 0.97
+    },
+    {
+      "sessionId": "039c7100-014c-4ee9-ab8b-63e4e40dbdc8",
+      "changeKey": "acme-demo/infra#118",
+      "reason": "pr-link",
+      "confidence": 0.97
+    },
+    {
+      "sessionId": "89871198-8b22-41ab-a99c-6eb31deef8aa",
+      "changeKey": "acme-demo/infra#119",
+      "reason": "pr-link",
+      "confidence": 0.97
+    },
+    {
+      "sessionId": "d3835486-3bc7-4afc-a7e5-025cb77f459a",
+      "changeKey": "acme-demo/payments-api#120",
+      "reason": "pr-link",
+      "confidence": 0.97
+    },
+    {
+      "sessionId": "45ad1a3b-f543-4b56-aa9f-e44ea7b9a226",
+      "changeKey": "acme-demo/web-app#121",
+      "reason": "pr-link",
+      "confidence": 0.97
+    },
+    {
+      "sessionId": "350d783b-33dd-4a5d-ae33-58d1add6afc2",
+      "changeKey": "acme-demo/payments-api#122",
+      "reason": "pr-link",
+      "confidence": 0.97
+    },
+    {
+      "sessionId": "01963bf0-2b7e-45a5-a83f-c0a34cd09fc1",
+      "changeKey": "acme-demo/payments-api#123",
+      "reason": "pr-link",
+      "confidence": 0.97
+    },
+    {
+      "sessionId": "5dc90c28-2028-403d-a112-47c0b53b8d5f",
+      "changeKey": "acme-demo/infra#124",
+      "reason": "pr-link",
+      "confidence": 0.97
+    }
+  ],
+  "judgements": [
+    {
+      "sessionId": "b1c73359-9b6c-4578-a363-ed13b87c9859",
+      "label": "Shipped",
+      "difficulty": 3,
+      "kind": "chore",
+      "confidence": 0.75,
+      "reason": "Linked to 1 merged change(s).",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "b1780c58-e840-4c2b-ad9a-05a71283cf86",
+      "label": "Shipped",
+      "difficulty": 4,
+      "kind": "feature",
+      "confidence": 0.75,
+      "reason": "Linked to 1 merged change(s).",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "d63e40d3-9038-40b2-a61c-45035d9070d6",
+      "label": "Overkill",
+      "difficulty": 1,
+      "kind": "fix",
+      "confidence": 0.75,
+      "reason": "Shipped, but cost $90.81 vs a $90.81 median for difficulty 1 work.",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "da54bcfb-3128-4786-aa10-1c6985830e1c",
+      "label": "Shipped",
+      "difficulty": 3,
+      "kind": "feature",
+      "confidence": 0.75,
+      "reason": "Linked to 1 merged change(s).",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "66121899-ae5c-4b4c-a83b-d970cf88bd39",
+      "label": "Shipped",
+      "difficulty": 3,
+      "kind": "chore",
+      "confidence": 0.75,
+      "reason": "Linked to 1 merged change(s).",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "f9efa6e7-3fc3-484c-a893-61b07499ad69",
+      "label": "Learned",
+      "difficulty": 2,
+      "kind": "other",
+      "confidence": 0.55,
+      "reason": "Mostly reading and questions, no code changes.",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "1609e340-3ce4-42f9-a45d-ddb460cbe5fd",
+      "label": "Shipped",
+      "difficulty": 3,
+      "kind": "fix",
+      "confidence": 0.75,
+      "reason": "Linked to 1 merged change(s).",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "56d3d011-804a-4fd6-a1c5-ba2c34a5d20b",
+      "label": "Learned",
+      "difficulty": 2,
+      "kind": "other",
+      "confidence": 0.55,
+      "reason": "Mostly reading and questions, no code changes.",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "4550b1bb-f045-46f2-afca-86cef0f6de16",
+      "label": "Looped",
+      "difficulty": 4,
+      "kind": "fix",
+      "confidence": 0.6,
+      "reason": "Shipped 1 change(s), but spent a lot of the session retrying (loop score 6).",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "b85148c2-724e-47e5-a2b4-9c84ca67685d",
+      "label": "Pending",
+      "difficulty": 4,
+      "kind": "feature",
+      "confidence": 0.6,
+      "reason": "Linked PR still open.",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "635cd3b1-b8d8-47cf-aac9-8d441e4524bd",
+      "label": "Shipped",
+      "difficulty": 4,
+      "kind": "chore",
+      "confidence": 0.75,
+      "reason": "Linked to 1 merged change(s).",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "46af98dc-4e18-4cd5-a931-e02543d0247c",
+      "label": "Abandoned",
+      "difficulty": 4,
+      "kind": "test",
+      "confidence": 0.7,
+      "reason": "Linked change was closed or reverted.",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "a6e712fe-5174-4695-a0b5-0d548d5ec95b",
+      "label": "Learned",
+      "difficulty": 1,
+      "kind": "other",
+      "confidence": 0.55,
+      "reason": "Mostly reading and questions, no code changes.",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "b4177adf-95d6-43e4-aa1e-17c18255c110",
+      "label": "Abandoned",
+      "difficulty": 3,
+      "kind": "fix",
+      "confidence": 0.7,
+      "reason": "Linked change was closed or reverted.",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "2a262bf3-9288-469e-a9f0-e7ffa743a9b4",
+      "label": "Abandoned",
+      "difficulty": 4,
+      "kind": "fix",
+      "confidence": 0.7,
+      "reason": "Linked change was closed or reverted.",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "bb418c9b-0def-44c5-a774-607f97aecef9",
+      "label": "Pending",
+      "difficulty": 4,
+      "kind": "docs",
+      "confidence": 0.6,
+      "reason": "Linked PR still open.",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "de404fe5-8b13-40a5-ad0e-93064a03f0f1",
+      "label": "Learned",
+      "difficulty": 2,
+      "kind": "other",
+      "confidence": 0.55,
+      "reason": "Mostly reading and questions, no code changes.",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "2d617c03-061d-43e1-ac78-0aaa1ba5f58d",
+      "label": "Shipped",
+      "difficulty": 4,
+      "kind": "feature",
+      "confidence": 0.75,
+      "reason": "Linked to 1 merged change(s).",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "d5f29bfe-7c9a-472d-ad2c-6af1a4a9e85d",
+      "label": "Shipped",
+      "difficulty": 4,
+      "kind": "fix",
+      "confidence": 0.75,
+      "reason": "Linked to 1 merged change(s).",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "c94e83de-c601-4668-a091-d9cec2607bfd",
+      "label": "Shipped",
+      "difficulty": 4,
+      "kind": "feature",
+      "confidence": 0.75,
+      "reason": "Linked to 1 merged change(s).",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "f95a406f-cb53-41ec-a859-d53793723395",
+      "label": "Looped",
+      "difficulty": 5,
+      "kind": "feature",
+      "confidence": 0.6,
+      "reason": "Shipped 1 change(s), but spent a lot of the session retrying (loop score 5).",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "3c196431-12ec-4530-ab49-29fac6d348c3",
+      "label": "Learned",
+      "difficulty": 3,
+      "kind": "other",
+      "confidence": 0.55,
+      "reason": "Mostly reading and questions, no code changes.",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "7341d728-71cd-4dd0-af4a-7f7ad96230c7",
+      "label": "Looped",
+      "difficulty": 3,
+      "kind": "fix",
+      "confidence": 0.6,
+      "reason": "Shipped 1 change(s), but spent a lot of the session retrying (loop score 5).",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "039c7100-014c-4ee9-ab8b-63e4e40dbdc8",
+      "label": "Shipped",
+      "difficulty": 4,
+      "kind": "feature",
+      "confidence": 0.75,
+      "reason": "Linked to 1 merged change(s).",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "89871198-8b22-41ab-a99c-6eb31deef8aa",
+      "label": "Abandoned",
+      "difficulty": 2,
+      "kind": "feature",
+      "confidence": 0.7,
+      "reason": "Linked change was closed or reverted.",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "d3835486-3bc7-4afc-a7e5-025cb77f459a",
+      "label": "Shipped",
+      "difficulty": 1,
+      "kind": "chore",
+      "confidence": 0.75,
+      "reason": "Linked to 1 merged change(s).",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "45ad1a3b-f543-4b56-aa9f-e44ea7b9a226",
+      "label": "Shipped",
+      "difficulty": 5,
+      "kind": "refactor",
+      "confidence": 0.75,
+      "reason": "Linked to 1 merged change(s).",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "350d783b-33dd-4a5d-ae33-58d1add6afc2",
+      "label": "Shipped",
+      "difficulty": 4,
+      "kind": "feature",
+      "confidence": 0.75,
+      "reason": "Linked to 1 merged change(s).",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "01963bf0-2b7e-45a5-a83f-c0a34cd09fc1",
+      "label": "Overkill",
+      "difficulty": 1,
+      "kind": "fix",
+      "confidence": 0.75,
+      "reason": "Shipped, but cost $92.13 vs a $90.81 median for difficulty 1 work.",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    },
+    {
+      "sessionId": "5dc90c28-2028-403d-a112-47c0b53b8d5f",
+      "label": "Looped",
+      "difficulty": 3,
+      "kind": "refactor",
+      "confidence": 0.6,
+      "reason": "Shipped 1 change(s), but spent a lot of the session retrying (loop score 5).",
+      "judge": {
+        "engine": "heuristic",
+        "at": "2026-11-06T12:00:00.000Z"
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "changeKey": "acme-demo/payments-api#123",
+      "repo": "acme-demo/payments-api",
+      "url": "https://github.com/acme-demo/payments-api/pull/123",
+      "title": "fix: webhook signature check",
+      "kind": "fix",
+      "difficulty": 1,
+      "state": "merged",
+      "reverted": false,
+      "survival": 0.9242272213660181,
+      "survivalMatured": false,
+      "costUsd": 92.13,
+      "sessions": [
+        "01963bf0-2b7e-45a5-a83f-c0a34cd09fc1"
+      ],
+      "keptWork": 0.9242272213660181,
+      "mergedAt": "2026-11-05T18:55:52.527Z"
+    },
+    {
+      "changeKey": "acme-demo/payments-api#102",
+      "repo": "acme-demo/payments-api",
+      "url": "https://github.com/acme-demo/payments-api/pull/102",
+      "title": "fix: null merchant name in receipts",
+      "kind": "fix",
+      "difficulty": 1,
+      "state": "merged",
+      "reverted": false,
+      "survival": 0.980967096700333,
+      "survivalMatured": false,
+      "costUsd": 90.81,
+      "sessions": [
+        "d63e40d3-9038-40b2-a61c-45035d9070d6"
+      ],
+      "keptWork": 0.980967096700333,
+      "mergedAt": "2026-10-11T23:05:49.411Z"
+    },
+    {
+      "changeKey": "acme-demo/infra#124",
+      "repo": "acme-demo/infra",
+      "url": "https://github.com/acme-demo/infra/pull/124",
+      "title": "refactor: move fees into pure functions",
+      "kind": "refactor",
+      "difficulty": 3,
+      "state": "merged",
+      "reverted": false,
+      "survival": 0.5964983790181577,
+      "survivalMatured": false,
+      "costUsd": 67.01,
+      "sessions": [
+        "5dc90c28-2028-403d-a112-47c0b53b8d5f"
+      ],
+      "keptWork": 0.5964983790181577,
+      "mergedAt": "2026-11-06T07:20:54.017Z"
+    },
+    {
+      "changeKey": "acme-demo/payments-api#117",
+      "repo": "acme-demo/payments-api",
+      "url": "https://github.com/acme-demo/payments-api/pull/117",
+      "title": "fix: flaky login redirect",
+      "kind": "fix",
+      "difficulty": 3,
+      "state": "merged",
+      "reverted": false,
+      "survival": 0.7547565150074661,
+      "survivalMatured": false,
+      "costUsd": 65.49,
+      "sessions": [
+        "7341d728-71cd-4dd0-af4a-7f7ad96230c7"
+      ],
+      "keptWork": 0.7547565150074661,
+      "mergedAt": "2026-10-31T19:55:15.277Z"
+    },
+    {
+      "changeKey": "acme-demo/web-app#106",
+      "repo": "acme-demo/web-app",
+      "url": "https://github.com/acme-demo/web-app/pull/106",
+      "title": "fix: timezone bug in settlement report",
+      "kind": "fix",
+      "difficulty": 4,
+      "state": "merged",
+      "reverted": false,
+      "survival": 0.6628349161008373,
+      "survivalMatured": false,
+      "costUsd": 46.07,
+      "sessions": [
+        "4550b1bb-f045-46f2-afca-86cef0f6de16"
+      ],
+      "keptWork": 0.6628349161008373,
+      "mergedAt": "2026-10-18T20:01:09.648Z"
+    },
+    {
+      "changeKey": "acme-demo/web-app#116",
+      "repo": "acme-demo/web-app",
+      "url": "https://github.com/acme-demo/web-app/pull/116",
+      "title": "feat: retry queue for payouts",
+      "kind": "feature",
+      "difficulty": 5,
+      "state": "merged",
+      "reverted": false,
+      "survival": 0.7304401782923379,
+      "survivalMatured": false,
+      "costUsd": 44.9,
+      "sessions": [
+        "f95a406f-cb53-41ec-a859-d53793723395"
+      ],
+      "keptWork": 0.7304401782923379,
+      "mergedAt": "2026-10-29T18:51:23.302Z"
+    },
+    {
+      "changeKey": "acme-demo/web-app#121",
+      "repo": "acme-demo/web-app",
+      "url": "https://github.com/acme-demo/web-app/pull/121",
+      "title": "refactor: split payments service",
+      "kind": "refactor",
+      "difficulty": 5,
+      "state": "merged",
+      "reverted": false,
+      "survival": 0.8631266176328063,
+      "survivalMatured": false,
+      "costUsd": 41.27,
+      "sessions": [
+        "45ad1a3b-f543-4b56-aa9f-e44ea7b9a226"
+      ],
+      "keptWork": 0.8631266176328063,
+      "mergedAt": "2026-11-03T21:15:15.119Z"
+    },
+    {
+      "changeKey": "acme-demo/web-app#113",
+      "repo": "acme-demo/web-app",
+      "url": "https://github.com/acme-demo/web-app/pull/113",
+      "title": "feat: add refund status webhook",
+      "kind": "feature",
+      "difficulty": 4,
+      "state": "merged",
+      "reverted": false,
+      "survival": 0.8700890326220543,
+      "survivalMatured": false,
+      "costUsd": 41.14,
+      "sessions": [
+        "2d617c03-061d-43e1-ac78-0aaa1ba5f58d"
+      ],
+      "keptWork": 0.8700890326220543,
+      "mergedAt": "2026-10-25T23:09:55.413Z"
+    },
+    {
+      "changeKey": "acme-demo/payments-api#101",
+      "repo": "acme-demo/payments-api",
+      "url": "https://github.com/acme-demo/payments-api/pull/101",
+      "title": "feat: rate limit per API key",
+      "kind": "feature",
+      "difficulty": 4,
+      "state": "merged",
+      "reverted": false,
+      "survival": 0.7930432979669422,
+      "survivalMatured": false,
+      "costUsd": 37.14,
+      "sessions": [
+        "b1780c58-e840-4c2b-ad9a-05a71283cf86"
+      ],
+      "keptWork": 0.7930432979669422,
+      "mergedAt": "2026-10-12T20:30:36.438Z"
+    },
+    {
+      "changeKey": "acme-demo/payments-api#107",
+      "repo": "acme-demo/payments-api",
+      "url": "https://github.com/acme-demo/payments-api/pull/107",
+      "title": "feat: rate limit per API key",
+      "kind": "feature",
+      "difficulty": 4,
+      "state": "open",
+      "reverted": false,
+      "survival": null,
+      "survivalMatured": false,
+      "costUsd": 35.09,
+      "sessions": [
+        "b85148c2-724e-47e5-a2b4-9c84ca67685d"
+      ],
+      "keptWork": 0
+    },
+    {
+      "changeKey": "acme-demo/infra#114",
+      "repo": "acme-demo/infra",
+      "url": "https://github.com/acme-demo/infra/pull/114",
+      "title": "fix: webhook signature check",
+      "kind": "fix",
+      "difficulty": 4,
+      "state": "merged",
+      "reverted": false,
+      "survival": 0.9557267563929781,
+      "survivalMatured": false,
+      "costUsd": 30.1,
+      "sessions": [
+        "d5f29bfe-7c9a-472d-ad2c-6af1a4a9e85d"
+      ],
+      "keptWork": 0.9557267563929781,
+      "mergedAt": "2026-10-27T14:00:38.285Z"
+    },
+    {
+      "changeKey": "acme-demo/payments-api#122",
+      "repo": "acme-demo/payments-api",
+      "url": "https://github.com/acme-demo/payments-api/pull/122",
+      "title": "feat: invoice PDF preview",
+      "kind": "feature",
+      "difficulty": 4,
+      "state": "merged",
+      "reverted": false,
+      "survival": 0.8547865836555139,
+      "survivalMatured": false,
+      "costUsd": 29.74,
+      "sessions": [
+        "350d783b-33dd-4a5d-ae33-58d1add6afc2"
+      ],
+      "keptWork": 0.8547865836555139,
+      "mergedAt": "2026-11-05T07:58:53.101Z"
+    },
+    {
+      "changeKey": "acme-demo/infra#118",
+      "repo": "acme-demo/infra",
+      "url": "https://github.com/acme-demo/infra/pull/118",
+      "title": "feat: retry queue for payouts",
+      "kind": "feature",
+      "difficulty": 4,
+      "state": "merged",
+      "reverted": false,
+      "survival": 0.9347264690324664,
+      "survivalMatured": false,
+      "costUsd": 27.58,
+      "sessions": [
+        "039c7100-014c-4ee9-ab8b-63e4e40dbdc8"
+      ],
+      "keptWork": 0.9347264690324664,
+      "mergedAt": "2026-10-31T07:26:52.058Z"
+    },
+    {
+      "changeKey": "acme-demo/web-app#105",
+      "repo": "acme-demo/web-app",
+      "url": "https://github.com/acme-demo/web-app/pull/105",
+      "title": "fix: webhook signature check",
+      "kind": "fix",
+      "difficulty": 3,
+      "state": "merged",
+      "reverted": false,
+      "survival": 0.9126440608408302,
+      "survivalMatured": false,
+      "costUsd": 23.53,
+      "sessions": [
+        "1609e340-3ce4-42f9-a45d-ddb460cbe5fd"
+      ],
+      "keptWork": 0.9126440608408302,
+      "mergedAt": "2026-10-15T15:51:16.282Z"
+    },
+    {
+      "changeKey": "acme-demo/web-app#112",
+      "repo": "acme-demo/web-app",
+      "url": "https://github.com/acme-demo/web-app/pull/112",
+      "title": "docs: runbook for incidents",
+      "kind": "docs",
+      "difficulty": 4,
+      "state": "open",
+      "reverted": false,
+      "survival": null,
+      "survivalMatured": false,
+      "costUsd": 22.19,
+      "sessions": [
+        "bb418c9b-0def-44c5-a774-607f97aecef9"
+      ],
+      "keptWork": 0
+    },
+    {
+      "changeKey": "acme-demo/payments-api#108",
+      "repo": "acme-demo/payments-api",
+      "url": "https://github.com/acme-demo/payments-api/pull/108",
+      "title": "chore: bump dependencies",
+      "kind": "chore",
+      "difficulty": 4,
+      "state": "merged",
+      "reverted": false,
+      "survival": 0.8661149448994547,
+      "survivalMatured": false,
+      "costUsd": 20.52,
+      "sessions": [
+        "635cd3b1-b8d8-47cf-aac9-8d441e4524bd"
+      ],
+      "keptWork": 0.8661149448994547,
+      "mergedAt": "2026-10-20T09:23:03.441Z"
+    },
+    {
+      "changeKey": "acme-demo/infra#104",
+      "repo": "acme-demo/infra",
+      "url": "https://github.com/acme-demo/infra/pull/104",
+      "title": "chore: bump dependencies",
+      "kind": "chore",
+      "difficulty": 3,
+      "state": "merged",
+      "reverted": false,
+      "survival": 0.919671355066821,
+      "survivalMatured": false,
+      "costUsd": 18.88,
+      "sessions": [
+        "66121899-ae5c-4b4c-a83b-d970cf88bd39"
+      ],
+      "keptWork": 0.919671355066821,
+      "mergedAt": "2026-10-13T23:24:43.562Z"
+    },
+    {
+      "changeKey": "acme-demo/infra#119",
+      "repo": "acme-demo/infra",
+      "url": "https://github.com/acme-demo/infra/pull/119",
+      "title": "feat: rate limit per API key",
+      "kind": "feature",
+      "difficulty": 2,
+      "state": "closed",
+      "reverted": false,
+      "survival": null,
+      "survivalMatured": false,
+      "costUsd": 18.61,
+      "sessions": [
+        "89871198-8b22-41ab-a99c-6eb31deef8aa"
+      ],
+      "keptWork": 0
+    },
+    {
+      "changeKey": "acme-demo/payments-api#103",
+      "repo": "acme-demo/payments-api",
+      "url": "https://github.com/acme-demo/payments-api/pull/103",
+      "title": "feat: add refund status webhook",
+      "kind": "feature",
+      "difficulty": 3,
+      "state": "merged",
+      "reverted": false,
+      "survival": 0.9946679102675989,
+      "survivalMatured": false,
+      "costUsd": 17.8,
+      "sessions": [
+        "da54bcfb-3128-4786-aa10-1c6985830e1c"
+      ],
+      "keptWork": 0.9946679102675989,
+      "mergedAt": "2026-10-13T11:56:38.250Z"
+    },
+    {
+      "changeKey": "acme-demo/infra#115",
+      "repo": "acme-demo/infra",
+      "url": "https://github.com/acme-demo/infra/pull/115",
+      "title": "feat: rate limit per API key",
+      "kind": "feature",
+      "difficulty": 4,
+      "state": "merged",
+      "reverted": false,
+      "survival": 0.9182359781861306,
+      "survivalMatured": false,
+      "costUsd": 17.52,
+      "sessions": [
+        "c94e83de-c601-4668-a091-d9cec2607bfd"
+      ],
+      "keptWork": 0.9182359781861306,
+      "mergedAt": "2026-10-27T07:20:11.996Z"
+    },
+    {
+      "changeKey": "acme-demo/infra#109",
+      "repo": "acme-demo/infra",
+      "url": "https://github.com/acme-demo/infra/pull/109",
+      "title": "test: cover payout edge cases",
+      "kind": "test",
+      "difficulty": 4,
+      "state": "closed",
+      "reverted": false,
+      "survival": null,
+      "survivalMatured": false,
+      "costUsd": 13.84,
+      "sessions": [
+        "46af98dc-4e18-4cd5-a931-e02543d0247c"
+      ],
+      "keptWork": 0
+    },
+    {
+      "changeKey": "acme-demo/web-app#110",
+      "repo": "acme-demo/web-app",
+      "url": "https://github.com/acme-demo/web-app/pull/110",
+      "title": "fix: flaky login redirect",
+      "kind": "fix",
+      "difficulty": 3,
+      "state": "closed",
+      "reverted": false,
+      "survival": null,
+      "survivalMatured": false,
+      "costUsd": 12.03,
+      "sessions": [
+        "b4177adf-95d6-43e4-aa1e-17c18255c110"
+      ],
+      "keptWork": 0
+    },
+    {
+      "changeKey": "acme-demo/web-app#111",
+      "repo": "acme-demo/web-app",
+      "url": "https://github.com/acme-demo/web-app/pull/111",
+      "title": "fix: double charge on retry",
+      "kind": "fix",
+      "difficulty": 4,
+      "state": "merged",
+      "reverted": true,
+      "survival": null,
+      "survivalMatured": false,
+      "costUsd": 9.25,
+      "sessions": [
+        "2a262bf3-9288-469e-a9f0-e7ffa743a9b4"
+      ],
+      "keptWork": 0,
+      "mergedAt": "2026-10-24T04:56:07.350Z"
+    },
+    {
+      "changeKey": "acme-demo/payments-api#120",
+      "repo": "acme-demo/payments-api",
+      "url": "https://github.com/acme-demo/payments-api/pull/120",
+      "title": "chore: bump dependencies",
+      "kind": "chore",
+      "difficulty": 1,
+      "state": "merged",
+      "reverted": false,
+      "survival": 0.9354605081817136,
+      "survivalMatured": false,
+      "costUsd": 7.6,
+      "sessions": [
+        "d3835486-3bc7-4afc-a7e5-025cb77f459a"
+      ],
+      "keptWork": 0.9354605081817136,
+      "mergedAt": "2026-11-02T11:10:42.495Z"
+    },
+    {
+      "changeKey": "acme-demo/web-app#100",
+      "repo": "acme-demo/web-app",
+      "url": "https://github.com/acme-demo/web-app/pull/100",
+      "title": "chore: CI cache",
+      "kind": "chore",
+      "difficulty": 3,
+      "state": "merged",
+      "reverted": false,
+      "survival": 0.88180669689551,
+      "survivalMatured": false,
+      "costUsd": 6,
+      "sessions": [
+        "b1c73359-9b6c-4578-a363-ed13b87c9859"
+      ],
+      "keptWork": 0.88180669689551,
+      "mergedAt": "2026-10-11T07:32:44.215Z"
+    }
+  ],
+  "meta": {
+    "days": 28,
+    "judge": "heuristic"
+  }
+}

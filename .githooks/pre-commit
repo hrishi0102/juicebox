@@ -1,0 +1,16 @@
+#!/bin/sh
+# Blocks commits that look like they contain Claude Code transcripts or personal data.
+fail=0
+for f in $(git diff --cached --name-only --diff-filter=ACM); do
+  case "$f" in
+    *.jsonl) echo "pre-commit: refusing to commit $f (.jsonl looks like a transcript)"; fail=1 ;;
+    .receipts/*|*/.receipts/*|data/*) echo "pre-commit: refusing to commit $f (local data folder)"; fail=1 ;;
+  esac
+  # A transcript line has both keys with values on one line.
+  if git show ":$f" 2>/dev/null | grep -qE '"parent[U]uid":.{0,200}"session[I]d":"'; then
+    echo "pre-commit: $f contains Claude Code transcript lines"; fail=1
+  fi
+  size=$(git cat-file -s ":$f" 2>/dev/null || echo 0)
+  if [ "$size" -gt 3000000 ]; then echo "pre-commit: $f is larger than 3 MB"; fail=1; fi
+done
+exit $fail

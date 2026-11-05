@@ -1,0 +1,20 @@
+# Receipts: never commit real transcripts or derived personal data.
+*.jsonl
+.receipts/
+data/
+**/.env
+**/.env.local
+**/.env.*.local
+!**/.env.example
+
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
+
+# Foundry
+contracts/out/
+contracts/cache/
+contracts/broadcast/*/31337/
