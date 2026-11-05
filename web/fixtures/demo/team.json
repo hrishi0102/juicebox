@@ -50,26 +50,26 @@
         "keptWorkMilli": 2660,
         "wasteBps": 0,
         "labels": [
-          3,
+          2,
           0,
           0,
           0,
-          0,
+          1,
           0
         ],
         "labelSpendCents": [
-          "13395",
+          "4314",
           "0",
           "0",
           "0",
-          "0",
+          "9081",
           "0"
         ],
         "evidenceRoot": "0x3803f15a484826e813d1697b14bccbfe520f9050fa627fa2909767060c891a6d",
-        "judgeRoot": "0xe595ec97a90397f884fd593de577a240a63df7f698c0f3915436b55bab389433",
+        "judgeRoot": "0xd56e66e67062e6aad54ec5a6ea7f968b822f3d045290ad03c8fc338fb5a02b53",
         "judge": "heuristic"
       },
-      "digest": "0x0b78501e3483b2994a69fdeb4b10ff1841b5bb304590d5d093c4feb8f29d5512",
+      "digest": "0x516e4e2c18d9920642d67d1b017ff03e77fe56f9a8f3bf2210f65cd179bc2abf",
       "evidence": [
         {
           "changeKey": "acme-demo/payments-api#102",
@@ -131,7 +131,7 @@
         },
         {
           "sessionHash": "0x283d04b50b08d9430c07a682366a0bfe95dd7c76739ca892e023f6c0f9976d23",
-          "label": "Shipped",
+          "label": "Overkill",
           "difficulty": 1,
           "engine": "heuristic",
           "model": "",
@@ -140,7 +140,7 @@
           "requestHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
           "responseHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
           "verified": false,
-          "leaf": "0x476fde9e20296f5ea0f08d6eb06abc39f71fd130d0233f48fd8908827501a77d"
+          "leaf": "0x206efa966d3b1b3b7736d8e42c38f53103738c6173e295f7aa76932d5d1ac03d"
         }
       ],
       "summary": {
@@ -188,7 +188,7 @@
           }
         ]
       },
-      "signature": "0x98aa8a0f2d587ac6c2a8c76514e85e7853677727c6490582216d45611366fd3f693047f14654cd073e754c384d42c92586fb6e9b8dcf66ebafbbf4baf819f25f1b",
+      "signature": "0xc10cc764956a70e5fdf3bafd668efdc0d959d75c6e6991dce5e7ff71c202e89d5c491df911ab95e0c64fffb697c1af53f45a3a8bfd30328e472e738fa402fb981b",
       "signedAt": "2026-10-12T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -964,28 +964,28 @@
         "shippedTasks": 4,
         "survivalBps": 8123,
         "keptWorkMilli": 3240,
-        "wasteBps": 2912,
+        "wasteBps": 2969,
         "labels": [
-          3,
+          2,
           0,
           1,
           0,
-          0,
+          1,
           0
         ],
         "labelSpendCents": [
-          "16314",
+          "7101",
           "0",
           "6701",
           "0",
-          "0",
+          "9213",
           "0"
         ],
         "evidenceRoot": "0x3b1ebe75caeb9605f5d2dfb40bf8a8ab6980af6efeac45cdec46ede19e33340d",
-        "judgeRoot": "0x6a26c9cb32e700a3889cda02e7f5e897509b85ad74bd3d8a68f7ef2dd2242f51",
+        "judgeRoot": "0xe2510d5e4d8b3b5155e02db935110dfb3b4f0c176b09d54b87a9e45e8b767d16",
         "judge": "heuristic"
       },
-      "digest": "0xef5407ac3a498ac8af84559e974ed9ea7ba21911b10d40049a391992a8c663d3",
+      "digest": "0x13055bc45b1a56d124bfc3ff68b1a6f654a1e224f2e9447fa5d4165236d10f78",
       "evidence": [
         {
           "changeKey": "acme-demo/payments-api#123",
@@ -1057,7 +1057,7 @@
         },
         {
           "sessionHash": "0x932d88b3b94477b3966a108d468ede4065ef85a722f38ff8482bbfe9da403721",
-          "label": "Shipped",
+          "label": "Overkill",
           "difficulty": 1,
           "engine": "heuristic",
           "model": "",
@@ -1066,7 +1066,7 @@
           "requestHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
           "responseHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
           "verified": false,
-          "leaf": "0x969c730b30a85360830de90d575528cb3644f454e9bb262c0bd67aa6cd7c01ba"
+          "leaf": "0x80bf49d4fc82b0d8cad773d70c695721ebb5141f3657e7ac0457c2595c388ad6"
         },
         {
           "sessionHash": "0xde065df0d1dc44bda9aaeee71a3db60ca65135b899338785d26976efa9421154",
@@ -1088,7 +1088,7 @@
         "survivalPct": 81.23,
         "keptWork": 3.24,
         "keptWorkPer100Usd": 1.41,
-        "wastePct": 29.12,
+        "wastePct": 29.69,
         "buckets": [
           {
             "difficulty": 1,
@@ -1127,7 +1127,7 @@
           }
         ]
       },
-      "signature": "0x0919abae0a74052f8e9308b15cda56811131a02c05bed676259164b1651777b2799174157c2b7516a098e7489c745cbbc979d4ab3fd94ff8d41060d17876ee161c",
+      "signature": "0x2ab277dc522af4a1de994a3599474c9bac11fdfc73c6feb1a8eec7c9b651285b3e85669d99a88e419a130d4b36facc9ed086ee9a2c33054e9bfc7c4603b3f9b61c",
       "signedAt": "2026-11-06T12:00:00.000Z",
       "share": {
         "level": "full",

@@ -6,6 +6,9 @@ import { sessionUsd } from "./pricing";
 import type { Change, ChangeKind, Judgement, Session, SessionLabel, SessionMatch } from "./types";
 
 const DAY = 86400_000;
+// What a small (difficulty 1 or 2) task usually costs in Claude Code at API prices. Only used when
+// there are too few shipped small tasks in the data to measure it.
+const SMALL_TASK_USD = 5;
 
 export type Linked = { change: Change; confidence: number };
 
@@ -29,23 +32,27 @@ export function loopScore(s: Session) {
   return score;
 }
 
-export function estimateDifficulty(s: Session, linked: Linked[]): 1 | 2 | 3 | 4 | 5 {
-  const shipped = linked.filter((l) => l.change.state === "merged" || l.change.state === "direct" || l.change.state === "open");
-  let d: number;
-  if (shipped.length) {
-    const size = shipped.reduce((a, l) => a + l.change.additions + l.change.deletions, 0);
-    const files = new Set(shipped.flatMap((l) => l.change.files)).size;
-    d = size < 15 ? 1 : size < 80 ? 2 : size < 300 ? 3 : size < 1200 ? 4 : 5;
-    if (files >= 15) d += 1;
-    if (files <= 1 && size < 40) d = Math.min(d, 1);
-  } else if (s.filesEdited.length) {
-    const size = s.linesAdded + s.linesRemoved;
-    d = size < 15 ? 1 : size < 80 ? 2 : size < 300 ? 3 : size < 1200 ? 4 : 5;
-  } else {
-    const m = s.activeMinutes;
-    d = m < 15 ? 1 : m < 45 ? 2 : m < 120 ? 3 : 4;
-  }
+export function sizeToDifficulty(size: number, files: number): 1 | 2 | 3 | 4 | 5 {
+  let d = size < 15 ? 1 : size < 80 ? 2 : size < 300 ? 3 : size < 1200 ? 4 : 5;
+  if (files >= 15) d += 1;
+  if (files <= 1 && size < 40) d = Math.min(d, 1);
   return Math.max(1, Math.min(5, d)) as 1 | 2 | 3 | 4 | 5;
+}
+
+/** Difficulty of a change (PR or commit) from its size. Used for tasks. */
+export function changeDifficulty(c: Pick<Change, "additions" | "deletions" | "files">) {
+  return sizeToDifficulty(c.additions + c.deletions, c.files.length);
+}
+
+/**
+ * Difficulty of the session's own work. A session that only opened a big PR did small work,
+ * so we look at what the session itself edited, or at its effort when it edited nothing.
+ */
+export function estimateDifficulty(s: Session, _linked: Linked[] = []): 1 | 2 | 3 | 4 | 5 {
+  void _linked;
+  if (s.filesEdited.length) return sizeToDifficulty(s.linesAdded + s.linesRemoved, s.filesEdited.length);
+  const m = s.activeMinutes;
+  return (m < 15 ? 1 : m < 45 ? 2 : m < 120 ? 3 : 4) as 1 | 2 | 3 | 4;
 }
 
 export function pickKind(linked: Linked[]): ChangeKind {
@@ -88,9 +95,10 @@ export function judgeAllHeuristic(sessions: Session[], matches: SessionMatch[], 
 
   // Overkill only makes sense for small work: a sledgehammer for a small nail. The yardstick is the
   // median cost of other shipped sessions whose linked work was also small (difficulty 1 or 2).
+  // With few samples the outliers themselves would set the bar, so fall back to a fixed yardstick.
   const small = first.filter((f) => f.label === "Shipped" && f.difficulty <= 2).map((f) => sessionUsd(f.s));
-  const smallMedian = small.length >= 3 ? median(small) : 4;
-  const overkillAt = Math.max(12, 4 * smallMedian);
+  const smallMedian = small.length >= 5 ? median(small) : SMALL_TASK_USD;
+  const overkillAt = Math.max(15, 4 * smallMedian);
 
   return first.map((f): Judgement => {
     let label = f.label;

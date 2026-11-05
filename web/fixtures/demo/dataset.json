@@ -3555,11 +3555,11 @@
     },
     {
       "sessionId": "d63e40d3-9038-40b2-a61c-45035d9070d6",
-      "label": "Shipped",
+      "label": "Overkill",
       "difficulty": 1,
       "kind": "fix",
       "confidence": 0.75,
-      "reason": "Linked to 1 merged change(s).",
+      "reason": "Shipped small work (difficulty 1) for $90.81; similar small tasks cost about $5.00.",
       "judge": {
         "engine": "heuristic",
         "at": "2026-11-06T12:00:00.000Z"
@@ -3867,11 +3867,11 @@
     },
     {
       "sessionId": "01963bf0-2b7e-45a5-a83f-c0a34cd09fc1",
-      "label": "Shipped",
+      "label": "Overkill",
       "difficulty": 1,
       "kind": "fix",
       "confidence": 0.75,
-      "reason": "Linked to 1 merged change(s).",
+      "reason": "Shipped small work (difficulty 1) for $92.13; similar small tasks cost about $5.00.",
       "judge": {
         "engine": "heuristic",
         "at": "2026-11-06T12:00:00.000Z"

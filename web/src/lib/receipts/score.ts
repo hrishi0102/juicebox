@@ -4,7 +4,7 @@
 
 import { attributeCost } from "./match";
 import { sessionUsd } from "./pricing";
-import { median, medianShippedCost } from "./heuristics";
+import { changeDifficulty, median, medianShippedCost } from "./heuristics";
 import type { BucketStat, Change, Judgement, PeriodSummary, Session, SessionLabel, SessionMatch, Task } from "./types";
 
 const ALL_LABELS: SessionLabel[] = ["Shipped", "Learned", "Looped", "Abandoned", "Overkill", "Pending"];
@@ -20,7 +20,9 @@ export function buildTasks(sessions: Session[], matches: SessionMatch[], changes
     .filter((c) => (sessionsByChange.get(c.key) ?? []).some((id) => ids.has(id)))
     .map((c) => {
       const sids = (sessionsByChange.get(c.key) ?? []).filter((id) => ids.has(id));
-      const diffs = sids.map((id) => judgeBy.get(id)?.difficulty ?? 2);
+      // Task difficulty comes from the change itself; an AI judge's rating wins when there is one.
+      const aiDiffs = sids.map((id) => judgeBy.get(id)).filter((j) => j && j.judge.engine !== "heuristic").map((j) => j!.difficulty);
+      const difficulty = aiDiffs.length ? Math.max(...aiDiffs) : changeDifficulty(c);
       const shipped = (c.state === "merged" || c.state === "direct") && !c.reverted;
       const survival = c.survival ? c.survival.ratio : null;
       return {
@@ -29,7 +31,7 @@ export function buildTasks(sessions: Session[], matches: SessionMatch[], changes
         url: c.url,
         title: c.title,
         kind: judgeBy.get(sids[0])?.kind && judgeBy.get(sids[0])!.kind !== "other" ? judgeBy.get(sids[0])!.kind : c.kind,
-        difficulty: Math.max(...diffs, 1),
+        difficulty,
         state: c.state,
         reverted: c.reverted,
         survival,

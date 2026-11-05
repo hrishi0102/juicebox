@@ -2,7 +2,9 @@ import Link from "next/link";
 import { ReceiptPaper } from "@/components/receipt-paper";
 import { UseDemoButton } from "@/components/source-switch";
 import { ReceiptActions } from "@/components/receipt-actions";
-import { JudgeButton, ScanButton } from "@/components/pipeline-controls";
+import { JudgeButton, ReviewButton, ScanButton } from "@/components/pipeline-controls";
+import { readJson } from "@/lib/receipts/store";
+import type { WeeklyReview } from "@/lib/receipts/review";
 import { Difficulty, LabelBadge, SpendBar } from "@/components/label-badge";
 import { currentSource, getDataset, getDemoTeam, weekView, weeksWithData } from "@/lib/server/data";
 import { loadSavedReceipt, localSigner } from "@/lib/server/receipts-store";
@@ -27,12 +29,15 @@ export default async function ThisWeek({ searchParams }: { searchParams: Promise
   const saved = loadSavedReceipt(source, wv.id);
   const signer = localSigner(source);
   const owner = saved?.message.owner ?? signer?.address ?? d.owner;
-  const preview = owner ? buildReceipt({ owner: owner as `0x${string}`, periodId: wv.id, summary: s, judgements: wv.judgements }) : undefined;
-  const digest = saved?.digest ?? preview?.digest;
+  const preview = owner ? buildReceipt({ owner: owner as `0x${string}`, periodId: wv.id, summary: { ...s, owner }, judgements: wv.judgements }) : undefined;
+  // A saved receipt is stale when the data changed after it was signed (rescan, new judge labels).
+  const stale = !!saved && !!preview && saved.digest !== preview.digest;
+  const digest = stale ? preview?.digest : (saved?.digest ?? preview?.digest);
   const shipped = s.tasks.filter((t) => t.state === "merged" || t.state === "direct");
   const other = s.tasks.filter((t) => !(t.state === "merged" || t.state === "direct"));
   const teamBuckets = source === "demo" ? teamMedians() : undefined;
   const judgeReady = !!process.env.ZG_API_KEY;
+  const review = readJson<WeeklyReview | null>("local", `reviews/${source}-${wv.id}.json`, null);
 
   return (
     <div className="space-y-8">
@@ -60,19 +65,22 @@ export default async function ThisWeek({ searchParams }: { searchParams: Promise
             owner={owner}
             judgeLine={judgeLine(wv.judgements)}
             digest={digest}
-            signed={!!saved?.signature}
-            sharedLevel={saved?.share?.level}
+            signed={!!saved?.signature && !stale}
+            stale={stale}
+            sharedLevel={stale ? undefined : saved?.share?.level}
             animate
           />
           <ReceiptActions
             week={wv.id}
             source={source}
-            signed={!!saved?.signature}
-            shared={saved?.share ?? null}
+            signed={!!saved?.signature && !stale}
+            stale={stale}
+            shared={stale ? null : (saved?.share ?? null)}
             canSignLocally={!!signer}
             arkivReady={!!process.env.ARKIV_PRIVATE_KEY}
             savedJson={saved ? JSON.stringify(saved, null, 2) : undefined}
           />
+          <PrivateJudgePanel judgements={wv.judgements} />
         </div>
 
         <div className="min-w-0 space-y-10">
@@ -125,9 +133,29 @@ export default async function ThisWeek({ searchParams }: { searchParams: Promise
           </section>
 
           <section aria-labelledby="leaks">
-            <h2 id="leaks" className="text-xl font-semibold tracking-tight">
-              Where it leaked
-            </h2>
+            <div className="flex flex-wrap items-center gap-3">
+              <h2 id="leaks" className="text-xl font-semibold tracking-tight">
+                Where it leaked
+              </h2>
+              <div className="ml-auto">
+                <ReviewButton week={wv.id} judgeReady={judgeReady} label={review ? "New private review" : "Get a private review"} />
+              </div>
+            </div>
+            {review && (
+              <div className="mt-3 max-w-[72ch] rounded-lg border border-primary/30 bg-accent/40 p-4">
+                <p className="text-[15px]">{review.summary}</p>
+                <ul className="mt-3 list-disc space-y-1.5 pl-5 text-[15px]">
+                  {review.tips.map((t, i) => (
+                    <li key={i}>{t}</li>
+                  ))}
+                </ul>
+                <p className="mt-3 text-xs text-muted-foreground">
+                  Private review by {review.judge.model} on 0G Private Computer ({review.judge.trustMode ?? "private"} mode
+                  {review.judge.sealed ? ", sealed" : ""}
+                  {review.judge.verified ? ", TEE signature verified" : ""}). Request {review.judge.requestId ?? "n/a"}.
+                </p>
+              </div>
+            )}
             <ul className="mt-3 max-w-[70ch] list-disc space-y-2 pl-5 text-[15px]">
               {s.tips.map((t, i) => (
                 <li key={i}>{t}</li>
@@ -223,6 +251,35 @@ function WeekLink({ week, label, dir }: { week?: string; label: string; dir: "pr
     <Link href={`/?week=${week}`} aria-label={label} className="rounded-md px-2 py-1 text-lg leading-none hover:bg-accent">
       {glyph}
     </Link>
+  );
+}
+
+/** Visible proof of the private judge: which sessions were judged on 0G, with request ids. */
+function PrivateJudgePanel({ judgements }: { judgements: Judgement[] }) {
+  const tee = judgements.filter((j) => j.judge.engine === "0g-tee");
+  if (!tee.length)
+    return (
+      <p className="text-sm text-muted-foreground">
+        Labels this week come from offline rules. The private judge reads each session inside a 0G enclave and does better.
+      </p>
+    );
+  return (
+    <div className="rounded-lg border border-border bg-card p-4 text-sm">
+      <div className="font-medium">
+        Judged privately on 0G: {tee.length} of {judgements.length} sessions, {tee.filter((j) => j.judge.verified).length} with a verified TEE signature
+      </div>
+      <ul className="mt-2 space-y-0.5 text-muted-foreground">
+        {tee.slice(0, 6).map((j) => (
+          <li key={j.sessionId} className="truncate">
+            <Link href={`/sessions/${j.sessionId}`} className="hover:underline">
+              {j.label}
+            </Link>
+            , request {j.judge.requestId ?? "n/a"}
+          </li>
+        ))}
+        {tee.length > 6 && <li>and {tee.length - 6} more</li>}
+      </ul>
+    </div>
   );
 }
 

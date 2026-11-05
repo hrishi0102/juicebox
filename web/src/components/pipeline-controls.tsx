@@ -31,6 +31,32 @@ export function ScanButton({ label = "Scan my logs", variant = "default" }: { la
   );
 }
 
+export function ReviewButton({ week, judgeReady, label }: { week: string; judgeReady: boolean; label: string }) {
+  const router = useRouter();
+  const [busy, setBusy] = useState(false);
+  const [, start] = useTransition();
+  async function review() {
+    setBusy(true);
+    const t = toast.loading("Asking the private judge on 0G for a review of this week");
+    try {
+      const r = await fetch("/api/review", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ week }) });
+      const j = await r.json();
+      if (!j.ok) throw new Error(j.error);
+      toast.success(`Private review ready. Request ${j.requestId ?? ""}`, { id: t });
+      start(() => router.refresh());
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : String(e), { id: t });
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <Button variant="outline" size="sm" onClick={review} disabled={busy || !judgeReady} title={judgeReady ? undefined : "Add ZG_API_KEY to web/.env.local"}>
+      {busy ? "Reviewing" : label}
+    </Button>
+  );
+}
+
 export function JudgeButton({ sessionIds, label, judgeReady }: { sessionIds?: string[]; label: string; judgeReady: boolean }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);

@@ -11,6 +11,7 @@ type Props = {
   week: string;
   source: "local" | "demo";
   signed: boolean;
+  stale?: boolean;
   shared?: { level: string; arkivKey?: string } | null;
   canSignLocally: boolean;
   arkivReady: boolean;
@@ -91,6 +92,7 @@ export function ReceiptActions(p: Props) {
           </Button>
         )}
       </div>
+      {p.stale && <p className="text-sm text-muted-foreground">The numbers changed since you signed this week (a rescan or new labels). Sign again to update the receipt.</p>}
       {p.signed && (
         <div className="flex flex-wrap items-center gap-2">
           <Button variant="secondary" onClick={() => share("totals")} disabled={!!busy || !p.arkivReady}>

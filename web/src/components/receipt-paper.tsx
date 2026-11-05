@@ -10,6 +10,7 @@ export type ReceiptPaperProps = {
   judgeLine: string;
   digest?: string;
   signed?: boolean;
+  stale?: boolean;
   sharedLevel?: string;
   compact?: boolean;
   animate?: boolean;
@@ -69,7 +70,7 @@ export function ReceiptPaper(p: ReceiptPaperProps) {
 
         <div className="space-y-0.5 text-[12px]">
           <Row k="Judge" v={p.judgeLine} />
-          <Row k="Signature" v={p.signed ? "signed (EIP-712)" : "not signed yet"} />
+          <Row k="Signature" v={p.signed ? "signed (EIP-712)" : p.stale ? "out of date, sign again" : "not signed yet"} />
           {p.sharedLevel && <Row k="Shared" v={p.sharedLevel === "full" ? "with evidence" : "totals only"} />}
         </div>
 
