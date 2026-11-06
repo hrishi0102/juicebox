@@ -59,6 +59,7 @@ export type ReceiptMessage = {
 
 export type EvidenceLeaf = {
   changeKey: string;
+  title: string; // PR or commit title, so the company can see what the work was
   url: string;
   state: string;
   reverted: boolean;
@@ -115,13 +116,14 @@ const ZERO = ("0x" + "0".repeat(64)) as Hex;
 export function evidenceLeaf(t: Task): EvidenceLeaf {
   const survivalBps = t.survival === null ? 65535 : Math.round(t.survival * 10000);
   const costCents = Math.round(t.costUsd * 100);
+  const title = t.title ?? "";
   const leaf = keccak256(
     encodeAbiParameters(
-      [{ type: "string" }, { type: "string" }, { type: "string" }, { type: "bool" }, { type: "uint16" }, { type: "uint64" }, { type: "uint8" }],
-      [t.changeKey, t.url, t.state, t.reverted, survivalBps, BigInt(costCents), t.difficulty],
+      [{ type: "string" }, { type: "string" }, { type: "string" }, { type: "string" }, { type: "bool" }, { type: "uint16" }, { type: "uint64" }, { type: "uint8" }],
+      [t.changeKey, title, t.url, t.state, t.reverted, survivalBps, BigInt(costCents), t.difficulty],
     ),
   );
-  return { changeKey: t.changeKey, url: t.url, state: t.state, reverted: t.reverted, survivalBps, costCents, difficulty: t.difficulty, leaf };
+  return { changeKey: t.changeKey, title, url: t.url, state: t.state, reverted: t.reverted, survivalBps, costCents, difficulty: t.difficulty, leaf };
 }
 
 export function judgeLeaf(j: Judgement): JudgeLeaf {
@@ -318,7 +320,7 @@ export async function verifyReceipt(r: SignedReceipt): Promise<VerifyResult> {
     }
   } else checks.push({ name: "Signed by the owner", ok: false, detail: "No signature" });
   if (r.evidence.length) {
-    const leavesOk = r.evidence.every((e) => evidenceLeaf({ changeKey: e.changeKey, url: e.url, state: e.state as Task["state"], reverted: e.reverted, survival: e.survivalBps === 65535 ? null : e.survivalBps / 10000, costUsd: e.costCents / 100, difficulty: e.difficulty } as Task).leaf === e.leaf);
+    const leavesOk = r.evidence.every((e) => evidenceLeaf({ changeKey: e.changeKey, title: e.title ?? "", url: e.url, state: e.state as Task["state"], reverted: e.reverted, survival: e.survivalBps === 65535 ? null : e.survivalBps / 10000, costUsd: e.costCents / 100, difficulty: e.difficulty } as Task).leaf === e.leaf);
     checks.push({ name: "Evidence matches its Merkle root", ok: leavesOk && merkleRoot(r.evidence.map((e) => e.leaf)) === m.evidenceRoot });
   } else checks.push({ name: "Evidence matches its Merkle root", ok: true, detail: "Evidence not shared (totals only)" });
   if (r.judges.length) {

@@ -5,7 +5,7 @@
 //   npm run receipts -- week [2026-W45]          print the summary for a week
 //   npm run receipts -- sign [2026-W45]          sign a receipt with RECEIPTS_SIGNER_KEY
 //   npm run receipts -- team <id> "Name"         set the team id used for sharing
-//   npm run receipts -- share 2026-W45 [--level full]   publish a signed receipt to Arkiv
+//   npm run receipts -- share 2026-W45           publish a signed receipt (with its PR list) to Arkiv
 //   npm run receipts -- demo                     regenerate the synthetic demo dataset
 //   npm run receipts -- publish-demo             write the demo team's signed receipts to Arkiv
 //   npm run receipts -- arkiv [team]             read a team's shared receipts back from Arkiv
@@ -120,7 +120,7 @@ async function main() {
     }
     case "share": {
       // npm run receipts -- share 2026-W45 [--level full]
-      const level = opt("level") === "full" ? "full" : "totals";
+      const level = opt("level") === "totals" ? "totals" : "full";
       const week = positional[0];
       if (!week) throw new Error("Usage: share <week> [--level totals|full]");
       const r = readJson<SignedReceipt | null>("local", `receipts/${week}.json`, null);

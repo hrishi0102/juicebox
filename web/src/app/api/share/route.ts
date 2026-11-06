@@ -10,7 +10,8 @@ export const maxDuration = 120;
 export async function POST(req: Request) {
   const blocked = rejectCrossSite(req);
   if (blocked) return blocked;
-  const { week, level } = (await req.json()) as { week: string; level: "totals" | "full" };
+  // Company policy: the PR list is shared with the org. "totals" is only used if explicitly asked for.
+  const { week, level = "full" } = (await req.json()) as { week: string; level?: "totals" | "full" };
   const source = await currentSource();
   const r = loadSavedReceipt(source, week);
   if (!r?.signature) return NextResponse.json({ ok: false, error: "Sign this week's receipt first." }, { status: 400 });

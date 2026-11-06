@@ -1,6 +1,6 @@
 // Synthetic demo data: a fictional company ("Acme", three teams, twelve people) over four weeks,
-// using Claude Code and Codex. Company policy in the demo: everyone shares weekly totals, and
-// sharing the PR list (evidence) is each person's choice.
+// using Claude Code and Codex. Company policy in the demo: everyone shares a signed weekly receipt
+// including the list of PRs it paid for. Prompts never leave the laptop.
 // No real transcript, repo or person is in here. Labels come from the real heuristic judge,
 // run over synthetic signals, so the demo exercises the same code paths as real data.
 
@@ -205,15 +205,15 @@ const P = (ship: number, loop: number, learn: number, abandon: number, overkill:
 const MEMBERS: Persona[] = [
   { name: "You", role: "Engineer", share: "full", team: "acme-payments", you: true, seed: 35, codex: 0, plan: P(13, 4, 5, 3, 2, 2, 1) },
   { name: "Asha", role: "Senior engineer", share: "full", team: "acme-payments", seed: 11, codex: 0.2, plan: P(16, 1, 4, 1, 1, 2, 0) },
-  { name: "Ravi", role: "Engineer", share: "totals", team: "acme-payments", seed: 23, codex: 0.5, plan: P(9, 7, 2, 4, 1, 1, 1) },
+  { name: "Ravi", role: "Engineer", share: "full", team: "acme-payments", seed: 23, codex: 0.5, plan: P(9, 7, 2, 4, 1, 1, 1) },
   { name: "Meera", role: "Staff engineer", share: "full", team: "acme-payments", seed: 31, codex: 0, plan: P(8, 1, 9, 1, 0, 2, 0) },
-  { name: "Kabir", role: "Engineer", share: "totals", team: "acme-payments", seed: 47, codex: 0.3, plan: P(10, 2, 2, 2, 5, 1, 0) },
+  { name: "Kabir", role: "Engineer", share: "full", team: "acme-payments", seed: 47, codex: 0.3, plan: P(10, 2, 2, 2, 5, 1, 0) },
   { name: "Neel", role: "Platform lead", share: "full", team: "acme-platform", seed: 53, codex: 0.6, plan: P(12, 2, 6, 1, 1, 2, 0) },
-  { name: "Tara", role: "SRE", share: "totals", team: "acme-platform", seed: 59, codex: 0.8, plan: P(7, 3, 8, 2, 0, 1, 1) },
+  { name: "Tara", role: "SRE", share: "full", team: "acme-platform", seed: 59, codex: 0.8, plan: P(7, 3, 8, 2, 0, 1, 1) },
   { name: "Imran", role: "Engineer", share: "full", team: "acme-platform", seed: 61, codex: 0.4, plan: P(11, 5, 3, 3, 2, 1, 0) },
-  { name: "Divya", role: "Engineer", share: "totals", team: "acme-platform", seed: 67, codex: 0.1, plan: P(14, 1, 3, 1, 3, 2, 0) },
+  { name: "Divya", role: "Engineer", share: "full", team: "acme-platform", seed: 67, codex: 0.1, plan: P(14, 1, 3, 1, 3, 2, 0) },
   { name: "Arjun", role: "Mobile lead", share: "full", team: "acme-mobile", seed: 71, codex: 0.5, plan: P(10, 2, 4, 2, 1, 2, 1) },
-  { name: "Sara", role: "Engineer", share: "totals", team: "acme-mobile", seed: 73, codex: 0.9, plan: P(6, 6, 2, 4, 1, 1, 0) },
+  { name: "Sara", role: "Engineer", share: "full", team: "acme-mobile", seed: 73, codex: 0.9, plan: P(6, 6, 2, 4, 1, 1, 0) },
   { name: "Dev", role: "Engineer", share: "full", team: "acme-mobile", seed: 79, codex: 0.2, plan: P(13, 1, 5, 1, 4, 1, 0) },
 ];
 
@@ -259,7 +259,7 @@ export async function makeDemoDataset(): Promise<{ dataset: Dataset; org: OrgDat
     dataset: mine!,
     org: {
       ...DEMO_ORG,
-      policy: "Everyone shares weekly totals. Sharing the PR list is each person's choice. Prompts are never collected.",
+      policy: "Everyone shares a signed weekly receipt with the PRs it paid for. Prompts never leave anyone's laptop.",
       teams: TEAMS,
       members,
       receipts,
