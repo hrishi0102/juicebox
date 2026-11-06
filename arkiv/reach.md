@@ -20,7 +20,6 @@ Two kinds of people touch Arkiv:
 
 - **89 receipt entities** for the demo company Acme: 12 people in 3 teams over 5 weeks. 60 carry the full list on Arkiv; 29 are sealed, with the list encrypted on Swarm.
 - **12 owners**: every receipt is owned by the person who signed it, not by the wallet that paid for it.
-- **12 card entities** on the wall, each pointing to an image on Swarm.
 - The author's own logs: about 50 Claude Code sessions a month, which turn into 4 or 5 weekly receipts a month for one person.
 
 ## Plan after the hackathon

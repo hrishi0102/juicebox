@@ -34,7 +34,7 @@ The payload is the signed receipt (`kind: "receipts.v3"`; the first shares are `
 
 - `message`: the EIP-712 typed data that was signed: owner, GitHub login, week, spend, sessions, things done, items and spend per category (Built, Fixed, Figured out, Researched, Wrote, Planned, Wasted), merged PRs, spend per AI tool, three Merkle roots (`itemsRoot`, `evidenceRoot`, `judgeRoot`), and in v3 the efficiency numbers (step-time medians, PR counts, waste by reason, where the money went)
 - `signature`: the owner's signature over `message`
-- `items`: the list (category, title, cost, linked PRs). Items the owner hid are left out; the ones shown carry Merkle proofs, and the signed counts still include the hidden ones
+- `items`: the whole list (category, title, cost, linked PRs). The employee cannot leave lines out or edit them, and readers rebuild `itemsRoot` from the items. (Receipts from an earlier version could leave lines out; each line they show carries a Merkle proof, and they still verify.)
 - `evidence`: one leaf per PR (title, link, state, cost)
 - `judges`: one leaf per session the private AI read on 0G (category, model, 0G request id, provider, hashes of exactly what was sent and answered)
 - `oneLiner`: the AI's sentence about the week (display only)
@@ -46,23 +46,9 @@ Never in the payload: prompts, the AI's answers, session titles, session ids (on
 
 With Swarm set up, sharing uploads the full signed week to Swarm as AES-256-GCM ciphertext (encrypted on the laptop), and the entity's payload is the totals-only receipt with `level = sealed`. The company page opens `sealed` with the company key, downloads the ciphertext, checks its size and SHA-256, decrypts it, and checks that it is the same signed receipt (same digest, valid signature). Everyone else sees the signed totals. See [swarm.md](swarm.md).
 
-## Card entity (`receipts-ethglobal-mumbai.card.v1`)
+## Card entity (no longer written)
 
-One per card someone makes public ("Get a Swarm link"). Read-only, handed to its maker, expires after 60 days.
-
-| Attribute | Type | Indexed | Meaning |
-|---|---|---|---|
-| `type` | `str` | yes | Always `card` |
-| `org` | `str` | yes | Company (GitHub org), or empty |
-| `period` | `str` | yes | ISO week |
-| `author` | `str` | yes | GitHub login or handle |
-| `signer` | `str` | yes | Lowercased address of the owner |
-| `done` | `i32` | yes | Things done on the card |
-| `swarm` | `str` | no | Swarm reference of the PNG (open at `<gateway>/bzz/<ref>/`) |
-| `sha256` | `str` | no | SHA-256 of the PNG |
-| `size` | `u64` | no | PNG size in bytes |
-| `mediaType` | `str` | no | `image/png` |
-| `caption` | `str` | no | The week in one line, at most 120 characters |
+An earlier version also wrote `receipts-ethglobal-mumbai.card.v1` entities, one per public week card (a PNG on Swarm). The app no longer makes cards: For fun is AI Wrapped only, which is never stored anywhere. The 12 card entities on Rabdi expire on their own, 60 days after they were written.
 
 ## System fields we read
 
@@ -75,6 +61,8 @@ Every read also selects these, so the app can show what Arkiv itself guarantees:
 | `$creationFlags` | `readonly: true`, shown as "nobody can change it, not even its owner" |
 | `$createdAt` | The block it was created at. When a week was sent twice, readers keep the one sent last |
 | `$expiresAt` | The block it expires at, shown as a date (2 second blocks) |
+
+The same fields are on the Arkiv explorer at `https://rabdi.explorer.arkiv.network/entity/<key>`, and the transaction page (`/tx/<hash>`) shows the create with the `readonly` flag, the expiry and the attributes, then the ownership transfer to the signer. Every page in the app that shows a receipt links there.
 
 ## Queries
 
