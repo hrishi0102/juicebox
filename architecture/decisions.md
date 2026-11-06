@@ -139,3 +139,6 @@ The receipt is evidence for the company: signed, nobody can edit it, sent only t
 
 ## 46. The demo is a place you choose, not a fallback
 The demo company is entered from `/demo` by picking a role (the lead, an engineer, someone with a link, just for fun), with a banner until you leave. Without logs, the employee side asks you to read them instead of showing the demo person's week. A hosted copy opens on the demo, since it has no logs. Reason: silently showing made-up data as "my week" was the most confusing fallback, and a role picker shows each flow on its own.
+
+## 47. A public gist proves the signing key belongs to the GitHub login
+The employee publishes one public gist on their own GitHub account with a short note naming their login and key, signed by that key; the company page, a shared receipt and Check a receipt show the login as proven or claimed. Reason: a receipt's GitHub login was only claimed by whoever signed it, so the company had to trust it. GitHub already is our one identity (decision 43); a signed note on the person's own account ties the key to it with no server of ours and nothing to trust but GitHub's word on who owns a gist. Keybase-style proofs are a known pattern. Trade-off: it needs a public gist, which says the person uses Receipts and shows their key, nothing else.

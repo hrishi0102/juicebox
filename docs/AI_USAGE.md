@@ -38,6 +38,7 @@ The human team member found the app confusing: every role (employee, company, pu
 - Sign in with 0G as the one way to pay, shared across the app (`components/zero-g.tsx`, `lib/zerog-tasks.ts`), with the balance shown before and after; the review and roast routes moved to the same browser-pays path; the app-key web routes removed.
 - Joining a company from your GitHub teams (`/api/join`), lists opened by org membership (`lib/server/viewer.ts`), keeping single lines private when sending (`/api/share`), the `/demo` role picker and banner, and the company setup checklist.
 - Tests for the weekly steps and for sending with lines kept private; docs and decisions 41 to 46.
+- The GitHub key proof, after the human team member said yes to it: a public gist signed by the laptop key, checked on the company side, on shared receipts and in Check a receipt, with tests.
 - At the human team member's request, a check of every Arkiv and Swarm prize requirement against the repo and live data: the documented queries and links were run (read-only), the README got a runnable query (Arkiv refuses anonymous queries), the judging files were brought up to date, the company page now keeps the latest of a week sent twice by `$createdAt`, and the public receipt page shows read-only, owner, writer and expiry from Arkiv.
 
 ## What tools generated

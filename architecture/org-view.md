@@ -29,7 +29,7 @@ Every receipt is re-verified; only verified ones count, and only signed fields a
 
 ## People (`/company/people`)
 
-Everyone's week: one collapsible row per person (name or GitHub login, team, things done, spend, merged PRs, their AI sentence) that opens to their signed list, their PRs, and whether the signature checked out. People who did not send are listed as such (when their names are known, as in the demo). `?who=<signing address>` opens that person's row; the employee's "See it as your company sees it" link uses it.
+Everyone's week: one collapsible row per person (name or GitHub login, team, things done, spend, merged PRs, their AI sentence) that opens to their signed list, their PRs, whether the signature checked out, and whether their GitHub login is proven by a public gist signed by the same key (see [sign-in.md](sign-in.md)). People who did not send are listed as such (when their names are known, as in the demo). `?who=<signing address>` opens that person's row; the employee's "See it as your company sees it" link uses it.
 
 ## Teams (`/company/team?team=<id>`)
 
@@ -52,6 +52,5 @@ For whoever runs Receipts for the company. Read-only; everything is set in `web/
 
 ## Not built yet
 
-- Proving that a signing key belongs to a GitHub login (today the login inside the signed receipt is shown as claimed, next to the signing address). A one-time "link my key" step could post a signed note to the employee's GitHub that the company page checks.
 - Automatic weekly sending (today: a button, or the CLI `share`).
 - Restricting the company page to managers (today any member of the org can open the lists; GitHub can tell us who is an org owner or team maintainer).

@@ -18,6 +18,14 @@ Code: `web/src/lib/server/session.ts`, `web/src/lib/server/viewer.ts`, `web/src/
 - Callback URL: `<address>/api/auth/callback`, shown on Company, Setup (an OAuth App allows up to 10).
 - Orgs with OAuth App access restrictions (the default for new orgs) only show up after an org owner approves the app.
 
+## Proving the key belongs to the GitHub login
+
+Code: `web/src/lib/receipts/key-proof.ts` (format and checks), `web/src/lib/server/key-proofs.ts` (GitHub lookups, cache, publishing), `web/src/app/api/key-proof/route.ts`, `web/src/components/key-proof-button.tsx`, `github-proof.tsx`; tests in `web/test/key-proof.test.ts`.
+
+A receipt names its author's GitHub login, but anyone can type a login. So in My week, Setup the employee publishes one **public gist** on their own GitHub account (`receipts-key.txt`): a short note naming their login and their signing key, signed by that key (EIP-191). It says nothing about their work. The app creates the gist with the laptop's GitHub login (it needs the `gist` scope, which `gh auth login` gives by default); if it cannot, it shows the exact text to put in a gist by hand.
+
+Anyone can then check it without trusting us: GitHub says who owns the gist, the signature says which key wrote the note, and both must match the receipt. The company's People and Teams pages, a shared receipt (`/r/<key>`) and Check a receipt show "@login, key proven on GitHub" (with a link to the gist) or "claimed, not proven". The Send step tells the employee which one their company will see. Lookups use the laptop's GitHub token when there is one, and are cached (a proof for a day, no proof for ten minutes) in `~/.receipts/cache/key-proofs.json`. Demo people are never looked up. One proof covers one key, so a new laptop needs a new gist; a receipt signed with a browser wallet needs a gist signed by that wallet.
+
 ## 0G: every private AI call is paid from your own 0G account
 
 Code: `web/src/components/zero-g.tsx` (the session), `zero-g-button.tsx`, `ai-actions.tsx`, `zero-g-setup.tsx`, `web/src/lib/zerog-tasks.ts`, `web/src/app/api/week/browser/route.ts`, `api/review`, `api/wrapped/roast`, `browserPlan` / `browserPlanSessions` / `browserSessions` / `browserWeek` / `browserJudgeInfo` in `web/src/lib/receipts/week.ts`
