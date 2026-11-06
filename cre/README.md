@@ -65,7 +65,7 @@ cre login
 cre workflow simulate receipts-monthly --target staging-settings --non-interactive --trigger-index 0 --broadcast
 ```
 
-The simulator runs the workflow as one node, signs the report, and sends it through the simulation forwarder to `TeamScoreboard`. Look for the `TeamScorePosted` event on Etherscan, then open the app as Acme's lead (`/demo`), Teams, Payments: the "Checked by Chainlink" card shows the score and links to the transaction. Without `--broadcast` the write is a dry run.
+Or, in the app on the laptop: be Acme's lead in `/demo`, Teams, Payments, and click **Run the check now** on the Chainlink card. The app's server runs this same command (`web/src/lib/server/cre-run.ts`, `POST /api/cre/run`, laptop only) and the card reloads with the new score and transaction. The simulator runs the workflow as one node, signs the report, and sends it through the simulation forwarder to `TeamScoreboard`. Look for the `TeamScorePosted` event on Etherscan, then open the app as Acme's lead (`/demo`), Teams, Payments: the "Checked by Chainlink" card shows the score and links to the transaction. Without `--broadcast` the write is a dry run.
 
 ## Limits and notes
 
