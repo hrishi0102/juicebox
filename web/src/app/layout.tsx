@@ -33,14 +33,23 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 <span className="text-[17px]">Receipts</span>
               </Link>
               <NavLinks />
-              <div className="ml-auto">
+              <div className="ml-auto flex items-center gap-3">
+                <Link href="/how" className="hidden text-sm text-muted-foreground hover:text-foreground sm:inline">
+                  How it works
+                </Link>
                 <SourceSwitch source={source} hasLocal={hasLocal} />
               </div>
             </div>
           </header>
           <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6">{children}</main>
-          <footer className="mx-auto w-full max-w-6xl px-4 pb-8 pt-4 text-sm text-muted-foreground sm:px-6">
-            Your logs stay on this machine. Only signed totals you choose to share leave it.
+          <footer className="mx-auto flex w-full max-w-6xl flex-wrap gap-x-6 gap-y-1 px-4 pb-8 pt-4 text-sm text-muted-foreground sm:px-6">
+            <span>Your prompts never leave this laptop.</span>
+            <Link href="/how" className="hover:text-foreground">
+              How it works
+            </Link>
+            <Link href="/verify" className="hover:text-foreground">
+              Check a receipt
+            </Link>
           </footer>
         </TooltipProvider>
         <Toaster />

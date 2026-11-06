@@ -4,12 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const LINKS = [
-  { href: "/", label: "This week" },
-  { href: "/sessions", label: "Sessions" },
+  { href: "/", label: "My week" },
+  { href: "/sessions", label: "My sessions" },
   { href: "/team", label: "Team" },
-  { href: "/org", label: "Org" },
-  { href: "/verify", label: "Verify" },
-  { href: "/how", label: "How it works" },
+  { href: "/org", label: "Company" },
 ];
 
 export function NavLinks() {

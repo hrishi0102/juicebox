@@ -199,11 +199,11 @@
   }
   @keyframes print-in {
     from {
-      clip-path: inset(0 0 100% 0);
-      transform: translateY(-14px);
+      opacity: 0.35;
+      transform: translateY(-10px);
     }
     to {
-      clip-path: inset(0 0 0 0);
+      opacity: 1;
       transform: translateY(0);
     }
   }

@@ -18,10 +18,10 @@ export function SourceSwitch({ source, hasLocal }: { source: "local" | "demo"; h
         onClick={() => set("local")}
         disabled={pending}
         aria-pressed={source === "local"}
-        title={hasLocal ? "Your own Claude Code logs" : "Run a scan first (Scan my logs on the home page)"}
+        title={hasLocal ? "Your own AI coding logs" : "Read your logs first (button on the home page)"}
         className={`rounded-md px-2.5 py-1 transition-colors ${source === "local" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
       >
-        My logs
+        My data
       </button>
       <button
         type="button"
@@ -30,7 +30,7 @@ export function SourceSwitch({ source, hasLocal }: { source: "local" | "demo"; h
         aria-pressed={source === "demo"}
         className={`rounded-md px-2.5 py-1 transition-colors ${source === "demo" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
       >
-        Demo team
+        Demo
       </button>
     </div>
   );
@@ -51,7 +51,7 @@ export function UseDemoButton() {
       }
       className="inline-flex h-8 items-center rounded-lg border border-border bg-background px-2.5 text-sm font-medium hover:bg-muted"
     >
-      Look at the demo team
+      Try the demo company
     </button>
   );
 }

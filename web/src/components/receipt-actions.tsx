@@ -57,12 +57,12 @@ export function ReceiptActions(p: Props) {
       toast.success("Receipt signed with your wallet");
     });
 
-  const share = (level: "totals" | "full") =>
-    run(`share-${level}`, async () => {
-      const r = await fetch("/api/share", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ week: p.week, level }) });
+  const share = () =>
+    run("share", async () => {
+      const r = await fetch("/api/share", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ week: p.week }) });
       const j = await r.json();
       if (!j.ok) throw new Error(j.error);
-      toast.success(level === "full" ? "Shared with evidence on Arkiv" : "Shared totals on Arkiv", { description: `Entity ${String(j.entityKey).slice(0, 14)}…` });
+      toast.success("Shared with your team", { description: "Receipt and PR list are on Arkiv." });
     });
 
   const download = () => {
@@ -75,42 +75,51 @@ export function ReceiptActions(p: Props) {
     URL.revokeObjectURL(a.href);
   };
 
+  // One step at a time: sign first, then share. Everything else is a small link.
   return (
     <div className="space-y-3">
-      <div className="flex flex-wrap gap-2">
-        {p.canSignLocally && (
-          <Button onClick={signLocal} disabled={!!busy}>
-            {busy === "sign" ? "Signing" : p.signed ? "Sign again" : p.source === "demo" ? "Sign as demo user" : "Sign receipt"}
+      {!p.signed ? (
+        <>
+          <div className="flex flex-wrap gap-2">
+            {p.canSignLocally ? (
+              <Button onClick={signLocal} disabled={!!busy}>
+                {busy === "sign" ? "Signing" : p.source === "demo" ? "Sign this receipt (demo key)" : "Sign this receipt"}
+              </Button>
+            ) : null}
+            <Button variant={p.canSignLocally ? "outline" : "default"} onClick={signWallet} disabled={!!busy}>
+              {busy === "wallet" ? "Waiting for wallet" : "Sign with my wallet"}
+            </Button>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            {p.stale ? "Your numbers changed since you last signed. Sign again to update it." : "Signing locks the numbers so nobody can change them later."}
+          </p>
+        </>
+      ) : !p.shared?.arkivKey ? (
+        <>
+          <Button onClick={share} disabled={!!busy || !p.arkivReady}>
+            {busy === "share" ? "Sharing" : "Share with my team"}
           </Button>
-        )}
-        <Button variant={p.canSignLocally ? "outline" : "default"} onClick={signWallet} disabled={!!busy}>
-          {busy === "wallet" ? "Waiting for wallet" : "Sign with wallet"}
-        </Button>
-        {p.signed && (
-          <Button variant="outline" onClick={download}>
-            Download JSON
-          </Button>
-        )}
-      </div>
-      {p.stale && <p className="text-sm text-muted-foreground">The numbers changed since you signed this week (a rescan or new labels). Sign again to update the receipt.</p>}
-      {p.signed && (
-        <div className="flex flex-wrap items-center gap-2">
-          <Button variant="secondary" onClick={() => share("totals")} disabled={!!busy || !p.arkivReady}>
-            {busy === "share-totals" ? "Publishing" : "Share totals with team"}
-          </Button>
-          <Button variant="secondary" onClick={() => share("full")} disabled={!!busy || !p.arkivReady}>
-            {busy === "share-full" ? "Publishing" : "Share with evidence"}
-          </Button>
-          {!p.arkivReady && <span className="text-xs text-muted-foreground">Sharing needs ARKIV_PRIVATE_KEY (Rabdi testnet) in .env.local</span>}
-        </div>
-      )}
-      {p.shared?.arkivKey && (
-        <p className="text-xs text-muted-foreground">
-          Shared on Arkiv ({p.shared.level === "full" ? "with evidence" : "totals only"}).{" "}
+          <p className="text-sm text-muted-foreground">
+            {p.arkivReady ? "Your team sees the totals and the PR list. Never your prompts." : "Sharing is not set up yet (needs an Arkiv key in .env.local)."}
+          </p>
+        </>
+      ) : (
+        <p className="text-sm">
+          Signed and shared with your team.{" "}
           <a className="text-primary hover:underline" href={`/r/${p.shared.arkivKey}`}>
-            Link to this receipt
+            Open the shared receipt
           </a>
         </p>
+      )}
+      {p.signed && (
+        <div className="flex flex-wrap gap-x-4 text-sm">
+          <button type="button" onClick={download} className="text-primary hover:underline">
+            Download receipt
+          </button>
+          <button type="button" onClick={p.canSignLocally ? signLocal : signWallet} disabled={!!busy} className="text-muted-foreground hover:text-foreground">
+            Sign again
+          </button>
+        </div>
       )}
     </div>
   );

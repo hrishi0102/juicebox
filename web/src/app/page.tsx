@@ -11,8 +11,9 @@ import { loadSavedReceipt, localSigner } from "@/lib/server/receipts-store";
 import { headline } from "@/lib/receipts/score";
 import { median } from "@/lib/receipts/heuristics";
 import { buildReceipt } from "@/lib/receipts/receipt";
-import { LABEL_ORDER, pct, usd, weekRange } from "@/lib/format";
-import type { Judgement, Task } from "@/lib/receipts/types";
+import { LABEL_COPY, LABEL_ORDER, pct, usd, weekRange } from "@/lib/format";
+import { Collapsible } from "@/components/collapsible";
+import { TOOL_NAMES, type AiTool, type Judgement, type Task } from "@/lib/receipts/types";
 
 export default async function ThisWeek({ searchParams }: { searchParams: Promise<{ week?: string }> }) {
   const sp = await searchParams;
@@ -41,6 +42,8 @@ export default async function ThisWeek({ searchParams }: { searchParams: Promise
 
   return (
     <div className="space-y-8">
+      <Intro />
+
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex items-center gap-1 text-sm">
           <WeekLink week={older?.id} label="Older week" dir="prev" />
@@ -49,14 +52,15 @@ export default async function ThisWeek({ searchParams }: { searchParams: Promise
           </span>
           <WeekLink week={newer?.id} label="Newer week" dir="next" />
         </div>
-        <div className="ml-auto flex flex-wrap gap-2">
-          {source === "local" && <ScanButton label="Rescan logs" variant="outline" />}
-          {source === "local" && <JudgeButton label="Ask the private judge" sessionIds={wv.sessions.map((x) => x.id)} judgeReady={judgeReady} />}
-        </div>
+        {source === "local" && (
+          <div className="ml-auto">
+            <ScanButton label="Refresh from my logs" variant="outline" />
+          </div>
+        )}
       </div>
 
-      <div className="grid gap-10 lg:grid-cols-[380px_1fr]">
-        <div className="space-y-5">
+      <div className="grid gap-10 lg:grid-cols-[360px_1fr]">
+        <div className="order-2 space-y-4 lg:order-1">
           <ReceiptPaper
             weekId={wv.id}
             start={wv.start}
@@ -80,19 +84,17 @@ export default async function ThisWeek({ searchParams }: { searchParams: Promise
             arkivReady={!!process.env.ARKIV_PRIVATE_KEY}
             savedJson={saved ? JSON.stringify(saved, null, 2) : undefined}
           />
-          <PrivateJudgePanel judgements={wv.judgements} />
         </div>
 
-        <div className="min-w-0 space-y-10">
+        <div className="order-1 min-w-0 space-y-8 lg:order-2">
           <section>
             <h1 className="text-balance text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl">{headline(s)}.</h1>
-            <p className="mt-4 max-w-[60ch] text-lg text-muted-foreground">
-              {s.sessions} sessions this week.{" "}
-              {s.wasteUsd > 0 ? `${usd(s.wasteUsd)} (${pct(s.wastePct)}) went to loops, dead ends and oversized runs.` : "Almost nothing went to loops or dead ends."}{" "}
-              {s.labelCounts.Pending > 0 && `${s.labelCounts.Pending} still open.`}
+            <p className="mt-3 max-w-[60ch] text-lg text-muted-foreground">
+              {s.sessions} AI sessions this week{toolText(s.toolSpend)}.{" "}
+              {s.wasteUsd > 0 ? `${usd(s.wasteUsd)} (${pct(s.wastePct)}) went to loops and dead ends.` : "Almost nothing was wasted."}
             </p>
             {s.spendUsd > 0 && (
-              <div className="mt-6 max-w-xl space-y-2">
+              <div className="mt-5 max-w-xl space-y-2">
                 <SpendBar parts={LABEL_ORDER.map((l) => ({ label: l, value: s.labelSpend[l] }))} total={s.spendUsd} />
                 <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
                   {LABEL_ORDER.filter((l) => s.labelSpend[l] > 0).map((l) => (
@@ -109,6 +111,7 @@ export default async function ThisWeek({ searchParams }: { searchParams: Promise
             <h2 id="bought" className="text-xl font-semibold tracking-tight">
               What it bought
             </h2>
+            <p className="mt-1 text-sm text-muted-foreground">Pull requests these sessions turned into, and how much of each is still in the code.</p>
             {shipped.length === 0 ? (
               <p className="mt-3 text-muted-foreground">Nothing merged from this week&apos;s sessions yet.</p>
             ) : (
@@ -118,92 +121,131 @@ export default async function ThisWeek({ searchParams }: { searchParams: Promise
                 ))}
               </ul>
             )}
+          </section>
+
+          <div className="space-y-3">
             {other.length > 0 && (
-              <details className="mt-3 text-sm">
-                <summary className="cursor-pointer text-muted-foreground hover:text-foreground">
-                  {other.length} more linked change{other.length === 1 ? "" : "s"} not merged (open or closed)
-                </summary>
-                <ul className="mt-2 divide-y divide-border rounded-lg border border-border bg-card">
+              <Collapsible title="Not merged yet" hint={`${other.length} open or closed PR${other.length === 1 ? "" : "s"}`}>
+                <ul className="divide-y divide-border">
                   {other.map((t) => (
                     <TaskRow key={t.changeKey} t={t} />
                   ))}
                 </ul>
-              </details>
+              </Collapsible>
             )}
-          </section>
 
-          <section aria-labelledby="leaks">
-            <div className="flex flex-wrap items-center gap-3">
-              <h2 id="leaks" className="text-xl font-semibold tracking-tight">
-                Where it leaked
-              </h2>
-              <div className="ml-auto">
-                <ReviewButton week={wv.id} judgeReady={judgeReady} label={review ? "New private review" : "Get a private review"} />
+            <Collapsible title="Where money leaked" hint={review ? "Private review ready" : `${s.tips.length} tip${s.tips.length === 1 ? "" : "s"}`}>
+              {review && (
+                <div className="mb-4 rounded-lg border border-primary/30 bg-accent/40 p-4">
+                  <p className="text-[15px]">{review.summary}</p>
+                  <ul className="mt-3 list-disc space-y-1.5 pl-5 text-[15px]">
+                    {review.tips.map((t, i) => (
+                      <li key={i}>{t}</li>
+                    ))}
+                  </ul>
+                  <p className="mt-3 text-xs text-muted-foreground">
+                    Private review by {review.judge.model} on 0G ({review.judge.trustMode ?? "private"} mode{review.judge.verified ? ", TEE verified" : ""}). Request{" "}
+                    {review.judge.requestId ?? "n/a"}.
+                  </p>
+                </div>
+              )}
+              <ul className="max-w-[70ch] list-disc space-y-2 pl-5 text-[15px]">
+                {s.tips.map((t, i) => (
+                  <li key={i}>{t}</li>
+                ))}
+              </ul>
+              <div className="mt-4">
+                <ReviewButton week={wv.id} judgeReady={judgeReady} label={review ? "Get a new private review" : "Get a private AI review"} />
               </div>
-            </div>
-            {review && (
-              <div className="mt-3 max-w-[72ch] rounded-lg border border-primary/30 bg-accent/40 p-4">
-                <p className="text-[15px]">{review.summary}</p>
-                <ul className="mt-3 list-disc space-y-1.5 pl-5 text-[15px]">
-                  {review.tips.map((t, i) => (
-                    <li key={i}>{t}</li>
-                  ))}
-                </ul>
-                <p className="mt-3 text-xs text-muted-foreground">
-                  Private review by {review.judge.model} on 0G Private Computer ({review.judge.trustMode ?? "private"} mode
-                  {review.judge.sealed ? ", sealed" : ""}
-                  {review.judge.verified ? ", TEE signature verified" : ""}). Request {review.judge.requestId ?? "n/a"}.
-                </p>
-              </div>
-            )}
-            <ul className="mt-3 max-w-[70ch] list-disc space-y-2 pl-5 text-[15px]">
-              {s.tips.map((t, i) => (
-                <li key={i}>{t}</li>
-              ))}
-            </ul>
-          </section>
+            </Collapsible>
 
-          <section aria-labelledby="buckets">
-            <h2 id="buckets" className="text-xl font-semibold tracking-tight">
-              Cost per kept task, by difficulty
-            </h2>
-            <p className="mt-1 text-sm text-muted-foreground">Compared only with tasks of the same difficulty{teamBuckets ? ", against your team's median" : ""}.</p>
-            <table className="mt-3 w-full max-w-xl text-sm">
-              <thead className="text-left text-muted-foreground">
-                <tr>
-                  <th className="py-1.5 font-normal">Difficulty</th>
-                  <th className="py-1.5 font-normal">Tasks</th>
-                  <th className="py-1.5 font-normal">Kept</th>
-                  <th className="py-1.5 font-normal">You</th>
-                  {teamBuckets && <th className="py-1.5 font-normal">Team median</th>}
-                </tr>
-              </thead>
-              <tbody>
-                {s.buckets
-                  .filter((b) => b.tasks > 0)
-                  .map((b) => {
-                    const team = teamBuckets?.[b.difficulty];
-                    const worse = team && b.costPerKept !== null && b.costPerKept > team * 1.25;
-                    return (
-                      <tr key={b.difficulty} className="border-t border-border">
-                        <td className="py-2">
-                          <Difficulty value={b.difficulty} />
-                        </td>
-                        <td className="py-2">{b.tasks}</td>
-                        <td className="py-2">{b.keptWork.toFixed(1)}</td>
-                        <td className={`py-2 font-medium ${worse ? "text-[var(--l-overkill)]" : ""}`}>{b.costPerKept === null ? "nothing kept" : usd(b.costPerKept)}</td>
-                        {teamBuckets && <td className="py-2 text-muted-foreground">{team ? usd(team) : "n/a"}</td>}
-                      </tr>
-                    );
-                  })}
-              </tbody>
-            </table>
-          </section>
+            <Collapsible title="Cost per task, by difficulty" hint={teamBuckets ? "Compared with your team" : "Small, medium and hard tasks kept apart"}>
+              <p className="text-sm text-muted-foreground">Tasks are only compared with tasks of the same difficulty, never across people.</p>
+              <table className="mt-3 w-full max-w-xl text-sm">
+                <thead className="text-left text-muted-foreground">
+                  <tr>
+                    <th className="py-1.5 font-normal">Difficulty</th>
+                    <th className="py-1.5 font-normal">Tasks</th>
+                    <th className="py-1.5 font-normal">Kept</th>
+                    <th className="py-1.5 font-normal">You</th>
+                    {teamBuckets && <th className="py-1.5 font-normal">Team median</th>}
+                  </tr>
+                </thead>
+                <tbody>
+                  {s.buckets
+                    .filter((b) => b.tasks > 0)
+                    .map((b) => {
+                      const team = teamBuckets?.[b.difficulty];
+                      const worse = team && b.costPerKept !== null && b.costPerKept > team * 1.25;
+                      return (
+                        <tr key={b.difficulty} className="border-t border-border">
+                          <td className="py-2">
+                            <Difficulty value={b.difficulty} />
+                          </td>
+                          <td className="py-2">{b.tasks}</td>
+                          <td className="py-2">{b.keptWork.toFixed(1)}</td>
+                          <td className={`py-2 font-medium ${worse ? "text-[var(--l-overkill)]" : ""}`}>{b.costPerKept === null ? "nothing kept" : usd(b.costPerKept)}</td>
+                          {teamBuckets && <td className="py-2 text-muted-foreground">{team ? usd(team) : "n/a"}</td>}
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </table>
+            </Collapsible>
+
+            <Collapsible title="How sessions were judged" hint={judgeLine(wv.judgements) === "offline rules" ? "Offline rules" : "Private AI on 0G"}>
+              <PrivateJudgePanel judgements={wv.judgements} />
+              {source === "local" && (
+                <div className="mt-4">
+                  <JudgeButton label="Judge this week with the private AI" sessionIds={wv.sessions.map((x) => x.id)} judgeReady={judgeReady} />
+                </div>
+              )}
+            </Collapsible>
+
+            <Collapsible title="What the labels mean">
+              <LabelLegend />
+            </Collapsible>
+          </div>
         </div>
       </div>
     </div>
   );
 }
+
+function Intro() {
+  return (
+    <p className="max-w-[80ch] text-[15px] text-muted-foreground">
+      Receipts reads your AI coding sessions (Claude Code, Codex) on this laptop, finds the pull requests they turned into, and shows what the
+      money bought each week.{" "}
+      <Link href="/how" className="text-primary hover:underline">
+        How it works
+      </Link>
+    </p>
+  );
+}
+
+function toolText(toolSpend: Record<string, number>) {
+  const parts = Object.entries(toolSpend ?? {})
+    .sort((a, b) => b[1] - a[1])
+    .map(([t, v]) => `${TOOL_NAMES[t as AiTool] ?? t} ${usd(v)}`);
+  return parts.length > 1 ? ` (${parts.join(", ")})` : "";
+}
+
+function LabelLegend() {
+  return (
+    <dl className="grid gap-2 sm:grid-cols-2">
+      {LABEL_ORDER.map((l) => (
+        <div key={l} className="flex items-start gap-3 text-sm">
+          <dt className="w-28 shrink-0">
+            <LabelBadge label={l} />
+          </dt>
+          <dd className="text-muted-foreground">{LABEL_COPY[l].hint}.</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
 
 function TaskRow({ t }: { t: Task }) {
   const alive = t.survival === null ? null : Math.round(t.survival * 100);
@@ -260,11 +302,12 @@ function PrivateJudgePanel({ judgements }: { judgements: Judgement[] }) {
   if (!tee.length)
     return (
       <p className="text-sm text-muted-foreground">
-        Labels this week come from offline rules. The private judge reads each session inside a 0G enclave and does better.
+        Labels this week come from offline rules (errors, retries, what merged). The private AI judge reads each session inside a sealed 0G enclave and
+        labels it more accurately. Your prompts are never stored.
       </p>
     );
   return (
-    <div className="rounded-lg border border-border bg-card p-4 text-sm">
+    <div className="text-sm">
       <div className="font-medium">
         Judged privately on 0G: {tee.length} of {judgements.length} sessions, {tee.filter((j) => j.judge.verified).length} with a verified TEE signature
       </div>
