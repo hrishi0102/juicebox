@@ -40,3 +40,12 @@ Only re-judge sessions whose activity or GitHub outcome changed. Reason: judge c
 
 ## 13. Weekly task cost = share spent that week
 Reason: a task worked on across two weeks otherwise showed its full cost in both, and the list did not add up to the receipt's spend.
+
+## 14. One reader per AI tool, one shared engine
+Each tool (Claude Code, Codex, later others) gets a small reader that outputs the common `Session` shape with a `tool` field. Reason: matching, judging, scoring and receipts do not depend on the tool, so adding a tool is a contained change, and the org view can compare tools on the same numbers.
+
+## 15. Org-first framing on the "middle path"
+The company requires signed weekly totals from everyone (including spend per AI tool); PR lists stay opt-in; prompts are never collected. Reason: companies need real numbers across people and tools to act on AI spend, but collecting prompts or ranking people recreates the surveillance dashboards this product replaces.
+
+## 16. Per-tool spend inside the signed receipt
+`tools` and `toolSpendCents` are part of the EIP-712 message, not the unsigned summary. Reason: the org's Claude vs Codex split must be as tamper-proof as the totals.

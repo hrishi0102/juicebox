@@ -6,7 +6,7 @@ Code: `web/src/lib/receipts/receipt.ts`
 
 Domain `{ name: "Receipts", version: "1" }`, with no `chainId` on purpose: a receipt is not tied to a chain, and wallets refuse typed data whose chain id differs from the connected chain.
 
-`Receipt` fields: owner, period (`2026-W45`), periodStart, periodEnd, sessions, spendCents, shippedTasks, survivalBps (65535 = unknown), keptWorkMilli, wasteBps, labels (`uint32[6]`, counts in the order Shipped, Learned, Looped, Abandoned, Overkill, Open), labelSpendCents (`uint64[6]`), evidenceRoot, judgeRoot, judge (engine name).
+`Receipt` fields: owner, period (`2026-W45`), periodStart, periodEnd, sessions, spendCents, shippedTasks, survivalBps (65535 = unknown), keptWorkMilli, wasteBps, labels (`uint32[6]`, counts in the order Shipped, Learned, Looped, Abandoned, Overkill, Open), labelSpendCents (`uint64[6]`), tools (`string[]`, AI tools used that week, sorted) and toolSpendCents (`uint64[]`, same order), evidenceRoot, judgeRoot, judge (engine name).
 
 ## Merkle roots
 

@@ -13,7 +13,8 @@ A cookie picks **My logs** (`~/.receipts/dataset.json`) or **Demo team** (`web/f
 | `/` | Weekly receipt (thermal paper), headline, what it bought, where it leaked, private review, cost per kept task by difficulty, sign and share buttons, 0G request ids |
 | `/sessions` | All sessions with label, difficulty, linked work, judge, cost; filter by label |
 | `/sessions/[id]` | Cost breakdown, signals, linked changes, judge record, the exact message the private judge would get |
-| `/team` | Team totals from signed fields, who shared and who did not, shared receipts; reads Arkiv plus demo receipts |
+| `/team?team=<id>` | One team: totals from signed fields, who shared, each shared receipt; team switcher |
+| `/org` | Company view: totals, spend by AI tool, by team, week by week (see [org-view.md](org-view.md)) |
 | `/r/[key]` | One shared receipt loaded from Arkiv and checked |
 | `/verify` | Paste a receipt JSON or an Arkiv key and run the checks |
 | `/how` | How it works and what leaves the laptop |
@@ -30,8 +31,8 @@ A cookie picks **My logs** (`~/.receipts/dataset.json`) or **Demo team** (`web/f
 
 ## CLI (`web/scripts/receipts.ts`)
 
-`scan`, `judge`, `week`, `sign`, `team`, `share`, `demo`, `publish-demo`, `arkiv`, `doctor`. Run with `npm run receipts -- <command>`. Loads `web/.env.local` itself.
+`scan`, `judge`, `week`, `sign`, `team`, `org`, `share`, `demo`, `publish-demo`, `arkiv`, `doctor`. Run with `npm run receipts -- <command>`. Loads `web/.env.local` itself.
 
 ## Tests
 
-`npm test` (node:test via tsx): pricing against a real Claude Code cost record, the parser on a synthetic transcript built at test time, judge rules, signing, tampering and Merkle proofs.
+`npm test` (node:test via tsx): pricing against a real Claude Code cost record, OpenAI pricing, the Claude and Codex readers on synthetic logs built at test time, judge rules, signing, tampering and Merkle proofs.

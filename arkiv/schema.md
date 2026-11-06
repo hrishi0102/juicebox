@@ -11,6 +11,7 @@ One entity per shared weekly receipt.
 | Attribute | Type | Indexed | Meaning |
 |---|---|---|---|
 | `type` | `str` | yes | Always `receipt` |
+| `org` | `str` | yes | Company id, for example `acme`, so one query reads every team |
 | `team` | `str` | yes | Team id the owner shared with, for example `acme-payments` |
 | `period` | `str` | yes | ISO week, for example `2026-W45` |
 | `signer` | `str` | yes | Lowercased address that signed the receipt (EIP-712). Can differ from the entity owner when a team relayer writes it |
@@ -40,6 +41,12 @@ All shared receipts of a team:
 
 ```
 arkiv.schema = str('receipts-ethglobal-mumbai.receipt.v1') AND type = str('receipt') AND team = str('acme-payments')
+```
+
+A whole company:
+
+```
+arkiv.schema = str('receipts-ethglobal-mumbai.receipt.v1') AND type = str('receipt') AND org = str('acme')
 ```
 
 One week:

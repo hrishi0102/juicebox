@@ -10,7 +10,7 @@ Arkiv testnet Rabdi, chain 7794095, RPC `https://rpc.rabdi.db-chain.testnet.arki
 
 `publishReceipt` re-verifies the receipt, strips evidence and judge leaves for a totals-only share, and creates one entity with schema `receipts-ethglobal-mumbai.receipt.v1`:
 
-- Indexed: `type`, `team`, `period`, `signer`, `level`, `spendCents` (u64), `shipped`, `survivalBps`, `wasteBps` (i32)
+- Indexed: `type`, `org`, `team`, `period`, `signer`, `level`, `spendCents` (u64), `shipped`, `survivalBps`, `wasteBps` (i32)
 - Not indexed: `digest`, `payload` (the signed JSON as bytes)
 - Expires after 120 days
 
@@ -19,6 +19,7 @@ Writes are paid in tGLM by one writer wallet (`ARKIV_PRIVATE_KEY`). Authorship c
 ## Read
 
 - `fetchTeamReceipts(team, period?)`: query by attributes, decode payloads, re-verify each one. Unsigned or tampered receipts are dropped.
+- `fetchOrgReceipts(org, period?)`: every team of a company in one query (paged by 100), re-verified. Used by the org view.
 - `fetchReceiptByKey(key)`: one entity, for `/r/<key>` and the Verify page.
 - The CRE job reads the same entities with a raw `arkiv_query` JSON-RPC call.
 
