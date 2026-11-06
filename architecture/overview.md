@@ -46,8 +46,8 @@ Keep these files in sync with the code. When a module changes shape, update its 
                                               |
                      +------------------------+------------------------+
                      v                        v                        v
-          Company and team pages       /r/<entity key>        [8 CRE job] (optional)
-          (company = GitHub org)
+          Company and team pages       /r/<entity key>    [8 Chainlink CRE] monthly check
+          (company = GitHub org)                             -> TeamScoreboard on Sepolia
 ```
 
 ## Modules
@@ -67,7 +67,7 @@ Keep these files in sync with the code. When a module changes shape, update its 
 | 7d | The employee side (My week): set up, write, sign, send | `app/me`, `components/send-flow.tsx`, `lib/server/employee.ts`, `lib/receipts/flow.ts` | [web-app.md](web-app.md) |
 | 7e | Check it yourself: links to the Arkiv explorer, Swarm and 0G, and the live proof pages | `lib/proof-urls.ts`, `components/proof-links.tsx`, `app/(public)/proof`, `lib/server/zerog-providers.ts` | [web-app.md](web-app.md) |
 | 8 | Web app, API and CLI | `web/src/app`, `web/src/lib/server`, `web/scripts` | [web-app.md](web-app.md) |
-| 9 | CRE job and contracts (optional) | `cre/`, `contracts/` | [cre-and-contracts.md](cre-and-contracts.md) |
+| 9 | Chainlink CRE monthly check and TeamScoreboard (Sepolia) | `cre/`, `contracts/`, `lib/server/scoreboard.ts` | [cre-and-contracts.md](cre-and-contracts.md) |
 | 10 | AI Wrapped (fun segments, persona, chat exports) | `chat-stats.ts`, `wrapped.ts`, `chat-import.ts`, `app/(personal)/wrapped` | [wrapped.md](wrapped.md) |
 
 Key decisions and their reasons are in [decisions.md](decisions.md).

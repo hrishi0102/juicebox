@@ -48,6 +48,7 @@ After testing the whole flow themselves, the human team member asked for these c
 - "Check it yourself" links wherever the app claims something happened on 0G, Arkiv or Swarm, and two live proof pages: `/proof/swarm/<ref>` (fetches the ciphertext, so the Swarm link no longer just downloads a file) and `/proof/0g/<provider>` (0G's TEE verdicts) (decision 51).
 - The 0G balance read in neuron and shown in 0G, with what each call cost (decision 52), and a sidebar for the company and employee pages (decision 53).
 - Tests for the 0G balance and for sending the whole week sealed on Swarm; docs brought up to date.
+- At the human team member's request, a ranking of the other prize tracks by how naturally they fit (they dropped the Ethereum Foundation track), then the Chainlink CRE job brought up to date for the chosen track: the check moved to `cre/receipts-monthly/score.ts` with signature checks inside the workflow, a Node runner against live Arkiv data, the WASM build, the `TeamScoreboard` contract updated, tested and deployed on Sepolia, and the company's Team page reading the score (decision 54).
 
 ## What tools generated
 

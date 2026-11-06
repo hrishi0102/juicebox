@@ -140,13 +140,11 @@ More queries (sealed weeks, one team, big weeks that went in circles) are in [ar
 
 **Judging files:** [schema.md](arkiv/schema.md), [friction.md](arkiv/friction.md) (Arkiv feedback), [reach.md](arkiv/reach.md), [why-arkiv.md](arkiv/why-arkiv.md), [how-you-use-arkiv.md](arkiv/how-you-use-arkiv.md) (who can edit each entity, and when it expires), [swarm.md](arkiv/swarm.md) (the bonus).
 
-### Ethereum Foundation: Best CROPS App
+### Chainlink: Best Workflow with CRE
 
-See the CROPS section below. The lead property is **Private**.
+Receipts are written by employees and read by their company, and both sides have a reason to bend the numbers. Once a month a CRE workflow checks each team with no Receipts server and no company computer involved: every node reads the team's receipts straight from Arkiv, checks each EIP-712 signature against the person it is about, adds up the signed numbers (one receipt per person per week), and asks the GitHub API whether each PR a receipt claims as merged is still merged. The nodes agree on every number (median), and the score is written to [`TeamScoreboard`](contracts/src/TeamScoreboard.sol) on Ethereum Sepolia ([`0x563F…FDD5`](https://sepolia.etherscan.io/address/0x563F8f8A06a9bCb394Bd463CEC352e6EB902FDD5)) through Chainlink's forwarder, so nobody can post or change a team's score. The company's Team page reads it back ("Checked by Chainlink, once a month") with links to the transaction on Etherscan.
 
-### Optional: Chainlink CRE monthly scoring job
-
-Built but not submitted (three partners max). See [cre/README.md](cre/README.md).
+Code: [`cre/receipts-monthly/score.ts`](cre/receipts-monthly/score.ts) (the check), [`main.ts`](cre/receipts-monthly/main.ts) (the workflow), [`web/src/lib/server/scoreboard.ts`](web/src/lib/server/scoreboard.ts) (the app reading it). How to run and simulate it: [cre/README.md](cre/README.md).
 
 ## CROPS
 
