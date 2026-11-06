@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   // Local-first app: pages read the user's own data on every request.
   serverExternalPackages: ["@0gfoundation/0g-compute-ts-sdk", "ethers"],
   // Demo data is read with fs at runtime; make sure a hosted deploy ships it.
-  outputFileTracingIncludes: { "/**": ["./fixtures/demo/**/*"] },
+  outputFileTracingIncludes: { "/**": ["./fixtures/demo/**/*"], "/api/card": ["./assets/fonts/*"] },
   turbopack: {
     rules: {
       "*.css": {
