@@ -6,6 +6,11 @@ import { summarize, weekOf } from "@/lib/receipts/score";
 import { loadWeekStory } from "@/lib/receipts/week";
 import type { OrgData, OrgTeam } from "@/lib/receipts/demo";
 import type { Judgement, PeriodSummary, Session } from "@/lib/receipts/types";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
+import { DATA_DIR } from "@/lib/receipts/store";
+import { githubTeams } from "@/lib/receipts/identity";
+import { getSession } from "./session";
 
 export const SOURCE_COOKIE = "receipts-source";
 
@@ -77,4 +82,27 @@ export function periodView(d: Dataset, days: number) {
   const end = nowFor(d);
   const start = new Date(end.getTime() - days * 86400_000);
   return summarize({ periodStart: start.toISOString(), periodEnd: new Date(end.getTime() + 1).toISOString(), sessions: d.sessions, judgements: d.judgements, tasks: d.tasks, changes: d.changes });
+}
+
+export type ShareTarget = { org: string; orgName: string; team: string; teamName: string; from: "settings" | "github sign-in" | "github" | "default" };
+
+/**
+ * Where your shared receipts go: a company (GitHub org) and a team (GitHub team).
+ * Settings made with the CLI win; then the GitHub sign-in; then the teams of the GitHub token
+ * this app already uses; then a default.
+ */
+export async function shareTarget(): Promise<ShareTarget> {
+  if (existsSync(join(DATA_DIR, "org.json")) || existsSync(join(DATA_DIR, "team.json"))) {
+    const o = getLocalOrgConfig();
+    const t = getLocalTeamConfig();
+    return { org: o.id, orgName: o.name, team: t.id, teamName: t.name, from: "settings" };
+  }
+  const s = await getSession();
+  const gh = s ? { orgs: s.orgs, teams: s.teams } : await githubTeams();
+  if (gh && (gh.teams.length || gh.orgs.length)) {
+    const t = gh.teams[0];
+    const org = t?.org ?? gh.orgs[0];
+    return { org, orgName: org, team: t ? `${t.org}/${t.slug}` : `${org}/everyone`, teamName: t?.name ?? "Everyone", from: s ? "github sign-in" : "github" };
+  }
+  return { org: "my-org", orgName: "My org", team: "my-team", teamName: "My team", from: "default" };
 }

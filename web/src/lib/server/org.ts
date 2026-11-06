@@ -5,7 +5,7 @@ import { fetchOrgReceipts } from "@/lib/receipts/arkiv";
 import { verifyReceipt, type SignedReceipt } from "@/lib/receipts/receipt";
 import type { Source } from "@/lib/receipts/store";
 import type { OrgTeam, TeamMember } from "@/lib/receipts/demo";
-import { getDemoOrg, getLocalOrgConfig } from "./data";
+import { getDemoOrg, shareTarget } from "./data";
 
 export type OrgRow = SignedReceipt & { from: "arkiv" | "demo file"; arkivKey?: string; verified: boolean; team: string };
 
@@ -22,7 +22,16 @@ export type LoadedOrg = {
 
 export async function loadOrg(source: Source): Promise<LoadedOrg> {
   const demo = source === "demo" ? getDemoOrg() : undefined;
-  const cfg = demo ?? { ...getLocalOrgConfig(), policy: "", members: [] as TeamMember[], receipts: [] as SignedReceipt[] };
+  // Your own company: the GitHub org from sign-in (or your GitHub token), or the CLI settings.
+  const target = demo ? undefined : await shareTarget();
+  const cfg = demo ?? {
+    id: target!.org,
+    name: target!.orgName,
+    teams: [{ id: target!.team, name: target!.teamName }],
+    policy: "",
+    members: [] as TeamMember[],
+    receipts: [] as SignedReceipt[],
+  };
 
   let live: Awaited<ReturnType<typeof fetchOrgReceipts>> = [];
   let arkivError: string | undefined;
@@ -30,7 +39,7 @@ export async function loadOrg(source: Source): Promise<LoadedOrg> {
   try {
     live = await Promise.race([
       fetchOrgReceipts(cfg.id),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Arkiv did not answer within 6 seconds")), 6000)),
+      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Arkiv did not answer within 5 seconds")), 5000)),
     ]);
   } catch (e) {
     arkivError = e instanceof Error ? e.message : String(e);

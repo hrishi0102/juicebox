@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { publishReceipt, ARKIV_EXPLORER } from "@/lib/receipts/arkiv";
-import { currentSource, getDemoOrg, getLocalOrgConfig, getLocalTeamConfig } from "@/lib/server/data";
+import { currentSource, getDemoOrg, shareTarget } from "@/lib/server/data";
 import { loadSavedReceipt, saveReceipt } from "@/lib/server/receipts-store";
 import { rejectCrossSite } from "@/lib/server/guard";
 
@@ -16,8 +16,9 @@ export async function POST(req: Request) {
   const r = loadSavedReceipt(source, week);
   if (!r?.signature) return NextResponse.json({ ok: false, error: "Sign this week's receipt first." }, { status: 400 });
   const demo = source === "demo" ? getDemoOrg() : undefined;
-  const team = demo ? (demo.members.find((m) => m.you)?.team ?? demo.teams[0].id) : getLocalTeamConfig().id;
-  const org = demo ? demo.id : getLocalOrgConfig().id;
+  const target = demo ? undefined : await shareTarget();
+  const team = demo ? (demo.members.find((m) => m.you)?.team ?? demo.teams[0].id) : target!.team;
+  const org = demo ? demo.id : target!.org;
   try {
     const out = await publishReceipt(r, { team, org, level: level === "full" ? "full" : "totals" });
     r.share = { level: level === "full" ? "full" : "totals", team, org, arkivKey: out.entityKey, arkivTx: out.txHash, publishedAt: new Date().toISOString() };

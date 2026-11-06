@@ -16,6 +16,7 @@ type Props = {
   canSignLocally: boolean;
   arkivReady: boolean;
   savedJson?: string;
+  shareTo?: string;
 };
 
 export function ReceiptActions(p: Props) {
@@ -101,7 +102,7 @@ export function ReceiptActions(p: Props) {
           </Button>
           <p className="text-sm text-muted-foreground">
             {p.arkivReady
-              ? "Your company sees this list, the PRs and the totals. Never your prompts. The record on Arkiv is read-only and owned by you."
+              ? `Goes to ${p.shareTo ?? "your company"}. They see this list, the PRs and the totals, never your prompts. The record on Arkiv is read-only and owned by you.`
               : "Sharing is not set up yet: it needs the company's Arkiv key in .env.local."}
           </p>
         </>

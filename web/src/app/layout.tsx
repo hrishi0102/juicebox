@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SourceSwitch } from "@/components/source-switch";
 import { NavLinks } from "@/components/nav-links";
+import { AuthMenu } from "@/components/auth-menu";
 import { currentSource } from "@/lib/server/data";
 import { hasData } from "@/lib/receipts/store";
 import "./globals.css";
@@ -37,6 +38,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 <Link href="/how" className="hidden text-sm text-muted-foreground hover:text-foreground sm:inline">
                   How it works
                 </Link>
+                <AuthMenu />
                 <SourceSwitch source={source} hasLocal={hasLocal} />
               </div>
             </div>

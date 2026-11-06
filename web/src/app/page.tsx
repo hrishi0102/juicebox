@@ -12,7 +12,7 @@ import { Collapsible } from "@/components/collapsible";
 import { buttonVariants } from "@/components/ui/button";
 import { readJson } from "@/lib/receipts/store";
 import type { WeeklyReview } from "@/lib/receipts/review";
-import { currentSource, getDataset, getDemoOrg, weekView, weeksWithData } from "@/lib/server/data";
+import { currentSource, getDataset, getDemoOrg, shareTarget, weekView, weeksWithData } from "@/lib/server/data";
 import { loadSavedReceipt, signerAddress } from "@/lib/server/receipts-store";
 import { median } from "@/lib/receipts/heuristics";
 import { buildReceipt } from "@/lib/receipts/receipt";
@@ -43,6 +43,8 @@ export default async function ThisWeek({ searchParams }: { searchParams: Promise
   const aiStory = s.story.engine !== "rules";
   const review = readJson<WeeklyReview | null>("local", `reviews/${source}-${wv.id}.json`, null);
   const teamBuckets = source === "demo" ? teamMedians() : undefined;
+  const target = source === "demo" ? undefined : await shareTarget();
+  const shareTo = target ? `${target.teamName} at ${target.orgName}${target.from === "github" || target.from === "github sign-in" ? " (from GitHub)" : ""}` : "Payments at Acme (demo)";
 
   return (
     <div className="space-y-8">
@@ -216,6 +218,7 @@ export default async function ThisWeek({ searchParams }: { searchParams: Promise
             canSignLocally
             arkivReady={!!process.env.ARKIV_PRIVATE_KEY}
             savedJson={saved ? JSON.stringify(saved, null, 2) : undefined}
+            shareTo={shareTo}
           />
         </aside>
       </div>
