@@ -19,6 +19,7 @@ import { join } from "node:path";
 import { createInterface } from "node:readline";
 import { addTokens, emptyModelCost, emptyTokens, priceOpenAiUsage } from "./pricing";
 import { cleanPrompt, parsePrUrl } from "./parse";
+import { TimelineBuilder } from "./timeline";
 import type { GitPrRef, Session } from "./types";
 
 export const DEFAULT_CODEX_ROOT = join(homedir(), ".codex", "sessions");
@@ -110,6 +111,7 @@ export async function parseCodexSession(file: string): Promise<Session | undefin
   let readOnly = 0;
   let interruptions = 0;
   let title: string | undefined;
+  const tl = new TimelineBuilder();
 
   const addUsage = (m: string, u: any) => {
     const priced = priceOpenAiUsage(m, u);
@@ -167,7 +169,10 @@ export async function parseCodexSession(file: string): Promise<Session | undefin
         if (p.message.trim()) {
           userPrompts++;
           title ??= cleanPrompt(p.message, 80);
+          tl.prompt(ts);
         }
+      } else if (p.type === "agent_message" && typeof p.message === "string") {
+        tl.answer(ts, p.message);
       } else if (p.type === "turn_aborted") interruptions++;
       continue;
     }
@@ -179,6 +184,7 @@ export async function parseCodexSession(file: string): Promise<Session | undefin
         if (p.call_id) callName.set(p.call_id, p.name);
         const args = argsOf(p);
         if (p.name === "apply_patch") {
+          tl.edit(ts);
           const patch = typeof args === "string" ? args : (args.input ?? args.patch ?? "");
           const r = parsePatch(String(patch));
           const base = cwd ? cwd.replace(/\/$/, "") + "/" : "";
@@ -195,6 +201,7 @@ export async function parseCodexSession(file: string): Promise<Session | undefin
             const norm = cmd.replace(/\s+/g, " ").slice(0, 300);
             bashCounts.set(norm, (bashCounts.get(norm) ?? 0) + 1);
             if (TEST_RE.test(cmd)) testRuns++;
+            if (/\bgh pr create\b/.test(cmd)) tl.pr(ts);
             if (READ_ONLY_CMD.test(cmd)) readOnly++;
             const b = cmd.match(/git (?:checkout -b|switch -c)\s+([^\s;&|]+)/);
             if (b) branches.add(b[1]);
@@ -213,6 +220,7 @@ export async function parseCodexSession(file: string): Promise<Session | undefin
         for (const m of out.matchAll(/https:\/\/github\.com\/[^/\s]+\/[^/\s]+\/pull\/\d+/g)) {
           const ref = parsePrUrl(m[0]);
           if (ref && !prs.has(ref.url)) prs.set(ref.url, { ...ref, action: "linked" });
+          tl.pr(ts);
         }
         const commit = out.match(/^\[([^\s\]]+)(?: \(root-commit\))? ([0-9a-f]{7,40})\]/m);
         if (commit && callName.get(p.call_id)?.startsWith("exec")) {
@@ -268,6 +276,7 @@ export async function parseCodexSession(file: string): Promise<Session | undefin
       subagents: 0,
     },
     tools,
+    timeline: tl.finish(commits),
   };
 }
 

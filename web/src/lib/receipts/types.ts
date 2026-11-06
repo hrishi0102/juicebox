@@ -55,6 +55,19 @@ export function toolOf(s: { tool?: AiTool }): AiTool {
   return s.tool ?? "claude-code";
 }
 
+/** When things happened in a session (times only). See timeline.ts. */
+export type SessionTimeline = {
+  firstPromptAt?: string;
+  lastPromptAt?: string;
+  firstEditAt?: string;
+  lastEditAt?: string;
+  planAt?: string; // the AI proposed a plan (Claude Code plan mode)
+  firstCommitAt?: string;
+  firstPrAt?: string; // a PR was opened or linked in the session
+  lastAnswerAt?: string;
+  endsOnQuestion?: boolean; // the AI's last answer asked something or offered more, and nobody replied
+};
+
 export type Session = {
   id: string;
   tool?: AiTool; // which AI tool wrote the session (missing = claude-code)
@@ -75,6 +88,7 @@ export type Session = {
   git: SessionGit;
   signals: SessionSignals;
   tools: Record<string, number>;
+  timeline?: SessionTimeline; // missing in datasets read before step times were kept
 };
 
 // What the private judge gets to see. Built on demand, never written to the repo.

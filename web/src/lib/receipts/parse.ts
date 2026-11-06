@@ -16,6 +16,7 @@ import { createInterface } from "node:readline";
 import { execFileSync } from "node:child_process";
 import { addTokens, emptyModelCost, emptyTokens, priceUsage } from "./pricing";
 export { sessionUsd } from "./pricing";
+import { TimelineBuilder } from "./timeline";
 import type { GitPrRef, PrivateDigest, Session } from "./types";
 
 export const DEFAULT_LOG_ROOT = join(homedir(), ".claude", "projects");
@@ -27,7 +28,7 @@ const EDIT_TOOLS = new Set(["Edit", "Write", "MultiEdit", "NotebookEdit"]);
 const TEST_RE = /\b(npm|pnpm|yarn|bun)\s+(run\s+)?test\b|\b(jest|vitest|pytest|mocha|playwright|go test|cargo test|forge test)\b/;
 const ACTIVE_GAP_MS = 15 * 60 * 1000;
 
-export type SessionFile = { sessionId: string; projectDir: string; main: string; subagents: string[]; mtimeMs: number; bytes: number };
+export type SessionFile = { sessionId: string; projectDir: string; main: string; subagents: string[]; mtimeMs: number; bytes: number; mainBytes?: number };
 
 export function listSessionFiles(root = DEFAULT_LOG_ROOT): SessionFile[] {
   if (!existsSync(/*turbopackIgnore: true*/ root)) return [];
@@ -48,7 +49,7 @@ export function listSessionFiles(root = DEFAULT_LOG_ROOT): SessionFile[] {
         mtimeMs = Math.max(mtimeMs, ss.mtimeMs);
         bytes += ss.size;
       }
-      out.push({ sessionId, projectDir, main, subagents, mtimeMs, bytes });
+      out.push({ sessionId, projectDir, main, subagents, mtimeMs, bytes, mainBytes: st.size });
     }
   }
   return out.sort((a, b) => b.mtimeMs - a.mtimeMs);
@@ -70,6 +71,14 @@ function walkJsonl(dir: string, acc: string[] = []): string[] {
     else if (f.endsWith(".jsonl")) acc.push(p);
   }
   return acc;
+}
+
+/** Lines that carry a message id: what grows from one copy of a conversation to the next. */
+async function countMessageLines(file: string): Promise<number> {
+  let n = 0;
+  const rl = createInterface({ input: createReadStream(file, { encoding: "utf8" }), crlfDelay: Infinity });
+  for await (const line of rl) if (line.includes('"uuid":"')) n++;
+  return n;
 }
 
 async function* readLines(file: string): AsyncGenerator<Record<string, any>> {
@@ -133,8 +142,14 @@ export function cleanPrompt(text: string, max = 400) {
     .slice(0, max);
 }
 
-/** Parse one session (main transcript plus its subagent transcripts). */
-export async function parseSession(sf: SessionFile): Promise<Session | undefined> {
+/**
+ * Parse one session (main transcript plus its subagent transcripts).
+ *
+ * `seen` holds the line ids already counted in other files. Claude Code keeps a full copy of the
+ * conversation when a chat is continued or forked, so the same lines (same uuid, same API response)
+ * can sit in several files; each line must count once, or cost and work are counted again per copy.
+ */
+export async function parseSession(sf: SessionFile, seen?: Set<string>): Promise<Session | undefined> {
   const seenMsg = new Set<string>();
   const seenTool = new Set<string>();
   const timestamps: number[] = [];
@@ -171,11 +186,16 @@ export async function parseSession(sf: SessionFile): Promise<Session | undefined
   let interruptions = 0;
   let readOnlyCalls = 0;
   const subagentIds = new Set<string>();
+  const tl = new TimelineBuilder();
 
   const files = [sf.main, ...sf.subagents];
   for (const file of files) {
     const isSub = file !== sf.main;
     for await (const o of readLines(file)) {
+      if (seen && typeof o.uuid === "string") {
+        if (seen.has(o.uuid)) continue;
+        seen.add(o.uuid);
+      }
       const ts = o.timestamp ? Date.parse(o.timestamp) : NaN;
       switch (o.type) {
         case "assistant": {
@@ -201,7 +221,10 @@ export async function parseSession(sf: SessionFile): Promise<Session | undefined
             mc.webSearches += priced.webSearches;
           }
           for (const c of msg.content ?? []) {
+            if (!isSub && c?.type === "text" && typeof c.text === "string") tl.answer(ts, c.text);
             if (c?.type !== "tool_use" || !c.id || seenTool.has(c.id)) continue;
+            if (EDIT_TOOLS.has(c.name)) tl.edit(ts);
+            if (c.name === "ExitPlanMode" && !isSub) tl.plan(ts);
             seenTool.add(c.id);
             toolNameById.set(c.id, c.name);
             toolCalls++;
@@ -254,13 +277,17 @@ export async function parseSession(sf: SessionFile): Promise<Session | undefined
               if (g.pr?.url) {
                 const ref = parsePrUrl(g.pr.url);
                 if (ref) prs.set(ref.url, { ...ref, action: g.pr.action });
+                tl.pr(ts);
               }
             }
           }
           if (!isSub && !o.isMeta && !o.isCompactSummary) {
             const text = userText(o.message);
             if (text && text.includes("[Request interrupted")) interruptions++;
-            if (text && isRealPrompt(text)) userPrompts++;
+            if (text && isRealPrompt(text)) {
+              userPrompts++;
+              tl.prompt(ts);
+            }
           }
           break;
         }
@@ -268,6 +295,7 @@ export async function parseSession(sf: SessionFile): Promise<Session | undefined
           if (o.prUrl) {
             const ref = parsePrUrl(o.prUrl);
             if (ref && !prs.has(ref.url)) prs.set(ref.url, { ...ref, action: "linked" });
+            tl.pr(ts);
           }
           break;
         }
@@ -355,6 +383,7 @@ export async function parseSession(sf: SessionFile): Promise<Session | undefined
       subagents: Math.max(subagentIds.size, sf.subagents.length),
     },
     tools,
+    timeline: tl.finish(commits),
   };
 }
 
@@ -373,8 +402,15 @@ export async function scanSessions(
   if (opts.limit) files = files.slice(0, opts.limit);
   const sessions: Session[] = [];
   let done = 0;
+  // Copies of a continued conversation only ever gain messages, so reading files with fewer message
+  // lines first makes the original own the shared history and each later copy keep only its new part.
+  // (Byte size and raw line count are not reliable: copies drop bookkeeping lines the original has.)
+  const seen = new Set<string>();
+  const lineCounts = new Map<string, number>();
+  for (const f of files) lineCounts.set(f.main, await countMessageLines(f.main));
+  files = [...files].sort((a, b) => lineCounts.get(a.main)! - lineCounts.get(b.main)!);
   for (const f of files) {
-    const s = await parseSession(f);
+    const s = await parseSession(f, seen);
     done++;
     opts.onProgress?.(done, files.length);
     if (!s) continue;
@@ -488,7 +524,10 @@ export async function buildPrivateDigest(session: Session, root = DEFAULT_LOG_RO
   } else if (existsSync(main)) {
     // One API response is split over several lines; join its text blocks by message id.
     const texts = new Map<string, string>();
+    // A continued conversation's copy repeats the whole history: only read this session's own part.
+    const from = Date.parse(session.startedAt);
     for await (const o of readLines(main)) {
+      if (o.timestamp && Date.parse(o.timestamp) < from) continue;
       if (o.type === "assistant" && !o.isSidechain && Array.isArray(o.message?.content)) {
         const t = o.message.content
           .filter((x: any) => x?.type === "text" && typeof x.text === "string")

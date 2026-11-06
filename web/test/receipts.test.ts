@@ -8,7 +8,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { normalizeModel, priceUsage } from "../src/lib/receipts/pricing";
-import { listSessionFiles, parseSession, parsePrUrl } from "../src/lib/receipts/parse";
+import { listSessionFiles, parseSession, parsePrUrl, scanSessions } from "../src/lib/receipts/parse";
 import { buildReceipt, merkleProof, merkleRoot, revealItems, signedNumbers, typedDataFor, verifyProof, verifyReceipt } from "../src/lib/receipts/receipt";
 import { heuristicLabel, judgeAllHeuristic } from "../src/lib/receipts/heuristics";
 import { summarize, buildTasks, weekOf } from "../src/lib/receipts/score";
@@ -77,6 +77,42 @@ test("parser: dedupes repeated usage lines, adds subagents, reads PRs, commits a
   assert.equal(s.linesRemoved, 1);
   assert.equal(s.signals.userPrompts, 1);
   assert.deepEqual(s.filesEdited, ["/Users/x/code/app/src/a.ts"]);
+});
+
+test("parser: a continued conversation's copy counts only its new part, and step times are kept", async () => {
+  const root = mkdtempSync(join(tmpdir(), "receipts-copy-"));
+  const proj = join(root, "-Users-x-code-app");
+  mkdirSync(proj, { recursive: true });
+  const usage = { input_tokens: 10, output_tokens: 100, cache_read_input_tokens: 1000, cache_creation_input_tokens: 0 };
+  const base = { cwd: "/Users/x/code/app", version: "2.1.0" };
+  const line = (uuid: string, extra: object) => ({ ...base, uuid, ...extra });
+  const original = [
+    line("u1", { sessionId: "orig", type: "user", timestamp: "2026-11-02T10:00:00Z", message: { role: "user", content: "plan the login page" } }),
+    line("u2", { sessionId: "orig", type: "assistant", timestamp: "2026-11-02T10:00:05Z", requestId: "r1", message: { id: "m1", model: "claude-opus-5-5", usage, content: [{ type: "tool_use", id: "p1", name: "ExitPlanMode", input: {} }] } }),
+    line("u3", { sessionId: "orig", type: "assistant", timestamp: "2026-11-02T10:10:00Z", requestId: "r2", message: { id: "m2", model: "claude-opus-5-5", usage, content: [{ type: "tool_use", id: "t1", name: "Edit", input: { file_path: "/Users/x/code/app/a.ts" } }] } }),
+    line("u4", { sessionId: "orig", type: "assistant", timestamp: "2026-11-02T10:11:00Z", requestId: "r3", message: { id: "m3", model: "claude-opus-5-5", usage, content: [{ type: "text", text: "Done. Want me to add tests too?" }] } }),
+  ];
+  // The copy repeats every line of the original (same uuids), then continues.
+  const copy = [
+    ...original.map((l) => ({ ...l, sessionId: "copy" })),
+    line("u5", { sessionId: "copy", type: "user", timestamp: "2026-11-02T12:00:00Z", message: { role: "user", content: "yes, add tests" } }),
+    line("u6", { sessionId: "copy", type: "assistant", timestamp: "2026-11-02T12:00:05Z", requestId: "r4", message: { id: "m4", model: "claude-opus-5-5", usage, content: [{ type: "text", text: "Added the tests." }] } }),
+  ];
+  writeFileSync(join(proj, "orig.jsonl"), original.map((l) => JSON.stringify(l)).join("\n"));
+  writeFileSync(join(proj, "copy.jsonl"), copy.map((l) => JSON.stringify(l)).join("\n"));
+  const sessions = await scanSessions({ root, includeCodex: false });
+  const orig = sessions.find((s) => s.id === "orig")!;
+  const cont = sessions.find((s) => s.id === "copy")!;
+  const one = priceUsage("claude-opus-5-5", usage).usd;
+  // Costs are kept to 4 decimals.
+  assert.ok(Math.abs(orig.cost.usd - 3 * one) < 2e-4, `the original owns the shared history (${orig.cost.usd})`);
+  assert.ok(Math.abs(cont.cost.usd - one) < 2e-4, `the copy counts only its new answer (${cont.cost.usd})`);
+  assert.equal(cont.startedAt, "2026-11-02T12:00:00.000Z");
+  // Step times from the original: plan, first edit 10 minutes after the prompt, an open question at the end.
+  assert.equal(orig.timeline?.planAt, "2026-11-02T10:00:05.000Z");
+  assert.equal(orig.timeline?.firstEditAt, "2026-11-02T10:10:00.000Z");
+  assert.equal(orig.timeline?.endsOnQuestion, true);
+  assert.equal(cont.timeline?.endsOnQuestion, false, "the copy's last answer is not a question");
 });
 
 test("parsePrUrl", () => {
