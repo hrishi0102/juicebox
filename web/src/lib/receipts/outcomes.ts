@@ -64,10 +64,17 @@ function pullToChange(repo: string, pr: GhPull, files: string[], shas: string[],
   };
 }
 
-/** A commit pushed straight to the default branch, with no PR. */
-export async function loadCommitChange(gh: GitHub, repo: string, sha: string): Promise<Change | undefined> {
+/**
+ * A commit with no PR. It counts as shipped ("pushed to main") only when GitHub confirms it is in
+ * the default branch's history; a commit that only sits on another branch is still in progress.
+ * Pass `onBranch` when that is already known (for example, the commit came from the branch's log).
+ */
+export async function loadCommitChange(gh: GitHub, repo: string, sha: string, onBranch?: string): Promise<Change | undefined> {
   const c = await gh.commit(repo, sha);
   if (!c) return undefined;
+  const branch = onBranch ?? (await gh.repoInfo(repo))?.default_branch ?? "main";
+  const onMain = onBranch ? true : await gh.inBranch(repo, c.sha, branch).catch(() => undefined);
+  const pushed = onMain !== false; // GitHub could not say: keep the old reading, pushed
   const title = c.commit.message.split("\n")[0];
   return {
     key: `${repo}@${c.sha.slice(0, 12)}`,
@@ -78,9 +85,10 @@ export async function loadCommitChange(gh: GitHub, repo: string, sha: string): P
     title,
     author: c.author?.login ?? undefined,
     kind: kindFromTitle(title),
-    state: "direct",
+    state: pushed ? "direct" : "open",
     createdAt: c.commit.author?.date,
-    mergedAt: c.commit.committer?.date,
+    mergedAt: pushed ? c.commit.committer?.date : undefined,
+    baseRef: pushed ? branch : undefined,
     additions: c.stats?.additions ?? 0,
     deletions: c.stats?.deletions ?? 0,
     files: (c.files ?? []).map((f) => f.filename),

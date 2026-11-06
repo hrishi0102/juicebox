@@ -11,7 +11,7 @@
 import { z } from "zod";
 import { CATEGORIES, type Category, type ChangeKind, type PrivateDigest } from "./types";
 
-export const SESSION_SYSTEM = `You write one line of a person's weekly "what I got done" list, from one session they ran with an AI assistant (Claude Code or Codex). You get a private digest: what they asked (trimmed), what the AI said at the end, a summary of tool use, what happened on GitHub, and the cost.
+export const SESSION_SYSTEM = `You write one line of a person's weekly "what I got done" list, from one session they ran with an AI assistant (Claude Code or Codex). You get a private digest: what they asked (trimmed), what the AI said at the end, a summary of tool use, what happened on GitHub, and the cost. On GitHub, work ships either as a merged pull request or as a commit pushed straight to the main branch with no pull request; both count as shipped.
 
 Pick one category:
 - Built: made something new that works (a feature, page, tool, script, test suite).
@@ -23,7 +23,7 @@ Pick one category:
 - Wasted: went in circles or produced nothing usable.
 
 title: what they got, 3 to 8 plain words a friend would understand, no full stop. Name the thing, not its status (no "shipped", "merged", "done", "completed"). Good: "Login page that remembers you", "Why the nightly build kept failing", "Price comparison of three GPU clouds". Bad: "Worked on code", "Session about the project".
-in_progress: true when the work is clearly not finished (open PR, still debugging, half built).
+in_progress: true when the work is clearly not finished (open PR, commits not on main yet, still debugging, half built). A commit pushed straight to main is finished, not in progress.
 difficulty: 1 trivial, 2 small, 3 moderate, 4 hard, 5 very hard.
 kind: feature, fix, refactor, test, docs, chore or other.
 reason: why this category, at most 20 words, generic.
@@ -32,7 +32,7 @@ tip: one practical way to spend less next time, at most 15 words, or "".
 Never put secrets, keys, emails, people's names, client or customer names, file paths or code in title, reason or tip. Names of public tools and products are fine. Plain English, no em dashes.
 Reply with JSON only: {"category":"Built","title":"...","in_progress":false,"difficulty":3,"kind":"feature","reason":"...","tip":""}`;
 
-export const WEEK_SYSTEM = `You turn one person's AI sessions from one week into a short, fun list: "what I got done this week". Each input line is one session: its id, category, title, cost and linked pull request, if any.
+export const WEEK_SYSTEM = `You turn one person's AI sessions from one week into a short, fun list: "what I got done this week". Each input line is one session: its id, category, title, cost and what it shipped on GitHub, if anything: a pull request (merged, open or closed) or a commit pushed straight to main with no pull request, which counts as shipped too.
 
 Rules:
 - Merge sessions that are clearly about the same piece of work into one item. Keep different work separate.
@@ -66,7 +66,7 @@ export function weekMessage(weekLabel: string, lines: WeekLine[]) {
     `WEEK: ${weekLabel}`,
     `SESSIONS (${lines.length}):`,
     ...lines.map(
-      (l) => `${l.id} | ${l.category} | ${l.title} | $${l.costUsd.toFixed(2)}${l.pr ? ` | PR: ${l.pr}` : ""}${l.inProgress ? " | in progress" : ""}`,
+      (l) => `${l.id} | ${l.category} | ${l.title} | $${l.costUsd.toFixed(2)}${l.pr ? ` | ${l.pr}` : ""}${l.inProgress ? " | in progress" : ""}`,
     ),
   ].join("\n");
 }

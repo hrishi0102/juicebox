@@ -49,10 +49,19 @@ export function sessionLines(input: StoryInput): (WeekLine & { sessionId: string
         category: j?.category ?? "Figured out",
         title: j?.title ?? "Session",
         costUsd: sessionUsd(s),
-        pr: t ? `${t.title} (${t.reverted ? "reverted" : t.state})` : undefined,
+        pr: t ? weekLineChange(t) : undefined,
         inProgress: j?.inProgress,
       };
     });
+}
+
+/** How a week line names what a session shipped: a PR, or a commit pushed straight to main. */
+function weekLineChange(t: { title: string; state: string; reverted: boolean; changeKey: string }) {
+  if (t.changeKey.includes("@")) {
+    if (t.reverted) return `pushed to main, then reverted: ${t.title}`;
+    return t.state === "direct" ? `pushed straight to main (no PR): ${t.title}` : `commit not on main yet: ${t.title}`;
+  }
+  return `PR: ${t.title} (${t.reverted ? "reverted" : t.state})`;
 }
 
 /** Build one item from a set of sessions; every number comes from the current data. */

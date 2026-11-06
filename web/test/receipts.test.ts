@@ -13,6 +13,7 @@ import { buildReceipt, merkleProof, merkleRoot, revealItems, signedNumbers, type
 import { heuristicLabel, judgeAllHeuristic } from "../src/lib/receipts/heuristics";
 import { summarize, buildTasks, weekOf } from "../src/lib/receipts/score";
 import { cleanTitle, parseSessionVerdict, parseWeekAnswer, toCategory } from "../src/lib/receipts/judge-core";
+import { outcomeText } from "../src/lib/receipts/judge";
 import { countLine, itemsFromAnswer, ruleItems, sessionLines } from "../src/lib/receipts/story";
 import { decryptBlob, encryptBlob, openPointer, publicKeyOf, sealPointer } from "../src/lib/receipts/seal";
 import { computeEfficiency } from "../src/lib/receipts/efficiency";
@@ -397,4 +398,20 @@ test("codex: reads a synthetic rollout (usage records, patch edits, exit codes, 
   assert.equal(s.signals.testRuns, 1);
   assert.deepEqual(s.git.prs.map((x) => x.url), ["https://github.com/acme/app/pull/9"]);
   assert.equal(s.signals.userPrompts, 1);
+});
+
+test("pushes to main: a commit with no PR on the default branch is shipped, and the private AI is told so", () => {
+  const base = { repo: "acme/app", url: "https://github.com/acme/app/commit/abc", kind: "feature" as const, additions: 10, deletions: 2, files: ["a.ts"], commitShas: ["abc"], reverted: false };
+  const pushed: Change = { ...base, key: "acme/app@abc", type: "commit", sha: "abc", title: "Add export button", state: "direct", baseRef: "main" };
+  const sideBranch: Change = { ...pushed, key: "acme/app@def", sha: "def", title: "Try a new chart", state: "open", baseRef: undefined };
+  const pr: Change = { ...base, key: "acme/app#7", type: "pr", number: 7, url: "https://github.com/acme/app/pull/7", title: "Fix login", state: "merged" };
+  const text = outcomeText([
+    { change: pushed, confidence: 0.65 },
+    { change: sideBranch, confidence: 0.6 },
+    { change: pr, confidence: 0.9 },
+  ]);
+  assert.match(text, /commit "Add export button" .*: pushed straight to main with no PR \(shipped\)/);
+  assert.match(text, /commit "Try a new chart" .*: committed on a branch with no PR, not on main yet/);
+  assert.match(text, /PR "Fix login" .*: merged;/);
+  assert.match(outcomeText([{ change: { ...pushed, reverted: true }, confidence: 0.65 }]), /pushed straight to main with no PR, then REVERTED/);
 });

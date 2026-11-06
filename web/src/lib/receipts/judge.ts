@@ -56,7 +56,17 @@ export function outcomeText(linked: { change: Change; confidence: number }[]) {
   if (!linked.length) return "No linked pull request or commit found.";
   return linked
     .map(({ change: c, confidence }) => {
-      const st = c.reverted ? "merged then REVERTED" : c.state;
+      const main = c.baseRef ?? "main";
+      const st =
+        c.type === "commit"
+          ? c.reverted
+            ? `pushed straight to ${main} with no PR, then REVERTED`
+            : c.state === "direct"
+              ? `pushed straight to ${main} with no PR (shipped)`
+              : "committed on a branch with no PR, not on main yet"
+          : c.reverted
+            ? "merged then REVERTED"
+            : c.state;
       return `${c.type === "pr" ? "PR" : "commit"} "${c.title}" (${c.kind}, +${c.additions}/-${c.deletions} lines, ${c.files.length} files): ${st}; match confidence ${confidence.toFixed(2)}`;
     })
     .join("\n");

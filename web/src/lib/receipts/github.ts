@@ -152,6 +152,19 @@ export class GitHub {
     const list = await this.rest<GhCommit[]>(`/repos/${repo}/commits?sha=${encodeURIComponent(branch)}&until=${until}&per_page=1`, 24 * HOUR);
     return list?.[0];
   }
+  /**
+   * Whether a commit is in a branch's history, from GitHub's compare (branch...sha): "behind" or
+   * "identical" means the branch already contains it; "ahead" or "diverged" means it is somewhere else.
+   * Undefined when GitHub could not say.
+   */
+  async inBranch(repo: string, sha: string, branch: string) {
+    const r = await this.rest<{ status: string }>(`/repos/${repo}/compare/${encodeURIComponent(branch)}...${sha}`, HOUR);
+    return r ? r.status === "behind" || r.status === "identical" : undefined;
+  }
+  /** The login of whoever owns the GitHub token. */
+  async login() {
+    return (await this.rest<{ login: string }>("/user", 24 * HOUR))?.login;
+  }
   async repoInfo(repo: string) {
     return this.rest<{ default_branch: string; private: boolean; full_name: string }>(`/repos/${repo}`, 24 * HOUR);
   }

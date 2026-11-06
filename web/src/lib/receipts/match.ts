@@ -3,13 +3,15 @@
 //   pr-link     the session created or linked the PR (Claude Code writes pr-link lines)
 //   commit      a commit made in the session is part of the PR (or a direct commit on main)
 //   branch      the session worked on (or pushed) the PR's head branch, around the same time
-//   files-time  the session edited files that a PR changed, within a week of the session
+//   files-time  the session edited files that a PR changed, within a week of the session; or, when
+//               no PR fits, files that one of the person's own commits pushed straight to main changed
 
 import type { GitHub, GhPull } from "./github";
 import { loadCommitChange, loadPullChange } from "./outcomes";
 import type { Change, MatchReason, Session, SessionMatch } from "./types";
 
 const DAY = 86400_000;
+const MINUTE = 60_000;
 
 export async function pool<T, R>(items: T[], size: number, fn: (t: T, i: number) => Promise<R>): Promise<R[]> {
   const out: R[] = new Array(items.length);
@@ -60,6 +62,48 @@ export async function matchSessions(gh: GitHub, sessions: Session[], log: (m: st
   const recent = (repo: string) => {
     if (!recentByRepo.has(repo)) recentByRepo.set(repo, gh.recentPulls(repo).catch(() => []));
     return recentByRepo.get(repo)!;
+  };
+
+  // Commits pushed straight to the default branch, without a PR, by the person whose GitHub token
+  // this is: work that never had a PR still counts. Read once per repo, from a day before the first
+  // session; each commit is loaded (files, title) only when a session needs it.
+  const firstStart = Math.min(...sessions.map((s) => Date.parse(s.startedAt)).filter(Number.isFinite));
+  const me = gh.login().catch(() => undefined);
+  const pushesByRepo = new Map<string, Promise<{ sha: string; at: number; branch: string }[]>>();
+  const mainPushes = (repo: string) => {
+    if (!pushesByRepo.has(repo)) {
+      pushesByRepo.set(
+        repo,
+        (async () => {
+          const branch = (await gh.repoInfo(repo))?.default_branch ?? "main";
+          const login = await me;
+          const list = await gh.commitsSince(repo, branch, new Date(firstStart - DAY).toISOString(), 3);
+          return list
+            .filter((c) => !login || c.author?.login?.toLowerCase() === login.toLowerCase())
+            .map((c) => ({ sha: c.sha, at: Date.parse(c.commit.committer?.date ?? c.commit.author?.date ?? ""), branch }));
+        })().catch(() => []),
+      );
+    }
+    return pushesByRepo.get(repo)!;
+  };
+  const loadPush = (repo: string, sha: string, branch: string) => {
+    const k = `${repo}@${sha}`;
+    if (!loading.has(k)) {
+      loading.set(
+        k,
+        (async () => {
+          // A commit that belongs to a PR is that PR's work, matched above; only PR-less pushes here.
+          if (((await gh.pullsForCommit(repo, sha)) ?? []).length) return undefined;
+          const c = await loadCommitChange(gh, repo, sha, branch);
+          if (c) changes.set(c.key, c);
+          return c;
+        })().catch((e) => {
+          log(`could not load ${k}: ${String(e).slice(0, 120)}`);
+          return undefined;
+        }),
+      );
+    }
+    return loading.get(k)!;
   };
 
   await pool(sessions, 6, async (s) => {
@@ -115,6 +159,25 @@ export async function matchSessions(gh: GitHub, sessions: Session[], log: (m: st
         // Giant PRs (vendored code, generated files) overlap with everything; require a real share.
         if (c.files.length > 100 && shareOfPr < 0.3) continue;
         if (shareOfPr >= 0.3 || (overlap >= 3 && shareOfSession >= 0.3)) add(s, c, "files-time", Math.min(0.7, 0.35 + 0.35 * shareOfPr + 0.05 * overlap));
+      }
+    }
+
+    // 5. Files edited + time, against the person's own pushes to main (only when still nothing matched)
+    if ((found.get(s.id)?.size ?? 0) === 0 && s.filesEdited.length) {
+      const near = (await mainPushes(repo))
+        // Committed during the session or within two days after it (ten minutes of slack for clocks);
+        // a commit from before the session started is not its work.
+        .filter((p) => p.at >= start - 10 * MINUTE && p.at <= end + 2 * DAY)
+        .sort((a, b) => Math.abs(a.at - end) - Math.abs(b.at - end))
+        .slice(0, 8);
+      for (const p of near) {
+        const c = await loadPush(repo, p.sha, p.branch);
+        if (!c?.files.length) continue;
+        const overlap = s.filesEdited.filter((f) => c.files.some((cf) => f === cf || f.endsWith("/" + cf))).length;
+        if (overlap === 0) continue;
+        const shareOfCommit = overlap / c.files.length;
+        if (c.files.length > 100 && shareOfCommit < 0.3) continue;
+        if (shareOfCommit >= 0.3 || (overlap >= 3 && overlap / s.filesEdited.length >= 0.3)) add(s, c, "files-time", Math.min(0.65, 0.35 + 0.3 * shareOfCommit + 0.05 * overlap));
       }
     }
   });
