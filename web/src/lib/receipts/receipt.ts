@@ -29,6 +29,8 @@ export const RECEIPT_TYPES = {
     { name: "wasteBps", type: "uint16" },
     { name: "labels", type: "uint32[6]" }, // Shipped, Learned, Looped, Abandoned, Overkill, Pending
     { name: "labelSpendCents", type: "uint64[6]" }, // spend per label, same order
+    { name: "tools", type: "string[]" }, // AI tools used this period, e.g. ["claude-code","codex"]
+    { name: "toolSpendCents", type: "uint64[]" }, // spend per tool, same order
     { name: "evidenceRoot", type: "bytes32" },
     { name: "judgeRoot", type: "bytes32" },
     { name: "judge", type: "string" },
@@ -48,6 +50,8 @@ export type ReceiptMessage = {
   wasteBps: number;
   labels: readonly [number, number, number, number, number, number];
   labelSpendCents: readonly [bigint, bigint, bigint, bigint, bigint, bigint];
+  tools: readonly string[];
+  toolSpendCents: readonly bigint[];
   evidenceRoot: Hex;
   judgeRoot: Hex;
   judge: string;
@@ -82,11 +86,12 @@ export type JudgeLeaf = {
 export type SignedReceipt = {
   kind: "receipts.v1";
   headline: string;
-  message: Omit<ReceiptMessage, "periodStart" | "periodEnd" | "spendCents" | "labelSpendCents"> & {
+  message: Omit<ReceiptMessage, "periodStart" | "periodEnd" | "spendCents" | "labelSpendCents" | "toolSpendCents"> & {
     periodStart: string;
     periodEnd: string;
     spendCents: string;
     labelSpendCents: string[];
+    toolSpendCents: string[];
   };
   digest: Hex;
   signature?: Hex;
@@ -213,6 +218,10 @@ export function buildReceipt(opts: { owner: Address; periodId: string; summary: 
     wasteBps: Math.round(summary.wastePct * 100),
     labels: [lc.Shipped, lc.Learned, lc.Looped, lc.Abandoned, lc.Overkill, lc.Pending] as const,
     labelSpendCents: [cents(ls.Shipped), cents(ls.Learned), cents(ls.Looped), cents(ls.Abandoned), cents(ls.Overkill), cents(ls.Pending)] as const,
+    tools: Object.keys(summary.toolSpend ?? {}).sort(),
+    toolSpendCents: Object.keys(summary.toolSpend ?? {})
+      .sort()
+      .map((t) => cents(summary.toolSpend[t])),
     evidenceRoot: merkleRoot(evidence.map((e) => e.leaf)),
     judgeRoot: merkleRoot(judges.map((j) => j.leaf)),
     judge: judgeLabel(judged),
@@ -243,6 +252,7 @@ export function toJsonMessage(m: ReceiptMessage): SignedReceipt["message"] {
     periodEnd: m.periodEnd.toString(),
     spendCents: m.spendCents.toString(),
     labelSpendCents: m.labelSpendCents.map((x) => x.toString()),
+    toolSpendCents: m.toolSpendCents.map((x) => x.toString()),
   };
 }
 
@@ -254,6 +264,8 @@ export function fromJsonMessage(m: SignedReceipt["message"]): ReceiptMessage {
     spendCents: BigInt(m.spendCents),
     labels: [...m.labels] as unknown as ReceiptMessage["labels"],
     labelSpendCents: (m.labelSpendCents ?? ["0", "0", "0", "0", "0", "0"]).map((x) => BigInt(x)) as unknown as ReceiptMessage["labelSpendCents"],
+    tools: m.tools ?? [],
+    toolSpendCents: (m.toolSpendCents ?? []).map((x) => BigInt(x)),
   };
 }
 
@@ -272,6 +284,7 @@ export function signedNumbers(r: SignedReceipt) {
     wasteUsd: (spendUsd * m.wasteBps) / 10000,
     labelCounts: Object.fromEntries(order.map((l, i) => [l, m.labels[i] ?? 0])) as Record<(typeof order)[number], number>,
     labelSpend: Object.fromEntries(order.map((l, i) => [l, Number(m.labelSpendCents?.[i] ?? 0) / 100])) as Record<(typeof order)[number], number>,
+    toolSpend: Object.fromEntries((m.tools ?? []).map((t, i) => [t, Number(m.toolSpendCents?.[i] ?? 0) / 100])) as Record<string, number>,
   };
 }
 

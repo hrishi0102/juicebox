@@ -5,7 +5,7 @@
 import { attributeCost } from "./match";
 import { sessionUsd } from "./pricing";
 import { changeDifficulty, median, medianShippedCost } from "./heuristics";
-import type { BucketStat, Change, Judgement, PeriodSummary, Session, SessionLabel, SessionMatch, Task } from "./types";
+import { toolOf, type BucketStat, type Change, type Judgement, type PeriodSummary, type Session, type SessionLabel, type SessionMatch, type Task } from "./types";
 
 const ALL_LABELS: SessionLabel[] = ["Shipped", "Learned", "Looped", "Abandoned", "Overkill", "Pending"];
 
@@ -77,9 +77,13 @@ export function summarize(opts: {
   const labelCounts = Object.fromEntries(ALL_LABELS.map((l) => [l, 0])) as Record<SessionLabel, number>;
   const labelSpend = Object.fromEntries(ALL_LABELS.map((l) => [l, 0])) as Record<SessionLabel, number>;
   let spend = 0;
+  const toolSpend: Record<string, number> = {};
+  const toolSessions: Record<string, number> = {};
   for (const s of inPeriod) {
     const usd = sessionUsd(s);
     spend += usd;
+    toolSpend[toolOf(s)] = (toolSpend[toolOf(s)] ?? 0) + usd;
+    toolSessions[toolOf(s)] = (toolSessions[toolOf(s)] ?? 0) + 1;
     const label = judgeBy.get(s.id)?.label ?? "Pending";
     labelCounts[label]++;
     labelSpend[label] += usd;
@@ -138,6 +142,8 @@ export function summarize(opts: {
     labelSpend: Object.fromEntries(Object.entries(labelSpend).map(([k, v]) => [k, round2(v)])) as Record<SessionLabel, number>,
     wasteUsd: round2(wasteUsd),
     wastePct: spend > 0 ? round2((wasteUsd / spend) * 100) : 0,
+    toolSpend: Object.fromEntries(Object.entries(toolSpend).map(([k, v]) => [k, round2(v)])),
+    toolSessions,
     buckets,
     tasks,
     tips: tipsFor(inPeriod, opts.judgements, spend, labelSpend, overkillExcess),

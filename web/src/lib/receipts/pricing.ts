@@ -137,3 +137,51 @@ export function isPremiumModel(model: string) {
 export function sessionUsd(s: Pick<Session, "cost">) {
   return Math.max(s.cost.usd, s.cost.claudeReportedUsd ?? 0);
 }
+
+// OpenAI API list prices, USD per million tokens (Standard tier, developers.openai.com/api/docs/pricing,
+// read Nov 6, 2026). Codex logs count cached tokens inside input and reasoning inside output.
+type OpenAiPrice = { input: number; cached: number; output: number; long?: { input: number; cached: number; output: number } };
+const LONG_CONTEXT = 272_000;
+const OPENAI_PRICES: Record<string, OpenAiPrice> = {
+  "gpt-6-astra": { input: 10, cached: 1, output: 50 },
+  "gpt-6.1-sol": { input: 2, cached: 0.1, output: 10 },
+  "gpt-6.1-terra": { input: 1, cached: 0.05, output: 5 },
+  "gpt-6-sol": { input: 2, cached: 0.2, output: 10 },
+  "gpt-6-luna": { input: 0.1, cached: 0.01, output: 0.5 },
+  "gpt-5.6-sol": { input: 4, cached: 0.4, output: 20, long: { input: 8, cached: 0.8, output: 30 } },
+  "gpt-5.6-terra": { input: 2, cached: 0.2, output: 12, long: { input: 4, cached: 0.4, output: 18 } },
+  "gpt-5.6-luna": { input: 0.2, cached: 0.02, output: 1.2, long: { input: 0.4, cached: 0.04, output: 1.8 } },
+  "gpt-5.5": { input: 5, cached: 0.5, output: 30, long: { input: 10, cached: 1, output: 45 } },
+  "gpt-5.4": { input: 2.5, cached: 0.25, output: 15, long: { input: 5, cached: 0.5, output: 22.5 } },
+  "gpt-5.4-mini": { input: 0.75, cached: 0.075, output: 4.5 },
+  "gpt-5.4-nano": { input: 0.2, cached: 0.02, output: 1.25 },
+  "gpt-5.3-codex": { input: 1.75, cached: 0.175, output: 14 },
+  "gpt-5.2": { input: 1.75, cached: 0.175, output: 14 },
+  "gpt-5.1": { input: 1.25, cached: 0.125, output: 10 },
+  "gpt-5": { input: 1.25, cached: 0.125, output: 10 },
+  "gpt-5-mini": { input: 0.25, cached: 0.025, output: 2 },
+  "gpt-5-nano": { input: 0.05, cached: 0.005, output: 0.4 },
+};
+
+export function openAiPriceFor(model: string): { price: OpenAiPrice; known: boolean } {
+  const m = model.toLowerCase().trim();
+  if (OPENAI_PRICES[m]) return { price: OPENAI_PRICES[m], known: true };
+  // Older codex variants (gpt-5.2-codex, gpt-5.1-codex...) are priced like their base model.
+  const base = m.replace(/-codex(-max|-mini)?$/, "");
+  if (OPENAI_PRICES[base]) return { price: OPENAI_PRICES[base], known: true };
+  if (m.includes("mini")) return { price: OPENAI_PRICES["gpt-5.4-mini"], known: false };
+  return { price: OPENAI_PRICES["gpt-5.5"], known: false };
+}
+
+export type OpenAiUsage = { input_tokens?: number; cached_input_tokens?: number; output_tokens?: number; reasoning_output_tokens?: number };
+
+/** Price one OpenAI response (Codex). `input_tokens` includes cached ones; `output_tokens` includes reasoning. */
+export function priceOpenAiUsage(model: string, u: OpenAiUsage): { usd: number; known: boolean; tokens: TokenCounts } {
+  const { price, known } = openAiPriceFor(model);
+  const input = u.input_tokens ?? 0;
+  const cached = Math.min(u.cached_input_tokens ?? 0, input);
+  const output = u.output_tokens ?? 0;
+  const p = price.long && input > LONG_CONTEXT ? price.long : price;
+  const usd = ((input - cached) * p.input + cached * p.cached + output * p.output) / 1_000_000;
+  return { usd, known, tokens: { input: input - cached, output, cacheRead: cached, cacheWrite5m: 0, cacheWrite1h: 0 } };
+}

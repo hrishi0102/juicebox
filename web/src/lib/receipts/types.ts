@@ -45,9 +45,21 @@ export type SessionSignals = {
   subagents: number;
 };
 
+// AI coding tools Receipts can read. Add a reader (see codex.ts) to support another one.
+export type AiTool = "claude-code" | "codex";
+export const AI_TOOLS: AiTool[] = ["claude-code", "codex"];
+export const TOOL_NAMES: Record<AiTool, string> = { "claude-code": "Claude Code", codex: "Codex" };
+
+/** Sessions from datasets made before multi-tool support have no `tool`: they are Claude Code. */
+export function toolOf(s: { tool?: AiTool }): AiTool {
+  return s.tool ?? "claude-code";
+}
+
 export type Session = {
   id: string;
-  projectDir: string; // folder name under ~/.claude/projects
+  tool?: AiTool; // which AI tool wrote the session (missing = claude-code)
+  file?: string; // transcript path, for tools whose files are not laid out like Claude Code's
+  projectDir: string; // folder name under ~/.claude/projects (or "codex")
   cwd: string; // most used working folder
   repos: string[]; // owner/name, best effort
   branches: string[]; // excludes HEAD / main / master
@@ -193,6 +205,8 @@ export type PeriodSummary = {
   labelSpend: Record<SessionLabel, number>;
   wasteUsd: number;
   wastePct: number;
+  toolSpend: Record<string, number>; // spend per AI tool
+  toolSessions: Record<string, number>; // sessions per AI tool
   buckets: BucketStat[];
   tasks: Task[];
   tips: string[];

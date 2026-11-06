@@ -364,7 +364,9 @@ function round(n: number, d: number) {
 }
 
 /** Scan all sessions that were active since `since`. */
-export async function scanSessions(opts: { root?: string; since?: Date; limit?: number; onProgress?: (done: number, total: number) => void } = {}) {
+export async function scanSessions(
+  opts: { root?: string; codexRoot?: string; includeCodex?: boolean; since?: Date; limit?: number; onProgress?: (done: number, total: number) => void } = {},
+) {
   const root = opts.root ?? DEFAULT_LOG_ROOT;
   let files = listSessionFiles(root);
   if (opts.since) files = files.filter((f) => f.mtimeMs >= opts.since!.getTime());
@@ -378,6 +380,11 @@ export async function scanSessions(opts: { root?: string; since?: Date; limit?: 
     if (!s) continue;
     if (opts.since && Date.parse(s.endedAt) < opts.since.getTime()) continue;
     sessions.push(s);
+  }
+  // Other AI tools go through their own readers but end up as the same Session shape.
+  if (opts.includeCodex !== false) {
+    const { scanCodexSessions } = await import("./codex");
+    sessions.push(...(await scanCodexSessions({ root: opts.codexRoot, since: opts.since })));
   }
   resolveRepos(sessions);
   return sessions.sort((a, b) => Date.parse(b.startedAt) - Date.parse(a.startedAt));
@@ -472,7 +479,10 @@ export function resolveRepos(sessions: Session[]) {
 export async function buildPrivateDigest(session: Session, root = DEFAULT_LOG_ROOT, outcome = ""): Promise<PrivateDigest> {
   const main = join(root, session.projectDir, `${session.id}.jsonl`);
   const prompts: string[] = [];
-  if (existsSync(main)) {
+  if (session.tool === "codex" && session.file) {
+    const { codexPrompts } = await import("./codex");
+    prompts.push(...(await codexPrompts(session.file)));
+  } else if (existsSync(main)) {
     for await (const o of readLines(main)) {
       if (o.type !== "user" || o.isMeta || o.isCompactSummary) continue;
       const t = userText(o.message);
