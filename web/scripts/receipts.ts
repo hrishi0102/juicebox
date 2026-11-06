@@ -19,7 +19,7 @@ import { headline, summarize, weekOf } from "../src/lib/receipts/score";
 import { buildReceipt, typedDataFor, verifyReceipt, type SignedReceipt } from "../src/lib/receipts/receipt";
 import { readJson, writeJson } from "../src/lib/receipts/store";
 import { makeDemoDataset, type OrgData } from "../src/lib/receipts/demo";
-import { ARKIV_EXPLORER, arkivPublic, arkivWriterAddress, exampleQuery, fetchTeamReceipts, publishReceipt } from "../src/lib/receipts/arkiv";
+import { ARKIV_EXPLORER, arkivPublic, arkivWriterAddress, exampleQuery, fetchReceiptByKey, fetchTeamReceipts, publishReceipt } from "../src/lib/receipts/arkiv";
 import { resolveGithubToken } from "../src/lib/receipts/github";
 import { loadEnvLocal } from "../src/lib/receipts/env";
 import { envPrivateKey } from "../src/lib/receipts/keys";
@@ -186,11 +186,15 @@ async function main() {
       let n = 0;
       const from = Number(opt("from") ?? 0);
       const limit = Number(opt("limit") ?? org.receipts.length);
-      for (const r of org.receipts.slice(from, from + limit)) {
+      // Filters: --week 2026-W45 (one week), --who you (one person's handle)
+      const wantWeek = opt("week");
+      const wantWho = opt("who");
+      const picked = org.receipts.filter((r) => (!wantWeek || r.message.period === wantWeek) && (!wantWho || r.message.author === wantWho));
+      for (const r of picked.slice(from, from + limit)) {
         const level = r.share?.level === "full" ? "full" : "totals";
         const out = await publishReceipt(r, { team: r.share?.team ?? org.teams[0].id, org: org.id, level });
         n++;
-        console.log(`${r.message.period} ${r.share?.team} ${r.message.author} owner ${out.owner.slice(0, 8)} -> ${out.entityKey}`);
+        console.log(`${r.message.period} ${r.share?.team} ${r.message.author} owner ${out.owner.slice(0, 8)} -> ${out.entityKey}${out.swarm ? ` (sealed, Swarm ${out.swarm})` : ""}`);
       }
       console.log(`Published ${n} demo receipts to Arkiv for org ${org.id}. Writer: ${arkivWriterAddress()}`);
       console.log("Query:", exampleQuery(org.teams[0].id));
@@ -212,8 +216,24 @@ async function main() {
       console.log(`${rs.length} receipts for team ${team}`);
       break;
     }
+    case "entity": {
+      // Read one shared week from Arkiv: as the company (opens the sealed Swarm copy with the
+      // company key) and as the public. npm run receipts -- entity 0x<entity key>
+      const key = positional[0];
+      if (!key) throw new Error("Usage: entity <arkiv entity key>");
+      for (const open of [true, false]) {
+        const r = await fetchReceiptByKey(key, open);
+        if (!r) throw new Error("No entity with that key");
+        console.log(open ? "\nAs the company (with the company key):" : "\nAs the public (no key):");
+        console.log(`  signature ${r.verified ? "verified" : "FAILED"}, level ${r.share?.level}, owner ${r.arkiv.owner}`);
+        console.log(`  ${r.items.length} items shown, ${r.evidence.length} PRs, ${r.judges.length} private AI records`);
+        for (const i of r.items.slice(0, 5)) console.log(`    ${i.category.padEnd(12)} ${i.title}`);
+        if (r.swarm) console.log(`  Swarm ${r.swarm.ref}: ${r.swarm.opened ? "opened and checked (SHA-256, signature)" : `not opened${r.swarm.error ? ` (${r.swarm.error})` : ""}`}`);
+      }
+      break;
+    }
     default:
-      console.log("Commands: scan, judge, week, sign, share, team, demo, publish-demo, arkiv, doctor. See scripts/receipts.ts for flags.");
+      console.log("Commands: scan, write, week, sign, share, team, org, demo, publish-demo, arkiv, entity, doctor. See scripts/receipts.ts for flags.");
   }
 }
 

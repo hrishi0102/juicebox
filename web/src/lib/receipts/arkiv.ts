@@ -21,6 +21,7 @@ import { hexToString, http, stringToBytes, type Hex } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { envPrivateKey } from "./keys";
 import { totalsOnly, verifyReceipt, type SignedReceipt } from "./receipt";
+import { sha256 } from "@noble/hashes/sha2";
 import { bytesToHex, decryptBlob, encryptBlob, hexToBytes, openPointer, publicKeyOf, sealPointer } from "./seal";
 import { downloadBytes, swarmReady, uploadBytes } from "./swarm";
 
@@ -42,8 +43,8 @@ export const ReceiptSchema = defineSchema(ARKIV_SCHEMA_NAME, {
   wasteCents: u64().indexed(),
   digest: str(), // EIP-712 digest of the receipt
   payload: bytes(), // the signed receipt JSON (totals only when the list is on Swarm)
-  swarm: str().optional(), // Swarm reference of the encrypted full week
-  sealed: str().optional(), // where it is and its key, sealed to the company's public key
+  swarm: str().optional(), // Swarm reference of the encrypted full week (64 hex)
+  sealed: bytes().optional(), // where it is, its key, SHA-256 and size, sealed to the company's public key
 });
 
 /** The company key opens sealed weeks. Defaults to the company wallet that pays for Arkiv. */
@@ -94,7 +95,7 @@ export async function publishReceipt(r: SignedReceipt, opts: { team: string; org
   if (opts.level === "full" && opts.swarm !== false && swarmReady() && companyPub) {
     const { key: aes, blob } = encryptBlob(new TextEncoder().encode(JSON.stringify(shared)));
     swarmRef = await uploadBytes(blob);
-    sealed = sealPointer(companyPub, { ref: swarmRef, key: bytesToHex(aes) });
+    sealed = sealPointer(companyPub, { ref: swarmRef, key: bytesToHex(aes), sha256: bytesToHex(sha256(blob)), size: blob.length });
     shared = { ...totalsOnly(r), share: { level: "sealed", team: opts.team, org, publishedAt: shared.share!.publishedAt, swarm: swarmRef } };
   }
   const values = {
@@ -111,7 +112,7 @@ export async function publishReceipt(r: SignedReceipt, opts: { team: string; org
     wasteCents: u64(BigInt(m.categorySpendCents[6] ?? "0")),
     digest: r.digest,
     payload: stringToBytes(JSON.stringify(shared)),
-    ...(swarmRef && sealed ? { swarm: swarmRef, sealed } : {}),
+    ...(swarmRef && sealed ? { swarm: swarmRef, sealed: hexToBytes(sealed) } : {}),
   };
   const expiration = ExpirationTime.fromDays(opts.days ?? 120);
   const handOver = !opts.keepOwnership && m.owner.toLowerCase() !== account.address.toLowerCase();
@@ -158,12 +159,17 @@ async function decodeRow(e: Row, open: boolean): Promise<TeamReceipt> {
   const r = JSON.parse(typeof raw === "string" && raw.startsWith("0x") ? hexToString(raw as Hex) : String(raw)) as SignedReceipt;
   const arkiv = { key: String(val(e.$key)), owner: String(val(e.$owner) ?? ""), expiresAt: String(val(e.$expiresAt) ?? "") };
   const ref = val(e.swarm) ? String(val(e.swarm)) : undefined;
-  const sealed = val(e.sealed) ? String(val(e.sealed)) : undefined;
+  const sealedRaw = val(e.sealed);
+  const sealed = sealedRaw instanceof Uint8Array ? bytesToHex(sealedRaw) : sealedRaw ? String(sealedRaw).replace(/^0x/, "") : undefined;
   const companyKey = companyPrivateKey();
   if (ref && sealed && open && companyKey) {
     try {
       const p = openPointer(companyKey, sealed);
-      const full = JSON.parse(new TextDecoder().decode(decryptBlob(hexToBytes(p.key), await downloadBytes(p.ref)))) as SignedReceipt;
+      if (p.ref !== ref) throw new Error("The sealed pointer names a different Swarm reference");
+      const blob = await downloadBytes(p.ref);
+      // Check the bytes before trusting them (Arkiv's hybrid-pointer pattern): size and SHA-256.
+      if ((p.size !== undefined && blob.length !== p.size) || (p.sha256 && bytesToHex(sha256(blob)) !== p.sha256)) throw new Error("The Swarm copy failed its SHA-256 check");
+      const full = JSON.parse(new TextDecoder().decode(decryptBlob(hexToBytes(p.key), blob))) as SignedReceipt;
       // The Swarm copy must be the same signed receipt as the public record.
       if (full.digest !== r.digest) throw new Error("Swarm copy does not match the signed record");
       const v = await verifyReceipt(full);

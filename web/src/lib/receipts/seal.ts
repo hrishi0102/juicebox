@@ -58,7 +58,7 @@ export function publicKeyOf(privateKeyHex: string): string {
 }
 
 /** What gets sealed for the company: where the encrypted week is, and its key. */
-export type SealedPointer = { ref: string; key: string };
+export type SealedPointer = { ref: string; key: string; sha256?: string; size?: number };
 
 export function sealPointer(companyPublicKey: string, p: SealedPointer): string {
   return sealTo(companyPublicKey, utf8ToBytes(JSON.stringify(p)));

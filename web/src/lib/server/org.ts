@@ -62,7 +62,12 @@ export async function loadOrg(source: Source): Promise<LoadedOrg> {
   for (const r of demo?.receipts ?? []) {
     rows.set(r.digest, { ...r, from: "demo file", verified: (await verifyReceipt(r)).ok, team: r.share?.team ?? cfg.teams[0]?.id ?? "" });
   }
-  for (const r of live) rows.set(r.digest, { ...r, from: "arkiv", arkivKey: r.arkiv.key, verified: r.verified, team: r.share?.team ?? "", swarm: r.swarm });
+  for (const r of live) {
+    // The same week can be on Arkiv twice (shared plain, then sealed). Prefer the copy opened from Swarm.
+    const prev = rows.get(r.digest);
+    if (prev?.from === "arkiv" && prev.swarm?.opened && !r.swarm?.opened) continue;
+    rows.set(r.digest, { ...r, from: "arkiv", arkivKey: r.arkiv.key, verified: r.verified, team: r.share?.team ?? "", swarm: r.swarm });
+  }
 
   // Teams that show up on Arkiv but are not in the config still get a row.
   const teams = [...cfg.teams];

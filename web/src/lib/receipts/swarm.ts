@@ -20,7 +20,7 @@ async function upload(path: string, data: Uint8Array, headers: Record<string, st
   if (!cfg.batch) throw new Error("Swarm is not set up: add SWARM_POSTAGE_BATCH_ID (and SWARM_API_URL) to web/.env.local");
   const r = await fetch(`${cfg.api}${path}`, {
     method: "POST",
-    headers: { "swarm-postage-batch-id": cfg.batch, ...headers },
+    headers: { "swarm-postage-batch-id": cfg.batch, "swarm-deferred-upload": "false", ...headers },
     body: Buffer.from(data),
     signal: AbortSignal.timeout(60_000),
   });
