@@ -18,6 +18,7 @@ One blockchain (Sepolia), two outside systems (Arkiv and the GitHub API), and th
 ## Deployed
 
 - `TeamScoreboard` on Ethereum Sepolia: [`0x563F8f8A06a9bCb394Bd463CEC352e6EB902FDD5`](https://sepolia.etherscan.io/address/0x563F8f8A06a9bCb394Bd463CEC352e6EB902FDD5), deploy transaction [`0x2afdeaf9…3acf`](https://sepolia.etherscan.io/tx/0x2afdeaf9e488bff2b55b01108b4e5a8218c4f9c7a76c6b9cf3b3b36d66073acf). Its forwarder is CRE's Sepolia simulation forwarder `0x15fC6ae953E024d975e77382eEeC56A9101f9F88`, so `cre workflow simulate --broadcast` can post to it. For the live network, the owner switches it to the production forwarder with `setForwarder`.
+- **First score, posted by the CRE simulator on Nov 7:** transaction [`0xa7f4dfd4…e7ff`](https://sepolia.etherscan.io/tx/0xa7f4dfd481fbde18edc11bed280f86d159f76d87d4b4f3973b72679f0cf1e7ff) (sent to the simulation forwarder, which called `onReport`; 489k gas). `latest(keccak256("acme-payments"))` returns 25 signed weeks from 5 people, 0 failed signatures, $2,834.77 of spend, 116 things done, $222.08 that went in circles, 89 merged PRs as signed, and 12 PRs asked on GitHub with 0 still merged (the demo company's PRs are made up).
 - Team checked: `acme-payments`, the demo company's Payments team. Only entities written by the company wallet `0x09351DC0A6AFa87da28D00914fE87373C5C82747` count (`trustedWriters`).
 
 ## Files
@@ -40,7 +41,7 @@ One blockchain (Sepolia), two outside systems (Arkiv and the GitHub API), and th
 node check-live.ts
 ```
 
-Output on Nov 7: 11 HTTP calls in about 3 seconds; 25 signed weeks from 5 people, 0 failed signatures, $2,834.77 of spend, 116 things done, $222.08 that went in circles, 89 merged PRs as signed, and 10 PRs asked on GitHub (0 still merged, because the demo company's PRs are made up). Changing one number inside a payload makes that receipt fail its signature check, and it is left out.
+Output on Nov 7 (the same numbers the simulator wrote on chain): 14 HTTP calls in about 1 second; 25 signed weeks from 5 people, 0 failed signatures, $2,834.77 of spend, 116 things done, $222.08 that went in circles, 89 merged PRs as signed, and 12 PRs asked on GitHub (0 still merged, because the demo company's PRs are made up). `--as-of=2026-11-01` checks as of another day. Changing one number inside a payload makes that receipt fail its signature check, and it is left out.
 
 **2. Compile to WASM** (what CRE runs; this works without an account):
 
@@ -61,14 +62,16 @@ cre login
 `cre/.env` needs `CRE_ETH_PRIVATE_KEY` (a Sepolia key with a little ETH; it pays the gas of the write) and `ARKIV_ACCESS_KEY_ALL` (free from https://hub.arkiv.network/access-keys). Then, from `cre/`:
 
 ```bash
-cre workflow simulate receipts-monthly --target staging-settings --broadcast
+cre workflow simulate receipts-monthly --target staging-settings --non-interactive --trigger-index 0 --broadcast
 ```
 
 The simulator runs the workflow as one node, signs the report, and sends it through the simulation forwarder to `TeamScoreboard`. Look for the `TeamScorePosted` event on Etherscan, then open the app as Acme's lead (`/demo`), Teams, Payments: the "Checked by Chainlink" card shows the score and links to the transaction. Without `--broadcast` the write is a dry run.
 
 ## Limits and notes
 
-- **HTTP calls:** CRE allows 15 per run; Arkiv uses 1 and GitHub up to 13 (`maxPrChecks`).
+- **HTTP calls:** CRE allows 15 per run. Arkiv is read in pages of 30 sorted by key (`ORDER BY $key:key ASC`), because CRE also caps one response at 250 KB and the whole team was 260 KB; GitHub gets what is left, keeping one call spare (12 for the demo team).
+- **The clock:** the workflow uses `runtime.now()`, the DON's agreed time. The simulator reports a cron run's scheduled time as the *next* one (Dec 1), which would have scored the wrong weeks in a demo; on the network the cron fires on the 1st, so both are the same.
+- **Sepolia RPC:** the public endpoints rate-limit; the simulator's write goes through `https://rpc.sepolia.ethpandaops.io` (`project.yaml`), after publicnode and Tenderly's gateway both answered 429.
 - **GitHub token:** optional. Public PRs are checked without one. For private repositories, add `GITHUB_TOKEN` to `secrets.yaml` (mapped to `GITHUB_TOKEN_ALL`).
 - **Sealed weeks:** their PRs are encrypted on Swarm for the company, so the DON checks the PRs of full receipts only. The signed totals of sealed weeks still count.
 - **Gas on Sepolia:** storing contract code now costs far more than older rules: the deploy used 5.1M gas (Foundry's own estimate of 1M failed twice), and one report write about 364k. The workflow's gas limit is 1.5M.

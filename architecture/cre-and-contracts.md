@@ -6,17 +6,17 @@ Code: `cre/receipts-monthly/score.ts` (the check), `main.ts` (the workflow), `ch
 
 Cron trigger (00:00 UTC on the 1st of each month; the simulator runs it at once). DON mode reads the secrets (`ARKIV_ACCESS_KEY`, optional `GITHUB_TOKEN`) and hands them to node mode. In node mode, on every DON node, `checkTeam`:
 
-1. Queries Arkiv once (`arkiv_query`, the access key as the last part of the RPC address) for the team's receipts, selecting `key`, `owner`, `creator`, `createdAt` and the `payload` attribute.
+1. Queries Arkiv in pages of 30 sorted by key (`arkiv_query` with `ORDER BY $key:key ASC`, the access key as the last part of the RPC address) for the team's receipts, selecting `key`, `owner`, `creator`, `createdAt` and the `payload` attribute.
 2. Keeps entities whose `creator` is in `trustedWriters` (the company wallet) and whose week ended inside `windowDays` (45).
 3. Recomputes each receipt's EIP-712 digest (the same types as `web/src/lib/receipts/receipt.ts`, v2 and v3) and recovers the signer with `@noble/curves` (synchronous, so it works in the WASM runtime). A receipt whose signer is not `message.owner` is counted in `rejected` and left out. Of the rest, one per person per week: the highest `createdAt`.
 4. Sums the signed fields: `spendCents`, `done`, `categorySpendCents[6]` (Wasted), `mergedPrs`; counts receipts and people.
-5. Asks GitHub about each PR a full receipt claims as merged (sorted, at most `maxPrChecks`, 13), counting `prsStillMerged`.
+5. Asks GitHub about each PR a full receipt claims as merged (sorted, at most `maxPrChecks` and never more than what is left of 14 HTTP calls after Arkiv), counting `prsStillMerged`.
 
 Consensus: median of every field (`ConsensusAggregationByFields`). The report is ABI-encoded (`REPORT_ABI` in `score.ts`) and written with `EVMClient.writeReport` to `TeamScoreboard` on `ethereum-testnet-sepolia`. A zero `consumerAddress` skips the write and returns the report.
 
 Report layout: `bytes32 teamId, uint32 periodDay, uint32 receipts, uint32 people, uint32 rejected, uint64 spendCents, uint32 done, uint64 wastedCents, uint32 mergedPrs, uint16 prsChecked, uint16 prsStillMerged`.
 
-Status (Nov 7): type-checks and compiles to WASM with `cre-compile` (`@chainlink/cre-sdk` 1.23); `check-live.ts` runs the same `checkTeam` against live Arkiv and GitHub (25 signed weeks from 5 people, every signature valid; tampered payloads are rejected). The CRE CLI simulation needs a Chainlink login.
+Status (Nov 7): the CRE CLI (v1.39.0) simulation runs with production limits and `--broadcast`, and wrote the first score to Sepolia (transaction `0xa7f4dfd481fbde18edc11bed280f86d159f76d87d4b4f3973b72679f0cf1e7ff`): 25 signed weeks from 5 people, every signature valid. `check-live.ts` gives the same numbers in Node, and tampered payloads are rejected. Arkiv is read in pages of 30 sorted by key (CRE caps a response at 250 KB), and the run uses `runtime.now()` because the simulator reports a cron run's time as the next scheduled one.
 
 ## TeamScoreboard
 
