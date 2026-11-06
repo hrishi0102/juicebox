@@ -1,8 +1,9 @@
 // Saving, building and signing weekly receipts (server only).
-import type { Address, Hex } from "viem";
+import type { Address } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { demoKey } from "@/lib/receipts/demo";
 import { githubLogin, laptopAccount } from "@/lib/receipts/identity";
+import { envPrivateKey } from "@/lib/receipts/keys";
 import type { Dataset } from "@/lib/receipts/pipeline";
 import { buildReceipt, typedDataFor, verifyReceipt, type SignedReceipt } from "@/lib/receipts/receipt";
 import { readJson, writeJson, type Source } from "@/lib/receipts/store";
@@ -32,14 +33,14 @@ export function buildWeekReceipt(d: Dataset, weekId: string, owner: Address, aut
 /** Address that signs on this laptop, if one exists yet (demo: the "You" persona). */
 export function signerAddress(source: Source): Address | undefined {
   if (source === "demo") return privateKeyToAccount(demoKey("You")).address;
-  const key = process.env.RECEIPTS_SIGNER_KEY as Hex | undefined;
+  const key = envPrivateKey("RECEIPTS_SIGNER_KEY");
   if (key) return privateKeyToAccount(key).address;
   return laptopAccount(false)?.address;
 }
 
 function signingAccount(source: Source) {
   if (source === "demo") return privateKeyToAccount(demoKey("You"));
-  const key = process.env.RECEIPTS_SIGNER_KEY as Hex | undefined;
+  const key = envPrivateKey("RECEIPTS_SIGNER_KEY");
   return key ? privateKeyToAccount(key) : laptopAccount(true)!;
 }
 

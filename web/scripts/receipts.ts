@@ -13,16 +13,18 @@
 //   npm run receipts -- doctor                   check config (GitHub, 0G, Arkiv)
 
 import { privateKeyToAccount } from "viem/accounts";
-import type { Hex } from "viem";
 import { loadDataset, rejudge, runPipeline } from "../src/lib/receipts/pipeline";
 import { judgeConfigFromEnv } from "../src/lib/receipts/judge";
 import { headline, summarize, weekOf } from "../src/lib/receipts/score";
 import { buildReceipt, typedDataFor, verifyReceipt, type SignedReceipt } from "../src/lib/receipts/receipt";
 import { readJson, writeJson } from "../src/lib/receipts/store";
 import { makeDemoDataset, type OrgData } from "../src/lib/receipts/demo";
-import { ARKIV_EXPLORER, arkivWriterAddress, exampleQuery, fetchTeamReceipts, publishReceipt } from "../src/lib/receipts/arkiv";
+import { ARKIV_EXPLORER, arkivPublic, arkivWriterAddress, exampleQuery, fetchTeamReceipts, publishReceipt } from "../src/lib/receipts/arkiv";
 import { resolveGithubToken } from "../src/lib/receipts/github";
 import { loadEnvLocal } from "../src/lib/receipts/env";
+import { envPrivateKey } from "../src/lib/receipts/keys";
+import { githubLogin, githubTeams, laptopAccount } from "../src/lib/receipts/identity";
+import { demoKey } from "../src/lib/receipts/demo";
 import { loadWeekStory, writeWeekStory } from "../src/lib/receipts/week";
 
 loadEnvLocal();
@@ -89,15 +91,18 @@ async function main() {
       break;
     }
     case "sign": {
-      const key = process.env.RECEIPTS_SIGNER_KEY as Hex | undefined;
-      if (!key) throw new Error("Set RECEIPTS_SIGNER_KEY in web/.env.local (a throwaway testnet key)");
-      const account = privateKeyToAccount(key);
-      const d = loadDataset(flag("demo") ? "demo" : "local");
+      // Signs with RECEIPTS_SIGNER_KEY if set, else the key made on this laptop (same as the app).
+      const demo = flag("demo");
+      const key = envPrivateKey("RECEIPTS_SIGNER_KEY");
+      const account = demo ? privateKeyToAccount(demoKey("You")) : key ? privateKeyToAccount(key) : laptopAccount(true)!;
+      const d = loadDataset(demo ? "demo" : "local");
       if (!d) throw new Error("No data");
       const w = positional[0] ? weekById(positional[0]) : weekOf(new Date());
-      const s = summarize({ periodStart: w.start, periodEnd: w.end, sessions: d.sessions, judgements: d.judgements, tasks: d.tasks, changes: d.changes, owner: account.address });
+      const story = loadWeekStory(demo ? "demo" : "local", w.id);
+      const s = summarize({ periodStart: w.start, periodEnd: w.end, sessions: d.sessions, judgements: d.judgements, tasks: d.tasks, changes: d.changes, owner: account.address, story });
       const ids = new Set(d.sessions.filter((x) => Date.parse(x.startedAt) >= Date.parse(w.start) && Date.parse(x.startedAt) < Date.parse(w.end)).map((x) => x.id));
-      const r = buildReceipt({ owner: account.address, periodId: w.id, summary: s, judgements: d.judgements.filter((j) => ids.has(j.sessionId)) });
+      const author = demo ? "you" : ((await githubLogin())?.login ?? "");
+      const r = buildReceipt({ owner: account.address, author, periodId: w.id, summary: s, judgements: d.judgements.filter((j) => ids.has(j.sessionId)) });
       r.signature = await account.signTypedData(typedDataFor(r));
       r.signedAt = new Date().toISOString();
       const v = await verifyReceipt(r);
@@ -122,8 +127,18 @@ async function main() {
       const j = judgeConfigFromEnv();
       console.log("GitHub token:", gh ? "found" : "missing (set GITHUB_TOKEN or `gh auth login`)");
       console.log("Judge engine:", j.engine, j.model ?? "", j.engine === "0g" && !j.apiKey ? "(ZG_API_KEY missing)" : "");
-      console.log("Signer key:", process.env.RECEIPTS_SIGNER_KEY ? "set" : "missing (needed for CLI signing; the web app can use a browser wallet)");
-      console.log("Arkiv writer key:", process.env.ARKIV_PRIVATE_KEY ? "set" : "missing (needed to publish shared receipts)");
+      console.log("Signing key:", process.env.RECEIPTS_SIGNER_KEY ? "RECEIPTS_SIGNER_KEY" : laptopAccount(false) ? `made on this laptop (${laptopAccount(false)!.address})` : "made on this laptop at the first signature");
+      console.log("Arkiv company wallet:", arkivWriterAddress() ?? "missing (needed to share with your company)");
+      console.log("Arkiv access key:", process.env.ARKIV_ACCESS_KEY ? "set" : "missing (the public endpoint is heavily rate limited)");
+      const writer = arkivWriterAddress();
+      if (writer) {
+        try {
+          const wei = await arkivPublic().getBalance({ address: writer as `0x${string}` });
+          console.log("Arkiv company wallet balance:", `${(Number(wei) / 1e18).toFixed(5)} tGLM`, wei === BigInt(0) ? "(empty: claim at https://hub.arkiv.network/faucet)" : "");
+        } catch (e) {
+          console.log("Arkiv company wallet balance: could not read", String(e).slice(0, 120));
+        }
+      }
       break;
     }
     case "team": {
@@ -141,14 +156,18 @@ async function main() {
       if (!week) throw new Error("Usage: share <week> [--level totals|full]");
       const r = readJson<SignedReceipt | null>("local", `receipts/${week}.json`, null);
       if (!r) throw new Error(`No signed receipt for ${week}. Run: sign ${week}`);
-      const team = readJson<{ id: string }>("local", "team.json", { id: process.env.RECEIPTS_TEAM || "my-team" }).id;
-      const out = await publishReceipt(r, { team, level });
-      r.share = { level, team, arkivKey: out.entityKey, arkivTx: out.txHash, publishedAt: new Date().toISOString() };
+      // Company and team: CLI settings first, else your GitHub org and team, else defaults.
+      const gh = await githubTeams();
+      const ghTeam = gh?.teams[0];
+      const org = readJson<{ id: string } | null>("local", "org.json", null)?.id ?? ghTeam?.org ?? gh?.orgs[0] ?? "my-org";
+      const team = readJson<{ id: string } | null>("local", "team.json", null)?.id ?? (ghTeam ? `${ghTeam.org}/${ghTeam.slug}` : `${org}/everyone`);
+      const out = await publishReceipt(r, { team, org, level });
+      r.share = { level, team, org, arkivKey: out.entityKey, arkivTx: out.txHash, publishedAt: new Date().toISOString() };
       writeJson("local", `receipts/${week}.json`, r);
-      console.log(`Shared ${week} (${level}) with team ${team}`);
-      console.log("entity", out.entityKey);
+      console.log(`Shared ${week} (${level}) with ${team} at ${org}`);
+      console.log("entity", out.entityKey, "(read-only, owned by", out.owner + ")");
       console.log("tx", out.txHash, `(${ARKIV_EXPLORER}/tx/${out.txHash})`);
-      console.log("writer", out.writer);
+      console.log("gas paid by", out.writer);
       break;
     }
     case "org": {
@@ -165,11 +184,12 @@ async function main() {
       const org = readJson<OrgData | null>("demo", "org.json", null);
       if (!org) throw new Error("No demo org. Run: demo");
       let n = 0;
-      for (const r of org.receipts) {
+      const limit = Number(opt("limit") ?? org.receipts.length);
+      for (const r of org.receipts.slice(0, limit)) {
         const level = r.share?.level === "full" ? "full" : "totals";
         const out = await publishReceipt(r, { team: r.share?.team ?? org.teams[0].id, org: org.id, level });
         n++;
-        console.log(`${r.message.period} ${r.share?.team} ${r.message.owner.slice(0, 8)} ${level} -> ${out.entityKey}`);
+        console.log(`${r.message.period} ${r.share?.team} ${r.message.author} owner ${out.owner.slice(0, 8)} -> ${out.entityKey}`);
       }
       console.log(`Published ${n} demo receipts to Arkiv for org ${org.id}. Writer: ${arkivWriterAddress()}`);
       console.log("Query:", exampleQuery(org.teams[0].id));

@@ -19,6 +19,7 @@ import { and, desc, eq } from "@arkiv-network/sdk/query";
 import { bytes, defineSchema, i32, str, u64 } from "@arkiv-network/sdk/schema";
 import { hexToString, http, stringToBytes, type Hex } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
+import { envPrivateKey } from "./keys";
 import { totalsOnly, verifyReceipt, type SignedReceipt } from "./receipt";
 
 export const ARKIV_SCHEMA_NAME = "receipts-ethglobal-mumbai.receipt.v2";
@@ -50,13 +51,13 @@ export function arkivPublic() {
 }
 
 export function arkivWriterAddress(): string | undefined {
-  const key = process.env.ARKIV_PRIVATE_KEY as Hex | undefined;
+  const key = envPrivateKey("ARKIV_PRIVATE_KEY");
   return key ? privateKeyToAccount(key).address : undefined;
 }
 
 /** Publish (share) a signed receipt. Returns the entity key and tx hash. */
 export async function publishReceipt(r: SignedReceipt, opts: { team: string; org?: string; level: "totals" | "full"; days?: number; keepOwnership?: boolean }) {
-  const key = process.env.ARKIV_PRIVATE_KEY as Hex | undefined;
+  const key = envPrivateKey("ARKIV_PRIVATE_KEY");
   if (!key) throw new Error("ARKIV_PRIVATE_KEY is not set. Add a funded Rabdi testnet key to web/.env.local.");
   if (!r.signature) throw new Error("Sign the receipt before sharing it.");
   const check = await verifyReceipt(r);
