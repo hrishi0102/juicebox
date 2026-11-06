@@ -76,7 +76,7 @@ export async function loadOrg(source: Source): Promise<LoadedOrg> {
   }
 
   // One receipt per person per week. Receipts are read-only, so the same week can exist several
-  // times (sent again after new sessions or with a line kept private, sent sealed, or in an older
+  // times (sent again after new sessions, sent sealed, or in an older
   // receipt version); keep the best: verified, newest version, read from Arkiv, opened from Swarm,
   // and among equals the one sent last.
   const rows = new Map<string, OrgRow>();

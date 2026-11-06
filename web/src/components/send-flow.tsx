@@ -1,35 +1,30 @@
 "use client";
 
-// Review, sign, send: the employee's receipt for the company, one step at a time.
-//   Review  what the company will see, what everyone can see, what stays on this laptop.
-//           Any line can be kept private; it still counts in the signed totals.
-//   Sign    lock the list and the numbers with the key on this laptop (or a wallet).
-//   Send    one read-only Arkiv record, owned by you; the list sealed for the company on Swarm.
+// Sign, then send: the employee's whole week goes to the company, exactly as the AI wrote it.
+// Nothing can be picked out or edited, so the receipt stays evidence.
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { createWalletClient, custom, type Address, type EIP1193Provider } from "viem";
-import { Check, EyeOff, Lock } from "lucide-react";
+import { Check, Lock } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { CategoryBadge } from "@/components/category-badge";
+import { ProofLinks } from "@/components/proof-links";
+import { arkivEntityUrl, arkivTxUrl, swarmProofPath } from "@/lib/proof-urls";
 import { typedDataFor, type SignedReceipt } from "@/lib/receipts/receipt";
-import type { Category } from "@/lib/receipts/types";
 
 export type SendFlowProps = {
   week: string;
-  weekLabel: string;
   demo: boolean;
   company: { org: string; orgName: string; teamName: string } | null;
-  items: { index: number; category: Category; title: string; cost: string }[];
-  prs: { key: string; title: string; url: string; state: string }[];
-  totals: { done: number; spend: string; merged: number; sessions: number; tools: string };
+  totals: { done: number; spend: string; merged: number };
   signed: boolean;
   stale: boolean;
   signer?: string;
+  /** Already formatted on the server, so the page renders the same text on both sides. */
   signedAt?: string;
-  sent: { arkivKey?: string; level: string; hidden?: number; publishedAt?: string } | null;
+  sent: { arkivKey?: string; arkivTx?: string; swarm?: string; publishedAt?: string } | null;
   arkivReady: boolean;
   sealed: boolean;
   savedJson?: string;
@@ -38,7 +33,6 @@ export type SendFlowProps = {
 export function SendFlow(p: SendFlowProps) {
   const router = useRouter();
   const [busy, setBusy] = useState<string | null>(null);
-  const [hidden, setHidden] = useState<Set<number>>(new Set());
   const [, start] = useTransition();
   const org = p.company?.orgName ?? "your company";
   const sentOk = !!p.sent?.arkivKey;
@@ -83,8 +77,8 @@ export function SendFlow(p: SendFlowProps) {
 
   const send = () =>
     run("send", async () => {
-      await post("/api/share", { week: p.week, hide: [...hidden] });
-      toast.success(`Sent to ${org}`, { description: p.sealed ? `Your list is sealed for ${org} on Swarm. Arkiv has a read-only record of your signed totals, owned by you.` : "The record on Arkiv is read-only and owned by you." });
+      await post("/api/share", { week: p.week });
+      toast.success(`Sent to ${org}`, { description: "One read-only record on Arkiv, owned by you. The list is sealed for the company on Swarm." });
     });
 
   const download = () => {
@@ -97,115 +91,33 @@ export function SendFlow(p: SendFlowProps) {
     URL.revokeObjectURL(a.href);
   };
 
-  const toggle = (i: number) =>
-    setHidden((h) => {
-      const n = new Set(h);
-      if (n.has(i)) n.delete(i);
-      else n.add(i);
-      return n;
-    });
-
-  const reviewDone = p.signed;
   return (
-    <div className="space-y-5">
-      {/* 1. Review */}
-      <Step n={1} title={`Review what ${org} will see`} done={reviewDone}>
-        <div className="grid gap-4 md:grid-cols-[1.4fr_1fr]">
-          <div className="rounded-lg border border-border bg-background p-4">
-            <h3 className="font-medium">{org} will see</h3>
-            <p className="mt-0.5 text-sm text-muted-foreground">Your list, the pull requests behind it, and the totals. Untick a line to keep it private; it still counts in the totals.</p>
-            <ul className="mt-3 divide-y divide-border">
-              {p.items.map((i) => {
-                const off = hidden.has(i.index);
-                return (
-                  <li key={i.index} className="flex items-start gap-3 py-2">
-                    <input
-                      type="checkbox"
-                      className="mt-1 size-4 accent-[var(--primary)]"
-                      checked={!off}
-                      disabled={sentOk}
-                      onChange={() => toggle(i.index)}
-                      aria-label={off ? `Share "${i.title}"` : `Keep "${i.title}" private`}
-                    />
-                    <div className={`min-w-0 flex-1 ${off ? "opacity-50" : ""}`}>
-                      <div className="flex flex-wrap items-center gap-2">
-                        <CategoryBadge category={i.category} />
-                        {off && (
-                          <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-                            <EyeOff className="size-3" aria-hidden="true" /> kept private
-                          </span>
-                        )}
-                      </div>
-                      <div className={`mt-1 text-[15px] ${off ? "line-through" : ""}`}>{i.title}</div>
-                    </div>
-                    <div className="shrink-0 text-sm text-muted-foreground">{i.cost}</div>
-                  </li>
-                );
-              })}
-            </ul>
-            {p.prs.length > 0 && (
-              <div className="mt-3 border-t border-border pt-3">
-                <div className="text-sm font-medium">Pull requests (always shared; {org} can see them on GitHub anyway)</div>
-                <ul className="mt-1 space-y-0.5 text-sm">
-                  {p.prs.map((pr) => (
-                    <li key={pr.key}>
-                      <a href={pr.url} target="_blank" rel="noreferrer" className="hover:underline">
-                        {pr.title}
-                      </a>{" "}
-                      <span className="text-muted-foreground">{pr.state}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-          <div className="space-y-4">
-            <div className="rounded-lg border border-border bg-background p-4">
-              <h3 className="font-medium">Everyone can see</h3>
-              <p className="mt-0.5 text-sm text-muted-foreground">Arkiv is public, so anyone can read and check your signed totals:</p>
-              <p className="mt-2 text-[15px]">
-                {p.totals.done} things done, {p.totals.spend} of AI, {p.totals.merged} merged PRs, {p.totals.sessions} sessions{p.totals.tools ? ` (${p.totals.tools})` : ""}.
-              </p>
-              <p className={`mt-2 text-sm ${p.sealed ? "text-muted-foreground" : "font-medium text-destructive"}`}>
-                {p.sealed
-                  ? `Not the list: it is encrypted on this laptop and stored on Swarm, and only ${org}'s key can open it.`
-                  : `Swarm is not set up here, so your list would be public on Arkiv too. Ask whoever set up Receipts at ${org}.`}
-              </p>
-            </div>
-            <div className="rounded-lg border border-border bg-background p-4">
-              <h3 className="flex items-center gap-1.5 font-medium">
-                <Lock className="size-4" aria-hidden="true" /> Stays on this laptop
-              </h3>
-              <p className="mt-0.5 text-sm text-muted-foreground">Your prompts, the AI&apos;s answers, session titles and file names. Never sent to anyone.</p>
-            </div>
-          </div>
-        </div>
-      </Step>
-
-      {/* 2. Sign */}
-      <Step n={2} title="Sign it" done={p.signed}>
+    <div className="space-y-4">
+      <Step n={1} title="Sign it" done={p.signed}>
         {p.signed ? (
           <div className="space-y-2 text-sm">
             <p>
-              Signed{p.signedAt ? ` on ${new Date(p.signedAt).toLocaleString()}` : ""} by <code>{p.signer ? `${p.signer.slice(0, 6)}…${p.signer.slice(-4)}` : "you"}</code>. Nobody,
+              Signed{p.signedAt ? ` on ${p.signedAt}` : ""} by <code>{p.signer ? `${p.signer.slice(0, 6)}…${p.signer.slice(-4)}` : "you"}</code>. Nobody,
               including {org} or us, can change the list or the numbers now.
             </p>
             <div className="flex flex-wrap gap-x-4">
               <button type="button" onClick={download} className="text-primary hover:underline">
                 Download the receipt file
               </button>
-              <button type="button" onClick={signLocal} disabled={!!busy} className="text-muted-foreground hover:text-foreground">
-                Sign again
-              </button>
+              {!sentOk && (
+                <button type="button" onClick={signLocal} disabled={!!busy} className="text-muted-foreground hover:text-foreground">
+                  Sign again
+                </button>
+              )}
             </div>
           </div>
         ) : (
           <div className="space-y-2">
-            <Button onClick={signLocal} disabled={!!busy}>
+            <Button size="lg" onClick={signLocal} disabled={!!busy}>
               {busy === "sign" ? "Signing" : p.demo ? "Sign it (demo key)" : "Sign it"}
             </Button>
             <p className="text-sm text-muted-foreground">
-              {p.stale ? "Your week changed since you last signed. Sign again to update it." : "Signing locks the list and the numbers. No wallet needed: the key was made on this laptop and never leaves it."}{" "}
+              {p.stale ? "Your week changed since you last signed. Sign again to update it." : "Signing locks every line and every number. No wallet needed: the key was made on this laptop and never leaves it."}{" "}
               <button type="button" onClick={signWallet} disabled={!!busy} className="text-primary hover:underline">
                 {busy === "wallet" ? "Waiting for wallet" : "Use a wallet instead"}
               </button>
@@ -214,8 +126,7 @@ export function SendFlow(p: SendFlowProps) {
         )}
       </Step>
 
-      {/* 3. Send */}
-      <Step n={3} title={`Send it to ${org}`} done={sentOk}>
+      <Step n={2} title={`Send it to ${org}`} done={sentOk}>
         {!p.company ? (
           <p className="text-sm">
             You have not joined your company yet.{" "}
@@ -228,28 +139,20 @@ export function SendFlow(p: SendFlowProps) {
           <div className="space-y-3 text-sm">
             <p>
               Sent to {p.company.teamName} at {p.company.orgName}
-              {p.sent?.publishedAt ? ` on ${new Date(p.sent.publishedAt).toLocaleString()}` : ""}.
-              {p.sent?.hidden ? ` ${p.sent.hidden === 1 ? "1 line was" : `${p.sent.hidden} lines were`} kept private.` : ""}
+              {p.sent?.publishedAt ? ` on ${p.sent.publishedAt}` : ""}.
             </p>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-2">
               <Link href={`/company/people?week=${p.week}${p.signer ? `&who=${p.signer}` : ""}`} className={buttonVariants({ variant: "outline", size: "sm" })}>
                 See it as {org} sees it
               </Link>
               <Link href={`/r/${p.sent!.arkivKey}`} className={buttonVariants({ variant: "outline", size: "sm" })}>
-                Open the public link
+                What anyone sees
               </Link>
             </div>
-            <p className="border-t border-border pt-3 text-muted-foreground">
-              Want to post your week too?{" "}
-              <Link href={`/card?week=${p.week}`} className="text-primary hover:underline">
-                Make a card for socials
-              </Link>
-              . It is a picture, not this receipt: not signed, and you can edit it.
-            </p>
           </div>
         ) : (
           <div className="space-y-2">
-            <Button onClick={send} disabled={!!busy || !p.signed || !p.arkivReady}>
+            <Button size="lg" onClick={send} disabled={!!busy || !p.signed || !p.arkivReady}>
               {busy === "send" ? "Sending" : `Send to ${p.company.orgName}`}
             </Button>
             <p className="text-sm text-muted-foreground">
@@ -257,11 +160,47 @@ export function SendFlow(p: SendFlowProps) {
                 ? `${p.company.orgName} has not turned on receipts in this copy yet (it needs the company wallet in .env.local). Ask whoever set up Receipts there.`
                 : !p.signed
                   ? "Sign it first."
-                  : `Goes to ${p.company.teamName} at ${p.company.orgName}. One read-only record on Arkiv, owned by you. The company wallet only pays the fee.${hidden.size ? ` ${hidden.size === 1 ? "1 line stays" : `${hidden.size} lines stay`} private.` : ""}`}
+                  : `Goes to ${p.company.teamName} at ${p.company.orgName}: one read-only record on Arkiv, owned by you. The company wallet only pays the fee.`}
             </p>
           </div>
         )}
       </Step>
+
+      {sentOk && p.sent && (
+        <ProofLinks
+          groups={[
+            {
+              service: "Arkiv",
+              what: "The record: read-only, owned by you, with the signed totals",
+              links: [
+                { label: "The record on the Arkiv explorer", href: arkivEntityUrl(p.sent.arkivKey!) },
+                ...(p.sent.arkivTx ? [{ label: "The transaction that wrote it", href: arkivTxUrl(p.sent.arkivTx) }] : []),
+              ],
+            },
+            {
+              service: "Swarm",
+              what: "Your full week, encrypted on this laptop before it left",
+              links: p.sent.swarm ? [{ label: "Fetch it from Swarm now", href: swarmProofPath(p.sent.swarm, p.sent.arkivKey) }] : [],
+            },
+          ]}
+        />
+      )}
+
+      <ul className="space-y-1.5 rounded-xl border border-border p-4 text-sm text-muted-foreground">
+        <li>
+          <span className="font-medium text-foreground">{org} gets</span> the whole receipt: every line, the pull requests and the totals.
+          {p.sealed ? ` The list is encrypted on this laptop and stored on Swarm, and only ${org}'s key opens it.` : ""}
+        </li>
+        <li>
+          <span className="font-medium text-foreground">Anyone can check</span> the signed totals on Arkiv: {p.totals.done} things done, {p.totals.spend} of AI, {p.totals.merged} merged PRs.
+        </li>
+        <li className="inline-flex items-start gap-1.5">
+          <Lock className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
+          <span>
+            <span className="font-medium text-foreground">Stays on this laptop:</span> your prompts, the AI&apos;s answers, session titles and file names.
+          </span>
+        </li>
+      </ul>
     </div>
   );
 }
@@ -279,7 +218,7 @@ function Step({ n, title, done, children }: { n: number; title: string; done: bo
         {title}
         {done && <span className="sr-only">(done)</span>}
       </h2>
-      <div className="mt-4">{children}</div>
+      <div className="mt-3">{children}</div>
     </section>
   );
 }

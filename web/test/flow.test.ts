@@ -1,4 +1,4 @@
-// The employee's weekly flow: write, review, sign, send. Run with: npm test
+// The employee's weekly flow: write, sign, send. Run with: npm test
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -9,24 +9,24 @@ const base: WeekStatus = { aiWritten: false, storyStale: false, signed: false, r
 test("a new week starts at write", () => {
   const f = weekFlow(base);
   assert.equal(f.next, "write");
-  assert.deepEqual([f.write, f.review, f.sign, f.send], ["current", "todo", "todo", "todo"]);
+  assert.deepEqual([f.write, f.sign, f.send], ["current", "todo", "todo"]);
 });
 
-test("once the private AI wrote it, review is next", () => {
+test("once the private AI wrote it, signing is next", () => {
   const f = weekFlow({ ...base, aiWritten: true });
-  assert.equal(f.next, "review");
+  assert.equal(f.next, "sign");
   assert.equal(f.write, "done");
-  assert.equal(f.review, "current");
+  assert.equal(f.sign, "current");
 });
 
 test("new sessions after the write-up put write back in front", () => {
   assert.equal(weekFlow({ ...base, aiWritten: true, storyStale: true }).next, "write");
 });
 
-test("signing finishes review and sign, then send is next", () => {
+test("after signing, sending is next", () => {
   const f = weekFlow({ ...base, aiWritten: true, signed: true });
   assert.equal(f.next, "send");
-  assert.deepEqual([f.write, f.review, f.sign, f.send], ["done", "done", "done", "current"]);
+  assert.deepEqual([f.write, f.sign, f.send], ["done", "done", "current"]);
 });
 
 test("a list drafted by rules can still be signed and sent", () => {
@@ -37,7 +37,7 @@ test("a list drafted by rules can still be signed and sent", () => {
 
 test("a week that changed after signing has to be signed again, even if it was sent", () => {
   const f = weekFlow({ ...base, aiWritten: true, signed: true, sent: true, receiptStale: true });
-  assert.equal(f.next, "review");
+  assert.equal(f.next, "sign");
   assert.equal(f.send, "todo");
 });
 

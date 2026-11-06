@@ -1,13 +1,12 @@
-// Where an employee's week stands. Every week is the same four steps:
+// Where an employee's week stands. Every week is the same three steps:
 //   write   the private AI on 0G writes the list (until then, simple rules draft it)
-//   review  check what the company will see, keep single lines private
-//   sign    lock the list and the numbers with the key on this laptop
+//   sign    lock every line and every number with the key on this laptop
 //   send    one read-only Arkiv record, owned by you; the list sealed for the company on Swarm
-// Review has no saved state of its own: you review right before you sign, so signing completes it.
+// The whole week is sent as written: nothing can be picked out or edited.
 
 export type StepState = "done" | "current" | "todo";
-export type WeekStep = "write" | "review" | "sign" | "send";
-export const WEEK_STEPS: WeekStep[] = ["write", "review", "sign", "send"];
+export type WeekStep = "write" | "sign" | "send";
+export const WEEK_STEPS: WeekStep[] = ["write", "sign", "send"];
 
 export type WeekStatus = {
   /** The private AI wrote this week's list. */
@@ -29,13 +28,12 @@ export function weekFlow(s: WeekStatus): WeekFlow {
   const done: Record<WeekStep, boolean> = {
     // Signing a list the rules drafted is allowed; writing is then simply skipped.
     write: (s.aiWritten && !s.storyStale) || signedOk,
-    review: signedOk,
     sign: signedOk,
     send: signedOk && s.sent,
   };
   const next = WEEK_STEPS.find((k) => !done[k]) ?? "done";
   const state = (k: WeekStep): StepState => (done[k] ? "done" : k === next ? "current" : "todo");
-  return { write: state("write"), review: state("review"), sign: state("sign"), send: state("send"), next };
+  return { write: state("write"), sign: state("sign"), send: state("send"), next };
 }
 
 /** One word for a saved week, for the employee's list of past receipts. */

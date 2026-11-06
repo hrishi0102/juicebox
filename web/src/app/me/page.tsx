@@ -9,7 +9,9 @@ import { CategoryBar, CategoryLegend } from "@/components/category-badge";
 import { Difficulty } from "@/components/label-badge";
 import { Collapsible } from "@/components/collapsible";
 import { FlowSteps } from "@/components/flow-steps";
+import { ProofLinks, type ProofGroup } from "@/components/proof-links";
 import { EnterDemo } from "@/components/demo";
+import { arkivEntityUrl, arkivTxUrl, swarmProofPath, ZG_ACTIVITY, zgAddressUrl, zgProofPath } from "@/lib/proof-urls";
 import { buttonVariants } from "@/components/ui/button";
 import { readJson } from "@/lib/receipts/store";
 import type { WeeklyReview } from "@/lib/receipts/review";
@@ -22,11 +24,12 @@ import { median } from "@/lib/receipts/heuristics";
 import { receiptStatus, weekFlow } from "@/lib/receipts/flow";
 import { CATEGORY_COPY, plural, usd, weekRange } from "@/lib/format";
 import { CATEGORIES, TOOL_NAMES, type AiTool, type PeriodSummary, type Task } from "@/lib/receipts/types";
+import { providersFor } from "@/lib/server/zerog-providers";
 
 export const metadata = { title: "My week · Receipts" };
 
-// The employee's week. One question, one answer, and one next step: write it, review and sign it,
-// send it. What the company will see is on the next page (Review and send).
+// The employee's week. One question, one answer, and one next step: write it, sign it, send it.
+// The receipt itself, and the Sign and Send buttons, are on the next page.
 export default async function MyWeek({ searchParams }: { searchParams: Promise<{ week?: string }> }) {
   const sp = await searchParams;
   const source = await currentSource();
@@ -47,36 +50,36 @@ export default async function MyWeek({ searchParams }: { searchParams: Promise<{
   const target = await employeeTarget(source);
   const login = source === "demo" ? "you" : (await githubLogin())?.login;
   const sendHref = `/me/send?week=${wv.id}`;
+  // The 0G provider(s) recorded for this week's sessions, else the ones serving the model (the demo).
+  const recorded = [...new Set(wv.judgements.filter((j) => j.judge.engine === "0g-tee" && j.judge.provider).map((j) => j.judge.provider!))];
+  const providers = recorded.length ? recorded : aiStory ? await providersFor(s.story.model) : [];
+  const proofs = weekProofs(providers, s.story.payer, rc.sent);
 
   return (
     <div className="space-y-8">
-      <IdentityLine login={login} target={target} />
-
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="flex items-center gap-1 text-sm">
-          <WeekLink week={older?.id} label="Older week" dir="prev" />
-          <span className="px-2 font-medium">
-            Week {wv.id.split("-W")[1]}, {weekRange(wv.start, wv.end)}
-          </span>
-          <WeekLink week={newer?.id} label="Newer week" dir="next" />
-        </div>
-        <FlowSteps
-          label={`Week ${wv.id.split("-W")[1]} steps`}
-          steps={[
-            { label: "Write", state: flow.write },
-            { label: "Review", state: flow.review, href: sendHref },
-            { label: "Sign", state: flow.sign, href: sendHref },
-            { label: "Send", state: flow.send, href: sendHref },
-          ]}
-        />
-        {source === "local" && (
-          <div className="ml-auto">
-            <ScanButton label="Refresh from my logs" variant="outline" />
-          </div>
-        )}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <IdentityLine login={login} target={target} />
+        {source === "local" && <ScanButton label="Refresh from my logs" variant="outline" />}
       </div>
 
       <section className="max-w-3xl">
+        <div className="mb-5 flex flex-wrap items-center gap-x-5 gap-y-3">
+          <div className="flex items-center gap-1 text-sm">
+            <WeekLink week={older?.id} label="Older week" dir="prev" />
+            <span className="px-1 font-medium">
+              Week {wv.id.split("-W")[1]}, {weekRange(wv.start, wv.end)}
+            </span>
+            <WeekLink week={newer?.id} label="Newer week" dir="next" />
+          </div>
+          <FlowSteps
+            label={`Week ${wv.id.split("-W")[1]} steps`}
+            steps={[
+              { label: "Write", state: flow.write },
+              { label: "Sign", state: flow.sign, href: sendHref },
+              { label: "Send", state: flow.send, href: sendHref },
+            ]}
+          />
+        </div>
         <h1 className="text-balance text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl">What did you get done this week?</h1>
         <p className="mt-4 text-pretty text-xl leading-snug sm:text-2xl">{s.oneLiner}</p>
         <p className="mt-2 text-[15px] text-muted-foreground">
@@ -100,7 +103,7 @@ export default async function MyWeek({ searchParams }: { searchParams: Promise<{
             </div>
           ) : (
             <Link href={sendHref} className={buttonVariants({ variant: flow.next === "write" ? "outline" : "default", size: "lg" })}>
-              {flow.next === "send" ? `Send it to ${target.orgName}` : "Review and send"}
+              {flow.next === "send" ? `Send it to ${target.orgName}` : "Sign and send"}
               <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
           )}
@@ -117,6 +120,7 @@ export default async function MyWeek({ searchParams }: { searchParams: Promise<{
             "Simple rules drafted this list. Write my week has the private AI on 0G read each session and write a better one. Only a trimmed summary of each session goes to 0G, where the model runs in a hardware enclave."
           )}
         </p>
+        <ProofLinks className="mt-5" groups={proofs} />
       </section>
 
       <div className="grid gap-10 lg:grid-cols-[1fr_360px]">
@@ -257,6 +261,33 @@ export default async function MyWeek({ searchParams }: { searchParams: Promise<{
       </div>
     </div>
   );
+}
+
+/**
+ * "Check it yourself" for one week: the 0G provider that wrote it and the account that paid, and,
+ * once sent, the Arkiv record and its encrypted copy on Swarm.
+ */
+function weekProofs(providers: string[], payer: string | undefined, sent: { arkivKey?: string; arkivTx?: string; swarm?: string } | null): ProofGroup[] {
+  const wallet = payer && payer !== "app key" ? payer : undefined;
+  const groups: ProofGroup[] = [];
+  if (providers.length || wallet)
+    groups.push({
+      service: "0G",
+      what: `The private AI that wrote this week ran in a hardware enclave${wallet ? ", paid from your 0G account" : ""}`,
+      links: [
+        ...providers.slice(0, 2).map((p, i) => ({ label: providers.length > 1 ? `0G's TEE check of provider ${i + 1}` : "0G's TEE check of the provider", href: zgProofPath(p) })),
+        ...(wallet ? [{ label: "Your calls on pc.0g.ai", href: ZG_ACTIVITY }, { label: "Your 0G account on ChainScan", href: zgAddressUrl(wallet) }] : []),
+      ],
+    });
+  if (sent?.arkivKey) {
+    groups.push({
+      service: "Arkiv",
+      what: "The receipt you sent: read-only, owned by you",
+      links: [{ label: "The record on the Arkiv explorer", href: arkivEntityUrl(sent.arkivKey) }, ...(sent.arkivTx ? [{ label: "The transaction", href: arkivTxUrl(sent.arkivTx) }] : [])],
+    });
+    if (sent.swarm) groups.push({ service: "Swarm", what: "Your full week, encrypted for the company", links: [{ label: "Fetch it from Swarm now", href: swarmProofPath(sent.swarm, sent.arkivKey) }] });
+  }
+  return groups;
 }
 
 function toolText(s: PeriodSummary) {

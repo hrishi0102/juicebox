@@ -307,8 +307,8 @@ test("receipts: sign the week list, verify, catch tampering, reveal only some it
   assert.equal(verifyProof(root, leaves[0], merkleProof(leaves, leaves[0])), true);
 });
 
-test("sending with lines kept private: the sealed copy still verifies, the counts still include them", async () => {
-  // What /api/share does with `hide`, then what the company page does when it opens the Swarm copy.
+test("sending a week: the whole receipt sealed on Swarm opens with the company key and still verifies", async () => {
+  // What /api/share does (the whole week, nothing left out), then what the company page does when it opens the Swarm copy.
   const account = privateKeyToAccount(generatePrivateKey());
   const sessions = ["a", "b", "c"].map((id, n) => fakeSession(id, { startedAt: `2026-11-0${3 + n}T10:00:00Z`, endedAt: `2026-11-0${3 + n}T11:00:00Z` }));
   const changes = [fakeChange("acme/app#11"), fakeChange("acme/app#12"), fakeChange("acme/app#13")];
@@ -319,22 +319,15 @@ test("sending with lines kept private: the sealed copy still verifies, the count
   const summary = summarize({ periodStart: w.start, periodEnd: w.end, sessions, judgements, tasks, changes });
   const r = buildReceipt({ owner: account.address, author: "octocat", periodId: w.id, summary, judgements });
   r.signature = await account.signTypedData(typedDataFor(r));
-  assert.ok(r.items.length >= 3, "three separate items to hide one from");
 
-  const hide = new Set([1]);
-  const sent = revealItems(r, (_, i) => !hide.has(i));
-  assert.equal(sent.items.length, r.items.length - 1);
-  assert.ok(!sent.items.some((i) => i.leaf === r.items[1].leaf), "the hidden line is not in what is sent");
-  assert.equal(sent.digest, r.digest, "same signed receipt");
-
-  // Sealed for the company on Swarm, then opened and checked like the company page does.
   const company = generatePrivateKey();
-  const { key, blob } = encryptBlob(new TextEncoder().encode(JSON.stringify(sent)));
+  const { key, blob } = encryptBlob(new TextEncoder().encode(JSON.stringify(r)));
   const pointer = openPointer(company, sealPointer(publicKeyOf(company), { ref: "cd".repeat(32), key: Buffer.from(key).toString("hex") }));
   const opened = JSON.parse(new TextDecoder().decode(decryptBlob(Buffer.from(pointer.key, "hex"), blob)));
   const v = await verifyReceipt(opened);
   assert.equal(v.ok, true, JSON.stringify(v.checks));
-  assert.equal(signedNumbers(opened).done, signedNumbers(r).done, "the hidden line still counts in the signed totals");
+  assert.equal(opened.items.length, r.items.length, "every line arrives");
+  assert.equal(opened.digest, r.digest, "the same signed receipt");
 });
 
 test("receipts: a version 2 receipt (already shared on Arkiv) still verifies", async () => {
