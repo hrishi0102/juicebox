@@ -1,14 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- query rows come back with SDK-generated shapes */
 // Shared receipts on Arkiv (testnet "Rabdi").
 //
-// When someone shares a receipt with their team, we write one Arkiv entity:
-//   indexed attributes  team, period, signer, level (totals | full), numbers for filtering
-//   payload (bytes)     the signed receipt JSON (totals-only or with evidence)
-// Never stored: prompts, session ids, file names. Arkiv data is public, so "full" sharing only
-// adds PR links and per-task numbers that the owner chose to reveal.
+// When someone shares a receipt with their company, one transaction does two things:
+//   1. creates a READ-ONLY entity: indexed attributes (org, team, period, signer, author, numbers
+//      for filtering) and the signed receipt JSON as the payload. Read-only means nobody, not the
+//      company and not us, can edit it later.
+//   2. hands ownership of that entity to the person who signed it (their laptop key). The company
+//      wallet only pays the gas; the record belongs to the employee.
+// Never stored: prompts, session ids, file names. Arkiv data is public, so a shared receipt holds
+// only the list, the PRs and the numbers the owner signed.
 //
-// The team view reads these entities back with a query, and every receipt's EIP-712 signature is
-// checked again on read, so anyone can write to the schema but only signed receipts count.
+// Company and team views read these entities back with a query, and every receipt's EIP-712
+// signature is checked again on read, so anyone can write to the schema but only signed receipts count.
 
 import { createPublicClient, createWalletClient, ExpirationTime } from "@arkiv-network/sdk";
 import { rabdi } from "@arkiv-network/sdk/chains";
@@ -16,9 +19,9 @@ import { and, desc, eq } from "@arkiv-network/sdk/query";
 import { bytes, defineSchema, i32, str, u64 } from "@arkiv-network/sdk/schema";
 import { hexToString, http, stringToBytes, type Hex } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { verifyReceipt, type SignedReceipt } from "./receipt";
+import { totalsOnly, verifyReceipt, type SignedReceipt } from "./receipt";
 
-export const ARKIV_SCHEMA_NAME = "receipts-ethglobal-mumbai.receipt.v1";
+export const ARKIV_SCHEMA_NAME = "receipts-ethglobal-mumbai.receipt.v2";
 export const ARKIV_CHAIN_ID = 7794095;
 export const ARKIV_EXPLORER = "https://rabdi.explorer.arkiv.network";
 
@@ -28,11 +31,12 @@ export const ReceiptSchema = defineSchema(ARKIV_SCHEMA_NAME, {
   team: str().indexed(),
   period: str().indexed(), // ISO week, e.g. 2026-W45
   signer: str().indexed(), // lowercased address that signed the receipt (EIP-712)
+  author: str().indexed(), // GitHub login inside the signed receipt, or ""
   level: str().indexed(), // totals | full
   spendCents: u64().indexed(),
-  shipped: i32().indexed(),
-  survivalBps: i32().indexed(), // 65535 = unknown
-  wasteBps: i32().indexed(),
+  done: i32().indexed(), // things done (items that were not wasted)
+  merged: i32().indexed(), // merged pull requests
+  wasteCents: u64().indexed(),
   digest: str(), // EIP-712 digest of the receipt
   payload: bytes(), // the signed receipt JSON
 });
@@ -51,7 +55,7 @@ export function arkivWriterAddress(): string | undefined {
 }
 
 /** Publish (share) a signed receipt. Returns the entity key and tx hash. */
-export async function publishReceipt(r: SignedReceipt, opts: { team: string; org?: string; level: "totals" | "full"; days?: number }) {
+export async function publishReceipt(r: SignedReceipt, opts: { team: string; org?: string; level: "totals" | "full"; days?: number; keepOwnership?: boolean }) {
   const key = process.env.ARKIV_PRIVATE_KEY as Hex | undefined;
   if (!key) throw new Error("ARKIV_PRIVATE_KEY is not set. Add a funded Rabdi testnet key to web/.env.local.");
   if (!r.signature) throw new Error("Sign the receipt before sharing it.");
@@ -60,35 +64,41 @@ export async function publishReceipt(r: SignedReceipt, opts: { team: string; org
   const account = privateKeyToAccount(key);
   const wallet = createWalletClient({ chain: chain(), transport: http(process.env.ARKIV_RPC_URL || undefined), account });
   const org = opts.org ?? r.share?.org ?? "";
-  const shared: SignedReceipt = { ...r, share: { level: opts.level, team: opts.team, org, publishedAt: new Date().toISOString() } };
-  if (opts.level === "totals") {
-    shared.evidence = [];
-    shared.judges = [];
-  }
+  const base = opts.level === "totals" ? totalsOnly(r) : r;
+  const shared: SignedReceipt = { ...base, share: { level: opts.level, team: opts.team, org, publishedAt: new Date().toISOString() } };
   const m = r.message;
-  const { entityKey, txHash } = await wallet
-    .createEntity(
-    ReceiptSchema,
-    {
-      type: "receipt",
-      org,
-      team: opts.team,
-      period: m.period,
-      signer: m.owner.toLowerCase(),
-      level: opts.level,
-      spendCents: u64(BigInt(m.spendCents)),
-      shipped: m.shippedTasks,
-      survivalBps: m.survivalBps,
-      wasteBps: m.wasteBps,
-      digest: r.digest,
-      payload: stringToBytes(JSON.stringify(shared)),
-    },
-    { expiration: ExpirationTime.fromDays(opts.days ?? 120) },
-    )
-    .catch((e: unknown) => {
-      throw new Error(explainArkivError(e, account.address));
+  const values = {
+    type: "receipt",
+    org,
+    team: opts.team,
+    period: m.period,
+    signer: m.owner.toLowerCase(),
+    author: m.author ?? "",
+    level: opts.level,
+    spendCents: u64(BigInt(m.spendCents)),
+    done: m.done,
+    merged: m.mergedPrs,
+    wasteCents: u64(BigInt(m.categorySpendCents[6] ?? "0")),
+    digest: r.digest,
+    payload: stringToBytes(JSON.stringify(shared)),
+  };
+  const expiration = ExpirationTime.fromDays(opts.days ?? 120);
+  const handOver = !opts.keepOwnership && m.owner.toLowerCase() !== account.address.toLowerCase();
+  try {
+    if (!handOver) {
+      const { entityKey, txHash } = await wallet.createEntity(ReceiptSchema, values, { expiration, flags: { readonly: true } });
+      return { entityKey: entityKey as string, txHash: txHash as string, writer: account.address, owner: account.address };
+    }
+    // Predict the new entity's key so the same transaction can hand it to the signer.
+    const [next] = await arkivPublic().predictEntityKeys({ owner: account.address, count: 1 });
+    const out = await wallet.executeBatch({
+      creates: [{ schema: ReceiptSchema, values, expiration, flags: { readonly: true }, salt: next.salt }],
+      ownershipChanges: [{ entityKey: next.key, newOwner: m.owner }],
     });
-  return { entityKey: entityKey as string, txHash: txHash as string, writer: account.address };
+    return { entityKey: (out.createdEntities[0] ?? next.key) as string, txHash: out.txHash as string, writer: account.address, owner: m.owner };
+  } catch (e) {
+    throw new Error(explainArkivError(e, account.address));
+  }
 }
 
 /** The SDK wraps the real cause (often an empty wallet) in a vague message; dig it out. */

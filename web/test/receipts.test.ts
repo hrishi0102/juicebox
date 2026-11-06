@@ -9,7 +9,7 @@ import { join } from "node:path";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { normalizeModel, priceUsage } from "../src/lib/receipts/pricing";
 import { listSessionFiles, parseSession, parsePrUrl } from "../src/lib/receipts/parse";
-import { buildReceipt, merkleProof, merkleRoot, typedDataFor, verifyProof, verifyReceipt } from "../src/lib/receipts/receipt";
+import { buildReceipt, merkleProof, merkleRoot, revealItems, signedNumbers, typedDataFor, verifyProof, verifyReceipt } from "../src/lib/receipts/receipt";
 import { heuristicLabel, judgeAllHeuristic } from "../src/lib/receipts/heuristics";
 import { summarize, buildTasks, weekOf } from "../src/lib/receipts/score";
 import { cleanTitle, parseSessionVerdict, parseWeekAnswer, toCategory } from "../src/lib/receipts/judge-core";
@@ -171,7 +171,7 @@ test("week list: one item per PR, sessions the AI skipped come back, waste goes 
   assert.equal(countLine(items), "Built 1 thing, figured out 1 problem and went in circles once.");
 });
 
-test("receipts: sign, verify, catch tampering, prove one task", async () => {
+test("receipts: sign the week list, verify, catch tampering, reveal only some items", async () => {
   const account = privateKeyToAccount(generatePrivateKey());
   const s1 = fakeSession("s1");
   const s2 = fakeSession("s2", { startedAt: "2026-11-04T10:00:00Z", endedAt: "2026-11-04T11:00:00Z", cost: { ...fakeSession("x").cost, usd: 4 } });
@@ -189,17 +189,35 @@ test("receipts: sign, verify, catch tampering, prove one task", async () => {
   assert.equal(summary.shippedTasks, 2, "a reverted task still counts as shipped");
   assert.ok(summary.survivalPct !== null && summary.survivalPct < 90, "but its lines count as dead");
 
-  const r = buildReceipt({ owner: account.address, periodId: w.id, summary, judgements });
+  const r = buildReceipt({ owner: account.address, author: "octocat", periodId: w.id, summary, judgements });
   r.signature = await account.signTypedData(typedDataFor(r));
   assert.equal((await verifyReceipt(r)).ok, true);
+  const n = signedNumbers(r);
+  assert.equal(n.author, "octocat");
+  assert.equal(n.spendUsd, 14);
+  assert.equal(r.items.length, summary.items.length);
+  assert.equal(n.categoryCounts.Built + n.categoryCounts.Fixed + n.categoryCounts.Wasted, r.items.length);
 
   const tampered = structuredClone(r);
   tampered.message.spendCents = "1";
   assert.equal((await verifyReceipt(tampered)).ok, false);
 
+  const renamed = structuredClone(r);
+  renamed.items[0].title = "Something I did not do";
+  assert.equal((await verifyReceipt(renamed)).ok, false, "item titles are signed");
+
   const badEvidence = structuredClone(r);
   badEvidence.evidence[0].costCents += 1;
   assert.equal((await verifyReceipt(badEvidence)).ok, false);
+
+  // Hide one item: the rest still verify with proofs, and the signed counts still include it.
+  const partial = revealItems(r, (_, i) => i > 0);
+  assert.equal(partial.items.length, r.items.length - 1);
+  const pv = await verifyReceipt(partial);
+  assert.equal(pv.ok, true, JSON.stringify(pv.checks));
+  const forged = structuredClone(partial);
+  forged.items[0].proof = [];
+  assert.equal((await verifyReceipt(forged)).ok, false);
 
   const leaves = r.evidence.map((e) => e.leaf);
   const root = merkleRoot(leaves);

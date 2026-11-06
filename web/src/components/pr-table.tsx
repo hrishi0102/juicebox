@@ -7,8 +7,8 @@ function status(e: EvidenceLeaf) {
   if (e.reverted) return { text: "Reverted", tone: "text-[var(--l-overkill)]" };
   if (e.state === "open") return { text: "Open", tone: "text-muted-foreground" };
   if (e.state === "closed") return { text: "Closed, not merged", tone: "text-muted-foreground" };
-  if (e.survivalBps === 65535) return { text: "Merged", tone: "" };
-  return { text: `Merged, ${Math.round(e.survivalBps / 100)}% alive`, tone: "" };
+  if (e.state === "direct") return { text: "Pushed", tone: "" };
+  return { text: "Merged", tone: "" };
 }
 
 /** Pull requests from signed receipts: title, link, status, and the AI cost behind each one. */

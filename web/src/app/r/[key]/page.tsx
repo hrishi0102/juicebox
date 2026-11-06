@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ReceiptPaper } from "@/components/receipt-paper";
 import { PrTable } from "@/components/pr-table";
+import { WeekList } from "@/components/week-list";
 import { ARKIV_EXPLORER, fetchReceiptByKey } from "@/lib/receipts/arkiv";
 import { summaryFromReceipt, verifyReceipt } from "@/lib/receipts/receipt";
 import { shortAddr } from "@/lib/format";
@@ -40,7 +41,8 @@ export default async function SharedReceipt({ params }: { params: Promise<{ key:
         end={summary.periodEnd}
         summary={summary}
         owner={r.message.owner}
-        judgeLine={r.message.judge.startsWith("0g") ? "0G TEE" : r.message.judge}
+        judgeLine={r.summary.writtenBy}
+        ownerName={r.message.author ? `@${r.message.author}` : undefined}
         digest={r.digest}
         signed={v.ok}
         sharedLevel={r.share?.level}
@@ -48,12 +50,21 @@ export default async function SharedReceipt({ params }: { params: Promise<{ key:
       />
       <div className="space-y-8">
         <div>
-          <h1 className="text-balance text-4xl font-semibold leading-[1.1] tracking-tight">{r.headline}.</h1>
-          <p className="mt-3 text-muted-foreground">
-            Week {r.message.period.split("-W")[1]} receipt of {shortAddr(r.message.owner)}, shared{r.share?.team ? ` with team ${r.share.team}` : ""}
-            {r.share?.level === "full" ? ", including the pull requests it paid for" : " as totals only"}.
+          <p className="text-sm text-muted-foreground">
+            Week {r.message.period.split("-W")[1]}, shared by {r.message.author ? `@${r.message.author}` : shortAddr(r.message.owner)}
+            {r.share?.team ? ` with team ${r.share.team}` : ""}
           </p>
+          <h1 className="mt-1 text-balance text-4xl font-semibold leading-[1.1] tracking-tight">{r.headline}.</h1>
+          {r.oneLiner && <p className="mt-3 text-xl">{r.oneLiner}</p>}
         </div>
+        {summary.items.length > 0 && (
+          <section>
+            <h2 className="text-lg font-semibold">What they got done</h2>
+            <div className="mt-2">
+              <WeekList items={summary.items} linkSessions={false} />
+            </div>
+          </section>
+        )}
         <section>
           <h2 className="text-lg font-semibold">Checks</h2>
           <ul className="mt-2 space-y-1 text-sm">
@@ -77,7 +88,7 @@ export default async function SharedReceipt({ params }: { params: Promise<{ key:
         </section>
         {r.evidence.length > 0 && (
           <section>
-            <h2 className="text-lg font-semibold">Pull requests it paid for</h2>
+            <h2 className="text-lg font-semibold">Pull requests</h2>
             <div className="mt-2 rounded-lg border border-border bg-card px-4 py-2">
               <PrTable evidence={r.evidence} />
             </div>

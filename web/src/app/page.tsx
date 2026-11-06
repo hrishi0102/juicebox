@@ -13,7 +13,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { readJson } from "@/lib/receipts/store";
 import type { WeeklyReview } from "@/lib/receipts/review";
 import { currentSource, getDataset, getDemoOrg, weekView, weeksWithData } from "@/lib/server/data";
-import { loadSavedReceipt, localSigner } from "@/lib/server/receipts-store";
+import { loadSavedReceipt, signerAddress } from "@/lib/server/receipts-store";
 import { median } from "@/lib/receipts/heuristics";
 import { buildReceipt } from "@/lib/receipts/receipt";
 import { CATEGORY_COPY, plural, usd, weekRange } from "@/lib/format";
@@ -32,9 +32,10 @@ export default async function ThisWeek({ searchParams }: { searchParams: Promise
   const newer = idx > 0 ? weeks[idx - 1] : undefined;
   const s = wv.summary;
   const saved = loadSavedReceipt(source, wv.id);
-  const signer = localSigner(source);
-  const owner = saved?.message.owner ?? signer?.address ?? d.owner;
-  const preview = owner ? buildReceipt({ owner: owner as `0x${string}`, periodId: wv.id, summary: { ...s, owner }, judgements: wv.judgements }) : undefined;
+  const owner = saved?.message.owner ?? signerAddress(source) ?? d.owner;
+  const preview = owner
+    ? buildReceipt({ owner: owner as `0x${string}`, author: saved?.message.author ?? "", periodId: wv.id, summary: { ...s, owner }, judgements: wv.judgements })
+    : undefined;
   // A saved receipt is stale when the data changed after it was signed (rescan, a new write-up).
   const stale = !!saved && !!preview && saved.digest !== preview.digest;
   const digest = stale ? preview?.digest : (saved?.digest ?? preview?.digest);
@@ -212,7 +213,7 @@ export default async function ThisWeek({ searchParams }: { searchParams: Promise
             signed={!!saved?.signature && !stale}
             stale={stale}
             shared={stale ? null : (saved?.share ?? null)}
-            canSignLocally={!!signer}
+            canSignLocally
             arkivReady={!!process.env.ARKIV_PRIVATE_KEY}
             savedJson={saved ? JSON.stringify(saved, null, 2) : undefined}
           />

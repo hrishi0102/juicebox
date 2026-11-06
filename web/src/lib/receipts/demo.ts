@@ -9,15 +9,16 @@ import { privateKeyToAccount } from "viem/accounts";
 import { judgeAllHeuristic } from "./heuristics";
 import { buildTasks, summarize, weeksBetween } from "./score";
 import { buildReceipt, totalsOnly, typedDataFor, type SignedReceipt } from "./receipt";
+import { readJson } from "./store";
 import type { Dataset } from "./pipeline";
-import type { Change, ChangeKind, Session, SessionMatch } from "./types";
+import type { Change, ChangeKind, Session, SessionMatch, WeekStory } from "./types";
 
 export const DEMO_END = Date.parse("2026-11-06T12:00:00Z");
 const DAY = 86400_000;
 
 type Archetype = "ship" | "loop" | "learn" | "abandon" | "overkill" | "pending" | "revert";
 
-export type TeamMember = { name: string; role: string; address: string; share: "full" | "totals" | "none"; team: string; you?: boolean };
+export type TeamMember = { name: string; role: string; address: string; share: "full" | "totals" | "none"; team: string; you?: boolean; login?: string };
 export type OrgTeam = { id: string; name: string };
 export type OrgData = {
   id: string;
@@ -233,7 +234,8 @@ export async function makeDemoDataset(): Promise<{ dataset: Dataset; org: OrgDat
     const { sessions, changes, matches } = memberSessions(m.name, m.seed, m.plan, m.codex);
     const judgements = judgeAllHeuristic(sessions, matches, changes, DEMO_END);
     const tasks = buildTasks(sessions, matches, changes, judgements);
-    members.push({ name: m.name, role: m.role, address: account.address, share: m.share, team: m.team, you: m.you });
+    const login = `${m.name.toLowerCase()}-acme`;
+    members.push({ name: m.name, role: m.role, address: account.address, share: m.share, team: m.team, you: m.you, login });
     if (m.you) {
       mine = {
         generatedAt: new Date(DEMO_END).toISOString(),
@@ -249,10 +251,12 @@ export async function makeDemoDataset(): Promise<{ dataset: Dataset; org: OrgDat
     }
     if (m.share === "none") continue;
     for (const w of weeks) {
-      const summary = summarize({ periodStart: w.start, periodEnd: w.end, sessions, judgements, tasks, changes, owner: account.address });
+      // "You" uses the weeks the private AI wrote (fixtures/demo/weeks); others use the rules.
+      const story = m.you ? (readJson<WeekStory | null>("demo", `weeks/${w.id}.json`, null) ?? undefined) : undefined;
+      const summary = summarize({ periodStart: w.start, periodEnd: w.end, sessions, judgements, tasks, changes, owner: account.address, story });
       if (!summary.sessions) continue;
       const ids = new Set(sessions.filter((s) => Date.parse(s.startedAt) >= Date.parse(w.start) && Date.parse(s.startedAt) < Date.parse(w.end)).map((s) => s.id));
-      let r = buildReceipt({ owner: account.address, periodId: w.id, summary, judgements: judgements.filter((j) => ids.has(j.sessionId)) });
+      let r = buildReceipt({ owner: account.address, author: m.you ? "you" : login, periodId: w.id, summary, judgements: judgements.filter((j) => ids.has(j.sessionId)) });
       r.signature = await account.signTypedData(typedDataFor(r));
       r.signedAt = new Date(Math.min(DEMO_END, Date.parse(w.end))).toISOString();
       if (m.share === "totals") r = totalsOnly(r);

@@ -40,7 +40,7 @@ export function ReceiptActions(p: Props) {
       const r = await fetch("/api/receipt/sign-local", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ week: p.week }) });
       const j = await r.json();
       if (!j.ok) throw new Error(j.error);
-      toast.success(p.source === "demo" ? "Signed with the demo key" : "Receipt signed");
+      toast.success(p.source === "demo" ? "Signed with the demo key" : "Signed with this laptop's key");
     });
 
   const signWallet = () =>
@@ -62,7 +62,7 @@ export function ReceiptActions(p: Props) {
       const r = await fetch("/api/share", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ week: p.week }) });
       const j = await r.json();
       if (!j.ok) throw new Error(j.error);
-      toast.success("Shared with your team", { description: "Receipt and PR list are on Arkiv." });
+      toast.success("Shared with your company", { description: "Your list, PRs and totals are on Arkiv, in a record only you own." });
     });
 
   const download = () => {
@@ -86,26 +86,28 @@ export function ReceiptActions(p: Props) {
                 {busy === "sign" ? "Signing" : p.source === "demo" ? "Sign this receipt (demo key)" : "Sign this receipt"}
               </Button>
             ) : null}
-            <Button variant={p.canSignLocally ? "outline" : "default"} onClick={signWallet} disabled={!!busy}>
-              {busy === "wallet" ? "Waiting for wallet" : "Sign with my wallet"}
-            </Button>
           </div>
           <p className="text-sm text-muted-foreground">
-            {p.stale ? "Your numbers changed since you last signed. Sign again to update it." : "Signing locks the numbers so nobody can change them later."}
+            {p.stale ? "Your week changed since you last signed. Sign again to update it." : "Signing locks the list and the numbers so nobody can change them later. No wallet needed: the key stays on this laptop."}{" "}
+            <button type="button" onClick={signWallet} disabled={!!busy} className="text-primary hover:underline">
+              {busy === "wallet" ? "Waiting for wallet" : "Use a wallet instead"}
+            </button>
           </p>
         </>
       ) : !p.shared?.arkivKey ? (
         <>
           <Button onClick={share} disabled={!!busy || !p.arkivReady}>
-            {busy === "share" ? "Sharing" : "Share with my team"}
+            {busy === "share" ? "Sharing" : "Share with my company"}
           </Button>
           <p className="text-sm text-muted-foreground">
-            {p.arkivReady ? "Your team sees the totals and the PR list. Never your prompts." : "Sharing is not set up yet (needs an Arkiv key in .env.local)."}
+            {p.arkivReady
+              ? "Your company sees this list, the PRs and the totals. Never your prompts. The record on Arkiv is read-only and owned by you."
+              : "Sharing is not set up yet: it needs the company's Arkiv key in .env.local."}
           </p>
         </>
       ) : (
         <p className="text-sm">
-          Signed and shared with your team.{" "}
+          Signed and shared with your company.{" "}
           <a className="text-primary hover:underline" href={`/r/${p.shared.arkivKey}`}>
             Open the shared receipt
           </a>

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { Address } from "viem";
 import { currentSource, getDataset } from "@/lib/server/data";
-import { buildWeekReceipt, loadSavedReceipt, saveReceipt } from "@/lib/server/receipts-store";
+import { authorFor, buildWeekReceipt, loadSavedReceipt, saveReceipt } from "@/lib/server/receipts-store";
 import { verifyReceipt, type SignedReceipt } from "@/lib/receipts/receipt";
 import { rejectCrossSite } from "@/lib/server/guard";
 
@@ -14,7 +14,7 @@ export async function GET(req: Request) {
   const d = getDataset(source);
   if (!d) return NextResponse.json({ error: "No data" }, { status: 404 });
   if (!owner) return NextResponse.json({ saved: loadSavedReceipt(source, week) ?? null });
-  return NextResponse.json({ receipt: buildWeekReceipt(d, week, owner) });
+  return NextResponse.json({ receipt: buildWeekReceipt(d, week, owner, await authorFor(source)) });
 }
 
 // POST: save a receipt signed in the browser, after checking the signature.

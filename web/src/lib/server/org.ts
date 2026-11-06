@@ -26,8 +26,12 @@ export async function loadOrg(source: Source): Promise<LoadedOrg> {
 
   let live: Awaited<ReturnType<typeof fetchOrgReceipts>> = [];
   let arkivError: string | undefined;
+  // Arkiv's public endpoint can be slow without an access key; never hold the page for it.
   try {
-    live = await fetchOrgReceipts(cfg.id);
+    live = await Promise.race([
+      fetchOrgReceipts(cfg.id),
+      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Arkiv did not answer within 6 seconds")), 6000)),
+    ]);
   } catch (e) {
     arkivError = e instanceof Error ? e.message : String(e);
   }
@@ -54,6 +58,7 @@ export async function loadOrg(source: Source): Promise<LoadedOrg> {
   };
 }
 
-export function personName(org: LoadedOrg, addr: string) {
-  return org.members.find((m) => m.address.toLowerCase() === addr.toLowerCase())?.name ?? `${addr.slice(0, 6)}…${addr.slice(-4)}`;
+/** A known name (demo), else the GitHub login inside the signed receipt, else a short address. */
+export function personName(org: LoadedOrg, addr: string, author?: string) {
+  return org.members.find((m) => m.address.toLowerCase() === addr.toLowerCase())?.name ?? (author ? `@${author}` : `${addr.slice(0, 6)}…${addr.slice(-4)}`);
 }

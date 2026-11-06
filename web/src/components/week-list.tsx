@@ -31,19 +31,24 @@ export function WeekList({ items, showCost = true, linkSessions = true }: { item
               {i.inProgress && <span className="ml-2 align-middle text-xs font-normal text-muted-foreground">in progress</span>}
             </div>
             <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-              {linkSessions && i.sessions.length === 1 ? (
-                <Link href={`/sessions/${i.sessions[0]}`} className="hover:text-foreground hover:underline">
-                  1 session
-                </Link>
-              ) : (
-                <span>{plural(i.sessions.length, "session")}</span>
+              {i.sessions.length > 0 &&
+                (linkSessions && i.sessions.length === 1 ? (
+                  <Link href={`/sessions/${i.sessions[0]}`} className="hover:text-foreground hover:underline">
+                    1 session
+                  </Link>
+                ) : (
+                  <span>{plural(i.sessions.length, "session")}</span>
+                ))}
+              {i.tools.length > 0 && <span>{i.tools.map((t) => TOOL_NAMES[t as AiTool] ?? t).join(" + ")}</span>}
+              {i.prs.slice(0, 3).map((p) =>
+                p.url ? (
+                  <a key={p.key} href={p.url} target="_blank" rel="noreferrer" className="hover:text-foreground hover:underline" title={p.title}>
+                    {prLabel(p)} {prState(p)}
+                  </a>
+                ) : (
+                  <span key={p.key}>{prLabel(p)}</span>
+                ),
               )}
-              <span>{i.tools.map((t) => TOOL_NAMES[t as AiTool] ?? t).join(" + ")}</span>
-              {i.prs.slice(0, 3).map((p) => (
-                <a key={p.key} href={p.url} target="_blank" rel="noreferrer" className="hover:text-foreground hover:underline" title={p.title}>
-                  {prLabel(p)} {prState(p)}
-                </a>
-              ))}
               {i.prs.length > 3 && <span>+{i.prs.length - 3} more</span>}
             </div>
           </div>
