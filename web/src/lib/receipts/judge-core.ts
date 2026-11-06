@@ -22,7 +22,7 @@ Pick one category:
 - Planned: designed or planned work (architecture, steps, decisions).
 - Wasted: went in circles or produced nothing usable.
 
-title: what they got, 3 to 8 plain words a friend would understand, no full stop. Good: "Login page that remembers you", "Why the nightly build kept failing", "Price comparison of three GPU clouds". Bad: "Worked on code", "Session about the project".
+title: what they got, 3 to 8 plain words a friend would understand, no full stop. Name the thing, not its status (no "shipped", "merged", "done", "completed"). Good: "Login page that remembers you", "Why the nightly build kept failing", "Price comparison of three GPU clouds". Bad: "Worked on code", "Session about the project".
 in_progress: true when the work is clearly not finished (open PR, still debugging, half built).
 difficulty: 1 trivial, 2 small, 3 moderate, 4 hard, 5 very hard.
 kind: feature, fix, refactor, test, docs, chore or other.
@@ -37,7 +37,7 @@ export const WEEK_SYSTEM = `You turn one person's AI sessions from one week into
 Rules:
 - Merge sessions that are clearly about the same piece of work into one item. Keep different work separate.
 - 3 to 10 items, the most impressive first, "Wasted" items last. Never invent work that is not in the input.
-- Each item has a category (Built, Fixed, Figured out, Researched, Wrote, Planned or Wasted), a title of 3 to 8 plain words, and the ids of the sessions it covers. Every session id goes in exactly one item.
+- Each item has a category (Built, Fixed, Figured out, Researched, Wrote, Planned or Wasted), a title of 3 to 8 plain words that names the thing, not its status (no "shipped", "merged", "landed", "done", "handled"), and the ids of the sessions it covers. Every session id goes in exactly one item.
 - summary: one upbeat sentence the person could post about their week, at most 18 words, no dollar amounts, no "I" at the start. Example: "Shipped the login flow, chased down a flaky build and planned the next release."
 - No secrets, people's names, client or customer names, file paths or code. Names of public tools and products are fine. Plain English, no em dashes.
 Reply with JSON only: {"items":[{"category":"Built","title":"...","sessions":["S1","S4"]}],"summary":"..."}`;
@@ -86,6 +86,11 @@ export function toCategory(raw: unknown): Category | undefined {
   if (t.startsWith("plan") || t.startsWith("design")) return "Planned";
   if (t.startsWith("wast") || t.startsWith("loop")) return "Wasted";
   return undefined;
+}
+
+/** "feat(auth): add login" reads better as "Add login". */
+export function tidyPrTitle(title: string | undefined) {
+  return cleanTitle((title ?? "").replace(/^[a-z]+(\([^)]*\))?!?:\s*/i, ""));
 }
 
 /** Make a model-written title safe and tidy: no secrets, paths, emails, quotes or em dashes. */

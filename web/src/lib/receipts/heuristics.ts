@@ -2,7 +2,7 @@
 // It is the fallback when the private AI judge (0G) is not configured, and the AI judge sees
 // these signals too.
 
-import { cleanTitle } from "./judge-core";
+import { cleanTitle, tidyPrTitle } from "./judge-core";
 import { sessionUsd } from "./pricing";
 import type { Category, Change, ChangeKind, Judgement, Session, SessionLabel, SessionMatch } from "./types";
 
@@ -82,7 +82,7 @@ export function ruleCategory(s: Session, linked: Linked[], label: SessionLabel):
 /** A plain title from rules: the PR title, else the session's own title, else where it ran. */
 export function ruleTitle(s: Session, linked: Linked[]): string {
   const top = topChange(linked);
-  const t = cleanTitle(top?.title) || cleanTitle(s.title);
+  const t = tidyPrTitle(top?.title) || cleanTitle(s.title);
   if (t) return t;
   const where = s.repos[0]?.split("/")[1] ?? s.cwd.split("/").filter(Boolean).pop() ?? "a project";
   return `Session in ${where}`;

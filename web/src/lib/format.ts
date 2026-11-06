@@ -1,5 +1,5 @@
 // Formatting helpers shared by server and client components.
-import type { SessionLabel } from "@/lib/receipts/types";
+import type { Category, SessionLabel } from "@/lib/receipts/types";
 
 export function usd(n: number, digits?: number) {
   const d = digits ?? (Math.abs(n) >= 100 ? 0 : 2);
@@ -51,3 +51,18 @@ export const LABEL_COPY: Record<SessionLabel, { name: string; hint: string; varN
 };
 
 export const LABEL_ORDER: SessionLabel[] = ["Shipped", "Learned", "Looped", "Abandoned", "Overkill", "Pending"];
+
+export const CATEGORY_COPY: Record<Category, { name: string; hint: string; varName: string }> = {
+  Built: { name: "Built", hint: "Made something new that works: a feature, page, tool or script", varName: "--c-built" },
+  Fixed: { name: "Fixed", hint: "Fixed a bug or something broken", varName: "--c-fixed" },
+  "Figured out": { name: "Figured out", hint: "Understood or diagnosed something: how it works, why it fails", varName: "--c-figured" },
+  Researched: { name: "Researched", hint: "Compared options, read docs or the web", varName: "--c-researched" },
+  Wrote: { name: "Wrote", hint: "Docs, posts, specs, emails or scripts in words", varName: "--c-wrote" },
+  Planned: { name: "Planned", hint: "Designed or planned the work", varName: "--c-planned" },
+  Wasted: { name: "Wasted", hint: "Went in circles or produced nothing usable", varName: "--c-wasted" },
+};
+
+/** "2 sessions", "1 session" */
+export function plural(n: number, word: string) {
+  return `${n} ${word}${n === 1 ? "" : "s"}`;
+}

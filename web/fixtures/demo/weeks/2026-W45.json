@@ -1,0 +1,117 @@
+{
+  "week": "2026-W45",
+  "source": "demo",
+  "items": [
+    {
+      "id": "a-1",
+      "category": "Built",
+      "title": "Team spend dashboard",
+      "inProgress": false,
+      "sessions": [
+        "3792574f-2e2a-469f-a175-07b8365aaa47"
+      ],
+      "costUsd": 10.6,
+      "prs": [
+        {
+          "key": "acme-demo/web-app#131",
+          "url": "https://github.com/acme-demo/web-app/pull/131",
+          "title": "feat: team spend dashboard",
+          "state": "merged",
+          "reverted": false
+        }
+      ],
+      "tools": [
+        "codex"
+      ]
+    },
+    {
+      "id": "a-2",
+      "category": "Built",
+      "title": "API quickstart docs",
+      "inProgress": false,
+      "sessions": [
+        "ac46e44f-055c-40f3-a961-088ccd60eed0"
+      ],
+      "costUsd": 60.58,
+      "prs": [
+        {
+          "key": "acme-demo/payments-api#129",
+          "url": "https://github.com/acme-demo/payments-api/pull/129",
+          "title": "docs: API quickstart",
+          "state": "merged",
+          "reverted": false
+        }
+      ],
+      "tools": [
+        "codex"
+      ]
+    },
+    {
+      "id": "a-3",
+      "category": "Built",
+      "title": "CI cache implementation",
+      "inProgress": false,
+      "sessions": [
+        "57cf906c-fc11-4776-a136-d685b1d1a59b"
+      ],
+      "costUsd": 31.05,
+      "prs": [
+        {
+          "key": "acme-demo/web-app#130",
+          "url": "https://github.com/acme-demo/web-app/pull/130",
+          "title": "chore: CI cache",
+          "state": "merged",
+          "reverted": false
+        }
+      ],
+      "tools": [
+        "codex"
+      ]
+    },
+    {
+      "id": "a-4",
+      "category": "Built",
+      "title": "Cover payout edge cases",
+      "inProgress": false,
+      "sessions": [
+        "e4b48d29-1d69-4a94-ae20-b34295ae0fab"
+      ],
+      "costUsd": 23.14,
+      "prs": [
+        {
+          "key": "acme-demo/infra#132",
+          "url": "https://github.com/acme-demo/infra/pull/132",
+          "title": "test: cover payout edge cases",
+          "state": "merged",
+          "reverted": false
+        }
+      ],
+      "tools": [
+        "codex"
+      ]
+    },
+    {
+      "id": "a-5",
+      "category": "Figured out",
+      "title": "Settlement batching logic",
+      "inProgress": false,
+      "sessions": [
+        "ac30f5fe-0384-4224-a8ad-e249d9be9fb5"
+      ],
+      "costUsd": 2.16,
+      "prs": [],
+      "tools": [
+        "claude-code"
+      ]
+    }
+  ],
+  "oneLiner": "Built out key financial features and docs while cracking settlement batching",
+  "engine": "0g-tee",
+  "model": "0gm-1.0-35b-a3b-sia",
+  "requestIds": [
+    "5429f81d-9ff1-4de2-813c-5264fa55b3db"
+  ],
+  "verified": true,
+  "sessionsHash": "1d4fe7d6",
+  "createdAt": "2026-11-06T12:17:50.471Z"
+}

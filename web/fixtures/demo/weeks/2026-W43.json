@@ -1,0 +1,213 @@
+{
+  "week": "2026-W43",
+  "source": "demo",
+  "items": [
+    {
+      "id": "a-1",
+      "category": "Built",
+      "title": "Checkout end to end tests",
+      "inProgress": false,
+      "sessions": [
+        "ed5f29bf-e7c9-4272-a0d2-c6af1a4a9e85",
+        "72871cd3-dd01-44a7-a7ad-96230c7aa47d"
+      ],
+      "costUsd": 92.48,
+      "prs": [
+        {
+          "key": "acme-demo/web-app#111",
+          "url": "https://github.com/acme-demo/web-app/pull/111",
+          "title": "test: e2e for checkout",
+          "state": "merged",
+          "reverted": false
+        },
+        {
+          "key": "acme-demo/payments-api#114",
+          "url": "https://github.com/acme-demo/payments-api/pull/114",
+          "title": "test: e2e for checkout",
+          "state": "open",
+          "reverted": false
+        }
+      ],
+      "tools": [
+        "claude-code"
+      ]
+    },
+    {
+      "id": "a-2",
+      "category": "Fixed",
+      "title": "Webhook signature validation fixes",
+      "inProgress": false,
+      "sessions": [
+        "a406fcb5-321e-4485-ad53-793723395fb1",
+        "963bf02b-7e35-4528-afc0-a34cd09fc139",
+        "0c282028-f03d-4112-a7c0-b53b8d5fd8d9"
+      ],
+      "costUsd": 140.22,
+      "prs": [
+        {
+          "key": "acme-demo/payments-api#118",
+          "url": "https://github.com/acme-demo/payments-api/pull/118",
+          "title": "fix: webhook signature check",
+          "state": "merged",
+          "reverted": false
+        },
+        {
+          "key": "acme-demo/web-app#119",
+          "url": "https://github.com/acme-demo/web-app/pull/119",
+          "title": "fix: webhook signature check",
+          "state": "merged",
+          "reverted": false
+        },
+        {
+          "key": "acme-demo/payments-api#113",
+          "url": "https://github.com/acme-demo/payments-api/pull/113",
+          "title": "fix: webhook signature check",
+          "state": "merged",
+          "reverted": false
+        }
+      ],
+      "tools": [
+        "claude-code"
+      ]
+    },
+    {
+      "id": "a-3",
+      "category": "Built",
+      "title": "API key rate limiting feature",
+      "inProgress": false,
+      "sessions": [
+        "94e83dec-6017-468d-a91d-9cec2607bfd6"
+      ],
+      "costUsd": 17.52,
+      "prs": [
+        {
+          "key": "acme-demo/infra#112",
+          "url": "https://github.com/acme-demo/infra/pull/112",
+          "title": "feat: rate limit per API key",
+          "state": "merged",
+          "reverted": false
+        }
+      ],
+      "tools": [
+        "codex"
+      ]
+    },
+    {
+      "id": "a-4",
+      "category": "Built",
+      "title": "Refund status webhook addition",
+      "inProgress": true,
+      "sessions": [
+        "350d783b-33dd-4a5d-ae33-58d1add6afc2"
+      ],
+      "costUsd": 14.32,
+      "prs": [
+        {
+          "key": "acme-demo/infra#117",
+          "url": "https://github.com/acme-demo/infra/pull/117",
+          "title": "feat: add refund status webhook",
+          "state": "open",
+          "reverted": false
+        }
+      ],
+      "tools": [
+        "claude-code"
+      ]
+    },
+    {
+      "id": "a-5",
+      "category": "Built",
+      "title": "Payout edge case coverage",
+      "inProgress": false,
+      "sessions": [
+        "43ed3835-4863-4c7f-afc8-7e5025cb77f4"
+      ],
+      "costUsd": 5.38,
+      "prs": [
+        {
+          "key": "acme-demo/infra#115",
+          "url": "https://github.com/acme-demo/infra/pull/115",
+          "title": "test: cover payout edge cases",
+          "state": "merged",
+          "reverted": false
+        }
+      ],
+      "tools": [
+        "codex"
+      ]
+    },
+    {
+      "id": "a-6",
+      "category": "Built",
+      "title": "Dependency version bumps",
+      "inProgress": false,
+      "sessions": [
+        "a045ad1a-3bf5-434b-a6ba-9fe44ea7b9a2"
+      ],
+      "costUsd": 33.09,
+      "prs": [
+        {
+          "key": "acme-demo/infra#116",
+          "url": "https://github.com/acme-demo/infra/pull/116",
+          "title": "chore: bump dependencies",
+          "state": "merged",
+          "reverted": false
+        }
+      ],
+      "tools": [
+        "codex"
+      ]
+    },
+    {
+      "id": "a-7",
+      "category": "Figured out",
+      "title": "Reasons for slow webhook tests",
+      "inProgress": false,
+      "sessions": [
+        "643112ec-6530-4b49-a9fa-c6d348c36bb3"
+      ],
+      "costUsd": 5.99,
+      "prs": [],
+      "tools": [
+        "claude-code"
+      ]
+    },
+    {
+      "id": "a-8",
+      "category": "Figured out",
+      "title": "Settlement batching mechanics",
+      "inProgress": false,
+      "sessions": [
+        "9c710001-4c9e-499b-ab63-e4e40dbdc88b"
+      ],
+      "costUsd": 5.18,
+      "prs": [],
+      "tools": [
+        "codex"
+      ]
+    },
+    {
+      "id": "a-9",
+      "category": "Researched",
+      "title": "Payout queue options comparison",
+      "inProgress": false,
+      "sessions": [
+        "f8987119-88b2-441a-a099-c6eb31deef8a"
+      ],
+      "costUsd": 1.14,
+      "prs": [],
+      "tools": [
+        "claude-code"
+      ]
+    }
+  ],
+  "oneLiner": "Solid week finishing checkout tests, fixing webhooks, and shipping rate limits",
+  "engine": "0g-tee",
+  "model": "0gm-1.0-35b-a3b-sia",
+  "requestIds": [
+    "8d014f2d-c3f7-40f3-bd4e-20880b402be5"
+  ],
+  "verified": true,
+  "sessionsHash": "3cb03edc",
+  "createdAt": "2026-11-06T12:17:31.288Z"
+}

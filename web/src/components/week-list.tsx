@@ -1,0 +1,55 @@
+import Link from "next/link";
+import { CategoryBadge } from "@/components/category-badge";
+import { plural, usd } from "@/lib/format";
+import { TOOL_NAMES, type AiTool, type WeekItem } from "@/lib/receipts/types";
+
+function prState(p: WeekItem["prs"][number]) {
+  if (p.reverted) return "reverted";
+  if (p.state === "direct") return "pushed";
+  if (p.state === "closed") return "closed";
+  return p.state;
+}
+
+function prLabel(p: WeekItem["prs"][number]) {
+  const n = p.key.match(/#(\d+)$/)?.[1];
+  return n ? `PR #${n}` : "commit";
+}
+
+/** "What you got this week": one row per item, the AI's order, waste last. */
+export function WeekList({ items, showCost = true, linkSessions = true }: { items: WeekItem[]; showCost?: boolean; linkSessions?: boolean }) {
+  if (!items.length) return <p className="text-muted-foreground">No AI sessions this week yet.</p>;
+  return (
+    <ol className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
+      {items.map((i) => (
+        <li key={i.id} className={`flex items-start gap-3 px-4 py-3.5 sm:gap-4 ${i.category === "Wasted" ? "bg-muted/40" : ""}`}>
+          <div className="w-[104px] shrink-0 pt-0.5">
+            <CategoryBadge category={i.category} />
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="text-[16px] font-medium leading-snug text-balance">
+              {i.title}
+              {i.inProgress && <span className="ml-2 align-middle text-xs font-normal text-muted-foreground">in progress</span>}
+            </div>
+            <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+              {linkSessions && i.sessions.length === 1 ? (
+                <Link href={`/sessions/${i.sessions[0]}`} className="hover:text-foreground hover:underline">
+                  1 session
+                </Link>
+              ) : (
+                <span>{plural(i.sessions.length, "session")}</span>
+              )}
+              <span>{i.tools.map((t) => TOOL_NAMES[t as AiTool] ?? t).join(" + ")}</span>
+              {i.prs.slice(0, 3).map((p) => (
+                <a key={p.key} href={p.url} target="_blank" rel="noreferrer" className="hover:text-foreground hover:underline" title={p.title}>
+                  {prLabel(p)} {prState(p)}
+                </a>
+              ))}
+              {i.prs.length > 3 && <span>+{i.prs.length - 3} more</span>}
+            </div>
+          </div>
+          {showCost && <div className="shrink-0 pt-0.5 text-right font-medium">{usd(i.costUsd, 2)}</div>}
+        </li>
+      ))}
+    </ol>
+  );
+}

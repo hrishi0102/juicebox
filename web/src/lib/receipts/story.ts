@@ -7,7 +7,7 @@
 
 import { sessionUsd } from "./pricing";
 import { CATEGORIES, toolOf, type Category, type Judgement, type Session, type Task, type WeekItem, type WeekStory } from "./types";
-import type { WeekAnswerItem, WeekLine } from "./judge-core";
+import { tidyPrTitle, type WeekAnswerItem, type WeekLine } from "./judge-core";
 
 export type StoryInput = {
   sessions: Session[]; // the sessions in the period
@@ -100,7 +100,7 @@ export function ruleItems(input: StoryInput, onlyIds?: Set<string>): WeekItem[] 
   let items = [...groups.entries()].map(([key, ls]) => {
     const task = primary.get(ls[0].sessionId);
     const cat = mostCommon(ls.map((l) => l.category));
-    const title = task && !key.startsWith("session:") ? task.title : ls[0].title;
+    const title = (task && !key.startsWith("session:") && tidyPrTitle(task.title)) || ls[0].title;
     return makeItem(`r-${ls[0].sessionId.slice(0, 8)}`, cat, title, ls.map((l) => l.sessionId), input);
   });
   if (items.length > MAX_ITEMS) {

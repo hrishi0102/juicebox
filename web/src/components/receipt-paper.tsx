@@ -1,5 +1,5 @@
-import { LABEL_COPY, LABEL_ORDER, pct, shortAddr, shortHash, usd, weekRange } from "@/lib/format";
-import { TOOL_NAMES, type AiTool, type PeriodSummary } from "@/lib/receipts/types";
+import { CATEGORY_COPY, LABEL_COPY, LABEL_ORDER, plural, shortAddr, shortHash, usd, weekRange } from "@/lib/format";
+import { CATEGORIES, TOOL_NAMES, type AiTool, type PeriodSummary } from "@/lib/receipts/types";
 
 export type ReceiptPaperProps = {
   weekId: string;
@@ -7,6 +7,7 @@ export type ReceiptPaperProps = {
   end: string;
   summary: PeriodSummary;
   owner?: string;
+  ownerName?: string;
   judgeLine: string;
   digest?: string;
   signed?: boolean;
@@ -14,52 +15,64 @@ export type ReceiptPaperProps = {
   sharedLevel?: string;
   compact?: boolean;
   animate?: boolean;
+  showCost?: boolean;
 };
 
-/** The weekly receipt, drawn as a thermal-paper slip. */
+/** The weekly receipt, drawn as a thermal-paper slip: what you got, then what it cost. */
 export function ReceiptPaper(p: ReceiptPaperProps) {
   const s = p.summary;
   const week = p.weekId.split("-W")[1];
+  const showCost = p.showCost ?? true;
+  const done = s.items.filter((i) => i.category !== "Wasted").length;
   return (
     <div className={`receipt-shadow ${p.animate ? "print-in" : ""}`}>
       <article className="receipt-paper relative text-[13px] leading-[1.55]" aria-label={`Receipt for week ${week}`}>
         <header className="text-center">
           <div className="text-[15px] tracking-[0.18em]">RECEIPTS</div>
-          <div className="text-paper-faint">AI coding spend, itemized</div>
+          <div className="text-paper-faint">What did you get done this week?</div>
           <div className="mt-2">
             Week {week}, {weekRange(p.start, p.end)}
           </div>
-          {p.owner && <div className="text-paper-faint">Owner {shortAddr(p.owner)}</div>}
+          {(p.ownerName || p.owner) && <div className="text-paper-faint">{p.ownerName ?? `Owner ${shortAddr(p.owner)}`}</div>}
         </header>
 
         <hr className="receipt-rule" />
 
-        <div className="mb-1 text-paper-faint">Sessions by outcome</div>
-        <ul className="space-y-0.5" aria-label="Sessions by outcome">
-          {LABEL_ORDER.map((l) => (
-            <li key={l} className="flex items-baseline">
-              <span>{LABEL_COPY[l].name}</span>
-              <span className="ml-2 text-paper-faint">x{s.labelCounts[l] ?? 0}</span>
-              <span className="leader" />
-              <span>{usd(s.labelSpend[l] ?? 0, 2)}</span>
-            </li>
-          ))}
-        </ul>
-
-        {Object.keys(s.toolSpend ?? {}).length > 0 && (
+        {s.items.length > 0 ? (
+          <div className="space-y-2.5" aria-label="What you got">
+            {CATEGORIES.filter((c) => s.items.some((i) => i.category === c)).map((c) => (
+              <div key={c}>
+                <div className="text-paper-faint uppercase tracking-[0.12em]">{CATEGORY_COPY[c].name}</div>
+                <ul className="space-y-0.5">
+                  {s.items
+                    .filter((i) => i.category === c)
+                    .map((i) => (
+                      <li key={i.id} className="flex items-baseline">
+                        <span className="min-w-0">{i.title}</span>
+                        {showCost && (
+                          <>
+                            <span className="leader" />
+                            <span>{usd(i.costUsd, 2)}</span>
+                          </>
+                        )}
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        ) : (
           <>
-            <div className="mb-1 mt-3 text-paper-faint">By AI tool</div>
-            <ul className="space-y-0.5" aria-label="Spend by AI tool">
-              {Object.entries(s.toolSpend)
-                .sort((a, b) => b[1] - a[1])
-                .map(([t, v]) => (
-                  <li key={t} className="flex items-baseline">
-                    <span>{TOOL_NAMES[t as AiTool] ?? t}</span>
-                    {s.toolSessions?.[t] !== undefined && <span className="ml-2 text-paper-faint">x{s.toolSessions[t]}</span>}
-                    <span className="leader" />
-                    <span>{usd(v, 2)}</span>
-                  </li>
-                ))}
+            <div className="mb-1 text-paper-faint">Sessions by outcome</div>
+            <ul className="space-y-0.5" aria-label="Sessions by outcome">
+              {LABEL_ORDER.map((l) => (
+                <li key={l} className="flex items-baseline">
+                  <span>{LABEL_COPY[l].name}</span>
+                  <span className="ml-2 text-paper-faint">x{s.labelCounts[l] ?? 0}</span>
+                  <span className="leader" />
+                  <span>{usd(s.labelSpend[l] ?? 0, 2)}</span>
+                </li>
+              ))}
             </ul>
           </>
         )}
@@ -67,19 +80,20 @@ export function ReceiptPaper(p: ReceiptPaperProps) {
         <hr className="receipt-rule" />
 
         <div className="space-y-0.5">
-          <Row k="Sessions" v={String(s.sessions)} />
-          <Row k="Total spend" v={usd(s.spendUsd, 2)} strong />
-          <Row k="Shipped tasks" v={String(s.shippedTasks)} />
-          <Row k="Kept work" v={`${s.keptWork.toFixed(1)} tasks`} />
-          <Row k="Kept work per $100" v={s.keptWorkPer100Usd === null ? "n/a" : s.keptWorkPer100Usd.toFixed(1)} />
-          <Row k="Waste" v={`${usd(s.wasteUsd, 2)} (${pct(s.wastePct)})`} />
+          <Row k="AI sessions" v={String(s.sessions)} />
+          {showCost &&
+            Object.entries(s.toolSpend ?? {})
+              .sort((a, b) => b[1] - a[1])
+              .map(([t, v]) => <Row key={t} k={`${TOOL_NAMES[t as AiTool] ?? t}${s.toolSessions?.[t] !== undefined ? ` x${s.toolSessions[t]}` : ""}`} v={usd(v, 2)} />)}
+          {showCost && <Row k="Total" v={usd(s.spendUsd, 2)} strong />}
+          {showCost && s.wasteUsd > 0 && <Row k="Of which wasted" v={usd(s.wasteUsd, 2)} />}
         </div>
 
-        {s.survivalPct !== null && (
+        {s.items.length > 0 && (
           <div className="mt-5 mb-2 flex justify-center">
             <div className="stamp px-4 py-1.5 text-center leading-tight">
-              <div className="text-[24px]">{Math.round(s.survivalPct)}%</div>
-              <div className="text-[11px]">of shipped code still alive</div>
+              <div className="text-[24px]">{done}</div>
+              <div className="text-[11px]">{done === 1 ? "thing" : "things"} done</div>
             </div>
           </div>
         )}
@@ -87,9 +101,9 @@ export function ReceiptPaper(p: ReceiptPaperProps) {
         <hr className="receipt-rule" />
 
         <div className="space-y-0.5 text-[12px]">
-          <Row k="Judge" v={p.judgeLine} />
-          <Row k="Signature" v={p.signed ? "signed (EIP-712)" : p.stale ? "out of date, sign again" : "not signed yet"} />
-          {p.sharedLevel && <Row k="Shared" v={p.sharedLevel === "full" ? "with team, incl. PRs" : "totals only"} />}
+          <Row k="Written by" v={p.judgeLine} />
+          {!p.compact && <Row k="Signature" v={p.signed ? "signed (EIP-712)" : p.stale ? "out of date, sign again" : "not signed yet"} />}
+          {p.sharedLevel && <Row k="Shared" v={p.sharedLevel === "full" ? "with company, incl. list" : "totals only"} />}
         </div>
 
         {p.digest && !p.compact && (
@@ -102,6 +116,17 @@ export function ReceiptPaper(p: ReceiptPaperProps) {
       </article>
     </div>
   );
+}
+
+/** "0G private AI, TEE verified" or "simple rules", for the receipt's "Written by" line. */
+export function writtenBy(story: PeriodSummary["story"]) {
+  if (story.engine === "0g-tee") return `0G private AI${story.verified ? ", TEE verified" : ""}`;
+  if (story.engine === "openai-compatible") return "local AI model";
+  return "simple rules";
+}
+
+export function storyCalls(story: PeriodSummary["story"]) {
+  return story.requestIds.length ? plural(story.requestIds.length, "private AI call") : "";
 }
 
 function Row({ k, v, strong }: { k: string; v: string; strong?: boolean }) {

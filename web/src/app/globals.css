@@ -88,6 +88,13 @@
   --l-abandoned: #6b7280;
   --l-overkill: #be185d;
   --l-pending: #64748b;
+  --c-built: #18794e;
+  --c-fixed: #2c46c9;
+  --c-figured: #0f7c8c;
+  --c-researched: #7a3fc6;
+  --c-wrote: #b45309;
+  --c-planned: #475569;
+  --c-wasted: #be185d;
   --sidebar: #f6f7f9;
   --sidebar-foreground: #161b26;
   --sidebar-primary: #2c46c9;
@@ -123,6 +130,13 @@
   --l-abandoned: #9aa3b5;
   --l-overkill: #ec5c9c;
   --l-pending: #94a3b8;
+  --c-built: #3fb67e;
+  --c-fixed: #8193f7;
+  --c-figured: #38b2c4;
+  --c-researched: #b18af0;
+  --c-wrote: #e0954a;
+  --c-planned: #a3b1c6;
+  --c-wasted: #ec5c9c;
   --sidebar: #1b2130;
   --sidebar-foreground: #e6e9ef;
   --sidebar-primary: #8193f7;

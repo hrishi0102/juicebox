@@ -1,0 +1,206 @@
+{
+  "week": "2026-W42",
+  "source": "demo",
+  "items": [
+    {
+      "id": "a-1",
+      "category": "Built",
+      "title": "Invoice PDF preview feature",
+      "inProgress": false,
+      "sessions": [
+        "73db6898-5bb4-4af9-adc4-e18ccd5f931e"
+      ],
+      "costUsd": 29.3,
+      "prs": [
+        {
+          "key": "acme-demo/infra#107",
+          "url": "https://github.com/acme-demo/infra/pull/107",
+          "title": "feat: invoice PDF preview",
+          "state": "merged",
+          "reverted": false
+        }
+      ],
+      "tools": [
+        "claude-code"
+      ]
+    },
+    {
+      "id": "a-2",
+      "category": "Fixed",
+      "title": "Double charge on retry bug",
+      "inProgress": false,
+      "sessions": [
+        "15f57bb1-395b-4f0f-ade5-6d3d011804a3",
+        "1cb1e1ff-a6e7-42fe-a174-3695b0b50d54"
+      ],
+      "costUsd": 33.17,
+      "prs": [
+        {
+          "key": "acme-demo/payments-api#103",
+          "url": "https://github.com/acme-demo/payments-api/pull/103",
+          "title": "fix: double charge on retry",
+          "state": "merged",
+          "reverted": false
+        },
+        {
+          "key": "acme-demo/web-app#108",
+          "url": "https://github.com/acme-demo/web-app/pull/108",
+          "title": "fix: double charge on retry",
+          "state": "merged",
+          "reverted": false
+        }
+      ],
+      "tools": [
+        "claude-code"
+      ]
+    },
+    {
+      "id": "a-3",
+      "category": "Wrote",
+      "title": "API quickstart documentation",
+      "inProgress": false,
+      "sessions": [
+        "c0432e18-7e84-4635-ad3b-1b8d8b7cffac"
+      ],
+      "costUsd": 25.01,
+      "prs": [
+        {
+          "key": "acme-demo/payments-api#106",
+          "url": "https://github.com/acme-demo/payments-api/pull/106",
+          "title": "docs: API quickstart",
+          "state": "merged",
+          "reverted": false
+        }
+      ],
+      "tools": [
+        "claude-code"
+      ]
+    },
+    {
+      "id": "a-4",
+      "category": "Fixed",
+      "title": "Webhook signature check issue",
+      "inProgress": false,
+      "sessions": [
+        "21fc7465-6594-48f5-a550-b1bbf04566f2"
+      ],
+      "costUsd": 11.99,
+      "prs": [
+        {
+          "key": "acme-demo/web-app#104",
+          "url": "https://github.com/acme-demo/web-app/pull/104",
+          "title": "fix: webhook signature check",
+          "state": "merged",
+          "reverted": false
+        }
+      ],
+      "tools": [
+        "claude-code"
+      ]
+    },
+    {
+      "id": "a-5",
+      "category": "Fixed",
+      "title": "Flaky login redirect problem",
+      "inProgress": false,
+      "sessions": [
+        "bac5fb32-e822-403b-a514-8c2724e07e5b"
+      ],
+      "costUsd": 7.73,
+      "prs": [
+        {
+          "key": "acme-demo/payments-api#105",
+          "url": "https://github.com/acme-demo/payments-api/pull/105",
+          "title": "fix: flaky login redirect",
+          "state": "merged",
+          "reverted": false
+        }
+      ],
+      "tools": [
+        "codex"
+      ]
+    },
+    {
+      "id": "a-6",
+      "category": "Built",
+      "title": "Payout edge case coverage",
+      "inProgress": false,
+      "sessions": [
+        "3b0c8cdc-d47d-4bb4-a8c9-b0def84c5177"
+      ],
+      "costUsd": 25,
+      "prs": [
+        {
+          "key": "acme-demo/web-app#109",
+          "url": "https://github.com/acme-demo/web-app/pull/109",
+          "title": "test: cover payout edge cases",
+          "state": "merged",
+          "reverted": false
+        }
+      ],
+      "tools": [
+        "claude-code"
+      ]
+    },
+    {
+      "id": "a-7",
+      "category": "Figured out",
+      "title": "Queue options for payouts",
+      "inProgress": false,
+      "sessions": [
+        "5859047b-b417-4adf-a5d6-13e4ca1e17c1",
+        "aeed5618-6820-42a2-a2bf-39288d69ec9f"
+      ],
+      "costUsd": 6.15,
+      "prs": [],
+      "tools": [
+        "codex"
+      ]
+    },
+    {
+      "id": "a-8",
+      "category": "Wasted",
+      "title": "Runbook for incidents effort",
+      "inProgress": false,
+      "sessions": [
+        "2c425b7c-de40-4fe5-ab13-80a55d0e9306"
+      ],
+      "costUsd": 12.82,
+      "prs": [
+        {
+          "key": "acme-demo/payments-api#110",
+          "url": "https://github.com/acme-demo/payments-api/pull/110",
+          "title": "docs: runbook for incidents",
+          "state": "closed",
+          "reverted": false
+        }
+      ],
+      "tools": [
+        "claude-code"
+      ]
+    },
+    {
+      "id": "a-9",
+      "category": "Wasted",
+      "title": "Null merchant name in receipts",
+      "inProgress": false,
+      "sessions": [
+        "f532d617-c030-41d2-ae18-c780aaa1ba5f"
+      ],
+      "costUsd": 9.13,
+      "prs": [],
+      "tools": [
+        "codex"
+      ]
+    }
+  ],
+  "oneLiner": "Built invoice previews and payout coverage, fixed three bugs, and wrote docs",
+  "engine": "0g-tee",
+  "model": "0gm-1.0-35b-a3b-sia",
+  "requestIds": [
+    "519ec889-246a-48ac-9da3-26794276d7f4"
+  ],
+  "verified": true,
+  "sessionsHash": "4cb68bf5",
+  "createdAt": "2026-11-06T12:17:24.060Z"
+}

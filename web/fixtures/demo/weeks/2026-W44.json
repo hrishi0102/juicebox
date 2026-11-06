@@ -1,0 +1,201 @@
+{
+  "week": "2026-W44",
+  "source": "demo",
+  "items": [
+    {
+      "id": "a-1",
+      "category": "Built",
+      "title": "CSV export for ledgers",
+      "inProgress": false,
+      "sessions": [
+        "22676894-3c0e-43a5-a08f-6ee858efa2f9"
+      ],
+      "costUsd": 22.21,
+      "prs": [
+        {
+          "key": "acme-demo/payments-api#120",
+          "url": "https://github.com/acme-demo/payments-api/pull/120",
+          "title": "feat: CSV export for ledgers",
+          "state": "merged",
+          "reverted": false
+        }
+      ],
+      "tools": [
+        "claude-code"
+      ]
+    },
+    {
+      "id": "a-2",
+      "category": "Built",
+      "title": "Rate limit per API key",
+      "inProgress": false,
+      "sessions": [
+        "9c26d987-c7d7-4149-a2a0-770bafea2356",
+        "3a3838f2-1a88-4df8-aeac-eb6e8da82a77",
+        "241645a0-220c-41e2-a185-24c29c987beb"
+      ],
+      "costUsd": 40.46,
+      "prs": [
+        {
+          "key": "acme-demo/infra#128",
+          "url": "https://github.com/acme-demo/infra/pull/128",
+          "title": "feat: rate limit per API key",
+          "state": "merged",
+          "reverted": false
+        },
+        {
+          "key": "acme-demo/payments-api#122",
+          "url": "https://github.com/acme-demo/payments-api/pull/122",
+          "title": "feat: rate limit per API key",
+          "state": "merged",
+          "reverted": false
+        }
+      ],
+      "tools": [
+        "claude-code"
+      ]
+    },
+    {
+      "id": "a-3",
+      "category": "Built",
+      "title": "CI cache improvements",
+      "inProgress": false,
+      "sessions": [
+        "eb75e074-cbd6-42dc-ac30-9525199899bd",
+        "17a550ff-e01e-487a-affd-c8fd4e079168"
+      ],
+      "costUsd": 50.88,
+      "prs": [
+        {
+          "key": "acme-demo/infra#123",
+          "url": "https://github.com/acme-demo/infra/pull/123",
+          "title": "chore: CI cache",
+          "state": "merged",
+          "reverted": false
+        },
+        {
+          "key": "acme-demo/infra#125",
+          "url": "https://github.com/acme-demo/infra/pull/125",
+          "title": "chore: CI cache",
+          "state": "merged",
+          "reverted": false
+        }
+      ],
+      "tools": [
+        "claude-code"
+      ]
+    },
+    {
+      "id": "a-4",
+      "category": "Built",
+      "title": "Refactor fees into pure functions",
+      "inProgress": false,
+      "sessions": [
+        "888abdbe-725b-4aa4-a01b-aeeb118efb2c"
+      ],
+      "costUsd": 22.17,
+      "prs": [
+        {
+          "key": "acme-demo/infra#124",
+          "url": "https://github.com/acme-demo/infra/pull/124",
+          "title": "refactor: move fees into pure functions",
+          "state": "merged",
+          "reverted": false
+        }
+      ],
+      "tools": [
+        "claude-code"
+      ]
+    },
+    {
+      "id": "a-5",
+      "category": "Wrote",
+      "title": "Runbook for incidents",
+      "inProgress": false,
+      "sessions": [
+        "c8e58c4c-beab-4d00-a519-c5c7fa44f89e",
+        "5d5912a9-e430-46e6-ab0c-e2a066a1260f"
+      ],
+      "costUsd": 44.54,
+      "prs": [
+        {
+          "key": "acme-demo/infra#127",
+          "url": "https://github.com/acme-demo/infra/pull/127",
+          "title": "docs: runbook for incidents",
+          "state": "merged",
+          "reverted": false
+        }
+      ],
+      "tools": [
+        "claude-code"
+      ]
+    },
+    {
+      "id": "a-6",
+      "category": "Fixed",
+      "title": "Webhook signature check",
+      "inProgress": true,
+      "sessions": [
+        "2f8cf7f1-3423-412e-af4f-578e704c520f"
+      ],
+      "costUsd": 17.48,
+      "prs": [
+        {
+          "key": "acme-demo/infra#121",
+          "url": "https://github.com/acme-demo/infra/pull/121",
+          "title": "fix: webhook signature check",
+          "state": "open",
+          "reverted": false
+        }
+      ],
+      "tools": [
+        "claude-code"
+      ]
+    },
+    {
+      "id": "a-7",
+      "category": "Figured out",
+      "title": "Settlement batching mechanics",
+      "inProgress": false,
+      "sessions": [
+        "c029e37f-e955-4155-a3f1-a025dc7f0f00"
+      ],
+      "costUsd": 5.79,
+      "prs": [],
+      "tools": [
+        "codex"
+      ]
+    },
+    {
+      "id": "a-8",
+      "category": "Wasted",
+      "title": "Retry queue for payouts",
+      "inProgress": false,
+      "sessions": [
+        "0accbad4-c2e6-4f99-ac90-e96e91c25bba"
+      ],
+      "costUsd": 25.05,
+      "prs": [
+        {
+          "key": "acme-demo/infra#126",
+          "url": "https://github.com/acme-demo/infra/pull/126",
+          "title": "feat: retry queue for payouts",
+          "state": "merged",
+          "reverted": true
+        }
+      ],
+      "tools": [
+        "claude-code"
+      ]
+    }
+  ],
+  "oneLiner": "Ship features fast, stabilize infra, and document ops",
+  "engine": "0g-tee",
+  "model": "0gm-1.0-35b-a3b-sia",
+  "requestIds": [
+    "9d81fac8-a3cc-4a3d-b967-ccb5720804a0"
+  ],
+  "verified": true,
+  "sessionsHash": "8f3393af",
+  "createdAt": "2026-11-06T12:17:41.914Z"
+}

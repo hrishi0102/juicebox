@@ -94,6 +94,7 @@ export function memberSessions(name: string, seed: number, plan: Record<Archetyp
             cacheWrite1h: Math.round((0.25 * usd) / (p.cw / 1e6)),
           };
         })();
+    const learnTitle = pick(["How settlement batching works", "Queue options for payouts compared", "Why the webhook test is slow", "Plan for splitting the payments service"]);
     const id = uuid(r);
     const branch = `${name.toLowerCase()}/${title.split(":")[1]?.trim().replace(/\W+/g, "-").slice(0, 30) ?? "work"}`;
     const loopy = a === "loop";
@@ -108,7 +109,7 @@ export function memberSessions(name: string, seed: number, plan: Record<Archetyp
       startedAt: new Date(start).toISOString(),
       endedAt: new Date(start + minutes * 60_000).toISOString(),
       activeMinutes: minutes,
-      title: a === "learn" ? pick(["How does settlement batching work?", "Compare queue options for payouts", "Why is the webhook test slow?"]) : title.replace(/^\w+: /, ""),
+      title: a === "learn" ? learnTitle : title.replace(/^\w+: /, ""),
       models: [model],
       cost: {
         usd: Math.round(usd * 100) / 100,
@@ -139,7 +140,11 @@ export function memberSessions(name: string, seed: number, plan: Record<Archetyp
       tools: codex
         ? { exec_command: Math.round(toolCalls * 0.7), apply_patch: Math.round(toolCalls * 0.3) }
         : a === "learn"
-          ? { Read: 20, Grep: 9, WebSearch: 3 }
+          ? learnTitle.includes("compared")
+            ? { Read: 8, WebSearch: 4, WebFetch: 3 }
+            : learnTitle.startsWith("Plan")
+              ? { Read: 18, Grep: 6, ExitPlanMode: 1 }
+              : { Read: 20, Grep: 9 }
           : { Bash: Math.round(toolCalls * 0.5), Edit: Math.round(toolCalls * 0.25), Read: Math.round(toolCalls * 0.25) },
     };
     sessions.push(s);
@@ -203,7 +208,7 @@ const P = (ship: number, loop: number, learn: number, abandon: number, overkill:
 
 // codex = share of a person's sessions run in Codex instead of Claude Code.
 const MEMBERS: Persona[] = [
-  { name: "You", role: "Engineer", share: "full", team: "acme-payments", you: true, seed: 35, codex: 0, plan: P(13, 4, 5, 3, 2, 2, 1) },
+  { name: "You", role: "Engineer", share: "full", team: "acme-payments", you: true, seed: 35, codex: 0.25, plan: P(22, 4, 9, 4, 2, 3, 1) },
   { name: "Asha", role: "Senior engineer", share: "full", team: "acme-payments", seed: 11, codex: 0.2, plan: P(16, 1, 4, 1, 1, 2, 0) },
   { name: "Ravi", role: "Engineer", share: "full", team: "acme-payments", seed: 23, codex: 0.5, plan: P(9, 7, 2, 4, 1, 1, 1) },
   { name: "Meera", role: "Staff engineer", share: "full", team: "acme-payments", seed: 31, codex: 0, plan: P(8, 1, 9, 1, 0, 2, 0) },
