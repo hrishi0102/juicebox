@@ -14,6 +14,7 @@ type Result = {
   arkiv?: { key: string; owner?: string; creator?: string; readonly?: boolean };
   evidence?: number;
   judges?: number;
+  github?: { login: string; status: "proven" | "none" | "unknown" | "demo"; url?: string; reason?: string };
 };
 
 export function VerifyForm() {
@@ -80,6 +81,22 @@ export function VerifyForm() {
                 </li>
               ))}
             </ul>
+          )}
+          {res.github && (
+            <p className="mt-3 text-sm">
+              GitHub:{" "}
+              {res.github.status === "proven" ? (
+                <a href={res.github.url} target="_blank" rel="noreferrer" className="text-[var(--l-shipped)] hover:underline">
+                  @{res.github.login}, key proven by a public gist
+                </a>
+              ) : res.github.status === "demo" ? (
+                `@${res.github.login}, a demo member known by key`
+              ) : res.github.status === "unknown" ? (
+                `@${res.github.login}, could not check GitHub just now`
+              ) : (
+                `@${res.github.login} is claimed, not proven (no public gist signed by this key)`
+              )}
+            </p>
           )}
           {res.judge && <p className="mt-3 text-sm text-muted-foreground">Judge: {res.judge}</p>}
           {res.arkiv && (

@@ -7,7 +7,7 @@ export const metadata = { title: "How it works · Receipts" };
 const EMPLOYEE: [string, string][] = [
   [
     "Set up once",
-    "Run Receipts on your laptop. Connect GitHub (the GitHub CLI you already use), join your company (your GitHub org and team), sign in with 0G, and let it read your Claude Code and Codex logs. Reading logs never leaves the laptop.",
+    "Run Receipts on your laptop. Connect GitHub (the GitHub CLI you already use), prove your signing key on GitHub (one public gist signed by the key), join your company (your GitHub org and team), sign in with 0G, and let it read your Claude Code and Codex logs. Reading logs never leaves the laptop.",
   ],
   [
     "Write",
@@ -65,7 +65,8 @@ export default function How() {
         <ul className="mt-4 max-w-[68ch] list-disc space-y-2 pl-5 text-muted-foreground">
           <li>
             <span className="font-medium text-foreground">GitHub is who you are.</span> Employees use the GitHub login their laptop already has; leads
-            sign in with GitHub on the company page. Your company is your GitHub org, your team is your GitHub team.
+            sign in with GitHub on the company page. Your company is your GitHub org, your team is your GitHub team. One public gist, signed by your
+            laptop key, proves to anyone that your receipts really come from your GitHub account.
           </li>
           <li>
             <span className="font-medium text-foreground">Your 0G account pays for the private AI.</span> Sign in with 0G, and every private AI call is

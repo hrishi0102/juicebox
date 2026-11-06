@@ -33,6 +33,8 @@ export type SendFlowProps = {
   arkivReady: boolean;
   sealed: boolean;
   savedJson?: string;
+  /** Your GitHub login, and whether a public gist proves your key belongs to it. */
+  github?: { login: string; proven: boolean; url?: string };
 };
 
 export function SendFlow(p: SendFlowProps) {
@@ -252,6 +254,7 @@ export function SendFlow(p: SendFlowProps) {
             <Button onClick={send} disabled={!!busy || !p.signed || !p.arkivReady}>
               {busy === "send" ? "Sending" : `Send to ${p.company.orgName}`}
             </Button>
+            {p.github && <GithubLine github={p.github} org={p.company.orgName} />}
             <p className="text-sm text-muted-foreground">
               {!p.arkivReady
                 ? `${p.company.orgName} has not turned on receipts in this copy yet (it needs the company wallet in .env.local). Ask whoever set up Receipts there.`
@@ -263,6 +266,26 @@ export function SendFlow(p: SendFlowProps) {
         )}
       </Step>
     </div>
+  );
+}
+
+function GithubLine({ github, org }: { github: { login: string; proven: boolean; url?: string }; org: string }) {
+  return github.proven ? (
+    <p className="text-sm">
+      {org} will see <span className="font-medium">@{github.login}</span> as{" "}
+      <a href={github.url} target="_blank" rel="noreferrer" className="text-primary hover:underline">
+        proven on GitHub
+      </a>
+      .
+    </p>
+  ) : (
+    <p className="text-sm">
+      {org} will see <span className="font-medium">@{github.login}</span> as claimed, not proven.{" "}
+      <Link href="/me/setup" className="text-primary hover:underline">
+        Prove your key in Setup
+      </Link>{" "}
+      (one public gist).
+    </p>
   );
 }
 

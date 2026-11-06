@@ -6,6 +6,8 @@ import { WeekList } from "@/components/week-list";
 import { plural, usd } from "@/lib/format";
 import { formatMinutes } from "@/lib/receipts/efficiency";
 import { receiptItems, signedNumbers, type SignedReceipt } from "@/lib/receipts/receipt";
+import { GithubProof } from "@/components/github-proof";
+import type { KeyProof } from "@/lib/server/key-proofs";
 
 /** One person's shared week, as the company sees it: their signed list, PRs and totals. */
 export function PersonWeek({
@@ -16,6 +18,7 @@ export function PersonWeek({
   arkivKey,
   defaultOpen,
   swarm,
+  proof,
 }: {
   r: SignedReceipt;
   name: string;
@@ -24,6 +27,8 @@ export function PersonWeek({
   arkivKey?: string;
   defaultOpen?: boolean;
   swarm?: { ref: string; opened: boolean; error?: string };
+  /** Whether a public gist proves the signing key belongs to the GitHub login in the receipt. */
+  proof?: KeyProof;
 }) {
   const n = signedNumbers(r);
   const items = receiptItems(r);
@@ -69,10 +74,8 @@ export function PersonWeek({
               <TriangleAlert className="size-4" aria-hidden="true" /> Signature does not match
             </span>
           )}
-          <span>
-            Written by {r.summary.writtenBy}
-            {n.author ? `, signed as ${n.author}` : ""}.
-          </span>
+          <span>Written by {r.summary.writtenBy}.</span>
+          {n.author && <GithubProof login={n.author} proof={proof} />}
           {swarm?.opened && (
             <span title={`Swarm reference ${swarm.ref}`} className="inline-flex items-center gap-1">
               <LockOpen className="size-3.5" aria-hidden="true" /> Opened from Swarm with the company key

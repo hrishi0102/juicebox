@@ -2,11 +2,14 @@ import Link from "next/link";
 import { SetupRow } from "@/components/setup-row";
 import { JoinCompany, type JoinOption } from "@/components/join-company";
 import { ZeroGSetup } from "@/components/zero-g-setup";
+import { KeyProofButton } from "@/components/key-proof-button";
 import { ScanButton } from "@/components/pipeline-controls";
 import { buttonVariants } from "@/components/ui/button";
 import { githubLogin, githubTeams } from "@/lib/receipts/identity";
 import { currentSource, getDataset, onLaptop } from "@/lib/server/data";
 import { employeeTarget, targetHow } from "@/lib/server/employee";
+import { keyProofFor } from "@/lib/server/key-proofs";
+import { signerAddress } from "@/lib/server/receipts-store";
 import { dayTime, plural } from "@/lib/format";
 
 export const metadata = { title: "Setup · My week · Receipts" };
@@ -27,13 +30,15 @@ export default async function EmployeeSetup() {
       ]
     : [];
   const joined = demo || target.from === "settings";
+  const address = demo ? undefined : signerAddress(source);
+  const proof = !demo && login && address ? await keyProofFor(login, address) : undefined;
 
   return (
     <div className="max-w-3xl space-y-8">
       <div>
         <h1 className="text-balance text-4xl font-semibold tracking-tight">Set up once</h1>
         <p className="mt-2 text-[15px] text-muted-foreground">
-          Four things on this laptop. After that, every week is the same: write, review, sign, send.
+          Five things on this laptop. After that, every week is the same: write, review, sign, send.
           {demo && " In the demo, the engineer is already set up; only Sign in with 0G is real."}
         </p>
       </div>
@@ -61,7 +66,33 @@ export default async function EmployeeSetup() {
           )}
         </SetupRow>
 
-        <SetupRow n={2} title="Join your company" done={joined}>
+        <SetupRow n={2} title="Prove your key on GitHub" done={demo || proof?.status === "proven"}>
+          <p className="text-muted-foreground">
+            Your receipts are signed with a key made on this laptop, and they name your GitHub login. Anyone can type a login, so prove the two belong
+            together: one public gist on your GitHub account holds a short note signed by this key. It says nothing about your work. Your company then
+            sees your login as proven, not just claimed.
+          </p>
+          {demo ? (
+            <p>The demo engineer is a known member of Acme, by key. There is no GitHub account to prove.</p>
+          ) : !login ? (
+            <p className="text-muted-foreground">Connect GitHub first.</p>
+          ) : proof?.status === "proven" ? (
+            <p>
+              Proven by{" "}
+              <a href={proof.url} target="_blank" rel="noreferrer" className="text-primary hover:underline">
+                your public gist
+              </a>{" "}
+              for key <code>{address ? `${address.slice(0, 6)}…${address.slice(-4)}` : ""}</code>.
+            </p>
+          ) : (
+            <>
+              {proof?.status === "unknown" && <p className="text-sm text-muted-foreground">Could not check GitHub just now ({proof.reason}).</p>}
+              <KeyProofButton />
+            </>
+          )}
+        </SetupRow>
+
+        <SetupRow n={3} title="Join your company" done={joined}>
           <p className="text-muted-foreground">Your company is your GitHub org, and your team is your GitHub team. Your receipts go there.</p>
           {demo ? (
             <p>
@@ -90,9 +121,9 @@ export default async function EmployeeSetup() {
           )}
         </SetupRow>
 
-        <ZeroGSetup n={3} />
+        <ZeroGSetup n={4} />
 
-        <SetupRow n={4} title="Read your logs" done={!!d}>
+        <SetupRow n={5} title="Read your logs" done={!!d}>
           <p className="text-muted-foreground">
             Claude Code and Codex already keep a log of every session on this laptop. Receipts reads them here, prices every call and links sessions
             to your pull requests. Nothing leaves the laptop for this step.
