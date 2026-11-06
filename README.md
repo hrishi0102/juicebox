@@ -6,7 +6,7 @@ AI tools make it easy to spend a lot and hard to say what came out of it, and to
 
 > **Built** the team spend dashboard and the API quickstart. **Fixed** the double charge on retry. **Figured out** how settlement batching works. 7 AI sessions, Claude Code + Codex. **5 things done.**
 
-A private AI on **0G** writes the list from your sessions inside a sealed enclave, so your prompts are never sent to an ordinary AI API. You can post the list as a card, or sign it and share it with your company on **Arkiv**, where it becomes a read-only record that you own. Your company sees everyone's signed list, the pull requests behind it and the totals. Never prompts.
+A private AI on **0G** writes the list from your sessions. It runs inside a hardware enclave (TEE) whose signature we check on every answer, so your prompts are never sent to an ordinary AI API. You can post the list as a card, or sign it and share it with your company on **Arkiv**, where it becomes a read-only record that you own. Your company sees everyone's signed list, the pull requests behind it and the totals. Never prompts.
 
 Built at ETHGlobal Mumbai (Nov 5 to 7, 2026).
 
@@ -127,8 +127,8 @@ Built but not submitted (three partners max). See [cre/README.md](cre/README.md)
 
 - **C (censorship resistance).** There is no Receipts server. The app runs on your laptop and depends only on GitHub (your token), the 0G router (optional) and an Arkiv RPC. If this project disappears, your receipts are still JSON files signed with your key that anyone can verify with a standard EIP-712 library, and shared ones stay on Arkiv, owned by you, until they expire.
 - **O (open source).** MIT license. Everything builds and runs from this repo with `npm install`.
-- **P (private).** Raw logs and prompts never leave the laptop except one session's digest into a TEE, on demand. Session titles and file names stay in `~/.receipts`. GitHub learns which PRs you look up (it already has them). The 0G router learns the model, sizes and timing. Arkiv (public) only gets what you share: the signed list, PR titles and links, and totals. The share card is drawn locally. No trackers or analytics.
-- **S (secure).** Receipts are signed with a key that never leaves `~/.receipts` (mode 0600). Any change to a number breaks the signature; any change to an item, PR or AI record breaks its Merkle root. Shared records are read-only and owned by the signer, and re-verified on read. The app only listens on 127.0.0.1, only answers requests addressed to localhost, and rejects cross-site requests, so another website cannot make it sign, publish or spend. Trust assumptions: the 0G TEE attestation, GitHub's API answers, and that the Arkiv testnet keeps data until expiry.
+- **P (private).** Raw logs never leave the laptop. When you ask for your week to be written, a trimmed digest of each session (prompts cut short, the AI's last answers) goes to 0G's private computer, where the model runs inside a TEE and every answer's TEE signature is checked. Those requests are not end-to-end sealed today: they travel over HTTPS through 0G's router, which could read them in transit, so 0G's router is a trusted party, like any API provider. Session titles and file names stay in `~/.receipts`. GitHub learns which PRs you look up (it already has them). Arkiv (public) only gets what you share: the signed list, PR titles and links, and totals. The share card is drawn locally. No trackers or analytics.
+- **S (secure).** Receipts are signed with a key that never leaves `~/.receipts` (mode 0600). Any change to a number breaks the signature; any change to an item, PR or AI record breaks its Merkle root. Shared records are read-only and owned by the signer, and re-verified on read. The app only listens on 127.0.0.1, only answers requests addressed to localhost, and rejects cross-site requests, so another website cannot make it sign, publish or spend. Trust assumptions: 0G's router (it can see requests in transit, since they are not end-to-end sealed) and its TEE attestation, GitHub's API answers, and that the Arkiv testnet and Swarm keep data until expiry.
 
 ## What leaves your laptop
 
@@ -136,8 +136,8 @@ Built but not submitted (three partners max). See [cre/README.md](cre/README.md)
 |---|---|---|
 | Raw logs and prompts | Nowhere | Only you |
 | Session titles, file names | `~/.receipts` on your laptop | Only you |
-| One session's trimmed prompts and the AI's last answers, when you click Write my week | 0G Private Computer, private mode | The enclave (the router sees model, size, timing) |
-| The list's titles, for the weekly summary | The same private model | The enclave |
+| One session's trimmed prompts and the AI's last answers, when you click Write my week | 0G Private Computer, private mode (model in a TEE) | The model in the TEE, and 0G's router in transit (not end-to-end sealed today) |
+| The list's titles, for the weekly summary | The same private model | The same |
 | PR numbers, repo names | GitHub API with your token | GitHub |
 | The share card | Nowhere, unless you post it | Whoever you show it to |
 | Your signed totals, when you share with your company | Arkiv testnet, read-only, owned by you | Anyone |
@@ -149,6 +149,7 @@ Built but not submitted (three partners max). See [cre/README.md](cre/README.md)
 - Linking is best effort. Sessions in folders that were deleted or moved often cannot be linked to a PR; the AI still writes what they got.
 - Cost is the API list price of the tokens in your logs. On a subscription plan your real bill is different.
 - The GitHub login inside a receipt is claimed by the signer; the company page shows the signing address next to it.
+- 0G requests are not end-to-end sealed today (0G reports `X-0G-E2EE: none` for our model), so 0G's router could read them in transit. The model itself runs in a TEE and its signature is checked on every answer.
 - "Sign in with 0G" uses 0G's own Privy app, which only allows `http://localhost:3000`. It needs a real login, so it was built and wired but not tested end to end by us.
 
 ## AI usage

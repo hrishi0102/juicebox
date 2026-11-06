@@ -13,7 +13,7 @@ export function WriteWeekButton({ week, label, aiReady, variant = "default" }: {
   const [, start] = useTransition();
   async function write() {
     setBusy(true);
-    const t = toast.loading(aiReady ? "The private AI on 0G is reading this week's sessions. Prompts go only into a sealed TEE." : "Writing your week with simple rules");
+    const t = toast.loading(aiReady ? "The private AI on 0G is reading this week's sessions. Only a trimmed summary of each one goes to 0G, where the model runs in a TEE." : "Writing your week with simple rules");
     try {
       const r = await fetch("/api/week", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ week }) });
       const j = await r.json();

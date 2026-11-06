@@ -1,7 +1,7 @@
 {
   "id": "acme",
   "name": "Acme (demo company)",
-  "policy": "Everyone shares a signed weekly receipt with the PRs it paid for. Prompts never leave anyone's laptop.",
+  "policy": "Everyone shares a signed weekly receipt with the PRs it paid for. Prompts are never shared.",
   "teams": [
     {
       "id": "acme-payments",

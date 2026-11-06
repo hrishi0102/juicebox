@@ -96,7 +96,7 @@ export default async function ThisWeek({ searchParams }: { searchParams: Promise
               {s.story.stale ? `${plural(s.story.newSessions, "new session")} since then, shown below with simple rules.` : ""}
             </>
           ) : aiReady ? (
-            "This list comes from simple rules. Write my week asks the private AI on 0G for a better one. Your prompts go only into a sealed enclave."
+            "This list comes from simple rules. Write my week asks the private AI on 0G for a better one. Only a trimmed summary of each session goes to 0G, where the model runs in a hardware enclave."
           ) : (
             "This list comes from simple rules. Add a 0G key to have a private AI write it (see How it works)."
           )}
@@ -276,8 +276,8 @@ function HowWritten({ s, firstSession }: { s: PeriodSummary; firstSession?: stri
           from signals in the logs (edits, web searches, failing commands).
         </p>
         <p className="text-muted-foreground">
-          The private AI does better: it reads what you asked and what the AI answered, inside a sealed 0G enclave (TEE), and writes one line per
-          session. A second call merges the lines into this list. It never sees anything else, and nothing is stored there.
+          The private AI does better: it reads what you asked and what the AI answered on 0G, where the model runs inside a hardware enclave (TEE),
+          and writes one line per session. A second call merges the lines into this list. It never sees anything else.
         </p>
       </div>
     );
@@ -285,7 +285,8 @@ function HowWritten({ s, firstSession }: { s: PeriodSummary; firstSession?: stri
     <div className="max-w-[70ch] space-y-3 text-[15px]">
       <p>
         Written by <span className="font-medium">{s.story.model}</span> on the 0G Private Computer, in private mode: only providers running the model
-        inside a TEE could answer{s.story.verified ? ", and every answer's TEE signature was checked" : ""}.
+        inside a TEE could answer{s.story.verified ? ", and every answer's TEE signature was checked" : ""}. The requests reach 0G over HTTPS
+        through its router and are not end-to-end sealed today, so the router could read them in transit.
       </p>
       <ol className="list-decimal space-y-1 pl-5 text-muted-foreground">
         <li>Each session went in as a private digest: what you asked, what the AI said at the end, tool counts, the GitHub outcome and the cost.</li>
@@ -350,7 +351,7 @@ function Empty() {
         </li>
         <li>
           <span className="font-medium">2. Write my week.</span>{" "}
-          <span className="text-muted-foreground">A private AI on 0G reads each session inside a sealed enclave and writes one line.</span>
+          <span className="text-muted-foreground">A private AI on 0G, running inside a hardware enclave, reads each session and writes one line.</span>
         </li>
         <li>
           <span className="font-medium">3. Share it.</span> <span className="text-muted-foreground">Post a card, or sign the receipt and share it with your company.</span>

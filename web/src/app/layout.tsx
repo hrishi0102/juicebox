@@ -45,7 +45,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           </header>
           <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6">{children}</main>
           <footer className="mx-auto flex w-full max-w-6xl flex-wrap gap-x-6 gap-y-1 px-4 pb-8 pt-4 text-sm text-muted-foreground sm:px-6 print:hidden">
-            <span>Your prompts never leave this laptop.</span>
+            <span>Your raw logs never leave this laptop.</span>
             <Link href="/how" className="hover:text-foreground">
               How it works
             </Link>

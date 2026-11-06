@@ -12,7 +12,7 @@ const STEPS = [
   },
   {
     t: "Write what you got",
-    d: "Only when you click Write my week. Each session goes to a private AI on 0G that runs inside a sealed hardware enclave (TEE): what you asked, what the AI said at the end, tool counts, the GitHub outcome and the cost. It answers with one line: a category and a short title. One more call sees only those lines and merges them into your list, with one sentence about the week. Without a 0G key, simple rules write the list instead.",
+    d: "Only when you click Write my week. Each session goes to a private AI on 0G that runs inside a hardware enclave (TEE): what you asked, what the AI said at the end, tool counts, the GitHub outcome and the cost. It answers with one line: a category and a short title. One more call sees only those lines and merges them into your list, with one sentence about the week. Without a 0G key, simple rules write the list instead.",
   },
   {
     t: "Share it for fun",
@@ -30,9 +30,9 @@ const FLOWS: [string, string, string][] = [
   [
     "One session's trimmed prompts and the AI's last answers, when you click Write my week",
     "0G Private Computer in private mode: only models running inside a TEE can answer, and the TEE signature of every answer is checked",
-    "The enclave. The router sees the model, size and timing",
+    "The model inside a TEE. It reaches it over HTTPS through 0G's router, which is not end-to-end sealed today, so 0G's router could read it in transit",
   ],
-  ["The list's titles, for the weekly summary", "The same private 0G model", "The enclave"],
+  ["The list's titles, for the weekly summary", "The same private 0G model", "The same: the model in a TEE, and 0G's router in transit"],
   ["PR numbers and repo names", "GitHub API, with your own token", "GitHub (it already has them)"],
   ["The share card", "Nowhere, unless you post it", "Whoever you show it to"],
   ["A card you make public with Get a Swarm link", "Swarm, listed on Arkiv and shown on the wall", "Anyone"],
@@ -48,8 +48,8 @@ export default function How() {
         <p className="mt-4 max-w-[68ch] text-lg text-muted-foreground">
           AI tools make it easy to spend a lot and hard to say what came out of it. Token leaderboards reward burning tokens, not getting things done.
           Receipts reads your AI sessions on your laptop and answers the question for you: what you built, fixed, figured out and researched, and what
-          it cost. You can post it for fun, or sign it and share it with your company. Your prompts never leave your laptop except into a sealed
-          enclave.
+          it cost. You can post it for fun, or sign it and share it with your company. Your raw logs never leave your laptop; only a trimmed summary
+          of each session goes to 0G&apos;s private AI, and only when you ask.
         </p>
       </section>
 

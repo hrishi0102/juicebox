@@ -8,7 +8,7 @@ export const maxDuration = 300;
 
 // "Write my week" paid from your own 0G credits: the browser calls 0G, this route builds the
 // messages and keeps the answers. Prompts only travel between this laptop's server, its browser
-// tab and the 0G enclave.
+// tab and 0G (its router, then the model in a TEE).
 
 const Reply = z.object({
   content: z.string().max(20000),

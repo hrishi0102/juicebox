@@ -23,6 +23,7 @@ Every call:
 
 - `X-0G-Provider-Trust-Mode: private`: only providers running the model inside a TEE may answer; the router never falls back silently.
 - `verify_tee: true`: the router checks the TEE signature (`x_0g_trace.tee_verified`).
+- Not end-to-end sealed: 0G answers `X-0G-E2EE: none` for our model, so requests are HTTPS to the router but not encrypted to the enclave; the router could read them in transit. We record this as `sealed: false` and say so in the app and README.
 - `selfVerifyTee` checks the same signature again with the 0G SDK (`processResponse`) against the signer registered on 0G mainnet, without trusting the router.
 - Model `0gm-1.0-35b-a3b-sia` with `chat_template_kwargs: { enable_thinking: false }` (about 2 seconds and $0.001 a call). If its provider is down, `glm-5.3`, then `0gm-1.0-35b-a3b`. 503 and 429 are retried; 401, 402 and 403 stop at once.
 - The answer is parsed forgivingly (`<think>` blocks, code fences, "figured out" vs "Figured out") and titles are cleaned (`cleanTitle`: no keys, addresses, emails, paths or em dashes).

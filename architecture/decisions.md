@@ -97,3 +97,6 @@ When Swarm is set up, a shared week's list, PRs and AI records are encrypted on 
 
 ## 32. The public Swarm testnet gateway for storage, for now
 It stamps uploads with its own batch, so it costs nothing and needs no node. Reason: no stamps were offered at the event, and the user is not spending money without being asked. Trade-off: the gateway is for testing and does not promise how long data lives; switching to our own node and batch is two environment variables.
+
+## 33. Say exactly what 0G protects
+The model runs in a TEE and every answer's TEE signature is checked, but our requests are not end-to-end sealed (`X-0G-E2EE: none`), so 0G's router could read them in transit. The app, README and docs say this plainly instead of "only the enclave can read it". Reason: overclaiming privacy is worse than a clear, smaller claim; sealing requests to the enclave is the next step if 0G's router supports it for our model.

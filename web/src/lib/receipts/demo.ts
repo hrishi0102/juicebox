@@ -1,6 +1,6 @@
 // Synthetic demo data: a fictional company ("Acme", three teams, twelve people) over four weeks,
 // using Claude Code and Codex. Company policy in the demo: everyone shares a signed weekly receipt
-// including the list of PRs it paid for. Prompts never leave the laptop.
+// including the list of PRs it paid for. Prompts are never shared.
 // No real transcript, repo or person is in here. Labels come from the real heuristic judge,
 // run over synthetic signals, so the demo exercises the same code paths as real data.
 
@@ -268,7 +268,7 @@ export async function makeDemoDataset(): Promise<{ dataset: Dataset; org: OrgDat
     dataset: mine!,
     org: {
       ...DEMO_ORG,
-      policy: "Everyone shares a signed weekly receipt with the PRs it paid for. Prompts never leave anyone's laptop.",
+      policy: "Everyone shares a signed weekly receipt with the PRs it paid for. Prompts are never shared.",
       teams: TEAMS,
       members,
       receipts,

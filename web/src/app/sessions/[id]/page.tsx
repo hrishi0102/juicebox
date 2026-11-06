@@ -108,8 +108,8 @@ export default async function SessionDetail({ params }: { params: Promise<{ id: 
           <details>
             <summary className="cursor-pointer text-lg font-semibold">What the private AI is sent</summary>
             <p className="mt-2 max-w-[70ch] text-sm text-muted-foreground">
-              This is the whole message sent to 0G for this session, plus a fixed instruction. Nothing else from the transcript leaves your laptop,
-              and only a model inside a TEE can read it.
+              This is the whole message sent to 0G for this session, plus a fixed instruction. Nothing else from the transcript leaves your laptop.
+              The model runs inside a TEE; the message gets there over HTTPS through 0G&apos;s router, which is not end-to-end sealed today.
             </p>
             <pre className="mt-3 max-h-96 overflow-auto whitespace-pre-wrap rounded-lg border border-border bg-card p-4 text-xs">{preview}</pre>
           </details>

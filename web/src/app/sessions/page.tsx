@@ -31,7 +31,7 @@ export default async function Sessions({ searchParams }: { searchParams: Promise
         </p>
         <p className="mt-2 max-w-[70ch] text-muted-foreground">
           Every AI session from the last {d.meta.days} days: what you got, what it cost and the PRs it turned into. Click one to see exactly what the
-          private AI was sent. The small grey line is the session&apos;s own title, which never leaves this laptop.
+          private AI was sent. The small grey line is the session&apos;s own title from your logs.
         </p>
       </div>
 

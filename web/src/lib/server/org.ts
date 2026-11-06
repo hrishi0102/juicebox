@@ -76,7 +76,7 @@ export async function loadOrg(source: Source): Promise<LoadedOrg> {
   return {
     id: cfg.id,
     name: cfg.name,
-    policy: demo?.policy || "Everyone shares a signed weekly receipt with the PRs it paid for. Prompts never leave anyone's laptop.",
+    policy: demo?.policy || "Everyone shares a signed weekly receipt with the PRs it paid for. Prompts are never shared.",
     teams,
     members: demo?.members ?? [],
     rows: [...rows.values()],
