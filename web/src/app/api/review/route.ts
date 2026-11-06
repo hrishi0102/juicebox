@@ -1,27 +1,36 @@
 import { NextResponse } from "next/server";
-import { judgeConfigFromEnv } from "@/lib/receipts/judge";
-import { reviewWeek } from "@/lib/receipts/review";
+import { z } from "zod";
+import { reviewFromAnswer, reviewPlan } from "@/lib/receipts/review";
+import { browserJudgeInfo } from "@/lib/receipts/week";
 import { writeJson } from "@/lib/receipts/store";
 import { currentSource, getDataset, weekView } from "@/lib/server/data";
 import { rejectCrossSite } from "@/lib/server/guard";
+import { Payer, WeekId, ZgAnswer } from "@/lib/server/zerog-answer";
 
 export const maxDuration = 120;
 
-// Ask the private judge (0G) for a review of one week.
+// A private review of one week, paid from the person's own 0G account. Two steps: "plan" builds the
+// message here (it reads the logs), the browser sends it to 0G with its 0G session, and "save"
+// keeps the answer. Only the answer is kept; what was sent is kept as a hash.
+const Body = z.discriminatedUnion("action", [
+  z.object({ action: z.literal("plan"), week: WeekId }),
+  z.object({ action: z.literal("save"), week: WeekId, payer: Payer, answer: ZgAnswer }),
+]);
+
 export async function POST(req: Request) {
   const blocked = rejectCrossSite(req);
   if (blocked) return blocked;
-  const { week } = (await req.json()) as { week: string };
-  const cfg = judgeConfigFromEnv();
-  if (cfg.engine === "heuristic" || (cfg.engine === "0g" && !cfg.apiKey)) {
-    return NextResponse.json({ ok: false, error: "The private judge is not set up. Add ZG_API_KEY (from pc.0g.ai) to web/.env.local and restart the app." }, { status: 400 });
-  }
+  const parsed = Body.safeParse(await req.json().catch(() => null));
+  if (!parsed.success) return NextResponse.json({ ok: false, error: "Bad request" }, { status: 400 });
+  const b = parsed.data;
   const source = await currentSource();
   const d = getDataset(source);
-  if (!d) return NextResponse.json({ ok: false, error: "No data" }, { status: 404 });
+  if (!d) return NextResponse.json({ ok: false, error: "No data yet. Read your logs first." }, { status: 404 });
   try {
-    const wv = weekView(d, week);
-    const review = await reviewWeek(cfg, d, wv);
+    const wv = weekView(d, b.week);
+    if (b.action === "plan") return NextResponse.json({ ok: true, ...(await reviewPlan(d, wv)) });
+    const judge = await browserJudgeInfo(b.answer as never, b.payer);
+    const review = reviewFromAnswer(wv.id, source, b.answer.content, judge);
     writeJson("local", `reviews/${source}-${wv.id}.json`, review);
     return NextResponse.json({ ok: true, requestId: review.judge.requestId, verified: review.judge.verified });
   } catch (e) {

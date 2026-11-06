@@ -4,7 +4,6 @@
 
 import { keccak256, stringToHex } from "viem";
 import { z } from "zod";
-import { chat, selfVerifyTee, type JudgeConfig } from "./judge";
 import { buildPrivateDigest, DEFAULT_LOG_ROOT } from "./parse";
 import { sessionUsd } from "./pricing";
 import type { Dataset } from "./pipeline";
@@ -63,36 +62,19 @@ export async function buildWeekDigest(d: Dataset, weekStart: string, weekEnd: st
   return lines.join("\n");
 }
 
-export async function reviewWeek(cfg: JudgeConfig, d: Dataset, week: { id: string; start: string; end: string }): Promise<WeeklyReview> {
+/** The message for one week's review. The browser sends it to 0G with the person's own 0G session. */
+export async function reviewPlan(d: Dataset, week: { id: string; start: string; end: string }) {
   const digest = await buildWeekDigest(d, week.start, week.end);
   if (!digest) throw new Error("No sessions in this week.");
   const user = `WEEK ${week.id}\n${digest}`;
-  const r = await chat(cfg, REVIEW_SYSTEM, user);
-  const cleaned = r.content.replace(/<think>[\s\S]*?<\/think>/g, "");
+  return { system: REVIEW_SYSTEM, user, hash: keccak256(stringToHex(REVIEW_SYSTEM + "\n" + user)) };
+}
+
+/** Turn the AI's answer into the saved review. `judge` is the record of that one 0G call. */
+export function reviewFromAnswer(week: string, source: "local" | "demo", content: string, judge: JudgeInfo): WeeklyReview {
+  const cleaned = content.replace(/<think>[\s\S]*?<\/think>/g, "");
   const m = cleaned.match(/\{[\s\S]*\}/);
   if (!m) throw new Error("The review answer had no JSON.");
   const a = Answer.parse(JSON.parse(m[0]));
-  const selfVerified = cfg.engine === "0g" && cfg.selfVerify && r.provider && r.chatId ? await selfVerifyTee(r.provider, r.chatId) : undefined;
-  return {
-    week: week.id,
-    source: d.source,
-    summary: a.summary,
-    tips: a.tips.slice(0, 3),
-    judge: {
-      engine: cfg.engine === "0g" ? "0g-tee" : "openai-compatible",
-      model: r.model,
-      provider: r.provider,
-      requestId: r.requestId,
-      chatId: r.chatId,
-      trustMode: cfg.engine === "0g" ? (cfg.trustMode ?? "private") : undefined,
-      sealed: r.sealed,
-      teeVerified: r.teeVerified,
-      selfVerified,
-      verified: !!(r.teeVerified || selfVerified),
-      requestHash: keccak256(stringToHex(REVIEW_SYSTEM + "\n" + user)),
-      responseHash: keccak256(stringToHex(r.content)),
-      at: new Date().toISOString(),
-    },
-    createdAt: new Date().toISOString(),
-  };
+  return { week, source, summary: a.summary, tips: a.tips.slice(0, 3), judge, createdAt: new Date().toISOString() };
 }

@@ -3,22 +3,25 @@ import { z } from "zod";
 import { keccak256, stringToHex } from "viem";
 import { rejectCrossSite } from "@/lib/server/guard";
 import { WrappedCardInput } from "@/lib/receipts/wrapped-schema";
-import { chat, judgeConfigFromEnv } from "@/lib/receipts/judge";
 import { extractJson } from "@/lib/receipts/judge-core";
+import { browserJudgeInfo } from "@/lib/receipts/week";
 import { readJson, writeJson } from "@/lib/receipts/store";
 import { DAY_NAMES, PERSONAS, SEGMENT_COPY, hourLabel, minutesLabel } from "@/lib/receipts/wrapped";
+import { Payer, ZgAnswer } from "@/lib/server/zerog-answer";
 
 export const maxDuration = 60;
 
-// "Roast me": the private AI on 0G writes one playful line about the Wrapped. It gets the numbers
-// only (persona, minutes, counts), never a message or a word the person typed. Answers are kept
-// in ~/.receipts so the same numbers never cost twice, and new calls are capped per hour.
+// "Roast me": the private AI on 0G writes one playful line about the Wrapped, paid from the
+// person's own 0G account (Sign in with 0G). It gets the numbers only (persona, minutes, counts),
+// never a message or a word the person typed. "plan" builds the message (or returns the line kept
+// for the same numbers, so they never cost twice); the browser asks 0G; "save" keeps the line.
 
 const int = z.number().int().min(0).max(1e9);
-const Body = z.object({
+const Numbers = z.object({
   card: WrappedCardInput.omit({ r: true }),
   extra: z.object({ conversations: int, words: int, manners: int, questions: int, whys: int, avalanches: int, activeDays: int, peakDay: z.number().int().min(0).max(6) }),
 });
+const Body = z.discriminatedUnion("action", [Numbers.extend({ action: z.literal("plan") }), Numbers.extend({ action: z.literal("save"), payer: Payer, answer: ZgAnswer })]);
 
 export const ROAST_SYSTEM = `You write one playful line for someone's "AI Wrapped", a yearly-recap style summary of how they talk to AI. You only get numbers.
 
@@ -29,19 +32,11 @@ Rules:
 - Plain, simple English. No em dashes, no emoji, no hashtags, no quotes around the line.
 - Reply with JSON only: {"line":"..."}`;
 
-const LIMIT_PER_HOUR = 30;
-const recent: number[] = [];
-type Saved = { line: string; model?: string; verified?: boolean; requestId?: string; costUsd?: number; at: string };
+type Saved = { line: string; model?: string; verified?: boolean; requestId?: string; costUsd?: number; payer?: string; at: string };
 
-export async function POST(req: Request) {
-  const blocked = rejectCrossSite(req);
-  if (blocked) return blocked;
-  const parsed = Body.safeParse(await req.json().catch(() => null));
-  if (!parsed.success) return NextResponse.json({ ok: false, error: "Bad request" }, { status: 400 });
-  const { card: c, extra: x } = parsed.data;
-
+function message({ card: c, extra: x }: z.infer<typeof Numbers>) {
   const p = PERSONAS[c.p];
-  const user = [
+  return [
     `Persona: ${p.name} (${p.line})`,
     c.t.length ? `Runner-up traits: ${c.t.map((t) => PERSONAS[t].name).join(", ")}` : "",
     `Period: ${c.l}`,
@@ -52,32 +47,42 @@ export async function POST(req: Request) {
   ]
     .filter(Boolean)
     .join("\n");
+}
 
-  const key = keccak256(stringToHex(ROAST_SYSTEM + "\n" + user));
-  const saved = readJson<Record<string, Saved>>("local", "wrapped-roasts.json", {});
-  if (saved[key]) return NextResponse.json({ ok: true, cached: true, ...saved[key] });
-
-  const cfg = judgeConfigFromEnv();
-  if (cfg.engine !== "0g") return NextResponse.json({ ok: false, error: "Add a 0G key (ZG_API_KEY) to use the private AI." }, { status: 400 });
-  const now = Date.now();
-  while (recent.length && now - recent[0] > 3600_000) recent.shift();
-  if (recent.length >= LIMIT_PER_HOUR) return NextResponse.json({ ok: false, error: "That is enough roasting for this hour. Try again later." }, { status: 429 });
-  recent.push(now);
-
+function tidy(content: string) {
+  let line: string;
   try {
-    const r = await chat(cfg, ROAST_SYSTEM, user, 160);
-    let line: string;
-    try {
-      line = String(extractJson(r.content, "line").line ?? "");
-    } catch {
-      line = r.content.replace(/<think>[\s\S]*?<\/think>/g, "");
-    }
-    line = line.replace(/\s*[—–]\s*/g, ", ").replace(/^["'\s]+|["'\s]+$/g, "").replace(/\s+/g, " ").slice(0, 220);
-    if (!line) throw new Error("The private AI gave an empty answer.");
-    const out: Saved = { line, model: r.model, verified: !!r.teeVerified, requestId: r.requestId, costUsd: r.costUsd, at: new Date().toISOString() };
-    writeJson("local", "wrapped-roasts.json", { ...saved, [key]: out });
-    return NextResponse.json({ ok: true, cached: false, ...out });
-  } catch (e) {
-    return NextResponse.json({ ok: false, error: e instanceof Error ? e.message : String(e) }, { status: 502 });
+    line = String(extractJson(content, "line").line ?? "");
+  } catch {
+    line = content.replace(/<think>[\s\S]*?<\/think>/g, "");
   }
+  return line
+    .replace(/\s*[—–]\s*/g, ", ")
+    .replace(/^["'\s]+|["'\s]+$/g, "")
+    .replace(/\s+/g, " ")
+    .slice(0, 220);
+}
+
+export async function POST(req: Request) {
+  const blocked = rejectCrossSite(req);
+  if (blocked) return blocked;
+  const parsed = Body.safeParse(await req.json().catch(() => null));
+  if (!parsed.success) return NextResponse.json({ ok: false, error: "Bad request" }, { status: 400 });
+  const b = parsed.data;
+  const user = message(b);
+  const hash = keccak256(stringToHex(ROAST_SYSTEM + "\n" + user));
+  const saved = readJson<Record<string, Saved>>("local", "wrapped-roasts.json", {});
+
+  if (b.action === "plan") {
+    if (saved[hash]) return NextResponse.json({ ok: true, cached: true, ...saved[hash] });
+    return NextResponse.json({ ok: true, cached: false, system: ROAST_SYSTEM, user, hash });
+  }
+
+  if (b.answer.hash !== hash) return NextResponse.json({ ok: false, error: "That answer is for different numbers." }, { status: 400 });
+  const line = tidy(b.answer.content);
+  if (!line) return NextResponse.json({ ok: false, error: "The private AI gave an empty answer." }, { status: 502 });
+  const info = await browserJudgeInfo(b.answer as never, b.payer);
+  const out: Saved = { line, model: info.model, verified: info.verified, requestId: info.requestId, costUsd: info.costUsd, payer: b.payer, at: new Date().toISOString() };
+  writeJson("local", "wrapped-roasts.json", { ...saved, [hash]: out });
+  return NextResponse.json({ ok: true, cached: false, ...out });
 }

@@ -112,8 +112,10 @@ export async function writeWeekStory(source: Source, week: string, opts: { cfg?:
 }
 
 // ---- Paying with your own 0G credits ("Sign in with 0G") ----
-// The browser makes the AI calls with the person's 0G session, so the cost lands on their own 0G
-// account. This server still builds every message and keeps the results, in three steps.
+// This is how the web app pays for every private AI call. The browser makes the call with the
+// person's 0G session, so the cost lands on their own 0G account (their daily credits). This server
+// still builds every message and keeps the results, in three steps. The app's own key
+// (ZG_API_KEY) is only used by the command line (`npm run receipts -- write`).
 
 export type PlanItem = { sessionId: string; user: string; hash: Hex };
 export type BrowserAnswer = { sessionId?: string; content: string; hash: Hex; reply: ChatReply };
@@ -139,13 +141,28 @@ export async function browserPlan(source: Source, week: string): Promise<{ syste
   return { system: SESSION_SYSTEM, sessions: out, next: out.length ? undefined : weekPlan(d, week) };
 }
 
+/** The private message for chosen sessions, asked again even if the AI already wrote their line. */
+export async function browserPlanSessions(source: Source, sessionIds: string[]): Promise<{ system: string; sessions: PlanItem[] }> {
+  const d = mustLoad(source);
+  if (source !== "local") return { system: SESSION_SYSTEM, sessions: [] };
+  const want = new Set(sessionIds);
+  const base = new Map(judgeAllHeuristic(d.sessions, d.matches, d.changes).map((j) => [j.sessionId, j]));
+  const out: PlanItem[] = [];
+  for (const s of d.sessions.filter((x) => want.has(x.id))) {
+    const p = await sessionPrompt(s, base.get(s.id)!, d.matches, d.changes, d.meta.logRoot);
+    out.push({ sessionId: s.id, user: p.user, hash: keccak256(stringToHex(p.sent)) });
+  }
+  return { system: SESSION_SYSTEM, sessions: out };
+}
+
 function weekPlan(d: Dataset, week: string) {
   const input: StoryInput = { sessions: sessionsInWeek(d, week), judgements: d.judgements, tasks: d.tasks };
   const user = weekMessage(week, sessionLines(input));
   return { system: WEEK_SYSTEM, user, hash: keccak256(stringToHex(WEEK_SYSTEM + "\n" + user)) };
 }
 
-async function browserInfo(a: BrowserAnswer, payer: string): Promise<JudgeInfo> {
+/** The record kept for one answer the browser got from 0G: model, request id, TEE checks, payer. */
+export async function browserJudgeInfo(a: BrowserAnswer, payer: string): Promise<JudgeInfo> {
   const r = a.reply;
   const selfVerified = r.provider && r.chatId && process.env.ZG_SELF_VERIFY !== "0" ? await selfVerifyTee(r.provider, r.chatId) : undefined;
   return {
@@ -167,8 +184,8 @@ async function browserInfo(a: BrowserAnswer, payer: string): Promise<JudgeInfo> 
   };
 }
 
-/** Step 2: the AI's answers (from the browser) become judgements. Returns the weekly message. */
-export async function browserSessions(source: Source, week: string, answers: BrowserAnswer[], payer: string) {
+/** Step 2: the AI's answers (from the browser) become judgements. With a week, returns its weekly message. */
+export async function browserSessions(source: Source, week: string | undefined, answers: BrowserAnswer[], payer: string) {
   const d = mustLoad(source);
   const base = new Map(judgeAllHeuristic(d.sessions, d.matches, d.changes).map((j) => [j.sessionId, j]));
   const judgeBy = new Map(d.judgements.map((j) => [j.sessionId, j]));
@@ -178,7 +195,7 @@ export async function browserSessions(source: Source, week: string, answers: Bro
     const s = d.sessions.find((x) => x.id === a.sessionId);
     if (!s) continue;
     try {
-      judgeBy.set(s.id, judgementFromAnswer(s, base.get(s.id)!, loopScore(s), a.content, await browserInfo(a, payer)));
+      judgeBy.set(s.id, judgementFromAnswer(s, base.get(s.id)!, loopScore(s), a.content, await browserJudgeInfo(a, payer)));
       judged++;
     } catch {
       failed++;
@@ -187,7 +204,7 @@ export async function browserSessions(source: Source, week: string, answers: Bro
   d.judgements = [...judgeBy.values()];
   d.tasks = buildTasks(d.sessions, d.matches, d.changes, d.judgements);
   saveDataset(d);
-  return { judged, failed, next: weekPlan(d, week) };
+  return { judged, failed, next: week ? weekPlan(d, week) : undefined };
 }
 
 /** Step 3: the weekly answer (from the browser) becomes the saved list. */
@@ -197,7 +214,7 @@ export async function browserWeek(source: Source, week: string, answer: BrowserA
   const input: StoryInput = { sessions, judgements: d.judgements, tasks: d.tasks };
   const parsed = parseWeekAnswer(answer.content);
   const items = itemsFromAnswer(parsed.items, sessionLines(input), input);
-  const info = await browserInfo(answer, payer);
+  const info = await browserJudgeInfo(answer, payer);
   const ids = new Set(sessions.map((s) => s.id));
   const sessionCalls = d.judgements.filter((j) => ids.has(j.sessionId) && j.judge.engine !== "heuristic");
   const story: WeekStory = {
