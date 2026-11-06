@@ -16,11 +16,11 @@ const STEPS = [
   },
   {
     t: "Share it for fun",
-    d: "Pick the lines you want, edit the wording, and download a card for X, LinkedIn or your team chat, or save it as a PDF. Cost is hidden unless you turn it on. The card is drawn on your laptop and nothing is uploaded.",
+    d: "Pick the lines you want, edit the wording, and download a card for X, LinkedIn or your team chat, or save it as a PDF. Cost is hidden unless you turn it on. The card is drawn on your laptop. If you want a link, Get a Swarm link stores it on Swarm and puts it on the wall.",
   },
   {
     t: "Share it with your company",
-    d: "Sign the week with a key made on your laptop (no wallet needed). The signature covers the list, the pull requests and every number, so nobody can change them later. Sharing writes it to Arkiv as a read-only record that you own, under your GitHub org and team, where your company can read it.",
+    d: "Sign the week with a key made on your laptop (no wallet needed). The signature covers the list, the pull requests and every number, so nobody can change them later. Sharing writes your signed totals to Arkiv as a read-only record that you own, under your GitHub org and team. The list and pull requests go to Swarm, encrypted on your laptop, and only your company's key can open them.",
   },
 ];
 
@@ -35,7 +35,9 @@ const FLOWS: [string, string, string][] = [
   ["The list's titles, for the weekly summary", "The same private 0G model", "The enclave"],
   ["PR numbers and repo names", "GitHub API, with your own token", "GitHub (it already has them)"],
   ["The share card", "Nowhere, unless you post it", "Whoever you show it to"],
-  ["Your signed list, PRs and totals, when you share with your company", `Arkiv testnet, schema ${ARKIV_SCHEMA_NAME}, read-only and owned by you`, "Anyone. That is the point of sharing"],
+  ["A card you make public with Get a Swarm link", "Swarm, listed on Arkiv and shown on the wall", "Anyone"],
+  ["Your signed totals, when you share with your company", `Arkiv testnet, schema ${ARKIV_SCHEMA_NAME}, read-only and owned by you`, "Anyone. That is the point of sharing"],
+  ["Your list, PRs and AI records, when you share with your company", "Swarm testnet, encrypted on your laptop; the key is sealed to your company's key on Arkiv", "Your company"],
 ];
 
 export default function How() {
@@ -103,7 +105,7 @@ export default function How() {
         </div>
       </section>
 
-      <section aria-labelledby="why" className="grid gap-8 sm:grid-cols-3">
+      <section aria-labelledby="why" className="grid gap-8 sm:grid-cols-2">
         <h2 id="why" className="sr-only">
           Why each piece is there
         </h2>
@@ -126,6 +128,14 @@ export default function How() {
           <p className="mt-1 text-muted-foreground">
             Shared weeks need a place the company can query that belongs neither to a company tool nor to us. Each record is read-only, owned by the
             person who signed it, and expires on its own.
+          </p>
+        </div>
+        <div>
+          <h3 className="font-semibold">Why Swarm</h3>
+          <p className="mt-1 text-muted-foreground">
+            Arkiv is public, and work titles can name customers or unreleased features. So the details go to Swarm, encrypted on your laptop, and only
+            your company&apos;s key can open them, while everyone can still check the signed totals. Public cards live on Swarm too, so their links never
+            depend on us.
           </p>
         </div>
       </section>

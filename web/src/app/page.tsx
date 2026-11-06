@@ -6,6 +6,7 @@ import { ReceiptActions } from "@/components/receipt-actions";
 import { ReviewButton, ScanButton } from "@/components/pipeline-controls";
 import { WriteWeekButton } from "@/components/write-week-button";
 import { ZeroGPay } from "@/components/zero-g-pay";
+import { swarmReady } from "@/lib/receipts/swarm";
 import { WeekList } from "@/components/week-list";
 import { CategoryBar, CategoryLegend } from "@/components/category-badge";
 import { Difficulty } from "@/components/label-badge";
@@ -224,6 +225,7 @@ export default async function ThisWeek({ searchParams }: { searchParams: Promise
             arkivReady={!!process.env.ARKIV_PRIVATE_KEY}
             savedJson={saved ? JSON.stringify(saved, null, 2) : undefined}
             shareTo={shareTo}
+            swarmReady={swarmReady()}
           />
         </aside>
       </div>

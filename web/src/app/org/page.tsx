@@ -207,6 +207,10 @@ export default async function OrgPage({ searchParams }: { searchParams: Promise<
                 <li>Can see: each person&apos;s signed list of what they got done, the pull requests behind it, and the totals per category and AI tool.</li>
                 <li>Cannot see: prompts, the AI&apos;s answers, file names or session details. Those never leave the laptop. People can also keep single items private; they still count in the signed totals.</li>
                 <li>
+                  The lists themselves are stored on Swarm, encrypted on each person&apos;s laptop. This page opens them with the company key; anyone
+                  else reading Arkiv sees only the signed totals.
+                </li>
+                <li>
                   Every number comes from receipts signed by the person they describe, read from Arkiv (schema <code>{ARKIV_SCHEMA_NAME}</code>, company
                   &quot;{org.id}&quot;): {org.arkivCount} live on Arkiv now{source === "demo" ? ", plus the demo company's signed receipts from the repo" : ""}.
                   {org.arkivError && ` Arkiv could not be reached: ${org.arkivError.slice(0, 120)}.`}

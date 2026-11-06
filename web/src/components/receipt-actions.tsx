@@ -17,6 +17,7 @@ type Props = {
   arkivReady: boolean;
   savedJson?: string;
   shareTo?: string;
+  swarmReady?: boolean;
 };
 
 export function ReceiptActions(p: Props) {
@@ -101,9 +102,11 @@ export function ReceiptActions(p: Props) {
             {busy === "share" ? "Sharing" : "Share with my company"}
           </Button>
           <p className="text-sm text-muted-foreground">
-            {p.arkivReady
-              ? `Goes to ${p.shareTo ?? "your company"}. They see this list, the PRs and the totals, never your prompts. The record on Arkiv is read-only and owned by you.`
-              : "Sharing is not set up yet: it needs the company's Arkiv key in .env.local."}
+            {!p.arkivReady
+              ? "Sharing is not set up yet: it needs the company's Arkiv key in .env.local."
+              : p.swarmReady
+                ? `Goes to ${p.shareTo ?? "your company"}. Your list and PRs are encrypted and stored on Swarm, and only your company can open them. Arkiv gets a read-only record of your signed totals, owned by you. Never your prompts.`
+                : `Goes to ${p.shareTo ?? "your company"}. They see this list, the PRs and the totals, never your prompts. The record on Arkiv is read-only and owned by you.`}
           </p>
         </>
       ) : (
