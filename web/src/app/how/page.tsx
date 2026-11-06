@@ -1,57 +1,59 @@
-import { LabelBadge } from "@/components/label-badge";
-import { LABEL_COPY, LABEL_ORDER } from "@/lib/format";
+import { CategoryLegend } from "@/components/category-badge";
 import { ARKIV_SCHEMA_NAME } from "@/lib/receipts/arkiv";
 
 const STEPS = [
   {
-    t: "Cost",
-    d: "Read Claude Code's own logs in ~/.claude/projects, including subagents. Each API call is priced from its token counts (cache reads, 5 minute and 1 hour cache writes, fast mode) and checked against Claude Code's own cost tracker.",
+    t: "Read your logs",
+    d: "Claude Code and Codex already keep a log of every session on your laptop. Receipts reads them there, prices every AI call from its token counts (checked against Claude Code's own cost tracker), and keeps the results in ~/.receipts. Nothing leaves your laptop for this step.",
   },
   {
-    t: "Outcome",
-    d: "Ask GitHub what happened to the work: merged, still open, closed, or reverted later. For merged work, run blame on the base branch 30 days after the merge and count how many added lines are still there.",
+    t: "Link the work",
+    d: "With your own GitHub token, it finds the pull requests and commits each session turned into: from the PR links and commits in the log, the branch, and files edited around the same time. It also notes what happened to them: merged, open, closed or reverted.",
   },
   {
-    t: "Match",
-    d: "Link sessions to pull requests by the PR links and commits Claude Code recorded, the branch the session worked on, and files edited around the same time. Each link keeps its reason and a confidence.",
+    t: "Write what you got",
+    d: "Only when you click Write my week. Each session goes to a private AI on 0G that runs inside a sealed hardware enclave (TEE): what you asked, what the AI said at the end, tool counts, the GitHub outcome and the cost. It answers with one line: a category and a short title. One more call sees only those lines and merges them into your list, with one sentence about the week. Without a 0G key, simple rules write the list instead.",
   },
   {
-    t: "Judge",
-    d: "Label every session as Shipped, Learned, Looped, Abandoned or Overkill and rate its difficulty. Offline rules always run. The private judge on 0G reads the trimmed prompts inside a hardware enclave and does better.",
+    t: "Share it for fun",
+    d: "Pick the lines you want, edit the wording, and download a card for X, LinkedIn or your team chat, or save it as a PDF. Cost is hidden unless you turn it on. The card is drawn on your laptop and nothing is uploaded.",
   },
   {
-    t: "Score",
-    d: "Kept work: each shipped task counts as the share of its code still alive. Cost per kept task is only compared between tasks of the same difficulty, never across people.",
-  },
-  {
-    t: "Sign and share",
-    d: "You sign the weekly receipt with your own key. It is yours to keep as evidence. Sharing writes it, with the list of pull requests it paid for, to Arkiv, where your team and company can read it.",
+    t: "Share it with your company",
+    d: "Sign the week with a key made on your laptop (no wallet needed). The signature covers the list, the pull requests and every number, so nobody can change them later. Sharing writes it to Arkiv as a read-only record that you own, under your GitHub org and team, where your company can read it.",
   },
 ];
 
 const FLOWS: [string, string, string][] = [
-  ["Raw logs and prompts", "Nowhere. They stay in ~/.claude on your laptop.", "Only you"],
+  ["Raw logs and prompts", "Nowhere. They stay in ~/.claude and ~/.codex on your laptop.", "Only you"],
   ["Session titles, file names, folders", "A local file in ~/.receipts, outside any repo", "Only you"],
-  ["Trimmed prompts of one session, when you ask the private judge", "0G Private Computer, private mode: only models running inside a TEE, sealed end to end", "The enclave. The router sees model, size and timing"],
+  [
+    "One session's trimmed prompts and the AI's last answers, when you click Write my week",
+    "0G Private Computer in private mode: only models running inside a TEE can answer, and the TEE signature of every answer is checked",
+    "The enclave. The router sees the model, size and timing",
+  ],
+  ["The list's titles, for the weekly summary", "The same private 0G model", "The enclave"],
   ["PR numbers and repo names", "GitHub API, with your own token", "GitHub (it already has them)"],
-  ["Signed weekly totals, when you share", `Arkiv testnet, schema ${ARKIV_SCHEMA_NAME}`, "Anyone. That is the point of sharing"],
-  ["PR titles, links and the AI cost of each, when you share", "Arkiv, inside the same signed receipt", "Anyone"],
+  ["The share card", "Nowhere, unless you post it", "Whoever you show it to"],
+  ["Your signed list, PRs and totals, when you share with your company", `Arkiv testnet, schema ${ARKIV_SCHEMA_NAME}, read-only and owned by you`, "Anyone. That is the point of sharing"],
 ];
 
 export default function How() {
   return (
     <div className="max-w-4xl space-y-14">
       <section>
-        <h1 className="text-4xl font-semibold tracking-tight">Receipts, not leaderboards.</h1>
+        <h1 className="text-balance text-4xl font-semibold tracking-tight">What did you get done this week?</h1>
         <p className="mt-4 max-w-[68ch] text-lg text-muted-foreground">
-          Companies hand out big AI budgets and then rank people by tokens burned. Those leaderboards get gamed, and tokens are a small part of what a
-          pull request costs anyway. Receipts shows what the spend bought, where it leaked, and lets each engineer own the evidence.
+          AI tools make it easy to spend a lot and hard to say what came out of it. Token leaderboards reward burning tokens, not getting things done.
+          Receipts reads your AI sessions on your laptop and answers the question for you: what you built, fixed, figured out and researched, and what
+          it cost. You can post it for fun, or sign it and share it with your company. Your prompts never leave your laptop except into a sealed
+          enclave.
         </p>
       </section>
 
       <section aria-labelledby="steps">
         <h2 id="steps" className="text-2xl font-semibold tracking-tight">
-          How a receipt gets made
+          How it works
         </h2>
         <ol className="mt-6 space-y-6">
           {STEPS.map((s, i) => (
@@ -66,20 +68,13 @@ export default function How() {
         </ol>
       </section>
 
-      <section aria-labelledby="labels">
-        <h2 id="labels" className="text-2xl font-semibold tracking-tight">
-          The labels
+      <section aria-labelledby="cats">
+        <h2 id="cats" className="text-2xl font-semibold tracking-tight">
+          The categories
         </h2>
-        <dl className="mt-4 grid gap-3 sm:grid-cols-2">
-          {LABEL_ORDER.map((l) => (
-            <div key={l} className="flex items-start gap-3">
-              <dt className="w-28 shrink-0">
-                <LabelBadge label={l} />
-              </dt>
-              <dd className="text-muted-foreground">{LABEL_COPY[l].hint}.</dd>
-            </div>
-          ))}
-        </dl>
+        <div className="mt-4">
+          <CategoryLegend />
+        </div>
       </section>
 
       <section aria-labelledby="leaves">
@@ -115,22 +110,22 @@ export default function How() {
         <div>
           <h3 className="font-semibold">Why 0G</h3>
           <p className="mt-1 text-muted-foreground">
-            A useful judge has to read your prompts. We never send them to a normal AI API. Without 0G&apos;s private computer there is no AI judge,
-            only rules that cannot tell a dead end from real learning.
+            To say what you got, an AI has to read what you asked. We never send prompts to a normal AI API. 0G&apos;s private computer runs the model
+            inside a TEE and signs every answer. You can pay with the app&apos;s key or sign in with 0G and use your own credits.
           </p>
         </div>
         <div>
           <h3 className="font-semibold">Why signatures</h3>
           <p className="mt-1 text-muted-foreground">
-            The receipt is your evidence at review time. Your signature means nobody, including your manager or us, can change the numbers after the
-            fact.
+            The receipt is your evidence at review time. Your signature means nobody, including your manager or us, can change the list or the numbers
+            after the fact. You can keep single items private; they still count in the signed totals.
           </p>
         </div>
         <div>
           <h3 className="font-semibold">Why Arkiv</h3>
           <p className="mt-1 text-muted-foreground">
-            Shared receipts need a place the team can query that does not belong to the company tool or to us. Entities expire, so old receipts do
-            not hang around forever.
+            Shared weeks need a place the company can query that belongs neither to a company tool nor to us. Each record is read-only, owned by the
+            person who signed it, and expires on its own.
           </p>
         </div>
       </section>

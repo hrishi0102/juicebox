@@ -1,12 +1,13 @@
 import Link from "next/link";
-import { Difficulty, LabelBadge } from "@/components/label-badge";
+import { Difficulty } from "@/components/label-badge";
+import { CategoryBadge } from "@/components/category-badge";
 import { currentSource, getDataset, periodView } from "@/lib/server/data";
 import { headline } from "@/lib/receipts/score";
 import { sessionUsd } from "@/lib/receipts/pricing";
-import { LABEL_COPY, LABEL_ORDER, dayTime, usd } from "@/lib/format";
-import { TOOL_NAMES, toolOf, type SessionLabel } from "@/lib/receipts/types";
+import { dayTime, usd } from "@/lib/format";
+import { CATEGORIES, TOOL_NAMES, toolOf, type Category } from "@/lib/receipts/types";
 
-export default async function Sessions({ searchParams }: { searchParams: Promise<{ label?: string }> }) {
+export default async function Sessions({ searchParams }: { searchParams: Promise<{ category?: string }> }) {
   const sp = await searchParams;
   const source = await currentSource();
   const d = getDataset(source);
@@ -14,12 +15,12 @@ export default async function Sessions({ searchParams }: { searchParams: Promise
 
   const judgeBy = new Map(d.judgements.map((j) => [j.sessionId, j]));
   const changeBy = new Map(d.changes.map((c) => [c.key, c]));
-  const filter = LABEL_ORDER.includes(sp.label as SessionLabel) ? (sp.label as SessionLabel) : undefined;
+  const filter = CATEGORIES.includes(sp.category as Category) ? (sp.category as Category) : undefined;
   const rows = d.sessions
     .map((s) => ({ s, j: judgeBy.get(s.id), links: d.matches.filter((m) => m.sessionId === s.id) }))
-    .filter((r) => !filter || r.j?.label === filter);
+    .filter((r) => !filter || r.j?.category === filter);
   const total = rows.reduce((a, r) => a + sessionUsd(r.s), 0);
-  const counts = Object.fromEntries(LABEL_ORDER.map((l) => [l, d.judgements.filter((j) => j.label === l).length]));
+  const counts = Object.fromEntries(CATEGORIES.map((c) => [c, d.judgements.filter((j) => j.category === c).length]));
 
   return (
     <div className="space-y-6">
@@ -29,22 +30,22 @@ export default async function Sessions({ searchParams }: { searchParams: Promise
           Last {d.meta.days} days: {headline(periodView(d, d.meta.days))}.
         </p>
         <p className="mt-2 max-w-[70ch] text-muted-foreground">
-          Every AI coding session from the last {d.meta.days} days: what it cost and what it turned into. Click one for details. Titles come from your
-          prompts and only ever show on this laptop.
+          Every AI session from the last {d.meta.days} days: what you got, what it cost and the PRs it turned into. Click one to see exactly what the
+          private AI was sent. The small grey line is the session&apos;s own title, which never leaves this laptop.
         </p>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 text-sm" role="group" aria-label="Filter by outcome">
+      <div className="flex flex-wrap items-center gap-2 text-sm" role="group" aria-label="Filter by category">
         <Link href="/sessions" className={`rounded-full border px-3 py-1 ${!filter ? "border-primary bg-accent text-accent-foreground" : "border-border hover:bg-card"}`}>
           All {d.sessions.length}
         </Link>
-        {LABEL_ORDER.map((l) => (
+        {CATEGORIES.filter((c) => counts[c] > 0).map((c) => (
           <Link
-            key={l}
-            href={`/sessions?label=${l}`}
-            className={`rounded-full border px-3 py-1 ${filter === l ? "border-primary bg-accent text-accent-foreground" : "border-border hover:bg-card"}`}
+            key={c}
+            href={`/sessions?category=${encodeURIComponent(c)}`}
+            className={`rounded-full border px-3 py-1 ${filter === c ? "border-primary bg-accent text-accent-foreground" : "border-border hover:bg-card"}`}
           >
-            {LABEL_COPY[l].name} {counts[l]}
+            {c} {counts[c]}
           </Link>
         ))}
         <span className="ml-auto text-muted-foreground">
@@ -57,8 +58,8 @@ export default async function Sessions({ searchParams }: { searchParams: Promise
           <thead className="border-b border-border text-left text-muted-foreground">
             <tr>
               <th className="px-4 py-2.5 font-normal">Started</th>
-              <th className="px-4 py-2.5 font-normal">Session</th>
-              <th className="px-4 py-2.5 font-normal">Outcome</th>
+              <th className="px-4 py-2.5 font-normal">What you got</th>
+              <th className="px-4 py-2.5 font-normal">Category</th>
               <th className="px-4 py-2.5 font-normal">Difficulty</th>
               <th className="px-4 py-2.5 font-normal">Linked work</th>
               <th className="px-4 py-2.5 font-normal">Judge</th>
@@ -71,13 +72,14 @@ export default async function Sessions({ searchParams }: { searchParams: Promise
                 <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">{dayTime(s.startedAt)}</td>
                 <td className="max-w-[280px] px-4 py-3">
                   <Link href={`/sessions/${s.id}`} className="font-medium hover:underline">
-                    {s.title || "Untitled session"}
+                    {j?.title || s.title || "Untitled session"}
                   </Link>
                   <div className="truncate text-muted-foreground">
                     {TOOL_NAMES[toolOf(s)]}, {s.repos[0] ?? s.cwd.split("/").slice(-2).join("/")}, {s.activeMinutes} min
                   </div>
+                  {s.title && j?.title && s.title !== j.title && <div className="truncate text-xs text-muted-foreground/80">{s.title}</div>}
                 </td>
-                <td className="px-4 py-3">{j ? <LabelBadge label={j.label} /> : null}</td>
+                <td className="px-4 py-3">{j?.category ? <CategoryBadge category={j.category} /> : null}</td>
                 <td className="px-4 py-3">{j ? <Difficulty value={j.difficulty} /> : null}</td>
                 <td className="px-4 py-3">
                   {links.length === 0 ? (

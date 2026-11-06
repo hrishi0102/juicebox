@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Difficulty, LabelBadge } from "@/components/label-badge";
+import { Difficulty } from "@/components/label-badge";
+import { CategoryBadge } from "@/components/category-badge";
 import { JudgeButton } from "@/components/pipeline-controls";
 import { currentSource, getDataset } from "@/lib/server/data";
 import { sessionUsd, totalTokens } from "@/lib/receipts/pricing";
@@ -35,15 +36,16 @@ export default async function SessionDetail({ params }: { params: Promise<{ id: 
         <Link href="/sessions" className="text-sm text-muted-foreground hover:text-foreground">
           All sessions
         </Link>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight">{s.title || "Untitled session"}</h1>
+        <h1 className="mt-2 text-3xl font-semibold tracking-tight">{j?.title || s.title || "Untitled session"}</h1>
         <p className="mt-2 text-muted-foreground">
           {dayTime(s.startedAt)}, {s.activeMinutes} active minutes in {s.repos[0] ?? s.cwd}
+          {s.title && j?.title && s.title !== j.title ? `. Session title: ${s.title}` : ""}
         </p>
         <div className="mt-4 flex flex-wrap items-center gap-3">
-          {j && <LabelBadge label={j.label} />}
+          {j?.category && <CategoryBadge category={j.category} />}
           {j && <Difficulty value={j.difficulty} />}
           <span className="text-2xl font-semibold">{usd(sessionUsd(s))}</span>
-          {source === "local" && <JudgeButton label="Ask the private judge about this session" sessionIds={[s.id]} judgeReady={!!process.env.ZG_API_KEY} />}
+          {source === "local" && <JudgeButton label="Ask the private AI about this session" sessionIds={[s.id]} judgeReady={!!process.env.ZG_API_KEY} />}
         </div>
         {j && <p className="mt-3 max-w-[70ch]">{j.reason}</p>}
       </div>
@@ -104,10 +106,10 @@ export default async function SessionDetail({ params }: { params: Promise<{ id: 
       {preview && (
         <section>
           <details>
-            <summary className="cursor-pointer text-lg font-semibold">What the private judge would see</summary>
+            <summary className="cursor-pointer text-lg font-semibold">What the private AI is sent</summary>
             <p className="mt-2 max-w-[70ch] text-sm text-muted-foreground">
-              This is the whole message sent to 0G when you ask the private judge about this session, plus a fixed instruction. Nothing else from
-              the transcript leaves your laptop. Only a model inside a TEE can read it.
+              This is the whole message sent to 0G for this session, plus a fixed instruction. Nothing else from the transcript leaves your laptop,
+              and only a model inside a TEE can read it.
             </p>
             <pre className="mt-3 max-h-96 overflow-auto whitespace-pre-wrap rounded-lg border border-border bg-card p-4 text-xs">{preview}</pre>
           </details>
@@ -116,7 +118,7 @@ export default async function SessionDetail({ params }: { params: Promise<{ id: 
 
       {j && (
         <section>
-          <h2 className="text-lg font-semibold">Judge record</h2>
+          <h2 className="text-lg font-semibold">Private AI record</h2>
           <dl className="mt-2 space-y-1 text-sm">
             <Item k="Engine" v={j.judge.engine === "0g-tee" ? "0G Private Computer (TEE)" : j.judge.engine === "heuristic" ? "Offline rules" : "Local model"} />
             {j.judge.model && <Item k="Model" v={j.judge.model} />}
@@ -126,12 +128,14 @@ export default async function SessionDetail({ params }: { params: Promise<{ id: 
             {j.judge.sealed !== undefined && <Item k="Sealed end to end" v={j.judge.sealed ? "yes" : "no"} />}
             {j.judge.teeVerified !== undefined && <Item k="Router checked TEE signature" v={j.judge.teeVerified ? "yes" : "no"} />}
             {j.judge.selfVerified !== undefined && <Item k="We checked TEE signature" v={j.judge.selfVerified ? "yes" : "no"} />}
+            {j.judge.payer && <Item k="Paid by" v={j.judge.payer === "app key" ? "the app's 0G key" : `0G account ${j.judge.payer}`} />}
+            {j.judge.costUsd !== undefined && <Item k="Cost of this call" v={`$${j.judge.costUsd.toFixed(4)}`} />}
             {j.judge.requestHash && <Item k="Hash of what was sent" v={shortHash(j.judge.requestHash, 10)} />}
             {j.judge.responseHash && <Item k="Hash of the answer" v={shortHash(j.judge.responseHash, 10)} />}
           </dl>
           <p className="mt-3 max-w-[70ch] text-sm text-muted-foreground">
-            The judge sees trimmed prompts, a tool-use summary, the GitHub outcome and the cost. Only the label, difficulty, a generic reason and these
-            hashes are kept. The prompts are never written anywhere.
+            The private AI sees trimmed prompts, the AI&apos;s last answers, a tool-use summary, the GitHub outcome and the cost. Only the category,
+            title, difficulty, a generic reason and these hashes are kept. The prompts are never written anywhere.
           </p>
         </section>
       )}
