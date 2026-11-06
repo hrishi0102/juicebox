@@ -12,7 +12,9 @@ import { listSessionFiles, parseSession, parsePrUrl } from "../src/lib/receipts/
 import { buildReceipt, merkleProof, merkleRoot, typedDataFor, verifyProof, verifyReceipt } from "../src/lib/receipts/receipt";
 import { heuristicLabel, judgeAllHeuristic } from "../src/lib/receipts/heuristics";
 import { summarize, buildTasks, weekOf } from "../src/lib/receipts/score";
-import type { Change, Session } from "../src/lib/receipts/types";
+import { cleanTitle, parseSessionVerdict, parseWeekAnswer, toCategory } from "../src/lib/receipts/judge-core";
+import { countLine, itemsFromAnswer, ruleItems, sessionLines } from "../src/lib/receipts/story";
+import type { Change, Judgement, Session } from "../src/lib/receipts/types";
 
 test("pricing: Opus 5.5 with 1h cache writes matches Claude Code's own number", () => {
   // Real per-model totals from a Claude Code cost-state record (Opus 5.5, $35.5007572)
@@ -122,6 +124,51 @@ test("judge rules: shipped, open, abandoned only with a known repo, learned, loo
   const tinyChange = fakeChange("acme/app#3", { additions: 3, deletions: 1 });
   const js = judgeAllHeuristic([tiny], [{ sessionId: "g", changeKey: tinyChange.key, reason: "pr-link", confidence: 0.97 }], [tinyChange], now);
   assert.equal(js[0].label, "Overkill");
+});
+
+test("private AI answers: forgiving parsing, safe titles", () => {
+  const v = parseSessionVerdict('<think>hmm</think>```json\n{"category":"figured out","title":"Why the build failed \u2014 again.","in_progress":false,"difficulty":"3","kind":"fix","reason":"r","tip":""}\n```');
+  assert.equal(v.category, "Figured out");
+  assert.equal(v.title, "Why the build failed, again");
+  assert.equal(v.difficulty, 3);
+  assert.equal(toCategory("Research"), "Researched");
+  assert.equal(toCategory("nonsense"), undefined);
+  assert.equal(cleanTitle("fix sk-abcdefghijklmnop leak in /Users/me/app/src/x.ts for bob@acme.com"), "Fix a key leak in for an email");
+  const w = parseWeekAnswer('{"items":[{"category":"Built","title":"Login page","sessions":["s1","S2"]}],"summary":"Good week."}');
+  assert.deepEqual(w.items[0].sessions, ["S1", "S2"]);
+  assert.throws(() => parseSessionVerdict("no json here"));
+});
+
+test("week list: one item per PR, sessions the AI skipped come back, waste goes last", () => {
+  const pr = fakeChange("acme/app#7", { title: "Add login page" });
+  const sessions = [
+    fakeSession("a", { startedAt: "2026-11-02T10:00:00Z" }),
+    fakeSession("b", { startedAt: "2026-11-03T10:00:00Z" }),
+    fakeSession("c", { startedAt: "2026-11-04T10:00:00Z", filesEdited: [], linesAdded: 0, linesRemoved: 0 }),
+    fakeSession("d", { startedAt: "2026-11-05T10:00:00Z" }),
+  ];
+  const matches = [
+    { sessionId: "a", changeKey: pr.key, reason: "pr-link" as const, confidence: 0.97 },
+    { sessionId: "b", changeKey: pr.key, reason: "branch" as const, confidence: 0.8 },
+  ];
+  const now = Date.parse("2026-11-20T00:00:00Z");
+  const judgements: Judgement[] = judgeAllHeuristic(sessions, matches, [pr], now);
+  const tasks = buildTasks(sessions, matches, [pr], judgements);
+  const input = { sessions, judgements, tasks };
+
+  const rules = ruleItems(input);
+  assert.equal(rules.length, 3, "a and b share the PR");
+  assert.equal(rules[0].title, "Add login page");
+  assert.equal(rules[0].sessions.length, 2);
+  assert.equal(rules.at(-1)!.category, "Wasted", "d edited code that never shipped");
+  assert.equal(Math.round(rules.reduce((x, i) => x + i.costUsd, 0)), 40, "items add up to the spend");
+
+  const lines = sessionLines(input);
+  assert.deepEqual(lines.map((l) => l.id), ["S1", "S2", "S3", "S4"]);
+  const items = itemsFromAnswer([{ category: "Wasted", title: "Dead end", sessions: ["S4"] }, { category: "Built", title: "Login page", sessions: ["S1", "S2"] }], lines, input);
+  assert.equal(items.length, 3, "S3 was left out by the AI and comes back from the rules");
+  assert.equal(items.at(-1)!.category, "Wasted");
+  assert.equal(countLine(items), "Built 1 thing, figured out 1 problem and went in circles once.");
 });
 
 test("receipts: sign, verify, catch tampering, prove one task", async () => {

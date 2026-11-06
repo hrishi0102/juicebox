@@ -5,7 +5,7 @@ import { PrTable } from "@/components/pr-table";
 import { currentSource } from "@/lib/server/data";
 import { loadOrg, personName } from "@/lib/server/org";
 import { ARKIV_SCHEMA_NAME, exampleQuery } from "@/lib/receipts/arkiv";
-import { signedNumbers, type SignedReceipt } from "@/lib/receipts/receipt";
+import { signedNumbers, summaryFromReceipt, type SignedReceipt } from "@/lib/receipts/receipt";
 import { pct, usd, weekRange } from "@/lib/format";
 import type { PeriodSummary } from "@/lib/receipts/types";
 
@@ -164,24 +164,5 @@ function Stat({ k, v, note }: { k: string; v: string; note?: string }) {
 }
 
 function toSummary(r: SignedReceipt): PeriodSummary {
-  const n = signedNumbers(r);
-  return {
-    periodStart: new Date(Number(r.message.periodStart) * 1000).toISOString(),
-    periodEnd: new Date(Number(r.message.periodEnd) * 1000).toISOString(),
-    sessions: n.sessions,
-    spendUsd: n.spendUsd,
-    shippedTasks: n.shippedTasks,
-    survivalPct: n.survivalPct,
-    keptWork: n.keptWork,
-    keptWorkPer100Usd: n.spendUsd > 0 ? (n.keptWork / n.spendUsd) * 100 : null,
-    labelCounts: n.labelCounts,
-    labelSpend: n.labelSpend,
-    wasteUsd: n.wasteUsd,
-    wastePct: n.wastePct,
-    toolSpend: n.toolSpend,
-    toolSessions: {},
-    buckets: r.summary.buckets,
-    tasks: [],
-    tips: [],
-  };
+  return summaryFromReceipt(r);
 }

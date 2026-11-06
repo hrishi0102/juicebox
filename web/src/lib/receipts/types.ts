@@ -81,6 +81,7 @@ export type Session = {
 export type PrivateDigest = {
   sessionId: string;
   prompts: string[]; // trimmed user prompts
+  replies: string[]; // the AI's last few answers, trimmed (what it explained or reported back)
   toolSummary: string;
   outcomeSummary: string;
   costSummary: string;
@@ -138,8 +139,24 @@ export const LABELS: Label[] = ["Shipped", "Learned", "Looped", "Abandoned", "Ov
 // "Pending" = work still in flight (open PR, or fresh edits). Not judged yet, not counted as waste.
 export type SessionLabel = Label | "Pending";
 
+// What a session got you, in plain words. This is what people see; `label` is kept for scoring.
+export type Category = "Built" | "Fixed" | "Figured out" | "Researched" | "Wrote" | "Planned" | "Wasted";
+export const CATEGORIES: Category[] = ["Built", "Fixed", "Figured out", "Researched", "Wrote", "Planned", "Wasted"];
+export const CATEGORY_HINT: Record<Category, string> = {
+  Built: "Made something new that works: a feature, page, tool or script",
+  Fixed: "Fixed a bug or something broken",
+  "Figured out": "Understood or diagnosed something: how code works, why it fails",
+  Researched: "Looked into options, docs or the web and compared choices",
+  Wrote: "Wrote words: docs, posts, scripts, specs, emails or copy",
+  Planned: "Designed or planned work: architecture, steps, decisions",
+  Wasted: "Went in circles or produced nothing usable",
+};
+
 export type Judgement = {
   sessionId: string;
+  category?: Category; // what the session got you
+  title?: string; // one plain line, safe to show (never a prompt quote)
+  inProgress?: boolean; // still being worked on (open PR, fresh edits)
   label: SessionLabel;
   difficulty: 1 | 2 | 3 | 4 | 5;
   kind: ChangeKind;
@@ -161,6 +178,7 @@ export type JudgeInfo = {
   verified?: boolean; // teeVerified || selfVerified
   requestHash?: string; // keccak256 of exactly what was sent (proves what was judged, without revealing it)
   responseHash?: string;
+  costUsd?: number; // what the AI call cost, as reported by 0G
   at: string;
 };
 
@@ -191,6 +209,32 @@ export type BucketStat = {
   costPerKept: number | null;
 };
 
+/** One line of "what you got this week": sessions about the same thing are merged. */
+export type WeekItem = {
+  id: string;
+  category: Category;
+  title: string;
+  inProgress: boolean;
+  sessions: string[];
+  costUsd: number;
+  prs: { key: string; url: string; title: string; state: string; reverted: boolean }[];
+  tools: string[];
+};
+
+/** The week written up: by the private AI on 0G, or by simple rules when no AI is set up. */
+export type WeekStory = {
+  week: string;
+  source: "local" | "demo";
+  items: WeekItem[];
+  oneLiner: string;
+  engine: "0g-tee" | "openai-compatible" | "rules";
+  model?: string;
+  requestIds: string[];
+  verified?: boolean;
+  sessionsHash: string; // which sessions it was written from, to spot new ones
+  createdAt: string;
+};
+
 export type PeriodSummary = {
   owner?: string;
   periodStart: string;
@@ -207,6 +251,12 @@ export type PeriodSummary = {
   wastePct: number;
   toolSpend: Record<string, number>; // spend per AI tool
   toolSessions: Record<string, number>; // sessions per AI tool
+  items: WeekItem[]; // what you got, grouped
+  categoryCounts: Record<Category, number>; // items per category
+  categorySpend: Record<Category, number>; // spend per category
+  oneLiner: string; // the AI's sentence about the week (or the count line when there is no AI)
+  countLine: string; // "Built 3 things, fixed 2 bugs and figured out 4 problems."
+  story: { engine: WeekStory["engine"]; model?: string; requestIds: string[]; verified?: boolean; stale: boolean; newSessions: number; createdAt?: string };
   buckets: BucketStat[];
   tasks: Task[];
   tips: string[];

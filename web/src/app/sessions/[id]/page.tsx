@@ -7,7 +7,8 @@ import { sessionUsd, totalTokens } from "@/lib/receipts/pricing";
 import { loopScore } from "@/lib/receipts/heuristics";
 import { dayTime, shortHash, tokens, usd } from "@/lib/format";
 import { buildPrivateDigest, DEFAULT_LOG_ROOT } from "@/lib/receipts/parse";
-import { digestToUserMessage, outcomeText } from "@/lib/receipts/judge";
+import { outcomeText } from "@/lib/receipts/judge";
+import { sessionMessage } from "@/lib/receipts/judge-core";
 import { linkedChanges } from "@/lib/receipts/heuristics";
 
 export default async function SessionDetail({ params }: { params: Promise<{ id: string }> }) {
@@ -25,7 +26,7 @@ export default async function SessionDetail({ params }: { params: Promise<{ id: 
   if (source === "local") {
     const byKey = new Map(d.changes.map((c) => [c.key, c]));
     const digest = await buildPrivateDigest(s, d.meta.logRoot ?? DEFAULT_LOG_ROOT, outcomeText(linkedChanges(s, d.matches, byKey)));
-    preview = digestToUserMessage(digest, j ? `${j.label}, difficulty ${j.difficulty}, loop score ${loopScore(s)}` : "none");
+    preview = sessionMessage(digest, j ? `${j.category ?? j.label}: "${j.title ?? ""}", difficulty ${j.difficulty}, loop score ${loopScore(s)}` : "none");
   }
 
   return (

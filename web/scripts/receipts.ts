@@ -3,6 +3,7 @@
 //   npm run receipts -- scan [--days 30] [--no-judge] [--no-survival]
 //   npm run receipts -- judge [--engine 0g|heuristic|openai-compatible] [--limit 5]
 //   npm run receipts -- week [2026-W45]          print the summary for a week
+//   npm run receipts -- write [2026-W45] [--demo] have the private AI write "what you got" for a week
 //   npm run receipts -- sign [2026-W45]          sign a receipt with RECEIPTS_SIGNER_KEY
 //   npm run receipts -- team <id> "Name"         set the team id used for sharing
 //   npm run receipts -- share 2026-W45           publish a signed receipt (with its PR list) to Arkiv
@@ -22,6 +23,7 @@ import { makeDemoDataset, type OrgData } from "../src/lib/receipts/demo";
 import { ARKIV_EXPLORER, arkivWriterAddress, exampleQuery, fetchTeamReceipts, publishReceipt } from "../src/lib/receipts/arkiv";
 import { resolveGithubToken } from "../src/lib/receipts/github";
 import { loadEnvLocal } from "../src/lib/receipts/env";
+import { loadWeekStory, writeWeekStory } from "../src/lib/receipts/week";
 
 loadEnvLocal();
 const [cmd = "help", ...rest] = process.argv.slice(2);
@@ -64,12 +66,26 @@ async function main() {
       break;
     }
     case "week": {
-      const d = loadDataset(flag("demo") ? "demo" : "local");
+      const source = flag("demo") ? "demo" : "local";
+      const d = loadDataset(source);
       if (!d) throw new Error("No data. Run `scan` or `demo` first");
       const w = positional[0] ? weekById(positional[0]) : weekOf(new Date());
-      const s = summarize({ periodStart: w.start, periodEnd: w.end, sessions: d.sessions, judgements: d.judgements, tasks: d.tasks, changes: d.changes });
+      const s = summarize({ periodStart: w.start, periodEnd: w.end, sessions: d.sessions, judgements: d.judgements, tasks: d.tasks, changes: d.changes, story: loadWeekStory(source, w.id) });
       console.log(w.id, headline(s));
-      console.log(JSON.stringify({ ...s, tasks: s.tasks.length }, null, 2));
+      console.log(s.oneLiner);
+      for (const i of s.items) console.log(`  ${i.category.padEnd(12)} ${i.title}  ($${i.costUsd.toFixed(2)}, ${i.sessions.length} sessions${i.prs.length ? `, ${i.prs.length} PR` : ""}${i.inProgress ? ", in progress" : ""})`);
+      if (flag("json")) console.log(JSON.stringify({ ...s, tasks: s.tasks.length }, null, 2));
+      break;
+    }
+    case "write": {
+      const source = flag("demo") ? "demo" : "local";
+      const w = positional[0] ? weekById(positional[0]) : weekOf(new Date());
+      const t0 = Date.now();
+      const r = await writeWeekStory(source, w.id, { progress: (stage, detail) => log(stage, detail) });
+      if (r.error) console.log(r.error);
+      console.log(`\n${w.id} (${r.story.engine}${r.story.model ? `, ${r.story.model}` : ""}): ${r.story.oneLiner}`);
+      for (const i of r.story.items) console.log(`  ${i.category.padEnd(12)} ${i.title}  ($${i.costUsd.toFixed(2)}, ${i.sessions.length} sessions)`);
+      console.log(`\nAI calls: ${r.judged} sessions + 1 week (${r.failed} failed), ${r.story.requestIds.length} request ids, verified: ${r.story.verified ?? "n/a"}, ${((Date.now() - t0) / 1000).toFixed(0)}s`);
       break;
     }
     case "sign": {

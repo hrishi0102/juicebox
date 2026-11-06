@@ -479,16 +479,39 @@ export function resolveRepos(sessions: Session[]) {
 export async function buildPrivateDigest(session: Session, root = DEFAULT_LOG_ROOT, outcome = ""): Promise<PrivateDigest> {
   const main = join(root, session.projectDir, `${session.id}.jsonl`);
   const prompts: string[] = [];
+  const answers: string[] = [];
   if (session.tool === "codex" && session.file) {
-    const { codexPrompts } = await import("./codex");
-    prompts.push(...(await codexPrompts(session.file)));
+    const { codexTranscript } = await import("./codex");
+    const t = await codexTranscript(session.file);
+    prompts.push(...t.prompts);
+    answers.push(...t.answers);
   } else if (existsSync(main)) {
+    // One API response is split over several lines; join its text blocks by message id.
+    const texts = new Map<string, string>();
     for await (const o of readLines(main)) {
+      if (o.type === "assistant" && !o.isSidechain && Array.isArray(o.message?.content)) {
+        const t = o.message.content
+          .filter((x: any) => x?.type === "text" && typeof x.text === "string")
+          .map((x: any) => x.text)
+          .join("\n")
+          .trim();
+        if (t) {
+          const id = o.message.id ?? o.uuid;
+          texts.set(id, ((texts.get(id) ?? "") + "\n" + t).trim());
+        }
+        continue;
+      }
       if (o.type !== "user" || o.isMeta || o.isCompactSummary) continue;
       const t = userText(o.message);
       if (t && isRealPrompt(t)) prompts.push(cleanPrompt(t));
     }
+    answers.push(...texts.values());
   }
+  // What the AI said at the end usually sums up what was done or found. Skip one-word answers.
+  const replies = answers
+    .filter((a) => a.trim().length >= 20)
+    .slice(-3)
+    .map((a) => cleanPrompt(a, 600));
   const keep = prompts.length > 10 ? [...prompts.slice(0, 6), `[${prompts.length - 9} more prompts]`, ...prompts.slice(-3)] : prompts;
   const s = session.signals;
   const topTools = Object.entries(session.tools)
@@ -499,6 +522,7 @@ export async function buildPrivateDigest(session: Session, root = DEFAULT_LOG_RO
   return {
     sessionId: session.id,
     prompts: keep,
+    replies,
     toolSummary:
       `${s.toolCalls} tool calls (${topTools}); ${s.toolErrors} tool errors, longest error streak ${s.maxErrorStreak}; ` +
       `${s.repeatedCommands} commands repeated 3+ times; max edits to one file ${s.maxEditsSameFile}; ${s.testRuns} test runs; ` +

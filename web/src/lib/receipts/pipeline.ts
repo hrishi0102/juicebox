@@ -2,7 +2,7 @@
 // All output goes to ~/.receipts (never into the repo).
 
 import { GitHub } from "./github";
-import { judgeConfigFromEnv, judgeSessions, type JudgeConfig } from "./judge";
+import { judgeSessions, type JudgeConfig } from "./judge";
 import { matchSessions, pool } from "./match";
 import { detectReverts, measureSurvival } from "./outcomes";
 import { scanSessions } from "./parse";
@@ -90,7 +90,9 @@ export async function runPipeline(opts: { days?: number; judge?: JudgeConfig; sk
       .map((j) => [j.sessionId, j]),
   );
 
-  const cfg = opts.skipJudge ? ({ engine: "heuristic" } as JudgeConfig) : (opts.judge ?? judgeConfigFromEnv());
+  // Reading logs never calls the AI: that only happens when someone asks for their week to be
+  // written (week.ts). Pass `judge` to label everything with an AI engine anyway.
+  const cfg = opts.skipJudge || !opts.judge ? ({ engine: "heuristic" } as JudgeConfig) : opts.judge;
   progress("judge", cfg.engine === "heuristic" ? "Labeling sessions with offline rules" : `Labeling sessions privately with ${cfg.engine} (${cfg.model})`);
   const toJudge = cfg.engine === "heuristic" ? undefined : new Set(sessions.filter((s) => !keepAi.has(s.id)).map((s) => s.id));
   const fresh = await judgeSessions(sessions, matches, changes, cfg, {

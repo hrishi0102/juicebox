@@ -4,8 +4,9 @@
 
 import { attributeCost } from "./match";
 import { sessionUsd } from "./pricing";
-import { changeDifficulty, median, medianShippedCost } from "./heuristics";
-import { toolOf, type BucketStat, type Change, type Judgement, type PeriodSummary, type Session, type SessionLabel, type SessionMatch, type Task } from "./types";
+import { changeDifficulty, median } from "./heuristics";
+import { applyStory, categoryTotals, countLine, ruleItems, sessionsHash } from "./story";
+import { toolOf, type BucketStat, type Change, type Judgement, type PeriodSummary, type Session, type SessionLabel, type SessionMatch, type Task, type WeekStory } from "./types";
 
 const ALL_LABELS: SessionLabel[] = ["Shipped", "Learned", "Looped", "Abandoned", "Overkill", "Pending"];
 
@@ -55,6 +56,7 @@ export function summarize(opts: {
   tasks: Task[];
   changes: Change[];
   owner?: string;
+  story?: WeekStory; // the saved write-up for this week, if there is one
 }): PeriodSummary {
   const start = Date.parse(opts.periodStart);
   const end = Date.parse(opts.periodEnd);
@@ -110,16 +112,17 @@ export function summarize(opts: {
   const survivalPct = added ? round2((alive / added) * 100) : shipped.length ? 100 : null;
   const keptWork = round2(shipped.reduce((a, t) => a + t.keptWork, 0));
 
-  // Waste: looped + abandoned spend, plus the part of Overkill spend above the median for that difficulty.
-  const medians = medianShippedCost(
-    opts.sessions.map((s) => ({ label: judgeBy.get(s.id)?.label ?? "Pending", difficulty: judgeBy.get(s.id)?.difficulty ?? 2, usd: sessionUsd(s) })),
-  );
-  let overkillExcess = 0;
-  for (const s of inPeriod) {
-    const j = judgeBy.get(s.id);
-    if (j?.label === "Overkill") overkillExcess += Math.max(0, sessionUsd(s) - (medians[j.difficulty] ?? medians[2] ?? medians[1] ?? 0));
-  }
-  const wasteUsd = labelSpend.Looped + labelSpend.Abandoned + overkillExcess;
+  // What you got: the saved write-up's grouping and titles when there is one, else the rules.
+  const input = { sessions: inPeriod, judgements: opts.judgements, tasks: opts.tasks };
+  const applied = opts.story ? applyStory(opts.story, input) : { items: ruleItems(input), newSessions: 0 };
+  const items = applied.items;
+  const totals = categoryTotals(items);
+  const counts = countLine(items);
+  const stale = !!opts.story && (applied.newSessions > 0 || opts.story.sessionsHash !== sessionsHash(inPeriod));
+
+  // Waste = what went to items that went in circles or produced nothing usable.
+  const wasteUsd = totals.spend.Wasted;
+  const overkillExcess = labelSpend.Overkill;
 
   const buckets: BucketStat[] = [1, 2, 3, 4, 5].map((d) => {
     const ts = tasks.filter((t) => t.difficulty === d);
@@ -144,6 +147,20 @@ export function summarize(opts: {
     wastePct: spend > 0 ? round2((wasteUsd / spend) * 100) : 0,
     toolSpend: Object.fromEntries(Object.entries(toolSpend).map(([k, v]) => [k, round2(v)])),
     toolSessions,
+    items,
+    categoryCounts: totals.counts,
+    categorySpend: totals.spend,
+    oneLiner: opts.story && opts.story.engine !== "rules" && opts.story.oneLiner ? opts.story.oneLiner : counts,
+    countLine: counts,
+    story: {
+      engine: opts.story?.engine ?? "rules",
+      model: opts.story?.model,
+      requestIds: opts.story?.requestIds ?? [],
+      verified: opts.story?.verified,
+      stale,
+      newSessions: applied.newSessions,
+      createdAt: opts.story?.createdAt,
+    },
     buckets,
     tasks,
     tips: tipsFor(inPeriod, opts.judgements, spend, labelSpend, overkillExcess),
@@ -167,8 +184,8 @@ function tipsFor(sessions: Session[], judgements: Judgement[], spend: number, la
   if (labelSpend.Abandoned / spend > 0.1) {
     tips.push(`${pct(labelSpend.Abandoned)}% of spend wrote code that never shipped. Smaller asks and earlier PRs make work easier to land or drop.`);
   }
-  if (overkillExcess / spend > 0.05) {
-    tips.push(`About $${overkillExcess.toFixed(0)} was spent above the usual cost for tasks of the same difficulty. Small fixes rarely need the top model at high effort.`);
+  if (overkillExcess / spend > 0.1) {
+    tips.push(`About $${overkillExcess.toFixed(0)} went to small tasks that cost far more than usual. Small fixes rarely need the top model at high effort.`);
   }
   const tok = sessions.reduce(
     (a, s) => {
@@ -196,10 +213,10 @@ function tipsFor(sessions: Session[], judgements: Judgement[], spend: number, la
   return tips;
 }
 
-export function headline(p: Pick<PeriodSummary, "spendUsd" | "shippedTasks" | "survivalPct">) {
+export function headline(p: Pick<PeriodSummary, "spendUsd" | "items">) {
   const usd = "$" + Math.round(p.spendUsd).toLocaleString("en-US");
-  const alive = p.survivalPct === null ? "" : `, ${Math.round(p.survivalPct)}% still alive`;
-  return `${usd} bought ${p.shippedTasks} shipped task${p.shippedTasks === 1 ? "" : "s"}${alive}`;
+  const done = p.items.filter((i) => i.category !== "Wasted").length;
+  return `${usd} of AI got ${done} thing${done === 1 ? "" : "s"} done`;
 }
 
 /** ISO week helpers (weeks start Monday 00:00 UTC). */

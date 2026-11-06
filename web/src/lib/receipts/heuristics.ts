@@ -2,8 +2,9 @@
 // It is the fallback when the private AI judge (0G) is not configured, and the AI judge sees
 // these signals too.
 
+import { cleanTitle } from "./judge-core";
 import { sessionUsd } from "./pricing";
-import type { Change, ChangeKind, Judgement, Session, SessionLabel, SessionMatch } from "./types";
+import type { Category, Change, ChangeKind, Judgement, Session, SessionLabel, SessionMatch } from "./types";
 
 const DAY = 86400_000;
 // What a small (difficulty 1 or 2) task usually costs in Claude Code at API prices. Only used when
@@ -53,6 +54,50 @@ export function estimateDifficulty(s: Session, _linked: Linked[] = []): 1 | 2 | 
   if (s.filesEdited.length) return sizeToDifficulty(s.linesAdded + s.linesRemoved, s.filesEdited.length);
   const m = s.activeMinutes;
   return (m < 15 ? 1 : m < 45 ? 2 : m < 120 ? 3 : 4) as 1 | 2 | 3 | 4;
+}
+
+const DOC_FILE = /\.(md|mdx|txt|rst|adoc)$/i;
+const isShipped = (c: Change) => (c.state === "merged" || c.state === "direct") && !c.reverted;
+
+function topChange(linked: Linked[]) {
+  return [...linked].sort((a, b) => b.confidence - a.confidence)[0]?.change;
+}
+
+/** What a session got you, from rules only (used when no private AI is set up). */
+export function ruleCategory(s: Session, linked: Linked[], label: SessionLabel): Category {
+  const top = topChange(linked);
+  const docsOnly = s.filesEdited.length > 0 && s.filesEdited.every((f) => DOC_FILE.test(f));
+  if (label === "Abandoned" || (label === "Looped" && !linked.some((l) => isShipped(l.change)))) return "Wasted";
+  if (top) {
+    if (top.kind === "docs" || docsOnly) return "Wrote";
+    return top.kind === "fix" ? "Fixed" : "Built";
+  }
+  if (docsOnly) return "Wrote";
+  if (s.filesEdited.length || s.linesAdded) return /\b(fix|bug|broken|error)/i.test(s.title ?? "") ? "Fixed" : "Built";
+  if ((s.tools.ExitPlanMode ?? 0) > 0) return "Planned";
+  if ((s.tools.WebSearch ?? 0) + (s.tools.WebFetch ?? 0) + (s.tools.web_search ?? 0) >= 2) return "Researched";
+  return "Figured out";
+}
+
+/** A plain title from rules: the PR title, else the session's own title, else where it ran. */
+export function ruleTitle(s: Session, linked: Linked[]): string {
+  const top = topChange(linked);
+  const t = cleanTitle(top?.title) || cleanTitle(s.title);
+  if (t) return t;
+  const where = s.repos[0]?.split("/")[1] ?? s.cwd.split("/").filter(Boolean).pop() ?? "a project";
+  return `Session in ${where}`;
+}
+
+/** Map an AI category onto the older outcome label, which scoring still uses. */
+export function labelFor(category: Category, inProgress: boolean, ruleLabel: SessionLabel, loops: number): SessionLabel {
+  if (category === "Wasted") return loops >= 2 || ruleLabel === "Looped" ? "Looped" : "Abandoned";
+  if (category === "Built" || category === "Fixed") {
+    if (ruleLabel === "Learned") return "Pending"; // built something we cannot see on GitHub
+    if (ruleLabel === "Abandoned" && inProgress) return "Pending";
+    return ruleLabel;
+  }
+  // Figured out, Researched, Wrote, Planned: learning is not waste, unless it also shipped a change.
+  return ruleLabel === "Shipped" || ruleLabel === "Overkill" || ruleLabel === "Pending" ? ruleLabel : "Learned";
 }
 
 export function pickKind(linked: Linked[]): ChangeKind {
@@ -110,6 +155,9 @@ export function judgeAllHeuristic(sessions: Session[], matches: SessionMatch[], 
     }
     return {
       sessionId: f.s.id,
+      category: ruleCategory(f.s, f.linked, label),
+      title: ruleTitle(f.s, f.linked),
+      inProgress: label === "Pending",
       label,
       difficulty: f.difficulty,
       kind: f.kind,

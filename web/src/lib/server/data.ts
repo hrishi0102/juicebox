@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { loadDataset, type Dataset } from "@/lib/receipts/pipeline";
 import { hasData, readJson, type Source } from "@/lib/receipts/store";
 import { summarize, weekOf } from "@/lib/receipts/score";
+import { loadWeekStory } from "@/lib/receipts/week";
 import type { OrgData, OrgTeam } from "@/lib/receipts/demo";
 import type { Judgement, PeriodSummary, Session } from "@/lib/receipts/types";
 
@@ -57,7 +58,8 @@ export function weekView(d: Dataset, weekId?: string): WeekView {
     return t >= Date.parse(w.start) && t < Date.parse(w.end);
   });
   const ids = new Set(sessions.map((s) => s.id));
-  const summary = summarize({ periodStart: w.start, periodEnd: w.end, sessions: d.sessions, judgements: d.judgements, tasks: d.tasks, changes: d.changes, owner: d.owner });
+  const story = loadWeekStory(d.source, w.id);
+  const summary = summarize({ periodStart: w.start, periodEnd: w.end, sessions: d.sessions, judgements: d.judgements, tasks: d.tasks, changes: d.changes, owner: d.owner, story });
   return { ...w, summary, sessions, judgements: d.judgements.filter((j) => ids.has(j.sessionId)) };
 }
 

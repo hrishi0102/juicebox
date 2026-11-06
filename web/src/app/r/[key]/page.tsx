@@ -2,9 +2,8 @@ import Link from "next/link";
 import { ReceiptPaper } from "@/components/receipt-paper";
 import { PrTable } from "@/components/pr-table";
 import { ARKIV_EXPLORER, fetchReceiptByKey } from "@/lib/receipts/arkiv";
-import { signedNumbers, verifyReceipt } from "@/lib/receipts/receipt";
+import { summaryFromReceipt, verifyReceipt } from "@/lib/receipts/receipt";
 import { shortAddr } from "@/lib/format";
-import type { PeriodSummary } from "@/lib/receipts/types";
 
 // A shared receipt, read straight from Arkiv by its entity key. This is the link an engineer
 // hands to a manager or a reviewer. Nothing here comes from our own storage.
@@ -31,26 +30,7 @@ export default async function SharedReceipt({ params }: { params: Promise<{ key:
     );
 
   const v = await verifyReceipt(r);
-  const n = signedNumbers(r);
-  const summary: PeriodSummary = {
-    periodStart: new Date(Number(r.message.periodStart) * 1000).toISOString(),
-    periodEnd: new Date(Number(r.message.periodEnd) * 1000).toISOString(),
-    sessions: n.sessions,
-    spendUsd: n.spendUsd,
-    shippedTasks: n.shippedTasks,
-    survivalPct: n.survivalPct,
-    keptWork: n.keptWork,
-    keptWorkPer100Usd: n.spendUsd > 0 ? (n.keptWork / n.spendUsd) * 100 : null,
-    labelCounts: n.labelCounts,
-    labelSpend: n.labelSpend,
-    wasteUsd: n.wasteUsd,
-    wastePct: n.wastePct,
-    toolSpend: n.toolSpend,
-    toolSessions: {},
-    buckets: r.summary.buckets,
-    tasks: [],
-    tips: [],
-  };
+  const summary = summaryFromReceipt(r);
 
   return (
     <div className="grid gap-10 lg:grid-cols-[380px_1fr]">

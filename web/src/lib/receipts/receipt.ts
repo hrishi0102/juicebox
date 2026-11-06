@@ -11,7 +11,7 @@
 
 import { encodeAbiParameters, hashTypedData, keccak256, recoverTypedDataAddress, stringToHex, type Address, type Hex } from "viem";
 import { headline } from "./score";
-import type { Judgement, PeriodSummary, Task } from "./types";
+import { CATEGORIES, type Category, type Judgement, type PeriodSummary, type Task } from "./types";
 
 export const RECEIPT_DOMAIN = { name: "Receipts", version: "1" } as const;
 
@@ -287,6 +287,37 @@ export function signedNumbers(r: SignedReceipt) {
     labelCounts: Object.fromEntries(order.map((l, i) => [l, m.labels[i] ?? 0])) as Record<(typeof order)[number], number>,
     labelSpend: Object.fromEntries(order.map((l, i) => [l, Number(m.labelSpendCents?.[i] ?? 0) / 100])) as Record<(typeof order)[number], number>,
     toolSpend: Object.fromEntries((m.tools ?? []).map((t, i) => [t, Number(m.toolSpendCents?.[i] ?? 0) / 100])) as Record<string, number>,
+  };
+}
+
+/** A period summary for pages, built only from signed fields (plus the unsigned buckets). */
+export function summaryFromReceipt(r: SignedReceipt): PeriodSummary {
+  const n = signedNumbers(r);
+  const zero = Object.fromEntries(CATEGORIES.map((c) => [c, 0])) as Record<Category, number>;
+  return {
+    periodStart: new Date(Number(r.message.periodStart) * 1000).toISOString(),
+    periodEnd: new Date(Number(r.message.periodEnd) * 1000).toISOString(),
+    sessions: n.sessions,
+    spendUsd: n.spendUsd,
+    shippedTasks: n.shippedTasks,
+    survivalPct: n.survivalPct,
+    keptWork: n.keptWork,
+    keptWorkPer100Usd: n.spendUsd > 0 ? (n.keptWork / n.spendUsd) * 100 : null,
+    labelCounts: n.labelCounts,
+    labelSpend: n.labelSpend,
+    wasteUsd: n.wasteUsd,
+    wastePct: n.wastePct,
+    toolSpend: n.toolSpend,
+    toolSessions: {},
+    items: [],
+    categoryCounts: zero,
+    categorySpend: { ...zero },
+    oneLiner: "",
+    countLine: "",
+    story: { engine: "rules", requestIds: [], stale: false, newSessions: 0 },
+    buckets: r.summary.buckets,
+    tasks: [],
+    tips: [],
   };
 }
 

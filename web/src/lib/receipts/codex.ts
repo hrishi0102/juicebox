@@ -284,6 +284,27 @@ export async function scanCodexSessions(opts: { root?: string; since?: Date } = 
   return out;
 }
 
+/** Prompts and the AI's answers in a Codex session, for the private AI (read on demand, never stored). */
+export async function codexTranscript(file: string): Promise<{ prompts: string[]; answers: string[] }> {
+  const prompts: string[] = [];
+  const answers: string[] = [];
+  const fromItems: string[] = []; // older logs only have the answer as a response item
+  if (!existsSync(file)) return { prompts, answers };
+  for await (const o of lines(file)) {
+    const p = o.payload;
+    if (o.type === "event_msg" && p?.type === "user_message" && typeof p.message === "string" && p.message.trim()) prompts.push(cleanPrompt(p.message));
+    else if (o.type === "event_msg" && p?.type === "agent_message" && typeof p.message === "string" && p.message.trim()) answers.push(p.message.trim());
+    else if (o.type === "response_item" && p?.type === "message" && p.role === "assistant" && Array.isArray(p.content)) {
+      const t = p.content
+        .map((c: { text?: string }) => c?.text ?? "")
+        .join("\n")
+        .trim();
+      if (t) fromItems.push(t);
+    }
+  }
+  return { prompts, answers: answers.length ? answers : fromItems };
+}
+
 /** Prompts of a Codex session, for the private judge (read on demand, never stored). */
 export async function codexPrompts(file: string): Promise<string[]> {
   const prompts: string[] = [];
