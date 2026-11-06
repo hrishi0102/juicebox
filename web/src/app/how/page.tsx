@@ -25,7 +25,7 @@ const STEPS = [
   },
   {
     t: "Sign and share",
-    d: "You sign the weekly receipt with your own key. It is yours to keep as evidence. Sharing writes it to Arkiv, either totals only or with PR links as evidence, for your team view.",
+    d: "You sign the weekly receipt with your own key. It is yours to keep as evidence. Sharing writes it, with the list of pull requests it paid for, to Arkiv, where your team and company can read it.",
   },
 ];
 
@@ -35,7 +35,7 @@ const FLOWS: [string, string, string][] = [
   ["Trimmed prompts of one session, when you ask the private judge", "0G Private Computer, private mode: only models running inside a TEE, sealed end to end", "The enclave. The router sees model, size and timing"],
   ["PR numbers and repo names", "GitHub API, with your own token", "GitHub (it already has them)"],
   ["Signed weekly totals, when you share", `Arkiv testnet, schema ${ARKIV_SCHEMA_NAME}`, "Anyone. That is the point of sharing"],
-  ["PR links and per-task cost, when you share with evidence", "Arkiv, inside the same signed receipt", "Anyone"],
+  ["PR titles, links and the AI cost of each, when you share", "Arkiv, inside the same signed receipt", "Anyone"],
 ];
 
 export default function How() {

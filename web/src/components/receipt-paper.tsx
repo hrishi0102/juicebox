@@ -89,7 +89,7 @@ export function ReceiptPaper(p: ReceiptPaperProps) {
         <div className="space-y-0.5 text-[12px]">
           <Row k="Judge" v={p.judgeLine} />
           <Row k="Signature" v={p.signed ? "signed (EIP-712)" : p.stale ? "out of date, sign again" : "not signed yet"} />
-          {p.sharedLevel && <Row k="Shared" v={p.sharedLevel === "full" ? "with evidence" : "totals only"} />}
+          {p.sharedLevel && <Row k="Shared" v={p.sharedLevel === "full" ? "with team, incl. PRs" : "totals only"} />}
         </div>
 
         {p.digest && !p.compact && (

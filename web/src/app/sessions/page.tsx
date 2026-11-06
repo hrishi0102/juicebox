@@ -24,13 +24,13 @@ export default async function Sessions({ searchParams }: { searchParams: Promise
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-semibold tracking-tight">Sessions</h1>
+        <h1 className="text-3xl font-semibold tracking-tight">My sessions</h1>
         <p className="mt-1 text-lg">
           Last {d.meta.days} days: {headline(periodView(d, d.meta.days))}.
         </p>
         <p className="mt-2 max-w-[70ch] text-muted-foreground">
-          Every Claude Code session from the last {d.meta.days} days, what it cost, and what it turned into. Titles come from your prompts and only
-          ever show on this machine.
+          Every AI coding session from the last {d.meta.days} days: what it cost and what it turned into. Click one for details. Titles come from your
+          prompts and only ever show on this laptop.
         </p>
       </div>
 

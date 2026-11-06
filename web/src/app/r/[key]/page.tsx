@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { ReceiptPaper } from "@/components/receipt-paper";
+import { PrTable } from "@/components/pr-table";
 import { ARKIV_EXPLORER, fetchReceiptByKey } from "@/lib/receipts/arkiv";
 import { signedNumbers, verifyReceipt } from "@/lib/receipts/receipt";
-import { shortAddr, usd } from "@/lib/format";
+import { shortAddr } from "@/lib/format";
 import type { PeriodSummary } from "@/lib/receipts/types";
 
 // A shared receipt, read straight from Arkiv by its entity key. This is the link an engineer
@@ -69,8 +70,8 @@ export default async function SharedReceipt({ params }: { params: Promise<{ key:
         <div>
           <h1 className="text-balance text-4xl font-semibold leading-[1.1] tracking-tight">{r.headline}.</h1>
           <p className="mt-3 text-muted-foreground">
-            Week {r.message.period.split("-W")[1]} receipt of {shortAddr(r.message.owner)}, shared {r.share?.level === "full" ? "with evidence" : "as totals only"}
-            {r.share?.team ? ` with team ${r.share.team}` : ""}.
+            Week {r.message.period.split("-W")[1]} receipt of {shortAddr(r.message.owner)}, shared{r.share?.team ? ` with team ${r.share.team}` : ""}
+            {r.share?.level === "full" ? ", including the pull requests it paid for" : " as totals only"}.
           </p>
         </div>
         <section>
@@ -96,18 +97,10 @@ export default async function SharedReceipt({ params }: { params: Promise<{ key:
         </section>
         {r.evidence.length > 0 && (
           <section>
-            <h2 className="text-lg font-semibold">Evidence</h2>
-            <ul className="mt-2 divide-y divide-border rounded-lg border border-border bg-card text-sm">
-              {r.evidence.map((e) => (
-                <li key={e.leaf} className="flex flex-wrap items-center gap-x-4 px-4 py-2.5">
-                  <a href={e.url} target="_blank" rel="noreferrer" className="min-w-0 flex-1 truncate hover:underline">
-                    {e.changeKey}
-                  </a>
-                  <span className="text-muted-foreground">{e.reverted ? "reverted" : e.survivalBps === 65535 ? e.state : `${Math.round(e.survivalBps / 100)}% alive`}</span>
-                  <span>{usd(e.costCents / 100)}</span>
-                </li>
-              ))}
-            </ul>
+            <h2 className="text-lg font-semibold">Pull requests it paid for</h2>
+            <div className="mt-2 rounded-lg border border-border bg-card px-4 py-2">
+              <PrTable evidence={r.evidence} />
+            </div>
           </section>
         )}
       </div>
