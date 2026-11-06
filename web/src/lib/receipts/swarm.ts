@@ -36,19 +36,9 @@ export function uploadBytes(data: Uint8Array, cfg = swarmConfig()) {
   return upload("/bytes", data, { "Content-Type": "application/octet-stream" }, cfg);
 }
 
-/** Upload one file people can open in a browser (for example the share card PNG). */
-export function uploadFile(data: Uint8Array, name: string, contentType: string, cfg = swarmConfig()) {
-  return upload(`/bzz?name=${encodeURIComponent(name)}`, data, { "Content-Type": contentType }, cfg);
-}
-
 export async function downloadBytes(ref: string, cfg = swarmConfig()): Promise<Uint8Array> {
   if (!/^[0-9a-f]{64}([0-9a-f]{64})?$/.test(ref)) throw new Error("Bad Swarm reference");
   const r = await fetch(`${cfg.gateway}/bytes/${ref}`, { signal: AbortSignal.timeout(30_000) });
   if (!r.ok) throw new Error(`Swarm download failed (${r.status})`);
   return new Uint8Array(await r.arrayBuffer());
-}
-
-/** A link anyone can open: the file through the gateway. */
-export function fileUrl(ref: string, cfg = swarmConfig()) {
-  return `${cfg.gateway}/bzz/${ref}/`;
 }

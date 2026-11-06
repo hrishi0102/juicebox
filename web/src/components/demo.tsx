@@ -12,7 +12,7 @@ function roleFor(path: string) {
   if (path.startsWith("/company")) return DEMO_ROLES[0];
   if (path.startsWith("/me")) return DEMO_ROLES[1];
   if (path.startsWith("/r/")) return DEMO_ROLES[2];
-  if (["/wrapped", "/card", "/wall"].some((p) => path.startsWith(p))) return DEMO_ROLES[3];
+  if (path.startsWith("/wrapped")) return DEMO_ROLES[3];
   return undefined;
 }
 

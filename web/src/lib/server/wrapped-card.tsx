@@ -4,7 +4,7 @@ import { ImageResponse } from "next/og";
 import { PERSONAS, SEGMENT_COPY, hourLabel, minutesLabel } from "@/lib/receipts/wrapped";
 import { WrappedCardInput } from "@/lib/receipts/wrapped-schema";
 
-// The AI Wrapped card, 1080x1350 like the weekly card. Numbers and the persona only: no messages,
+// The AI Wrapped card, 1080x1350 (a portrait post). Numbers and the persona only: no messages,
 // no words, no spend.
 
 const fontDir = join(process.cwd(), "assets", "fonts");

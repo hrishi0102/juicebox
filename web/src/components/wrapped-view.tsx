@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { Check, Copy, Download, Lock, Moon, Sparkles, Upload } from "lucide-react";
+import { Check, Copy, Download, Lock, Moon, Share2, Sparkles, Upload } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import type { FunSegment } from "@/lib/receipts/chat-stats";
 import { DAY_NAMES, SEGMENT_COPY, SOURCE_NAMES, hourLabel, minutesLabel, shareText, toCard, type Wrapped } from "@/lib/receipts/wrapped";
@@ -54,10 +54,10 @@ export function WrappedView({ initial, periods, source }: { initial?: Wrapped; p
     <div className="space-y-10">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div className="max-w-2xl">
-          <p className="text-sm font-medium text-muted-foreground">AI Wrapped</p>
-          <h1 className="mt-1 text-balance text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl">How you talk to AI</h1>
+          <h1 className="text-balance text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl">My AI Wrapped</h1>
           <p className="mt-3 text-pretty text-[15px] text-muted-foreground">
-            Overthinking, therapy sessions, hellos and caps lock: fun numbers from your own messages. Counted with simple rules on this device, with no AI and nothing uploaded.
+            How you talk to AI: overthinking, therapy sessions, hellos and caps lock, and your AI personality. Counted with simple rules from your own
+            messages, on this device, with no AI and nothing uploaded.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-1 rounded-lg border border-border bg-card p-0.5 text-sm" role="group" aria-label="Period">
@@ -142,6 +142,11 @@ function WrappedBody({ w }: { w: Wrapped }) {
   const [png, setPng] = useState<string>();
   const [cardError, setCardError] = useState<string>();
   const [copied, setCopied] = useState(false);
+  const [canShare, setCanShare] = useState(false);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- the share sheet is only known in the browser
+    setCanShare(typeof navigator !== "undefined" && typeof navigator.share === "function");
+  }, []);
 
   useEffect(() => {
     let url: string | undefined;
@@ -368,17 +373,48 @@ function WrappedBody({ w }: { w: Wrapped }) {
       <section aria-labelledby="share" className="grid gap-6 rounded-2xl border border-border bg-card p-5 sm:p-6 lg:grid-cols-[1fr_340px]">
         <div className="min-w-0">
           <h2 id="share" className="text-xl font-semibold tracking-tight">
-            Share your Wrapped
+            Share it
           </h2>
           <p className="mt-1 text-[15px] text-muted-foreground">The card shows your persona and the time numbers. No messages, no words, no spend.</p>
           <div className="mt-4 flex flex-wrap gap-2">
+            {canShare && png && (
+              <Button
+                size="lg"
+                onClick={async () => {
+                  try {
+                    const file = new File([await (await fetch(png)).blob()], `ai-wrapped-${w.persona.id}.png`, { type: "image/png" });
+                    await navigator.share(navigator.canShare?.({ files: [file] }) ? { files: [file], text } : { text });
+                  } catch {
+                    // the person closed the share sheet
+                  }
+                }}
+              >
+                <Share2 className="size-4" aria-hidden="true" />
+                Share
+              </Button>
+            )}
+            <Button
+              size="lg"
+              variant={canShare ? "outline" : "default"}
+              disabled={!png}
+              onClick={() => {
+                // X cannot take an image through a link: save the card, then open a post with the text to attach it to.
+                const a = document.createElement("a");
+                a.href = png!;
+                a.download = `ai-wrapped-${w.persona.id}.png`;
+                a.click();
+                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, "_blank", "noopener");
+              }}
+            >
+              Post on X
+            </Button>
             {png ? (
-              <a href={png} download={`ai-wrapped-${w.persona.id}.png`} className={buttonVariants({ size: "lg" })}>
+              <a href={png} download={`ai-wrapped-${w.persona.id}.png`} className={buttonVariants({ size: "lg", variant: "outline" })}>
                 <Download className="size-4" aria-hidden="true" />
                 Download the card
               </a>
             ) : (
-              <Button size="lg" disabled>
+              <Button size="lg" variant="outline" disabled>
                 <Download className="size-4" aria-hidden="true" />
                 Drawing the card…
               </Button>
