@@ -139,3 +139,25 @@ The receipt is evidence for the company: signed, nobody can edit it, sent only t
 
 ## 46. The demo is a place you choose, not a fallback
 The demo company is entered from `/demo` by picking a role (the lead, an engineer, someone with a link, just for fun), with a banner until you leave. Without logs, the employee side asks you to read them instead of showing the demo person's week. A hosted copy opens on the demo, since it has no logs. Reason: silently showing made-up data as "my week" was the most confusing fallback, and a role picker shows each flow on its own.
+
+## 47. A public gist proves the signing key belongs to the GitHub login
+Built on Nov 7 (a public gist on the employee's own GitHub account, signed by their laptop key, shown as "proven" on the company side), then removed the same day; see 49.
+
+## 48. Employees send everything, nothing is picked or edited
+The send page shows the receipt and has two steps: sign it, send it. There is no way to leave a line out. Replaces the keep-private switch of decision 45. Reason: the company should get the whole week as the AI wrote it; if the employee chooses what goes in, the receipt stops being evidence and can be gamed. The weekly steps are now write, sign, send.
+
+## 49. No GitHub key proof
+Reverses 47. Reason: one more setup step that people did not understand, for a check no prize asks for. The company page shows the GitHub login inside the signed receipt next to the signing address, as before.
+
+
+## 50. For fun is one page: AI Wrapped
+The side product is now only `/wrapped`: My AI Wrapped, then share it (Share, Post on X, Download the card, Copy the text). Week cards (`/card`), the wall (`/wall`) and the card entities on Arkiv are gone, and the old addresses redirect to `/wrapped`. Narrows 41 and drops the card half of 45. Reason: two things made from the same week (a card for socials, a receipt for the company) kept confusing people, and receipts belong only to the company side. Trade-off: Swarm now holds one kind of file (sealed weeks) instead of two; the 12 card entities already on Rabdi expire on their own.
+
+## 51. Every claim about 0G, Arkiv or Swarm links to where it can be checked
+Wherever the app says something happened on 0G, Arkiv or Swarm, a "Check it yourself" box links outside the app's own word: the record, its transaction and its owner on the Arkiv explorer; `/proof/swarm/<ref>`, which fetches the ciphertext from the Swarm gateway right then (the gateway's own link downloads a file instead of showing it) and, for members of the company, checks it against the SHA-256 sealed in the Arkiv record; `/proof/0g/<provider>`, which reads 0G's TEE verdicts for the provider live from the router; plus 0G ChainScan and pc.0g.ai. Reason: in a demo, "it is on Arkiv" means little until you open the explorer and see it there.
+
+## 52. The 0G balance is shown in 0G
+The router answers the balance in neuron (10^18 neuron = 1 0G). The app shows what you can spend now (total minus pending charges) in 0G, calls out credits and pending charges, and after each call says what it cost. Before, it printed the raw number as credits. Reason: an 18-digit number looked broken and did not match what pc.0g.ai shows.
+
+## 53. A sidebar for the company and the employee
+The company (Overview, Teams, People, Pull requests, Setup) and the employee (This week, Sessions, Setup) list their pages in a sidebar instead of tabs in the header; on phones it becomes a row of links. The header keeps only the part's name and who you are. Replaces the tabs of 42. Reason: cleaner, and each part reads as its own app.
