@@ -30,9 +30,9 @@ One entity per shared week.
 
 ## Payload
 
-The payload is the signed receipt (`kind: "receipts.v2"`), the same JSON a person can download from the app:
+The payload is the signed receipt (`kind: "receipts.v3"`; the first shares are `"receipts.v2"`), the same JSON a person can download from the app:
 
-- `message`: the EIP-712 typed data that was signed: owner, GitHub login, week, spend, sessions, things done, items and spend per category (Built, Fixed, Figured out, Researched, Wrote, Planned, Wasted), merged PRs, spend per AI tool, and three Merkle roots (`itemsRoot`, `evidenceRoot`, `judgeRoot`)
+- `message`: the EIP-712 typed data that was signed: owner, GitHub login, week, spend, sessions, things done, items and spend per category (Built, Fixed, Figured out, Researched, Wrote, Planned, Wasted), merged PRs, spend per AI tool, three Merkle roots (`itemsRoot`, `evidenceRoot`, `judgeRoot`), and in v3 the efficiency numbers (step-time medians, PR counts, waste by reason, where the money went)
 - `signature`: the owner's signature over `message`
 - `items`: the list (category, title, cost, linked PRs). Items the owner hid are left out; the ones shown carry Merkle proofs, and the signed counts still include the hidden ones
 - `evidence`: one leaf per PR (title, link, state, cost)

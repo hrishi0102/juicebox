@@ -18,7 +18,7 @@ A cookie picks **My logs** (`~/.receipts/dataset.json`) or **Demo** (`web/fixtur
 
 | Route | What it shows |
 |---|---|
-| `/` (My week) | The question, the AI's sentence, Write my week / Share it, Sign in with 0G; the list; the receipt paper with Sign and Share with my company; collapsed PRs, how it was written (0G request ids), money leaks, cost by difficulty |
+| `/` (My week) | The question, the AI's sentence, Write my week / Share it, Sign in with 0G; the list (each item with its own timeline); "How the week went" (step times, PR funnel, waste by reason, where the money went); the receipt paper with Sign and Share with my company; collapsed PRs, how it was written (0G request ids), money leaks, cost by difficulty |
 | `/share` | Share studio: tick and edit items, name, sentence and cost toggles; live card; Post on X, Download, Copy image, Copy text, Save as PDF |
 | `/sessions` | All sessions with category, AI title (and the session's own title), difficulty, linked work, who wrote it, cost; filter by category |
 | `/sessions/[id]` | Cost breakdown, signals, linked changes, the private AI record (who paid, cost), the exact message the private AI is sent |

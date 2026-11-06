@@ -100,3 +100,15 @@ It stamps uploads with its own batch, so it costs nothing and needs no node. Rea
 
 ## 33. Say exactly what 0G protects
 The model runs in a TEE and every answer's TEE signature is checked, but our requests are not end-to-end sealed (`X-0G-E2EE: none`), so 0G's router could read them in transit. The app, README and docs say this plainly instead of "only the enclave can read it". Reason: overclaiming privacy is worse than a clear, smaller claim; sealing requests to the enclave is the next step if 0G's router supports it for our model.
+
+## 34. Efficiency from timestamps, not from the AI
+Idea to code, code to commit, commit to PR, PR to merge, brainstorm time, PR funnel and waste reasons all come from log and GitHub timestamps. The AI only makes judgment calls (is this a plan, are these the same piece of work). Reason: hard numbers are reproducible and can be signed; it costs no 0G credits; and an AI guessing durations would be neither.
+
+## 35. A plan or open question is waste only after a day without follow-up
+Reason: work in progress is not waste. A day without any session in the same folder or repo is a clear, explainable rule; dropped plans are charged their session's cost, open questions are only counted.
+
+## 36. Receipt v3 signs the efficiency numbers; v2 keeps verifying
+Reason: the company should be able to trust the timeline and waste numbers as much as the totals, and receipts already shared must not break. The company page keeps one receipt per person per week (verified, newest version, from Arkiv, opened from Swarm), so re-shared weeks are not counted twice.
+
+## 37. Count each log line once across copies of a conversation
+Reason: continued conversations are stored as growing copies; counting per file inflated spend several times over. Files with fewer message lines are read first so the original owns the shared history.

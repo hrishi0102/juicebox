@@ -2,11 +2,15 @@
 
 Code: `web/src/lib/receipts/receipt.ts`, `identity.ts`, `web/src/lib/server/receipts-store.ts`
 
-## EIP-712 message (version 2)
+## EIP-712 message (version 3)
 
-Domain `{ name: "Receipts", version: "2" }`, with no `chainId` on purpose: a receipt is not tied to a chain, and wallets refuse typed data whose chain id differs from the connected chain.
+Domain `{ name: "Receipts", version: "3" }`, with no `chainId` on purpose: a receipt is not tied to a chain, and wallets refuse typed data whose chain id differs from the connected chain.
 
 `Receipt` fields: owner, author (GitHub login or ""), period (`2026-W45`), periodStart, periodEnd, sessions, spendCents, done (things done), categories (`uint32[7]`, items per category in the order Built, Fixed, Figured out, Researched, Wrote, Planned, Wasted), categorySpendCents (`uint64[7]`), mergedPrs, tools (`string[]`) and toolSpendCents (`uint64[]`), itemsRoot, evidenceRoot, judgeRoot, judge (who wrote the list, for example `0g-private-computer:0gm-1.0-35b-a3b-sia:9/9`).
+
+Version 3 adds the efficiency numbers at the end: stageMinutes (`uint32[5]`, medians for idea to code, code to commit, commit to PR, PR to merge, idea to merged; 4294967295 = none), stageCounts (`uint16[5]`), brainstormMinutes, prCounts (`uint16[5]`: opened, merged, open, closed, reverted), wasteCounts and wasteCents (`[5]`: plans nobody acted on, left on the AI's question, loops, never shipped, stopped answers) and spendSplitCents (`uint64[4]`: shipped, learning, in progress, wasted).
+
+Version 2 receipts (the first ones shared on Arkiv) still verify: `verifyReceipt` picks the domain and types from `kind`. Malformed or out-of-range fields fail verification instead of throwing.
 
 ## Merkle roots
 
@@ -18,7 +22,7 @@ Sorted-pair keccak trees (same rule as OpenZeppelin `MerkleProof`).
 
 ## The JSON file
 
-`SignedReceipt` (`kind: "receipts.v2"`) = message (bigints as strings) + digest + signature + items + evidence + judges + the AI's one sentence + an unsigned `summary` (cost by difficulty, who wrote it) + share info. Anything shown to someone else comes from the signed message (`signedNumbers`) or from leaves that match a signed root.
+`SignedReceipt` (`kind: "receipts.v3"`, or `"receipts.v2"` for older ones) = message (bigints as strings) + digest + signature + items + evidence + judges + the AI's one sentence + an unsigned `summary` (cost by difficulty, who wrote it) + share info. Anything shown to someone else comes from the signed message (`signedNumbers`) or from leaves that match a signed root.
 
 ## Verification
 

@@ -32,3 +32,11 @@ The billed number for a session is `max(our price, Claude Code's tracker)` (`ses
 ## Output
 
 A `Session`: cost (total, per model, tokens), folder, repos, branches, times and active minutes, files edited, lines added and removed, git operations, and loop signals (error streaks, repeated commands, edits to the same file, test runs). Prompts are not stored. `buildPrivateDigest` re-reads the transcript on demand when the private AI needs it: the prompts, and the text of the AI's last three answers (joined per `message.id`, subagent lines skipped).
+
+## Continued conversations
+
+Claude Code keeps a full copy of a conversation when it is continued or forked, so the same lines (same `uuid`, same API response) sit in several files. `scanSessions` reads files with fewer message lines first and skips any line already seen, so the original owns the shared history and each copy keeps only its new part. Without this, one long conversation was counted once per copy (about \$615 instead of \$272 in one real week). Byte size and raw line count are not reliable for the order: copies drop bookkeeping lines the original has.
+
+## Step times
+
+`TimelineBuilder` (`timeline.ts`) records, per session: first and last prompt, first and last code edit, plan mode (`ExitPlanMode`), first commit, PR opened or linked, and whether the AI's last answer asked something or offered more with nobody replying. Commits made through the shell (`git commit`, `gh pr create`) count when their tool result succeeded, since Claude Code does not always write `gitOperation` records; the sha is kept when the output shows it. Codex sessions use `user_message`, `agent_message`, `apply_patch` and commit output.
