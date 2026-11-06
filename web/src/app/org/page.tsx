@@ -6,7 +6,8 @@ import { PrTable, type PrRow } from "@/components/pr-table";
 import { PersonWeek } from "@/components/person-week";
 import { CategoryBar } from "@/components/category-badge";
 import { ARKIV_SCHEMA_NAME } from "@/lib/receipts/arkiv";
-import { aggregate, countsLine } from "@/lib/receipts/aggregate";
+import { aggregate, aggregateEfficiency, countsLine } from "@/lib/receipts/aggregate";
+import { EfficiencyPanel } from "@/components/efficiency-panel";
 import { signedNumbers } from "@/lib/receipts/receipt";
 import { CATEGORY_COPY, pct, plural, usd } from "@/lib/format";
 import { CATEGORIES, TOOL_NAMES, type AiTool } from "@/lib/receipts/types";
@@ -23,6 +24,7 @@ export default async function OrgPage({ searchParams }: { searchParams: Promise<
   const week = sp.week && weeks.includes(sp.week) ? sp.week : weeks[weeks.length - 1];
   const inWeek = verified.filter((r) => r.message.period === week);
   const total = aggregate(inWeek);
+  const eff = aggregateEfficiency(inWeek);
   const toolTotal = Object.values(total.tools).reduce((a, b) => a + b, 0);
   const toolHint = Object.entries(total.tools)
     .sort((a, b) => b[1] - a[1])
@@ -85,6 +87,14 @@ export default async function OrgPage({ searchParams }: { searchParams: Promise<
               </div>
             </div>
           </section>
+
+          {eff && (
+            <EfficiencyPanel
+              e={eff}
+              title="How the company worked this week"
+              note="Typical times are the median of each person's median. Counts and dollars are added up across everyone's signed receipts. People are never ranked."
+            />
+          )}
 
           <section aria-labelledby="people" className="space-y-3">
             <div className="flex items-baseline justify-between gap-3">

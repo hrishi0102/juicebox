@@ -58,16 +58,18 @@ export async function loadOrg(source: Source): Promise<LoadedOrg> {
     arkivError = e instanceof Error ? e.message : String(e);
   }
 
+  // One receipt per person per week. The same week can exist several times (shared again after a
+  // rescan, shared sealed, or in an older receipt version); keep the best: verified, newest version,
+  // read from Arkiv, opened from Swarm.
   const rows = new Map<string, OrgRow>();
-  for (const r of demo?.receipts ?? []) {
-    rows.set(r.digest, { ...r, from: "demo file", verified: (await verifyReceipt(r)).ok, team: r.share?.team ?? cfg.teams[0]?.id ?? "" });
-  }
-  for (const r of live) {
-    // The same week can be on Arkiv twice (shared plain, then sealed). Prefer the copy opened from Swarm.
-    const prev = rows.get(r.digest);
-    if (prev?.from === "arkiv" && prev.swarm?.opened && !r.swarm?.opened) continue;
-    rows.set(r.digest, { ...r, from: "arkiv", arkivKey: r.arkiv.key, verified: r.verified, team: r.share?.team ?? "", swarm: r.swarm });
-  }
+  const rank = (r: OrgRow) => (r.verified ? 8 : 0) + (r.kind === "receipts.v3" ? 4 : 0) + (r.from === "arkiv" ? 2 : 0) + (r.swarm?.opened ? 1 : 0);
+  const keep = (row: OrgRow) => {
+    const k = `${row.message.owner.toLowerCase()}|${row.message.period}`;
+    const prev = rows.get(k);
+    if (!prev || rank(row) > rank(prev)) rows.set(k, row);
+  };
+  for (const r of demo?.receipts ?? []) keep({ ...r, from: "demo file", verified: (await verifyReceipt(r)).ok, team: r.share?.team ?? cfg.teams[0]?.id ?? "" });
+  for (const r of live) keep({ ...r, from: "arkiv", arkivKey: r.arkiv.key, verified: r.verified, team: r.share?.team ?? "", swarm: r.swarm });
 
   // Teams that show up on Arkiv but are not in the config still get a row.
   const teams = [...cfg.teams];

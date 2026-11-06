@@ -1,6 +1,8 @@
 // Adding up shared receipts for the company and team views, using signed fields only, so a
 // shared receipt cannot be edited without breaking its signature.
-import { signedNumbers, type SignedReceipt } from "./receipt";
+import { signedNumbers, type EfficiencyView, type SignedReceipt } from "./receipt";
+import { SPEND, STAGES, WASTE } from "./efficiency";
+import { median } from "./heuristics";
 import { CATEGORIES, type Category } from "./types";
 
 export type Agg = {
@@ -66,4 +68,24 @@ export function countsLine(counts: Record<Category, number>) {
   if (!parts.length) return "";
   const text = parts.length === 1 ? parts[0] : `${parts.slice(0, -1).join(", ")} and ${parts[parts.length - 1]}`;
   return text[0].toUpperCase() + text.slice(1) + ".";
+}
+
+/**
+ * Efficiency across shared receipts (version 3 only): counts and dollars are added up; the typical
+ * time for each step is the median of each person's median.
+ */
+export function aggregateEfficiency(rows: SignedReceipt[]): EfficiencyView | undefined {
+  const views = rows.map((r) => signedNumbers(r).efficiency).filter((e): e is EfficiencyView => !!e);
+  if (!views.length) return undefined;
+  const stages = Object.fromEntries(
+    STAGES.map((st) => {
+      const meds = views.map((v) => v.stages[st]).filter((s) => s.n > 0 && s.medianMin !== null);
+      return [st, { medianMin: meds.length ? Math.round(median(meds.map((s) => s.medianMin!))) : null, n: meds.reduce((a, s) => a + s.n, 0) }];
+    }),
+  ) as EfficiencyView["stages"];
+  const sum = (f: (v: EfficiencyView) => number) => views.reduce((a, v) => a + f(v), 0);
+  const waste = Object.fromEntries(WASTE.map((k) => [k, { count: sum((v) => v.waste[k].count), usd: Math.round(sum((v) => v.waste[k].usd) * 100) / 100 }])) as EfficiencyView["waste"];
+  const spend = Object.fromEntries(SPEND.map((k) => [k, Math.round(sum((v) => v.spend[k]) * 100) / 100])) as EfficiencyView["spend"];
+  const prs = { opened: sum((v) => v.prs.opened), merged: sum((v) => v.prs.merged), open: sum((v) => v.prs.open), closed: sum((v) => v.prs.closed), reverted: sum((v) => v.prs.reverted) };
+  return { stages, brainstormMinutes: sum((v) => v.brainstormMinutes), prs, waste, spend, costPerMergedPr: prs.merged ? Math.round((spend.shipped / prs.merged) * 100) / 100 : null };
 }

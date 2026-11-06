@@ -4,6 +4,7 @@ import { Collapsible } from "@/components/collapsible";
 import { PrTable } from "@/components/pr-table";
 import { WeekList } from "@/components/week-list";
 import { plural, usd } from "@/lib/format";
+import { formatMinutes } from "@/lib/receipts/efficiency";
 import { receiptItems, signedNumbers, type SignedReceipt } from "@/lib/receipts/receipt";
 
 /** One person's shared week, as the company sees it: their signed list, PRs and totals. */
@@ -36,6 +37,7 @@ export function PersonWeek({
           {team ? `${team}. ` : ""}
           {plural(n.done, "thing")} done, {usd(n.spendUsd)}
           {n.mergedPrs ? `, ${plural(n.mergedPrs, "merged PR")}` : ""}
+          {n.efficiency?.stages.ideaToMerge.n ? `, idea to merged ${formatMinutes(n.efficiency.stages.ideaToMerge.medianMin)}` : ""}
           {r.oneLiner && r.oneLiner !== items[0]?.title ? `. ${r.oneLiner}` : ""}
         </>
       }

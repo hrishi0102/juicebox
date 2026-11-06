@@ -15,6 +15,7 @@ import { summarize, buildTasks, weekOf } from "../src/lib/receipts/score";
 import { cleanTitle, parseSessionVerdict, parseWeekAnswer, toCategory } from "../src/lib/receipts/judge-core";
 import { countLine, itemsFromAnswer, ruleItems, sessionLines } from "../src/lib/receipts/story";
 import { decryptBlob, encryptBlob, openPointer, publicKeyOf, sealPointer } from "../src/lib/receipts/seal";
+import { computeEfficiency } from "../src/lib/receipts/efficiency";
 import type { Change, Judgement, Session } from "../src/lib/receipts/types";
 
 test("pricing: Opus 5.5 with 1h cache writes matches Claude Code's own number", () => {
@@ -206,6 +207,43 @@ test("week list: one item per PR, sessions the AI skipped come back, waste goes 
   assert.equal(items.length, 3, "S3 was left out by the AI and comes back from the rules");
   assert.equal(items.at(-1)!.category, "Wasted");
   assert.equal(countLine(items), "Built 1 thing, figured out 1 problem and went in circles once.");
+});
+
+test("efficiency: dropped plans, plans built later, open questions, and the timeline of a merged item", () => {
+  const now = Date.parse("2026-11-20T00:00:00Z");
+  const noEdits = { filesEdited: [], linesAdded: 0, linesRemoved: 0 };
+  // A plan nobody acted on (a different folder, nothing afterwards).
+  const dropped = fakeSession("plan1", { ...noEdits, cwd: "/c/other", repos: [], startedAt: "2026-11-02T09:00:00Z", endedAt: "2026-11-02T09:20:00Z", timeline: { firstPromptAt: "2026-11-02T09:00:00Z", planAt: "2026-11-02T09:10:00Z" } });
+  // A plan that the next session built.
+  const plan2 = fakeSession("plan2", { ...noEdits, startedAt: "2026-11-03T09:00:00Z", endedAt: "2026-11-03T09:30:00Z", timeline: { firstPromptAt: "2026-11-03T09:00:00Z", planAt: "2026-11-03T09:20:00Z" } });
+  const built = fakeSession("build", {
+    startedAt: "2026-11-03T11:00:00Z",
+    endedAt: "2026-11-03T12:00:00Z",
+    timeline: { firstPromptAt: "2026-11-03T11:00:00Z", firstEditAt: "2026-11-03T11:30:00Z", firstCommitAt: "2026-11-03T11:40:00Z", lastEditAt: "2026-11-03T11:50:00Z", endsOnQuestion: false },
+  });
+  // The AI asked something at the end and nobody came back.
+  const hanging = fakeSession("q", { ...noEdits, cwd: "/c/third", repos: [], startedAt: "2026-11-04T09:00:00Z", endedAt: "2026-11-04T09:10:00Z", timeline: { firstPromptAt: "2026-11-04T09:00:00Z", endsOnQuestion: true } });
+  const sessions = [dropped, plan2, built, hanging];
+  const pr = fakeChange("acme/app#9", { createdAt: "2026-11-03T12:00:00Z", mergedAt: "2026-11-04T12:00:00Z" });
+  const matches = [{ sessionId: "build", changeKey: pr.key, reason: "pr-link" as const, confidence: 0.97 }];
+  const judgements = judgeAllHeuristic(sessions, matches, [pr], now).map((j) => (j.sessionId.startsWith("plan") ? { ...j, category: "Planned" as const, label: "Learned" as const } : j));
+  const tasks = buildTasks(sessions, matches, [pr], judgements);
+  const items = [
+    { id: "i1", category: "Built" as const, title: "Login page", inProgress: false, sessions: ["plan2", "build"], costUsd: 20, prs: [{ key: pr.key, url: pr.url, title: pr.title, state: "merged", reverted: false }], tools: ["claude-code"] },
+    { id: "i2", category: "Planned" as const, title: "Dropped idea", inProgress: false, sessions: ["plan1"], costUsd: 10, prs: [], tools: ["claude-code"] },
+  ];
+  const e = computeEfficiency({ sessions, allSessions: sessions, judgements, tasks, changes: [pr], items, now });
+  assert.deepEqual(e.waste.abandonedPlans.sessions, ["plan1"], "only the plan nobody built is waste");
+  assert.equal(e.waste.abandonedPlans.usd, 10);
+  assert.deepEqual(e.waste.leftHanging.sessions, ["q"]);
+  assert.equal(e.waste.leftHanging.usd, 0, "an open question is counted, not charged");
+  const tl = e.items.i1;
+  assert.equal(tl.ideaToCode, 150, "idea (first prompt of the plan) to first edit: 2.5 hours");
+  assert.equal(tl.codeToCommit, 10);
+  assert.equal(tl.commitToPr, 20);
+  assert.equal(tl.prToMerge, 24 * 60);
+  assert.equal(e.prs.merged, 1);
+  assert.equal(e.spend.wasted, 10);
 });
 
 test("receipts: sign the week list, verify, catch tampering, reveal only some items", async () => {

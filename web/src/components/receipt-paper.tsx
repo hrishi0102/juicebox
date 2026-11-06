@@ -1,5 +1,6 @@
 import { CATEGORY_COPY, plural, shortAddr, shortHash, usd, weekRange } from "@/lib/format";
 import { CATEGORIES, TOOL_NAMES, type AiTool, type PeriodSummary } from "@/lib/receipts/types";
+import { formatMinutes } from "@/lib/receipts/efficiency";
 
 export type ReceiptPaperProps = {
   weekId: string;
@@ -92,6 +93,10 @@ export function ReceiptPaper(p: ReceiptPaperProps) {
               .map(([t, v]) => <Row key={t} k={`${TOOL_NAMES[t as AiTool] ?? t}${s.toolSessions?.[t] !== undefined ? ` x${s.toolSessions[t]}` : ""}`} v={usd(v, 2)} />)}
           {showCost && <Row k="Total" v={usd(s.spendUsd, 2)} strong />}
           {showCost && s.wasteUsd > 0 && <Row k="Of which wasted" v={usd(s.wasteUsd, 2)} />}
+          {s.efficiency && s.efficiency.prs.opened > 0 && <Row k="PRs merged" v={`${s.efficiency.prs.merged} of ${s.efficiency.prs.opened}`} />}
+          {s.efficiency && s.efficiency.stages.ideaToMerge.n > 0 && <Row k="Idea to merged" v={formatMinutes(s.efficiency.stages.ideaToMerge.medianMin)} />}
+          {s.efficiency && s.efficiency.stages.ideaToMerge.n === 0 && s.efficiency.stages.ideaToCode.n > 0 && <Row k="Idea to code" v={formatMinutes(s.efficiency.stages.ideaToCode.medianMin)} />}
+          {showCost && s.efficiency && s.efficiency.waste.abandonedPlans.count > 0 && <Row k="Plans not acted on" v={usd(s.efficiency.waste.abandonedPlans.usd, 2)} />}
         </div>
 
         {(s.items.length > 0 || done > 0) && (

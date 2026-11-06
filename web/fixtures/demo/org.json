@@ -117,7 +117,7 @@
   ],
   "receipts": [
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$98 of AI got 4 things done",
       "oneLiner": "Built checkout tests and ledger exports while debugging webhook performance",
       "message": {
@@ -159,9 +159,51 @@
         "itemsRoot": "0xc10e982cc1d607f71d3e785206235b5468f989ec89b58996a4b8c3fd3fabc569",
         "evidenceRoot": "0x9d3bed955664b08ad87d526694cdccfff8394f51e1b60764c63144ed1319f057",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "0g-private-computer:0gm-1.0-35b-a3b-sia:0/5"
+        "judge": "0g-private-computer:0gm-1.0-35b-a3b-sia:0/5",
+        "brainstormMinutes": 176,
+        "stageMinutes": [
+          30,
+          19,
+          11,
+          1628,
+          1675
+        ],
+        "stageCounts": [
+          2,
+          1,
+          2,
+          2,
+          2
+        ],
+        "prCounts": [
+          3,
+          3,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          1,
+          1,
+          0,
+          3
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "5831",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "3115",
+          "811",
+          "0",
+          "5831"
+        ]
       },
-      "digest": "0x4a36f832580d956945e9230ae536439f5123b1edcb491e4cad80c075104a5e26",
+      "digest": "0x6b3e0134fa414eff65e68fcf11a0efb06643ae832bbad656a48837f915f0b5c5",
       "items": [
         {
           "category": "Built",
@@ -278,7 +320,7 @@
         "writtenBy": "0G private AI, TEE verified",
         "model": "0gm-1.0-35b-a3b-sia"
       },
-      "signature": "0x354ba9ff56c381dd13114bef1ef5285446880b60b01ece96006b37674af1219178492e4dc65831488443c9cc1edffa2874ed40c1249e524a0268ee1afd050f0b1c",
+      "signature": "0xcd1d28f958602b28bc68d86f615672ae7296773289cbc3fb0677bd935bab9f3d71dbaa1295f7d5eaa6af557c889959832c95112f0031f8f50f798ba7ed0b616e1c",
       "signedAt": "2026-10-12T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -288,7 +330,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$160 of AI got 7 things done",
       "oneLiner": "Built invoice previews and payout coverage, fixed three bugs, and wrote docs",
       "message": {
@@ -330,9 +372,51 @@
         "itemsRoot": "0x628b0b6010dcb6650263310a732b437e53165ec981d78c5e37cc32c440444e25",
         "evidenceRoot": "0x5c341cdcd0258311aacf92efa95d4466eca39a0dbab0ffc00af72bd1f84cf91e",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "0g-private-computer:0gm-1.0-35b-a3b-sia:0/11"
+        "judge": "0g-private-computer:0gm-1.0-35b-a3b-sia:0/11",
+        "brainstormMinutes": 255,
+        "stageMinutes": [
+          21,
+          36,
+          14,
+          1821,
+          1919
+        ],
+        "stageCounts": [
+          8,
+          8,
+          7,
+          6,
+          6
+        ],
+        "prCounts": [
+          8,
+          7,
+          0,
+          1,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          0,
+          0,
+          2,
+          0
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "0",
+          "2195",
+          "0"
+        ],
+        "spendSplitCents": [
+          "13220",
+          "615",
+          "0",
+          "2195"
+        ]
       },
-      "digest": "0x4c4584f39da4a3d535410966b73c58daef348ccbb24807c429adbeffdb8ba703",
+      "digest": "0xc8e1ba601752067e2df41b2b21bea6001aa6ab7a5fff09c082a9d160eb892185",
       "items": [
         {
           "category": "Built",
@@ -554,7 +638,7 @@
         "writtenBy": "0G private AI, TEE verified",
         "model": "0gm-1.0-35b-a3b-sia"
       },
-      "signature": "0x6d297df6720d8855eb02b56de7d7087d538f9d7aaa7a181420a199fceeb669f05a3c468ee4f5c910e4a4329ad0194eb462967220bd6341ef6659d2241fca43a51b",
+      "signature": "0xc681f66c96f3301a2036fc11c1458e36c87d6be0cf374c13efe6bce0159f5b4e00c40cab35bb6df75051f13837fec49ce45595e898a0122999e06a4a3edcd69d1c",
       "signedAt": "2026-10-19T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -564,7 +648,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$315 of AI got 9 things done",
       "oneLiner": "Solid week finishing checkout tests, fixing webhooks, and shipping rate limits",
       "message": {
@@ -606,9 +690,51 @@
         "itemsRoot": "0x4f7c4ad2060ae50be802b11b2fd50e01ef65ba8b2bb0a2c4cfee4511fbc2b779",
         "evidenceRoot": "0xe73048ce30d4580ba62035e7d46b612565dcddb3e428a14b67cf4326cd0942a6",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "0g-private-computer:0gm-1.0-35b-a3b-sia:0/12"
+        "judge": "0g-private-computer:0gm-1.0-35b-a3b-sia:0/12",
+        "brainstormMinutes": 304,
+        "stageMinutes": [
+          31,
+          33,
+          12,
+          2369,
+          2465
+        ],
+        "stageCounts": [
+          6,
+          5,
+          3,
+          5,
+          5
+        ],
+        "prCounts": [
+          9,
+          7,
+          2,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          2,
+          2,
+          0,
+          5
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "8737",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "17810",
+          "1231",
+          "3754",
+          "8737"
+        ]
       },
-      "digest": "0xab701a996602322049225fce90107edd750e97ecbaea54e1243ad0f80e8998d5",
+      "digest": "0xf46f809b4d749cf7a5b24613405371096c9009802cecda58fcc194158d4afc35",
       "items": [
         {
           "category": "Built",
@@ -841,7 +967,7 @@
         "writtenBy": "0G private AI, TEE verified",
         "model": "0gm-1.0-35b-a3b-sia"
       },
-      "signature": "0x0873ee4eacb501a8e0c69c4b3048b897acb9b2e4d016cde1a7fbde48afc2ed5b3053c0ef11ecc3dab4eda935ce1f65a7559d9354906b6eb156bef21f6aba657a1c",
+      "signature": "0x2dbb1f46f17de6a701f9d148669d6ecd4bb8ee13bef1a1d2abe1959ffbc896055e6dfd37ee7ade08cfdc8dd0559f8b5ada01d12028d66ab85d17c204eaad6f121b",
       "signedAt": "2026-10-26T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -851,7 +977,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$229 of AI got 7 things done",
       "oneLiner": "Ship features fast, stabilize infra, and document ops",
       "message": {
@@ -893,9 +1019,51 @@
         "itemsRoot": "0x95a2b0d3782b40907048d787d976a5c2124865d91399e8b8cfba9820b1d74c87",
         "evidenceRoot": "0x235c0c362fd991c2f85ad18299167cc3e9c1ce4e7f65fad9e04b967432e81c69",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "0g-private-computer:0gm-1.0-35b-a3b-sia:0/12"
+        "judge": "0g-private-computer:0gm-1.0-35b-a3b-sia:0/12",
+        "brainstormMinutes": 251,
+        "stageMinutes": [
+          20,
+          43,
+          11,
+          2783,
+          2848
+        ],
+        "stageCounts": [
+          7,
+          5,
+          5,
+          5,
+          5
+        ],
+        "prCounts": [
+          9,
+          7,
+          1,
+          0,
+          1
+        ],
+        "wasteCounts": [
+          0,
+          0,
+          1,
+          3,
+          2
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "3426",
+          "4453",
+          "0"
+        ],
+        "spendSplitCents": [
+          "12652",
+          "579",
+          "1748",
+          "7879"
+        ]
       },
-      "digest": "0xc5b235da651ea083b6dff3e2ac36e11aefb7d2824c44d1396fcad227dd28ac3e",
+      "digest": "0xd5c365750ff57ce01ee8d2e3528391ac497f6b8d59b470cce59e283fa58eefbb",
       "items": [
         {
           "category": "Built",
@@ -1121,7 +1289,7 @@
         "writtenBy": "0G private AI, TEE verified",
         "model": "0gm-1.0-35b-a3b-sia"
       },
-      "signature": "0xe78b28de37003dca457d07176fb8abd0459389c10ed5094c1a5875d920d26d5f3d317e0436f9f413dc3520039646d7815131a63d119aafa82d5b73f758ebf16e1c",
+      "signature": "0x19a9e1ea3cf770ff6e79f828436c73f4b9dc87ab84da42c72329504a9673b2a93960b920395f4bf795affce3597dd3124dbb55291c8cb40cfdb0a7137fac106b1b",
       "signedAt": "2026-11-02T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -1131,7 +1299,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$128 of AI got 5 things done",
       "oneLiner": "Built out key financial features and docs while cracking settlement batching",
       "message": {
@@ -1173,9 +1341,51 @@
         "itemsRoot": "0xa7becc3020c9f6de46635d3f74a160ff393a2a821b48bc44f2c19105bfee7b1e",
         "evidenceRoot": "0x44d723f9bf45b83074e872b463e817d4e880a977ffeff76b919efd28d1dda42d",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "0g-private-computer:0gm-1.0-35b-a3b-sia:0/5"
+        "judge": "0g-private-computer:0gm-1.0-35b-a3b-sia:0/5",
+        "brainstormMinutes": 167,
+        "stageMinutes": [
+          32,
+          68,
+          12,
+          2162,
+          2266
+        ],
+        "stageCounts": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "prCounts": [
+          4,
+          4,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "12537",
+          "216",
+          "0",
+          "0"
+        ]
       },
-      "digest": "0x72ca3e4047e650631f682fa6d1c841747852bf66a646b82a3caf71b875c50e9c",
+      "digest": "0x0c573ebbc4d14c27e5f2442a2d937463f18cdfde5fe538ca761842efe987fa47",
       "items": [
         {
           "category": "Built",
@@ -1314,7 +1524,7 @@
         "writtenBy": "0G private AI, TEE verified",
         "model": "0gm-1.0-35b-a3b-sia"
       },
-      "signature": "0x51831b58acc9e1e6fa28bb600d72eb718f5e9a4f27c3304bc028c2d876ebc543497a41c51a8c43689a0a52cf292cdb7c85475460227fddf91da6e272ff3ccb631c",
+      "signature": "0x18b6487d0a96ec6ff15d30e4161710168fb47c415820b30b5122f778a3aa83094f377919e88e6305dc7d2774cf98eeeb4db74051ea901a8a768cd5426ec7d6491c",
       "signedAt": "2026-11-06T12:00:00.000Z",
       "share": {
         "level": "full",
@@ -1324,7 +1534,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$34 of AI got 3 things done",
       "oneLiner": "Built 2 things and wrote 1 piece.",
       "message": {
@@ -1364,9 +1574,51 @@
         "itemsRoot": "0x95169a7f82a3760d5e42feb6b72a8c7d24af18c81c129b91d3afa9e2b6209252",
         "evidenceRoot": "0x2cb5c86890a34ee73b5d6537dbc4692e96e6bb8eb91a00b641f1c92f85db9687",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 68,
+        "stageMinutes": [
+          23,
+          49,
+          8,
+          2088,
+          2173
+        ],
+        "stageCounts": [
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "prCounts": [
+          3,
+          3,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          2,
+          0,
+          0,
+          0
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "3415",
+          "0",
+          "0",
+          "0"
+        ]
       },
-      "digest": "0x243424e86fcfb6f18f0951a12c2d55374af64ef5e15397f1b38881b233a486e5",
+      "digest": "0x7c4be94af37efd45da7fe9436864d1809fc9bbfef51f8e48d11ffda9d6a9fd15",
       "items": [
         {
           "category": "Built",
@@ -1475,7 +1727,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0xf12ea9cb340b4f11354c2f5973d90729a8053a32fa5e3b8f9bf2579270de57b376e117cb81e545cba65b2541eef24b8694209ffd8fee1fa95739096815f0f7b81c",
+      "signature": "0xabc99393d99c8849252c0b8b43563a50ef9fa63f78383e94b230393a15634b52204d15d5d648878b4780305c6568fd664ccc0762d508c39afcb1f13e59498fdf1c",
       "signedAt": "2026-10-12T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -1485,7 +1737,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$123 of AI got 6 things done",
       "oneLiner": "Built 4 things, fixed 1 bug and researched 1 topic.",
       "message": {
@@ -1527,9 +1779,51 @@
         "itemsRoot": "0xeb9da1b9426b84689aed747dea60b3d0e3a1a68595de2e6538a94eb85621eac0",
         "evidenceRoot": "0x5e96fab74d98ae79142b64208936795537f5f05604c40e502fb0e31f3c277cae",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 123,
+        "stageMinutes": [
+          18,
+          66,
+          10,
+          1733,
+          1753
+        ],
+        "stageCounts": [
+          5,
+          2,
+          2,
+          5,
+          5
+        ],
+        "prCounts": [
+          5,
+          5,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "12077",
+          "216",
+          "0",
+          "0"
+        ]
       },
-      "digest": "0x8a299f6041a50e577af50378196e06db55370dd64a12d392869cb9be2bf88c4e",
+      "digest": "0xa2952aeed8a9bcfb9ce58240c370785977bda1998e450a94e31d51b549ac645e",
       "items": [
         {
           "category": "Built",
@@ -1688,7 +1982,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0xe596d07ceed3d232b215c21ffd5d499dba8f5dab8b1c5b3959a4790ab5c26c4c3aa7ef3f2b6e0c69abc16b387ce3ce01a71fe17535aa470df05d572bb410a36b1c",
+      "signature": "0x9a23ae73d0d0070c4169c6e97661e4d5dbc66cf9510c38f384c7fcee244116af28f2a69511bcfb6ce6f0cb10c51ced6898c0253c5c273b486a4187ae10ed2e761c",
       "signedAt": "2026-10-19T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -1698,7 +1992,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$81 of AI got 7 things done",
       "oneLiner": "Built 3 things, fixed 1 bug, figured out 2 problems and researched 1 topic.",
       "message": {
@@ -1740,9 +2034,51 @@
         "itemsRoot": "0xc7f2764a9a189a05017e1985ca009d298136db261a6148cbcb8a4a341f048d61",
         "evidenceRoot": "0x15af290e371170b19511041ac5e0f01d40b3a484b489bff7a74e1547a17d6cbd",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 156,
+        "stageMinutes": [
+          25,
+          59,
+          11,
+          2403,
+          2441
+        ],
+        "stageCounts": [
+          4,
+          2,
+          4,
+          3,
+          3
+        ],
+        "prCounts": [
+          4,
+          3,
+          1,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "5648",
+          "1671",
+          "736",
+          "0"
+        ]
       },
-      "digest": "0x4d404842fc85abc9e4102142ddf4b8c77530d6547a6546c8eb43a3105aeb3029",
+      "digest": "0xd46f0691991b266eaedb2b5bd1c12aa7f549f06d7902b997832ab7cb9572e76a",
       "items": [
         {
           "category": "Built",
@@ -1896,7 +2232,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x1472202d00fd54b0d28210166e51ae180a4543614e8f27d290aafde0cbcdb5ee17798aa3ae038a9990fd0507fdd0045fee40bd97ae50140a48893adcf2ee907b1c",
+      "signature": "0x2455599375349496e72838ddf9203efa473ddea0fd508045ce78f3d4d061d93821955ef214f30cdb21170b02482680e930c5f4256539d7be0689d5ddb87c68281c",
       "signedAt": "2026-10-26T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -1906,7 +2242,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$140 of AI got 5 things done",
       "oneLiner": "Built 1 thing, fixed 4 bugs and went in circles once.",
       "message": {
@@ -1946,9 +2282,51 @@
         "itemsRoot": "0xb2b8bbe44b0c8103d2d8c645744ade41f57b772462ac4fdfb4e0b6ccb081e990",
         "evidenceRoot": "0xaa60ce4fd412f517e23794d0d2bacae1a8028bdc872d5df55b5c0a14d65a8801",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 153,
+        "stageMinutes": [
+          19,
+          20,
+          9,
+          1881,
+          1984
+        ],
+        "stageCounts": [
+          6,
+          3,
+          4,
+          4,
+          4
+        ],
+        "prCounts": [
+          6,
+          4,
+          1,
+          1,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          0,
+          1,
+          1,
+          4
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "6567",
+          "1837",
+          "0"
+        ],
+        "spendSplitCents": [
+          "4013",
+          "0",
+          "1617",
+          "8404"
+        ]
       },
-      "digest": "0x538602ae74ee1498d3d688b7ff6947b8c389651d3af91bd6bfe7205fcf08f01c",
+      "digest": "0xf5c84d1ecbbe78e3742010293e03d4610060f39dd87865285f21c5b3a897d413",
       "items": [
         {
           "category": "Built",
@@ -2120,7 +2498,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x9a850827b4b0f033fce31342c50685d2fada6c93f92bded2356def143f7bd9b33d3bb860d649bcb4064a7b4bf96756c022f903cf03dfd85e99e378ae4feb3cab1c",
+      "signature": "0xf2204e4b6b486a28a12452d4903a68b1c5fd5155ae49a7bd853304068e8e335067e6294b6977d982c95dfa2dabe4bc18692b78ca2fbd6c99e3e1d70380d3fe611b",
       "signedAt": "2026-11-02T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -2130,7 +2508,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$47 of AI got 3 things done",
       "oneLiner": "Built 3 things.",
       "message": {
@@ -2172,9 +2550,51 @@
         "itemsRoot": "0xc92bc9c048ad8b7296968b815b7d0b5d55f2e1b99df70d7539c1fa530f0d2275",
         "evidenceRoot": "0xf5db026eed5c70801788620a65390e11d4ef470d28dcc2ff4b986d233dabbf53",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 68,
+        "stageMinutes": [
+          26,
+          27,
+          7,
+          2448,
+          2488
+        ],
+        "stageCounts": [
+          3,
+          2,
+          2,
+          3,
+          3
+        ],
+        "prCounts": [
+          3,
+          3,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "4740",
+          "0",
+          "0",
+          "0"
+        ]
       },
-      "digest": "0x36fb7779cf39e10bfbfafb0971cff6c1d102f94640862a074530fca9cb9b4f3c",
+      "digest": "0x47137feb91bbb655e8ff7d888b7a17a18d5424a703f150886476ea89b5efe6ec",
       "items": [
         {
           "category": "Built",
@@ -2283,7 +2703,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x0939b1b95608e64d8b253d3daf60789e38925241d123ba5f6f80c8f62fa8368c6e72dc62a0746a21a898f71fe64267675f7936121ef32c87e7712a59a56cdf161c",
+      "signature": "0xf0975a255492c86f4246c9c3cabb86145e291d203adae983bf5befbd43e77b7f6b346d49a11e25473e9765cc675efa0f4da1a8da5272753a41b66285739c08d01c",
       "signedAt": "2026-11-06T12:00:00.000Z",
       "share": {
         "level": "full",
@@ -2293,7 +2713,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$81 of AI got 3 things done",
       "oneLiner": "Built 2 things and wrote 1 piece.",
       "message": {
@@ -2335,9 +2755,51 @@
         "itemsRoot": "0x33f85c513925b453596984833007d68b624e3e131558bec416e06628b91c69ff",
         "evidenceRoot": "0xf27c55688691178c0ad567766d3d50cb9c6a825505ada17099211fbdfaf8361a",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 26,
+        "stageMinutes": [
+          8,
+          40,
+          10,
+          767,
+          809
+        ],
+        "stageCounts": [
+          3,
+          2,
+          2,
+          3,
+          3
+        ],
+        "prCounts": [
+          3,
+          3,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          1,
+          1,
+          0,
+          2
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "4191",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "3885",
+          "0",
+          "0",
+          "4191"
+        ]
       },
-      "digest": "0x120f33aa0fda110492cd603b9a8ff12d07d08a1f294338a849afe9ec653f0082",
+      "digest": "0x3b8605c2f21e74e424b91fc48b5aa20eaf83d50abed89ebd77e272743390d980",
       "items": [
         {
           "category": "Built",
@@ -2446,7 +2908,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0xb376cce202169b11a0ada40450f3c0cec64539d102b3f9c83adcd7ec250dc34d0d6fba832a9d4ef6567d6cf8e43cb327f7bfe67d41189fab2a18082bd39595891b",
+      "signature": "0x510c7cb242a6c71a4fbfafe372eb27c5df6211e7bcbbdc1af887d3c339d0fd3333b554ba3d5ca623ac1f6f6243be727efff116bd12dfba619761f1397bf5d3d61c",
       "signedAt": "2026-10-12T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -2456,7 +2918,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$89 of AI got 5 things done",
       "oneLiner": "Built 2 things, figured out 1 problem, wrote 2 pieces and went in circles once.",
       "message": {
@@ -2498,9 +2960,51 @@
         "itemsRoot": "0x18b85147984942b9239407c60f9e6ab173ac4db38ed4ad06c9f007726c733c86",
         "evidenceRoot": "0xcab818af11e5fec51cf67d17369651c5b351f27f3a4207aa8aa27706d876ea86",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 151,
+        "stageMinutes": [
+          25,
+          74,
+          4,
+          1632,
+          1749
+        ],
+        "stageCounts": [
+          5,
+          4,
+          3,
+          4,
+          4
+        ],
+        "prCounts": [
+          4,
+          4,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          1,
+          1,
+          1,
+          3
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "3347",
+          "1984",
+          "0"
+        ],
+        "spendSplitCents": [
+          "3225",
+          "321",
+          "0",
+          "5331"
+        ]
       },
-      "digest": "0x4b146fe0be6636248c9f1060dcf8bce6ebcf9b2afa192291424ece8ec7e75650",
+      "digest": "0x0ccaab557c630ed0c5f4e9fefb44c756335e64b9237865f3efbfb4a693b0b8c8",
       "items": [
         {
           "category": "Built",
@@ -2646,7 +3150,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0xee3c284dde5bce02a1aec2fb1fb45c87c3483f0ba9dfd320bb6d04f5a37805e06eaddeb8b87683987b756df3e87cea2873e99f5e0dcaca468ad8546a96ec88711b",
+      "signature": "0x0e17ca7bba93de33357048d57a192161aa84ab869d9197e91273b755fabd27f00fc8f8d4f3deff30034268b9a8b1a85a3ca20669654873ea14c8ba994242f83c1b",
       "signedAt": "2026-10-19T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -2656,7 +3160,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$160 of AI got 6 things done",
       "oneLiner": "Built 3 things, fixed 2 bugs, wrote 1 piece and went in circles once.",
       "message": {
@@ -2698,9 +3202,51 @@
         "itemsRoot": "0x71cb67143879a57c2d90978027822644512305d9fa30abc3adca109cb6fde58d",
         "evidenceRoot": "0x02dafcb60acadb30f5c32dd5391173e33a753a2ab25b4cd66609655351bde4cb",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 180,
+        "stageMinutes": [
+          23,
+          51,
+          10,
+          2184,
+          2270
+        ],
+        "stageCounts": [
+          7,
+          2,
+          4,
+          6,
+          6
+        ],
+        "prCounts": [
+          6,
+          6,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          0,
+          2,
+          1,
+          6
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "4416",
+          "2282",
+          "0"
+        ],
+        "spendSplitCents": [
+          "9263",
+          "0",
+          "0",
+          "6698"
+        ]
       },
-      "digest": "0x660bb038f24899236e1d2937551449e7e4df8d61c84ded66ae55c41b00008ecd",
+      "digest": "0xdfa3815267715f89bd0d61a5af5b6106c754c03158c4b3fad6415bb735329645",
       "items": [
         {
           "category": "Built",
@@ -2880,7 +3426,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0xb89b4741a4b924bef43d78595440d79d6351c84c1ceb4d3a494d9bd51be87c47781c9664334ab191cb3800da7cebed8454c7e3e16c42c124fae7b759fbce4fb11c",
+      "signature": "0xb219356790e5f957e25e2b7bc95f4d326471fbac571ca1bf0eaad31fa95a70310867c235ac6c8c567b5d4dac29f63e841fa4bd0376a4003a4f74e9b0a77669e11c",
       "signedAt": "2026-10-26T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -2890,7 +3436,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$137 of AI got 3 things done",
       "oneLiner": "Built 2 things, figured out 1 problem and went in circles 3 times.",
       "message": {
@@ -2932,9 +3478,51 @@
         "itemsRoot": "0x43d63bfdef96a69c9bede325ad9840e25c9e69d7b593f27950f2b58ea30f9d17",
         "evidenceRoot": "0xb79c1e6486a7bd37d0f5ec4b91ce5ed2cad4ad33742c751a40062c66177d71b1",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 159,
+        "stageMinutes": [
+          29,
+          25,
+          9,
+          2181,
+          2293
+        ],
+        "stageCounts": [
+          5,
+          4,
+          4,
+          2,
+          2
+        ],
+        "prCounts": [
+          5,
+          2,
+          0,
+          2,
+          1
+        ],
+        "wasteCounts": [
+          1,
+          0,
+          1,
+          3,
+          1
+        ],
+        "wasteCents": [
+          "124",
+          "0",
+          "2974",
+          "6208",
+          "0"
+        ],
+        "spendSplitCents": [
+          "4387",
+          "0",
+          "0",
+          "9306"
+        ]
       },
-      "digest": "0x5cbae5e29efe3af618d385eb1f91a71a6c7ee15d446c6af1063f621b5775c0cd",
+      "digest": "0x842f2d5b20fc4fbbea72ff753a4aa1f615b18eafee1668d3475fd4c370eac9b1",
       "items": [
         {
           "category": "Built",
@@ -3093,7 +3681,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x1ae9595690096520d4c3fbac5f697fe148540e1e6348092ae8f5f06f1c61dbe472d6506bd8cba44b53e8e1b0f04b187a074d4f8ae99945b22c451a3b44c0d1bb1b",
+      "signature": "0xf9e528596fd379485587d283584c99ab4b370c2c4b2285910a3ab23858bafd9344e0a558229d7d512f46fd9121efa05ef4429b34bd32e2675999d72a6f30b51b1b",
       "signedAt": "2026-11-02T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -3103,7 +3691,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$109 of AI got 3 things done",
       "oneLiner": "Built 3 things.",
       "message": {
@@ -3143,9 +3731,51 @@
         "itemsRoot": "0xfa95a3ef0623f19c3f10b7296d96823b03dc232ce9c28cba6717cef22034ac8c",
         "evidenceRoot": "0x81279a7edeba2c6d06f57e15160b25f292c5ca600e3fda3cda484a8b5dfd9c0e",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 62,
+        "stageMinutes": [
+          17,
+          64,
+          6,
+          1506,
+          1655
+        ],
+        "stageCounts": [
+          3,
+          1,
+          1,
+          2,
+          2
+        ],
+        "prCounts": [
+          3,
+          2,
+          1,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          1,
+          2,
+          0,
+          5
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "10209",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "0",
+          "0",
+          "645",
+          "10209"
+        ]
       },
-      "digest": "0x8ed25a56ddcbda28cc7ac5c8ee82af44402dee843146ff0bd921c39366b66f15",
+      "digest": "0xe48433cbcf626fac34df16b7892e2183886e0125f763df2944175bcc308db7f3",
       "items": [
         {
           "category": "Built",
@@ -3254,7 +3884,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x1df2f5af97bdaec368226f87396da0c61c5b239625a2e78a73050f428350bb2805200c6ec00feb14309fb4007ed905bd2560a6623797393f48c58ab12edd55eb1b",
+      "signature": "0xc75b20d88c73049eebb06f4204091888e112225f62a16e069ca239bde17cef0b657a23e84aecbb07820ef7c4651f36432e4767af3c5a7a056ca3ca408e5c48e61b",
       "signedAt": "2026-11-06T12:00:00.000Z",
       "share": {
         "level": "full",
@@ -3264,7 +3894,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$26 of AI got 2 things done",
       "oneLiner": "Built 1 thing and figured out 1 problem.",
       "message": {
@@ -3304,9 +3934,51 @@
         "itemsRoot": "0x1001f9b5a0b60c30324e49a5ccafc4264ff819de073f9213ac45d457f7d09149",
         "evidenceRoot": "0x7cdf2a9e9814ba31c55621d0643fbd0022bab10be866f5606fc366380bd9ee8f",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 76,
+        "stageMinutes": [
+          29,
+          8,
+          14,
+          939,
+          990
+        ],
+        "stageCounts": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "prCounts": [
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "2161",
+          "484",
+          "0",
+          "0"
+        ]
       },
-      "digest": "0x08b526ab727937a73d736a49326e248119212ee186e8aca6d9617749ef9a4ff9",
+      "digest": "0x5513884ab202cd768d4c0e95cf5dbc1ed196618b332c72ee38d71ee1abb83135",
       "items": [
         {
           "category": "Built",
@@ -3381,7 +4053,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0xef756090d828e7b81fe7561ebb734abf82a2412d23ae494bf02cd1c53e1521f86431685c1934bde2a9ead59607c3673bb6e41fa33cb9baee217c0bcc55896c981c",
+      "signature": "0x13bc6f188cced78876ee5058482beac5464a6f768adf3ccd10468b8df6271f88092ee365983a5717a9ee793f8510d008719bdb502c4d6d39338154f4c68ff1b71c",
       "signedAt": "2026-10-12T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -3391,7 +4063,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$79 of AI got 6 things done",
       "oneLiner": "Built 3 things, figured out 1 problem, wrote 1 piece and planned 1 thing.",
       "message": {
@@ -3431,9 +4103,51 @@
         "itemsRoot": "0xac8413b14f593008c27910173028d36796cc2a2979582834e39a1a3cb41e2345",
         "evidenceRoot": "0xfd460998b114874e6a64f0a1d97632f4934a0e71b692d825e405df705d1ed705",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 179,
+        "stageMinutes": [
+          26,
+          38,
+          8,
+          2336,
+          2407
+        ],
+        "stageCounts": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "prCounts": [
+          4,
+          4,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        "wasteCents": [
+          "523",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "7199",
+          "135",
+          "0",
+          "523"
+        ]
       },
-      "digest": "0x2ec7cd29a3ab58b9f05b9511625a17bf8865cb4646b02caaa24e1e1d65705d54",
+      "digest": "0x48fd58d1260cecbc0b8d5c223989a39205b8b16d31a947431f21163ab2423db8",
       "items": [
         {
           "category": "Built",
@@ -3579,7 +4293,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x5b3063340796c3eeb95f7f7e4f9dd68b1fbe3c739a684ea5a89cba9d7c5e29c33be55dcee50991271be013a5eccda0b62b5366c17377fa76b55d9a479f445f131c",
+      "signature": "0xb08286323d5a80586a5bb29fcfaed7d76aa7a9e50235aa242e20bd6b07d25b65632bdfae5851f1eb5c2e00799dcebc119cdbd64b834f24a3eb6989de33d451d61b",
       "signedAt": "2026-10-19T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -3589,7 +4303,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$56 of AI got 5 things done",
       "oneLiner": "Built 2 things, fixed 1 bug, figured out 1 problem and planned 1 thing.",
       "message": {
@@ -3629,9 +4343,51 @@
         "itemsRoot": "0xca9eb8adff1932e8202ade2b1929b4d433322dcde6613195e8e91ee4523e4566",
         "evidenceRoot": "0x867272c8f842b60183eabbb08b133ba40b46d39824f640d4424aed4e4c349b62",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 159,
+        "stageMinutes": [
+          29,
+          47,
+          9,
+          3269,
+          3349
+        ],
+        "stageCounts": [
+          3,
+          3,
+          3,
+          2,
+          2
+        ],
+        "prCounts": [
+          3,
+          2,
+          1,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        "wasteCents": [
+          "443",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "2398",
+          "559",
+          "2161",
+          "443"
+        ]
       },
-      "digest": "0x37e1edda4638f3f42c62fea43e57d295d292b050a2492410bd92106fc65a09f1",
+      "digest": "0xb72775780ebf30c76a4fd7dc9a15683ea0a05a2e4b724ba80c9fad4f17edc027",
       "items": [
         {
           "category": "Built",
@@ -3756,7 +4512,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x67e24cd38b999e5656a979f7a8442ecb92f3dbc8578b73aa5b71b99f0a77f11e11bfc9f5cd9722acb03dfb3638c254a83cde8f6587c69bcbf22a449fd5eeab031c",
+      "signature": "0x96a3d68c210d5520accc5968bbea1bf2b22c2903c1faeca761337ff06e3322690bf7b7baf8cc77d2a213b2ced97afe1c1fa5e3135197150205f45b8f8afb70a11b",
       "signedAt": "2026-10-26T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -3766,7 +4522,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$83 of AI got 5 things done",
       "oneLiner": "Built 1 thing, fixed 1 bug, figured out 1 problem, researched 1 topic, planned 1 thing and went in circles once.",
       "message": {
@@ -3806,9 +4562,51 @@
         "itemsRoot": "0x5f214479d1c6b1b52fdaef09bddfd503e037ce9f3a8e5a2230f4f1e15658a1ed",
         "evidenceRoot": "0x3015cd2563788ae25f53fb14723e25e0a6f76bc671e4dfa9a67961cb411c4f62",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 200,
+        "stageMinutes": [
+          8,
+          31,
+          9,
+          2239,
+          2316
+        ],
+        "stageCounts": [
+          3,
+          2,
+          2,
+          2,
+          2
+        ],
+        "prCounts": [
+          3,
+          2,
+          0,
+          1,
+          0
+        ],
+        "wasteCounts": [
+          1,
+          0,
+          1,
+          1,
+          3
+        ],
+        "wasteCents": [
+          "378",
+          "0",
+          "3060",
+          "2758",
+          "0"
+        ],
+        "spendSplitCents": [
+          "1399",
+          "696",
+          "0",
+          "6196"
+        ]
       },
-      "digest": "0x216ebec9bdd41c90d9a0a37218feb7545f6bfc50874aa55c09199077548566a2",
+      "digest": "0xae33463ff86b7bd1a9d1b69d011e884cd8fa4893334f72f66ed7bdcf5a6e6ea9",
       "items": [
         {
           "category": "Built",
@@ -3941,7 +4739,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0xcb86aa0f03e2710c75f096f931983450cee7f49f8e2fb065cf5342f55cae116453c7ba89a8ebf9be44ad96f13feec94ad71132071d7e5d988f2eea7aa37b40b71b",
+      "signature": "0x978408826776662a131e9a4ad70e47df6897585537df2ac6615dd5220e72575223d17be4da911de778e89143129fc0d5cade4c9001dfbeb0baee8560024c1d3d1c",
       "signedAt": "2026-11-02T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -3951,7 +4749,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$12 of AI got 2 things done",
       "oneLiner": "Fixed 1 bug and planned 1 thing.",
       "message": {
@@ -3991,9 +4789,51 @@
         "itemsRoot": "0x60815eaf578d2feaac55c4f1005ee0e1e09167188cc4130fc6d69b9c3b048bf5",
         "evidenceRoot": "0x6e90eb1a32e3a06c8f02b462b7705f0281db87cf2087b057e9d3a004cb2aa423",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 34,
+        "stageMinutes": [
+          16,
+          28,
+          6,
+          4294967295,
+          4294967295
+        ],
+        "stageCounts": [
+          1,
+          1,
+          1,
+          0,
+          0
+        ],
+        "prCounts": [
+          1,
+          0,
+          1,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        "wasteCents": [
+          "521",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "0",
+          "0",
+          "634",
+          "521"
+        ]
       },
-      "digest": "0x4c2be73464ff8209dc3295b3308d93ae70d7f0ed55ec33719295fd580dc47ade",
+      "digest": "0x5e4902d928fd5a31d544910cef3df2463829e7c00c95d9101de431b9d7391455",
       "items": [
         {
           "category": "Fixed",
@@ -4068,7 +4908,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x366a10eaa49c9e1ffb09d68779b04bfa2865f6e158ea571ffffaf99dfb3b89b452a98afe9e0df7b6a01d4f45f93a16e9e810cd3ba017464e577725328df125c11c",
+      "signature": "0xf1b2b39549c7c9fe6083a7fee465c195d307a8c857ba9873c6b5155f029eb64b69f0c5f27d1ea250dba36f135a039506fd6fbd85cb2abb96c778d2f4c059d8df1c",
       "signedAt": "2026-11-06T12:00:00.000Z",
       "share": {
         "level": "full",
@@ -4078,7 +4918,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$17 of AI got 2 things done",
       "oneLiner": "Built 1 thing and researched 1 topic.",
       "message": {
@@ -4118,9 +4958,51 @@
         "itemsRoot": "0x51ecbca458bd6ad259c994578807984e79238ed3fcf42b772d59c4fafd9cbe68",
         "evidenceRoot": "0x8ea61d235ead86e28c9c6569b8a29cba445470c9430c0cb2cf9efa6c30f148f7",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 47,
+        "stageMinutes": [
+          24,
+          4294967295,
+          4294967295,
+          2646,
+          2696
+        ],
+        "stageCounts": [
+          1,
+          0,
+          0,
+          1,
+          1
+        ],
+        "prCounts": [
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "1483",
+          "228",
+          "0",
+          "0"
+        ]
       },
-      "digest": "0x26cb5096cd918a57d20147d440ab0ae3e94bc85ff5742fa1fca6aeb060a84fd0",
+      "digest": "0xa1d04e99c93b778bde81c30334884db1969f3f58cfcb16bfc10b1775a42a8415",
       "items": [
         {
           "category": "Built",
@@ -4195,7 +5077,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x66da509938eeb2e4a9d625ca10a9231489c1ded43f4729e686c73515cb17f8e67ffb31c8337cf791967d36291a66c268b9a18aa74c9dc194a331fa95674143621c",
+      "signature": "0xdd370e2d02ef0d10f723670c2f624b7b95dc849c273ffd7c2631704eecb6172c1cbfba98e38f0c7263480f7f2e60c012b58f1150da0399bbe4e909a1681c4da71b",
       "signedAt": "2026-10-12T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -4205,7 +5087,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$175 of AI got 5 things done",
       "oneLiner": "Built 5 things and went in circles once.",
       "message": {
@@ -4245,9 +5127,51 @@
         "itemsRoot": "0x7fb01748f6abb0c54e1b4453bcbd6d362c86c1499f270176cf70323e6adc7a79",
         "evidenceRoot": "0xc99fcb0c1a14dc80ef83333e0f34c297729746f40f812760ff4859985a28705e",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 139,
+        "stageMinutes": [
+          21,
+          52,
+          12,
+          813,
+          887
+        ],
+        "stageCounts": [
+          6,
+          4,
+          4,
+          5,
+          5
+        ],
+        "prCounts": [
+          5,
+          5,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "0",
+          "1487",
+          "0"
+        ],
+        "spendSplitCents": [
+          "16046",
+          "0",
+          "0",
+          "1487"
+        ]
       },
-      "digest": "0x87c76cd5b7f4da42ec991b8a8a275ecac8d6939181d2bc0dcedbef4a6d374f56",
+      "digest": "0x118227cd95c9c5f7d3b3a2db3ec8e1791fe0e3b4b72b91b3a0c9ec93708233e9",
       "items": [
         {
           "category": "Built",
@@ -4406,7 +5330,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x463cfeb42f97201ff8fa1378413a5389db25b46aba657a35a7d6a9d531387abb7564a8ba721098f4a2ebb65a556bb2ad1af8faf533b2cd5aebcc450561201f6b1b",
+      "signature": "0xdf2b0468e671e70f3d6e33f390cd163ef5a92ea8f147e5793d474164b15d82301720cdfa534388df7cfd036a27724230419549504d282c6b64db40b7fcd4595c1b",
       "signedAt": "2026-10-19T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -4416,7 +5340,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$136 of AI got 5 things done",
       "oneLiner": "Built 2 things, fixed 1 bug, figured out 1 problem, wrote 1 piece and went in circles once.",
       "message": {
@@ -4458,9 +5382,51 @@
         "itemsRoot": "0x45d4062bf26ece845e7174dbcf80f0066a6042d179ba7009256ad6800776a2e9",
         "evidenceRoot": "0xef743d49353be3bb52ce09032fa9423a31e3d5ae4a3a44a817b30f245158375d",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 195,
+        "stageMinutes": [
+          36,
+          46,
+          9,
+          916,
+          995
+        ],
+        "stageCounts": [
+          5,
+          2,
+          2,
+          4,
+          4
+        ],
+        "prCounts": [
+          4,
+          4,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          2,
+          0,
+          1,
+          0
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "0",
+          "952",
+          "0"
+        ],
+        "spendSplitCents": [
+          "12128",
+          "544",
+          "0",
+          "952"
+        ]
       },
-      "digest": "0x24bab0057e97b57f90da3084f85ecb264b21328decbce6fb0cc1201fb0a6e00b",
+      "digest": "0x41c44c7e052adde695cd4f6087a598e17ac16f6dc647af36cc16f6338586ee65",
       "items": [
         {
           "category": "Built",
@@ -4606,7 +5572,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x77a4eabf1f7cd0fabdb7401e9b37207b631ff513d1f5b2cf2e2a055314d6d89b54aa5a328332507ba70f2f1ece9d801373bfafc7edcebdd6b4b39f78fb956dee1c",
+      "signature": "0x4d1d5cc925d9a2f715d64ec6e005d6f2662099072c2d69146ac43be4a0ebd12102ac726f1cccf5c3021fcd6f0e728aef98eb2be98f69cbf7754ba23232e9f0d71c",
       "signedAt": "2026-10-26T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -4616,7 +5582,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$225 of AI got 5 things done",
       "oneLiner": "Built 2 things and fixed 3 bugs.",
       "message": {
@@ -4656,9 +5622,51 @@
         "itemsRoot": "0xe5974bed0595479308c35d4d3e7c9ffba6564826515dfea8982de96dea3949a4",
         "evidenceRoot": "0x7b8f7c3f11025c83afce66cceabda202c124ad4af7ca12deca65014032323687",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 97,
+        "stageMinutes": [
+          20,
+          45,
+          12,
+          1515,
+          1585
+        ],
+        "stageCounts": [
+          5,
+          4,
+          4,
+          4,
+          4
+        ],
+        "prCounts": [
+          5,
+          4,
+          1,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          2,
+          0,
+          0,
+          0
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "18255",
+          "0",
+          "4252",
+          "0"
+        ]
       },
-      "digest": "0xf1e4b9b7c869a905d6b9b43c2b0306f3b19618378e6de5e397487e801a41d980",
+      "digest": "0xd6edb1af7ee67409d19de9dfd09c6de4c89e9a00c7bb402527c682b3eb71edb4",
       "items": [
         {
           "category": "Built",
@@ -4809,7 +5817,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x0b9e24354167666a6797f491335510c0548edc27ffd7df25c9efc23e2d3e841728f365f5a4ed26cd60ed01fb6879831fe8e72f421a0ec40560ba1ca22061392e1b",
+      "signature": "0xc8b39c2e81c85af1f5b11629cf36de8c99acc5ed5c371fe9cc64058c685d18aa0534dcb9216f2195e5f4640073ec4592c8b9d16de9116a4bdb0bd1e6351609261b",
       "signedAt": "2026-11-02T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -4819,7 +5827,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$97 of AI got 3 things done",
       "oneLiner": "Built 3 things.",
       "message": {
@@ -4861,9 +5869,51 @@
         "itemsRoot": "0x91266a1b8940b67484ac0a038f412994a755abb7906af3e889c1a9d54b46cf92",
         "evidenceRoot": "0xc35059ab982ac077ca441bcc94a7d3641599a9d15613ab4af8e11c94b70d508e",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 125,
+        "stageMinutes": [
+          49,
+          4294967295,
+          4294967295,
+          1364,
+          1488
+        ],
+        "stageCounts": [
+          3,
+          0,
+          0,
+          3,
+          3
+        ],
+        "prCounts": [
+          3,
+          3,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          0,
+          2,
+          0,
+          2
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "7546",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "2119",
+          "0",
+          "0",
+          "7546"
+        ]
       },
-      "digest": "0xad8781acb52e875e609a57f587f3acc6bf81b9412bdf08abcff272a3c2a390e5",
+      "digest": "0x9929429c719584e3c8ed9cb9916092a89437ec7a4c0f6258352aeed9d6756f5e",
       "items": [
         {
           "category": "Built",
@@ -4972,7 +6022,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0xb02d0cf18cc52a8424f9faf12ba757ce428e663c2f9d0280b145e36c3bb465a138c9779eab7fb046b1bc86c8ea56444e14b311999e68f355407639b51bf6d4d11b",
+      "signature": "0xd6ae913fcd902b3f1146b1a45c09f58035cd7e6d7ba7de160641889c418bc2117d9d80bf19c29c4e29bf1ec16b06b004194cedc5a4185526f1cd75691827413e1c",
       "signedAt": "2026-11-06T12:00:00.000Z",
       "share": {
         "level": "full",
@@ -4982,7 +6032,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$52 of AI got 3 things done",
       "oneLiner": "Built 2 things and figured out 1 problem.",
       "message": {
@@ -5024,9 +6074,51 @@
         "itemsRoot": "0x4a6436d93db4d7df25703e5e66c9e77b12dbc2ffb4273fcbe1e90c8ec084f73f",
         "evidenceRoot": "0x81187919b6ff61eef8b8427e1a7285c5995d7aa019fa63883ada01b5b51bbe55",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 48,
+        "stageMinutes": [
+          16,
+          40,
+          9,
+          926,
+          1000
+        ],
+        "stageCounts": [
+          2,
+          2,
+          2,
+          1,
+          1
+        ],
+        "prCounts": [
+          2,
+          1,
+          1,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "1394",
+          "250",
+          "3526",
+          "0"
+        ]
       },
-      "digest": "0x8155500e2713290fc45863bde609433e1099f3e470edfb9faadeede2bbf03e7d",
+      "digest": "0x2794e80aa0b24d839af29c53ef5521cc5e8271bb9930755037a5d890a7de1f5c",
       "items": [
         {
           "category": "Built",
@@ -5122,7 +6214,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0xdcce4874dc6e2dea674feb90def76bd02eea4d826d0ad327362887b49c18c1c6375408bf800c7e1e0d8de1a43cd50b379bfa02989ca8b2e5d3218d8734eed3951b",
+      "signature": "0x74646ec912371c4749820fe362210ef30cfe03480f55bdb0821253fe3da643f866381964f412987b48a673487fa556702e7818e0ab0247fa4487778bc7a27fe31c",
       "signedAt": "2026-10-12T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -5132,7 +6224,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$206 of AI got 6 things done",
       "oneLiner": "Built 3 things and fixed 3 bugs.",
       "message": {
@@ -5174,9 +6266,51 @@
         "itemsRoot": "0xe9909913f8e883be650bc1c41916713a5d3959c02cce5b18e16031e1a66e140f",
         "evidenceRoot": "0x3acf87f7668713a5c15a425c90788c5ea283a1fe388335858edb9cb29d02c102",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 161,
+        "stageMinutes": [
+          28,
+          62,
+          7,
+          1229,
+          1320
+        ],
+        "stageCounts": [
+          6,
+          5,
+          5,
+          6,
+          6
+        ],
+        "prCounts": [
+          6,
+          6,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          1,
+          1,
+          0,
+          3
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "6018",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "14608",
+          "0",
+          "0",
+          "6018"
+        ]
       },
-      "digest": "0xf2ead94ac7112fc2c637b47c157800d0df54e6aa6c5f1a39ca0ca85ba3914c53",
+      "digest": "0x30dde77431f13e4fc175769491932c485afb8c10f1f9fba99d55191a2b7357f9",
       "items": [
         {
           "category": "Built",
@@ -5348,7 +6482,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x4b3549ff7d2fe47cddcd03589ccd849cd4258cf8985c45a8104e54038331750045acaf49d0423a64e922f03d34bd4338d230de76c1d10e8fb34bae53e81c5a811b",
+      "signature": "0x0c7cf989f6729664810d0ea7fa39a1600037d19af3c05de747278f2d42c0e3c9625db904bf268e2bc1fa39b69cd267b62f58c1b3a4e18967599059a853b95e6c1c",
       "signedAt": "2026-10-19T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -5358,7 +6492,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$102 of AI got 5 things done",
       "oneLiner": "Built 1 thing, fixed 2 bugs, figured out 1 problem, planned 1 thing and went in circles once.",
       "message": {
@@ -5400,9 +6534,51 @@
         "itemsRoot": "0x687f5430115c8ee2eefbec49ddb88ffbee5f75088728dfc76a536c646839409b",
         "evidenceRoot": "0x6ef63569f89b20d6feb166a7120d4f498ee2ba1b269335d188a898d204e1ed08",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 96,
+        "stageMinutes": [
+          7,
+          47,
+          12,
+          1691,
+          1750
+        ],
+        "stageCounts": [
+          4,
+          4,
+          3,
+          2,
+          2
+        ],
+        "prCounts": [
+          3,
+          2,
+          1,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          1,
+          0,
+          0,
+          1,
+          0
+        ],
+        "wasteCents": [
+          "268",
+          "0",
+          "0",
+          "2015",
+          "0"
+        ],
+        "spendSplitCents": [
+          "5325",
+          "355",
+          "2187",
+          "2283"
+        ]
       },
-      "digest": "0xe8f858be78f9176c5eb2145d67224b56d853209ccf97e6c7fa122b06d012f2b5",
+      "digest": "0x0b825cd7c7d3efc4f4ad8801fda2bb64cfe891dcf54e49531c38f6a05f37ec56",
       "items": [
         {
           "category": "Built",
@@ -5535,7 +6711,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x388a9236f20148c222564a8a7fedb7e62d48ab093dc9de05d0106232ef10e3f4631192b00d2ab8263e8e265618b8fc4892afdd51aade656ba96d5908fb1f1e391b",
+      "signature": "0xf6ba08119e25fc0aa19e003cd9bb3eb6e83f08d5462a6df0de1ee5861e3bbcd626e0edc8c7b424302df22b5cd88894d53af2e4220a55e5a4e83a59bb809671641c",
       "signedAt": "2026-10-26T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -5545,7 +6721,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$154 of AI got 6 things done",
       "oneLiner": "Built 2 things, fixed 2 bugs and figured out 2 problems.",
       "message": {
@@ -5587,9 +6763,51 @@
         "itemsRoot": "0x8384ecab324018da1eeb66535bb10edc9cc73ea0e4f980354e21cd5f9f4c3e76",
         "evidenceRoot": "0x297703993eb2cbdb47c4bc6ce595cc896a31a610ceb916bb50ad3ae43ee72c75",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 136,
+        "stageMinutes": [
+          18,
+          75,
+          13,
+          1228,
+          1295
+        ],
+        "stageCounts": [
+          4,
+          2,
+          3,
+          4,
+          4
+        ],
+        "prCounts": [
+          4,
+          4,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          1,
+          0,
+          1,
+          0,
+          4
+        ],
+        "wasteCents": [
+          "167",
+          "0",
+          "6933",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "8107",
+          "237",
+          "0",
+          "7100"
+        ]
       },
-      "digest": "0x1bdded5c7eb52bf7adea70c2da5f09c3c1e08a38d51da1b2ea46e97e296ae7f1",
+      "digest": "0x4c3b3de22ac497e9ebe49a6199ff1b4c1f987e51aa7a75b64417b89eac4be810",
       "items": [
         {
           "category": "Built",
@@ -5735,7 +6953,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x9d21fb071983a90c7a127f0bbaca0e47ec86a6871092b9b8deca0f4b99bd029a66d7b8945050126f2f65069b02204e7b6a2eddb3ff1b574e6ec0ca221644ec001b",
+      "signature": "0x7bce60b0345c3ed0cb3491eeed7a45661e8cb303691fcf888db70a8fabf425cd1b53bd58ed183889e6e2eacd2304b44faa3acd8df57004e87be245e3fe883a2d1b",
       "signedAt": "2026-11-02T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -5745,7 +6963,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$62 of AI got 3 things done",
       "oneLiner": "Built 1 thing, fixed 1 bug and figured out 1 problem.",
       "message": {
@@ -5787,9 +7005,51 @@
         "itemsRoot": "0xe6fbaecda7b2008a229651e4a0bd8485bc3814f8246cdcf9faed27f5c3a49858",
         "evidenceRoot": "0x2a02865279d2e06a6cccf435bdf879f79c640b81e5d1b89cfb78e80606f61e22",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 93,
+        "stageMinutes": [
+          33,
+          51,
+          10,
+          1552,
+          1644
+        ],
+        "stageCounts": [
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "prCounts": [
+          2,
+          2,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "6099",
+          "134",
+          "0",
+          "0"
+        ]
       },
-      "digest": "0x76e202c2e49ab2027b84f5298400c0472e3ead0afdaa9795c5160e1747ecd300",
+      "digest": "0x53bc415ff746701ea69056eac6810aab8861f9bf8684232a724952ceca9042d8",
       "items": [
         {
           "category": "Built",
@@ -5885,7 +7145,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x8c9ea9efd95b5efca803e6e7e1c78008bcec8bde706539ed826937786af182a55d6179cee3f7140a8fdc3ede67eacda774b85c06c95b5653ce2e3e7b645d87941b",
+      "signature": "0xb94b4bad9b33622a2dcf54ca40eee1e118d863806c4bb07c9d124cdc33c682b720a610444ec7fd758b4fd5a9e4af317e6f2814c70fd5cf75875031afc0a386e51b",
       "signedAt": "2026-11-06T12:00:00.000Z",
       "share": {
         "level": "full",
@@ -5895,7 +7155,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$36 of AI got 2 things done",
       "oneLiner": "Built 1 thing and figured out 1 problem.",
       "message": {
@@ -5935,9 +7195,51 @@
         "itemsRoot": "0x7442c117f0d391605376bd923f7cc6712fffc6327b814371f9e845e4c7d35046",
         "evidenceRoot": "0x567d99c3bab8cb57b4ea529ff487ba57d68044b0670657883c792b65c628a745",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 69,
+        "stageMinutes": [
+          37,
+          4294967295,
+          4294967295,
+          2209,
+          2380
+        ],
+        "stageCounts": [
+          1,
+          0,
+          0,
+          1,
+          1
+        ],
+        "prCounts": [
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          1,
+          1,
+          0,
+          4
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "3131",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "0",
+          "463",
+          "0",
+          "3131"
+        ]
       },
-      "digest": "0xc80d9f2ca8595d7a176ced9d4fcd90282bd5ea434d7396e1976c2f9a5e4c875c",
+      "digest": "0xc15872328ecd47b51ff04efd27144eecc73f8bc1709aa2d27a30f95b0ded6a29",
       "items": [
         {
           "category": "Built",
@@ -6012,7 +7314,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x9a2b13ea313ca1251002bc34abd1c0c78f1878c0dab341932f80d838b4905ecf190a5f2d7a8b9009bb810aebc53b3afa1516c5dd4bc0869b0ef871cf55d55f031c",
+      "signature": "0x26427c5d9de23c197508bd1bfb78ae2ab64f848de32cb6502bd66b1f1cdd48010369d9321bc5d094458f403a2f5809bac1d7dc17fe52fe79c5c305ce682f1e1a1b",
       "signedAt": "2026-10-12T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -6022,7 +7324,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$151 of AI got 4 things done",
       "oneLiner": "Built 3 things, fixed 1 bug and went in circles twice.",
       "message": {
@@ -6064,9 +7366,51 @@
         "itemsRoot": "0x77a6fb912ebb36ca13ad7b4381479aa3489612df6d80fc211649e9dfd3edfbff",
         "evidenceRoot": "0xf6fe2be2d773b4df644f84033e6a2ebdcaf8c3def3fd1439a1370b3f04a736d5",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 144,
+        "stageMinutes": [
+          26,
+          34,
+          13,
+          2179,
+          2239
+        ],
+        "stageCounts": [
+          6,
+          4,
+          4,
+          4,
+          4
+        ],
+        "prCounts": [
+          5,
+          4,
+          0,
+          0,
+          1
+        ],
+        "wasteCounts": [
+          0,
+          0,
+          1,
+          2,
+          4
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "5309",
+          "5532",
+          "0"
+        ],
+        "spendSplitCents": [
+          "4257",
+          "0",
+          "0",
+          "10841"
+        ]
       },
-      "digest": "0x7969509c3b4b3324098dffd7a9e2af29585fccd0c244aa1f91bb18127c2a488e",
+      "digest": "0xf8d6e2853c43f9f14ccf49c819a0a435235b008494e5f3fccf7f995f4ceb57ce",
       "items": [
         {
           "category": "Built",
@@ -6225,7 +7569,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x09d53ac8cba042beb1359b9039dd4a9ca575912c9c633939189bbf4354a561a332885984873c28a842945d3c08f4a39e94b161af5b111a848fd99c372814ad581b",
+      "signature": "0xdcc02036d6d699c2c5baeaa5bf25ae92e0a501d38e672e3e14ce133eef32fd7b4d242e0dc3ca09f666a75cbd434c23d0ac18553bd6e115bafe5c5e2afc5f7e811c",
       "signedAt": "2026-10-19T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -6235,7 +7579,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$127 of AI got 6 things done",
       "oneLiner": "Built 2 things, figured out 1 problem, wrote 2 pieces and planned 1 thing.",
       "message": {
@@ -6277,9 +7621,51 @@
         "itemsRoot": "0x3b17fc4a37656627d442591e02da96f8a555aead4b092f7c67417b3dee400be0",
         "evidenceRoot": "0xb5bde5a4b794e8e744304880e9bd9a43cdf4fa48b88f9aed54c406d06a4f458d",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 145,
+        "stageMinutes": [
+          18,
+          66,
+          3,
+          2132,
+          2193
+        ],
+        "stageCounts": [
+          4,
+          3,
+          3,
+          3,
+          3
+        ],
+        "prCounts": [
+          4,
+          3,
+          1,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          2,
+          0,
+          1,
+          0,
+          3
+        ],
+        "wasteCents": [
+          "479",
+          "0",
+          "4941",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "4324",
+          "2966",
+          "0",
+          "5420"
+        ]
       },
-      "digest": "0x7b4a9299f0b9c6ff3f122012d23e36ebd4389b4f9a9a73a4f3b0f660485baeef",
+      "digest": "0x13f4180cc50445acb0b7538feb0a0ecccb7f580e9bdb36ec5d3fb413ec63be0b",
       "items": [
         {
           "category": "Built",
@@ -6425,7 +7811,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x41caa143e69a509fb19261b14f63cbb80aea7ae7dfda93f97bc80ffd01cd55ca47e46b7e7b2b8f87455afd3cbe74a4aebfddc8f2cb881826bb7c6a11acf93c571b",
+      "signature": "0xf4aeb7a621443d97dc08710d4bf1c1d68397aa45fe7be70e13f095ae8a9b6a46240a87f1ea9e14f39813a28d38031cdbf01360477aeb1dbca5b87d4ab661a2d31b",
       "signedAt": "2026-10-26T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -6435,7 +7821,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$51 of AI got 5 things done",
       "oneLiner": "Built 2 things and figured out 3 problems.",
       "message": {
@@ -6475,9 +7861,51 @@
         "itemsRoot": "0x89241837b5b8ac26dda07597ae7b8766981ad38d09c28a9b01db802f8a0479c2",
         "evidenceRoot": "0x2acb6ac38ebdec6a703e37706cc090610eda61d325b421249063436e9cc84eb2",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 139,
+        "stageMinutes": [
+          25,
+          53,
+          7,
+          2143,
+          2232
+        ],
+        "stageCounts": [
+          2,
+          1,
+          1,
+          2,
+          2
+        ],
+        "prCounts": [
+          2,
+          2,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "4025",
+          "1096",
+          "0",
+          "0"
+        ]
       },
-      "digest": "0xb3ba509fca498eb3d7a406c3c060696b34b9caaa3f9d96d0430d58127b608930",
+      "digest": "0x7e6539175f4b267c73c26d779c13929e31b82e79358db53ebac175ce2191c3c8",
       "items": [
         {
           "category": "Built",
@@ -6589,7 +8017,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x1ac6bd550aaafbc649b0bad61a881f99fdbec6510f1ad0f431d3b520197a2b7c2a345f53bc35a70e53ecba85e2339be02fd8d733727691e711ed78c70e0564a11c",
+      "signature": "0x6f8485844d8c5576b06c30a1dc1f62d69dd8100485e20f6b7da8e7022d0c35eb53d67e028ad6261f7da8bec52e42827b7974ec8f282260f42688b7e82aac53831b",
       "signedAt": "2026-11-02T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -6599,7 +8027,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$13 of AI got 2 things done",
       "oneLiner": "Figured out 2 problems and went in circles once.",
       "message": {
@@ -6641,9 +8069,51 @@
         "itemsRoot": "0x0ee97d3d85506bd743aeebe6eea85d9f8aa17c53e4396b65142568e87bf92d02",
         "evidenceRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 88,
+        "stageMinutes": [
+          36,
+          24,
+          4294967295,
+          4294967295,
+          4294967295
+        ],
+        "stageCounts": [
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        "prCounts": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          1,
+          0,
+          0,
+          1,
+          0
+        ],
+        "wasteCents": [
+          "105",
+          "0",
+          "0",
+          "718",
+          "0"
+        ],
+        "spendSplitCents": [
+          "0",
+          "447",
+          "0",
+          "823"
+        ]
       },
-      "digest": "0x3f24c132617905f03547c7fa87fe0fe8acda21d6c14f4bd0bac3a235a93d022d",
+      "digest": "0x6b35972133176db0f977fa0feb2332e963c25ffb015f744436f28328263fdc74",
       "items": [
         {
           "category": "Figured out",
@@ -6712,7 +8182,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0xce7ea053b919950683c74f73b4300552d199304b803c27b820d284a2c747f8b77478dfeed1080afd792f9d190e2f3030bfd5bae228d1e5c0ac95f8ab205938701c",
+      "signature": "0xcefe3d5e32b9d355cc9f426acb7988d49336ffddafdac853f534d0e4010f216b584ef22cab8e689c9247d6e13787e9ba7a78834b43e6338e7364442f0893184b1b",
       "signedAt": "2026-11-06T12:00:00.000Z",
       "share": {
         "level": "full",
@@ -6722,7 +8192,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$100 of AI got 3 things done",
       "oneLiner": "Built 3 things.",
       "message": {
@@ -6764,9 +8234,51 @@
         "itemsRoot": "0xa27b304bc4b625ca6032cbd658c3af49a63e90071210107a31a3984591143a96",
         "evidenceRoot": "0x66b8c7ff8b807851e543438c7050b765bef1541788381a5834a63842c7389516",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 52,
+        "stageMinutes": [
+          14,
+          41,
+          5,
+          813,
+          1000
+        ],
+        "stageCounts": [
+          3,
+          1,
+          1,
+          3,
+          3
+        ],
+        "prCounts": [
+          3,
+          3,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          1,
+          1,
+          0,
+          3
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "5456",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "4579",
+          "0",
+          "0",
+          "5456"
+        ]
       },
-      "digest": "0x970aae9e2f25f7df957c86c85b4e97b145e6151b7cd9c971ac8c68480db0ee3d",
+      "digest": "0x334fa2e2bf3fd6b96cf8fd56fe0ba908ac2827f433f9f127959efe1c874759e7",
       "items": [
         {
           "category": "Built",
@@ -6875,7 +8387,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0xe76162c248332307a2e3f418ff67de3ffe4c6dffa8404c80041897fc67804ccf53afc781e6a906184c03def7f81319c9e865d2de4a728c702ac27ffb1e74defb1c",
+      "signature": "0x41f83505d962c9d4eed4c34481010fe05d065a94e69fea7e00924b9766cc41976bbe7ac2b9a81848b6edcdf37a4b367103f86a9a610708d038d390642ca71ee41c",
       "signedAt": "2026-10-12T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -6885,7 +8397,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$96 of AI got 6 things done",
       "oneLiner": "Built 5 things and figured out 1 problem.",
       "message": {
@@ -6927,9 +8439,51 @@
         "itemsRoot": "0x0ae721903beb32628588dab094b4a205eda36975d3aa2cebb0ff5c22a631118e",
         "evidenceRoot": "0xb85037f71c950e0d1bd8230c44cfbe6660c39acf3e944df1405413c9d5f82668",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 126,
+        "stageMinutes": [
+          23,
+          21,
+          10,
+          1664,
+          1715
+        ],
+        "stageCounts": [
+          5,
+          3,
+          4,
+          4,
+          4
+        ],
+        "prCounts": [
+          5,
+          4,
+          1,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          1,
+          1,
+          1,
+          0,
+          2
+        ],
+        "wasteCents": [
+          "118",
+          "0",
+          "2769",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "6037",
+          "0",
+          "685",
+          "2887"
+        ]
       },
-      "digest": "0x38b81e691364cf08ca8bc4d41c0501cca50db25f36b0c6c35acefc7fcae47c9b",
+      "digest": "0x1d63c291e58547fcce825e03e919d8ac1e5d02d6c1dc61fccb7b54791a3ce211",
       "items": [
         {
           "category": "Built",
@@ -7088,7 +8642,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x3139fcf88cc48ead5deaae72a15b2bffd4d2a865680df39213399e1db222fad47e620f2671b120849a7e11ab9fa6cd7eab0ea3f0b3878b33f7fa44c2686e67551c",
+      "signature": "0x10b4f204672be74e633719b21eed738ec73143d67d82636be9188e43c795c669475adb05805adc25cb3d7cd8529495a0a55500cc39683fbb8115036ad92812631b",
       "signedAt": "2026-10-19T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -7098,7 +8652,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$131 of AI got 5 things done",
       "oneLiner": "Built 2 things, fixed 1 bug, figured out 1 problem, wrote 1 piece and went in circles twice.",
       "message": {
@@ -7140,9 +8694,51 @@
         "itemsRoot": "0x9287e5190806635c05a3d39c4180f70f64f03df5dff0a7a50c9b69b2c0f77d91",
         "evidenceRoot": "0x49badd67401b377641923badca582fcb6c1a760413a18b597b159e05a38139a5",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 104,
+        "stageMinutes": [
+          12,
+          46,
+          11,
+          2487,
+          2555
+        ],
+        "stageCounts": [
+          6,
+          3,
+          2,
+          4,
+          4
+        ],
+        "prCounts": [
+          5,
+          4,
+          0,
+          1,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          0,
+          2,
+          2,
+          6
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "8298",
+          "2777",
+          "0"
+        ],
+        "spendSplitCents": [
+          "1473",
+          "581",
+          "0",
+          "11075"
+        ]
       },
-      "digest": "0x9d951a9571b983de9aa55fede6cae241b7afdc88eb6fd4bf6b7520809d9441e4",
+      "digest": "0xdf08158b52d8bfe00483b5c6d53e832b93fc923d219f649f495a4ff6439b633f",
       "items": [
         {
           "category": "Built",
@@ -7309,7 +8905,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x85f4d861ec253fcb09bf431f29ef87d1fafb16bbb3c1133a3c0716777b34b8a20632bdaf746fdd8f2cb5ce33a611310c9b5f1e82bfe3bc801408084b54ab35431c",
+      "signature": "0x612faee1933269d130ad55da537adaeb2a45634465696c3221e3f6d24f31b0c40fcd0f0c13f5db6defe0375b18b6965b8f70fe08e0e1015202849bc006352af91c",
       "signedAt": "2026-10-26T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -7319,7 +8915,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$151 of AI got 5 things done",
       "oneLiner": "Built 1 thing, fixed 3 bugs, wrote 1 piece and went in circles once.",
       "message": {
@@ -7359,9 +8955,51 @@
         "itemsRoot": "0x1461f53117ae46ca808d548a0c3251fe31697b7696c185d3a51cd125176755b0",
         "evidenceRoot": "0x226e586a4d5d83ce56627ecfbf7e152093031213c0157e01d9905dacbf925e9c",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 169,
+        "stageMinutes": [
+          31,
+          35,
+          10,
+          1174,
+          1330
+        ],
+        "stageCounts": [
+          6,
+          5,
+          4,
+          5,
+          5
+        ],
+        "prCounts": [
+          5,
+          5,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          0,
+          1,
+          1,
+          2
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "1952",
+          "1240",
+          "0"
+        ],
+        "spendSplitCents": [
+          "11891",
+          "0",
+          "0",
+          "3192"
+        ]
       },
-      "digest": "0xa18ba6c33499ca96715fb32e2716c7e5b38a844841aa9cc45583f3eb34e0facf",
+      "digest": "0x7f0f6ff26bd22590d3ec9376aec2dfae580d320e6151c9137e05e7c7d44848de",
       "items": [
         {
           "category": "Built",
@@ -7520,7 +9158,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x0cbbe28b3c6458ead07760355079844d7653d81bbc988549c422e4e9296edfef2f7305362bffa29a6de20ad8aa391cc5325d165b95aecea376723d66dc8289a01b",
+      "signature": "0x2194852658f3e3e2043b9e53889d821c2f464663d58791298ed75655776e399e567efe2f080522c5d1194160797996e5c78bf3e7681ce830919b111421974a8b1b",
       "signedAt": "2026-11-02T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -7530,7 +9168,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$84 of AI got 3 things done",
       "oneLiner": "Built 1 thing, fixed 1 bug and planned 1 thing.",
       "message": {
@@ -7570,9 +9208,51 @@
         "itemsRoot": "0x0273d2cc8cef9818c2759f9c0d9841926f55fd930b6416188fbbfb9994787fb0",
         "evidenceRoot": "0x04b96d4957cfcb3e4c2b4a0bbc937ac818df1350b0a21f554ee31fa54da22797",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 68,
+        "stageMinutes": [
+          23,
+          50,
+          16,
+          2991,
+          3067
+        ],
+        "stageCounts": [
+          2,
+          1,
+          1,
+          2,
+          2
+        ],
+        "prCounts": [
+          2,
+          2,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "wasteCents": [
+          "371",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "7991",
+          "0",
+          "0",
+          "371"
+        ]
       },
-      "digest": "0x0f388b518b9afb90167b2893c52dae0eb9ca7cbd4fbdd4864473b106cc18953d",
+      "digest": "0x9ea02bea992d6de3c61df2ea7b0664320412c5ed2678cb43a14fcc07688a2dab",
       "items": [
         {
           "category": "Built",
@@ -7668,7 +9348,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x256989ed13173c98fa4f23d7a7396aaf18b00127f69faae47ef8ad0e3a8306670967f9da4bfbce77b318c842e1ff3be138a792186e0a279aaed0409529ce3f901c",
+      "signature": "0x153d117bc37cbe5447f2f70ac9b89f2236f519110b8550c2ce5f47150962b312443c1f4e72844797e9de830e155590f6b035bd5fc81cbb466bfb072ed066b7191c",
       "signedAt": "2026-11-06T12:00:00.000Z",
       "share": {
         "level": "full",
@@ -7678,7 +9358,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$93 of AI got 3 things done",
       "oneLiner": "Built 2 things and fixed 1 bug.",
       "message": {
@@ -7720,9 +9400,51 @@
         "itemsRoot": "0x5ceebfe595bcbb4470b5ba3b442257a6346777e9405f11780e09c7735f36afd8",
         "evidenceRoot": "0x5635a3f0605a9d402bd254cbd11df8816db4635493d005af959d4a8c32fb4cc7",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 66,
+        "stageMinutes": [
+          26,
+          4294967295,
+          4294967295,
+          1601,
+          1708
+        ],
+        "stageCounts": [
+          3,
+          0,
+          0,
+          3,
+          3
+        ],
+        "prCounts": [
+          3,
+          3,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "9301",
+          "0",
+          "0",
+          "0"
+        ]
       },
-      "digest": "0xd15776d4ecaa0537e7f05f553ee07bf01625256af2052259d8c769c9f612a08c",
+      "digest": "0xd821fbb6f07c267cf691d8a8e68f06809b5e44cda3833a1d90fa4e05db3eff2e",
       "items": [
         {
           "category": "Built",
@@ -7831,7 +9553,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0xedd8326bce9c0126ec31f5943cbace447ef03d4f91096378131f9676ef65642b56b0f1350667d737dc14f48881118e6f1283cd8cb3fcf5a2f56677cd227a18cf1c",
+      "signature": "0xb85411df57123461ed1c6bc472bad60ff9252add2e819492d81a9958b6749cca16198d7d264dc7b677943416f2fc5ad4b137708b447de067ad559007362537af1b",
       "signedAt": "2026-10-12T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -7841,7 +9563,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$186 of AI got 6 things done",
       "oneLiner": "Built 5 things and fixed 1 bug.",
       "message": {
@@ -7881,9 +9603,51 @@
         "itemsRoot": "0x4e290a9d274b66c41f27820d1ca88844245b403ddaf71de19e6e1387381cde91",
         "evidenceRoot": "0xb5143e0d96c523737dc791a4bd052742a3599b591a8d4d9d548179c13423bc62",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 190,
+        "stageMinutes": [
+          36,
+          34,
+          9,
+          2711,
+          2807
+        ],
+        "stageCounts": [
+          6,
+          4,
+          4,
+          6,
+          6
+        ],
+        "prCounts": [
+          6,
+          6,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "18559",
+          "0",
+          "0",
+          "0"
+        ]
       },
-      "digest": "0x28218f72058af70ba4cdf2d7bc613d0932cf6cedd3185d3dcd0aae32bf1d76f3",
+      "digest": "0xef3397440337ed3389591c9fc17acf0f36bb0c1576e1ebae21b9adff7294c79d",
       "items": [
         {
           "category": "Built",
@@ -8055,7 +9819,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0xbde5159b7b2f5bbd648e191222720c6ba4835b1872e81c7533d57f45364286e1546517849e72d08bba2a3f4cbbd5c344d53ee9a441aeb45db3ecf718ca4dce321c",
+      "signature": "0xd18372460fa11474444813558fcf8fc41ad9bdae5b42829fca87f01f9201b64101c616bc7946906395915f887aeaf294d409e51f8dd67d4acf9f38f449f2a1291b",
       "signedAt": "2026-10-19T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -8065,7 +9829,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$139 of AI got 5 things done",
       "oneLiner": "Built 2 things, figured out 2 problems, researched 1 topic and went in circles once.",
       "message": {
@@ -8107,9 +9871,51 @@
         "itemsRoot": "0xb1ea3a94e7932d6bc3b0aa0e0eaea156d4913b44f71bf720adfc11658445bf1e",
         "evidenceRoot": "0x5db791ad90fdaf5e82a59fec2b2c8ab332babb395027e4929b5d5b4f66f53b97",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 151,
+        "stageMinutes": [
+          32,
+          25,
+          7,
+          2154,
+          2212
+        ],
+        "stageCounts": [
+          3,
+          2,
+          2,
+          2,
+          2
+        ],
+        "prCounts": [
+          2,
+          2,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          1,
+          1,
+          0,
+          1,
+          0
+        ],
+        "wasteCents": [
+          "545",
+          "0",
+          "0",
+          "1232",
+          "0"
+        ],
+        "spendSplitCents": [
+          "11443",
+          "706",
+          "0",
+          "1777"
+        ]
       },
-      "digest": "0x3559bac653d3961632e6a05c4aa0ee99dfff134992917d12af72c30e36a771c1",
+      "digest": "0x820fd19c42bee5c465237d397a48a9b486b7b8daef73e6362bb7fe2c96f85865",
       "items": [
         {
           "category": "Built",
@@ -8229,7 +10035,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x23f58889de1159d2aa998f205855a9c435f259de3c8fefd1a63ad1fa8c76dcb33463d5b98ec4b63e16c108487a9a08afe47146138167c5c7680b3e949ed4aebf1c",
+      "signature": "0xf3135468fe288da05562638cd2a359c2e315a61dbabd6ab8a839bf439a17098516d6806548b84c73c331ddfc54d28470bdb492e70151acda1a80c4684f84a7021c",
       "signedAt": "2026-10-26T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -8239,7 +10045,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$117 of AI got 6 things done",
       "oneLiner": "Built 4 things, fixed 1 bug and wrote 1 piece.",
       "message": {
@@ -8279,9 +10085,51 @@
         "itemsRoot": "0x9a4e00288af53d58918742b4fa4ea9069cf6e5040cef2e9bd4ac30d55d541e28",
         "evidenceRoot": "0x59a9a7680edb5dc72752e17e60653dac0a72d247755dd746e530bc19f08626d8",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 108,
+        "stageMinutes": [
+          19,
+          31,
+          12,
+          3121,
+          3187
+        ],
+        "stageCounts": [
+          6,
+          3,
+          4,
+          4,
+          4
+        ],
+        "prCounts": [
+          6,
+          4,
+          2,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "4442",
+          "0",
+          "7286",
+          "0"
+        ]
       },
-      "digest": "0xc3eac06bd3d2757ef78dd5507e1d4b0c61607d12d997c2af1280948cd84cb6f0",
+      "digest": "0x9881951491a9b80017627217f9ce31a0d291953f1fe3510c171df17aae544c34",
       "items": [
         {
           "category": "Built",
@@ -8453,7 +10301,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x4b59494c3fbefab91c926e04ac8fd5205ed655676e318aa9effe2188f12e732c4b4a3288319010e32e3bf3b587b65ca2885a81e6d2f8f16d535a579d7e460afc1b",
+      "signature": "0xdcd5cbcd377b81b6b37c7a26c2da353ba40556b62e83ac0b2176181b8c42222e0f7da55b2ce819b94c4b4497cb468d9695cc436c6ed50c4f86a20c642068eca51b",
       "signedAt": "2026-11-02T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -8463,7 +10311,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$85 of AI got 3 things done",
       "oneLiner": "Built 1 thing, fixed 1 bug and wrote 1 piece.",
       "message": {
@@ -8503,9 +10351,51 @@
         "itemsRoot": "0x08d02504a5893503e013e36e9febfae7c16d074ccf3b0b07897472d2693d4c44",
         "evidenceRoot": "0x8fdd48628e0493c32799b0f9bb08f3b90d5e69a8b0f83780965243749498f81f",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 56,
+        "stageMinutes": [
+          22,
+          24,
+          11,
+          1998,
+          2088
+        ],
+        "stageCounts": [
+          3,
+          1,
+          2,
+          3,
+          3
+        ],
+        "prCounts": [
+          3,
+          3,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          0,
+          1,
+          0,
+          2
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "2851",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "5676",
+          "0",
+          "0",
+          "2851"
+        ]
       },
-      "digest": "0xbc5c46856a7751a88da71b68b5e3ee13611c365aa40ed3d0f805aef37d288ece",
+      "digest": "0x64a49331384cb8d737006b2fcd5e984765f1e259725d6f4051a3d205ebf3f065",
       "items": [
         {
           "category": "Built",
@@ -8614,7 +10504,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x9f6fb0ee6c91a340175d213cac67e48f767bfac40fde0b239d19c1b096204bb06b303047048bc76c311b4e47476d3fd060e1da0372a135f4b03d10b3982502111b",
+      "signature": "0x008a90a37a3b2538536b78a8c4c4d91b9ec667d59019521af16404db43fb25461c7344fbd4b9a6f298792a64c9e8d92ea67d171ac4799570f676d66f410e1de51c",
       "signedAt": "2026-11-06T12:00:00.000Z",
       "share": {
         "level": "full",
@@ -8624,7 +10514,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$23 of AI got 2 things done",
       "oneLiner": "Fixed 1 bug and figured out 1 problem.",
       "message": {
@@ -8666,9 +10556,51 @@
         "itemsRoot": "0x3402ab060786b4c9bde159ca0bf6410e624d4d3b35c86c07ade15539ba6acec6",
         "evidenceRoot": "0x4f4819105df22529560a0cd27939387c313bb3ee80e5d2728e4454fe5b5d35dd",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 53,
+        "stageMinutes": [
+          31,
+          33,
+          5,
+          1204,
+          1273
+        ],
+        "stageCounts": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "prCounts": [
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "wasteCents": [
+          "369",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "1891",
+          "0",
+          "0",
+          "369"
+        ]
       },
-      "digest": "0x9a0339beb18f5d7b74772b51091ca3c85fafafc12e73bfaf536b3f0bcea78088",
+      "digest": "0x86c2b13c32f56ba368751be9756df3bf3be319a28553e158f2e604735a757436",
       "items": [
         {
           "category": "Fixed",
@@ -8743,7 +10675,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0xba0390296e9c963d91a4b780b161a611bceb1577a5477c57e5a90eb1c5491a6b097ee306a461dba3a399afcba540650bef9f357f96ee8066ded3a9d8f9e3654b1c",
+      "signature": "0xc134dbcefac11a54c26ad2706c7db2556278bdd8ed4c7648a926f94b988c04ab25ccc479154189b13f7d1cb73d160299f587bebbdb8bbf426971de976e4977351b",
       "signedAt": "2026-10-12T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -8753,7 +10685,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$158 of AI got 5 things done",
       "oneLiner": "Built 3 things, figured out 1 problem, wrote 1 piece and went in circles once.",
       "message": {
@@ -8795,9 +10727,51 @@
         "itemsRoot": "0xab788338f01830c6b30cbc57b4785986ab5fbcaa46cf9d7506689739118cf71f",
         "evidenceRoot": "0x76308f963f023663f74af5a999bb800a24ec9801bd0da7bbbbc9851967be6708",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 165,
+        "stageMinutes": [
+          23,
+          36,
+          15,
+          2367,
+          2431
+        ],
+        "stageCounts": [
+          5,
+          2,
+          2,
+          3,
+          3
+        ],
+        "prCounts": [
+          5,
+          3,
+          1,
+          0,
+          1
+        ],
+        "wasteCounts": [
+          0,
+          1,
+          1,
+          1,
+          2
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "4410",
+          "1703",
+          "0"
+        ],
+        "spendSplitCents": [
+          "6861",
+          "2791",
+          "0",
+          "6113"
+        ]
       },
-      "digest": "0xae2df4610940d079403f02104a45c745fc34bc80183cc7de9ffafbae0487a32f",
+      "digest": "0x3349c90db787e460ea84b7d57971e2b219f79257e5b9d1b1e64267744b210746",
       "items": [
         {
           "category": "Built",
@@ -8956,7 +10930,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x62ce274312b34943152885e16d1e2323719d7e81ae8fbcf4075801b6f1b76e7224b378d036e3da30822a5b4463ceff55bb8b812f2960fece28b55e52ff965ece1c",
+      "signature": "0x85c8bf5d4c378a33365cbeea4176916b81b8d737f2a7b0980eb2cb9e0a4b63174f910e09885f00ecd18deaf8591ea2acbf92763496538b420fd433742b24ea7f1c",
       "signedAt": "2026-10-19T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -8966,7 +10940,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$135 of AI got 6 things done",
       "oneLiner": "Built 2 things, fixed 2 bugs, figured out 1 problem and wrote 1 piece.",
       "message": {
@@ -9008,9 +10982,51 @@
         "itemsRoot": "0x41e5125203b25917b00dc5e28d23aa448a735f726b5a56acd30941efaaee3f08",
         "evidenceRoot": "0x73d82d61bbf3aa727da9f8df0ed10bec006d7f17483766668598d9ec50149c4f",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 127,
+        "stageMinutes": [
+          26,
+          40,
+          7,
+          2400,
+          2474
+        ],
+        "stageCounts": [
+          5,
+          5,
+          5,
+          4,
+          4
+        ],
+        "prCounts": [
+          5,
+          4,
+          1,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          2,
+          0,
+          0,
+          0
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "11470",
+          "2078",
+          "0",
+          "0"
+        ]
       },
-      "digest": "0xa6b1bea8bc5083bdf744556691e027d635149f4adbd1100c4d328f4528fd5a13",
+      "digest": "0x5fcaff051ad4423abcf24a13ec8bd8606b6007b5552417a147077d5131ba0a02",
       "items": [
         {
           "category": "Built",
@@ -9169,7 +11185,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0xa868926484f3ca134c4a2f579f67960701e151d645fb20bce06a1667200db18642faec3ebad911f464df1d907f17d09e2997102741acff653a003d323d29ed0a1b",
+      "signature": "0x9317c4637d387bbba8a6182151575d31eedfa384ba935afa1be1cc9a9c50a3e86151886fa83971ce73cdadffbe8932e82144f203b64e1c7e7b217705d45ef3121b",
       "signedAt": "2026-10-26T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -9179,7 +11195,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$74 of AI got 4 things done",
       "oneLiner": "Built 1 thing, fixed 2 bugs, figured out 1 problem and went in circles twice.",
       "message": {
@@ -9221,9 +11237,51 @@
         "itemsRoot": "0xa41c2dc0c9d420b12d2562c4cd25dfa461e693b139957834894797d937a5bf92",
         "evidenceRoot": "0xe8add61c4d0c1e359f7792fd5884b9796a2b565e79df7e82162741e73fdd28de",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 117,
+        "stageMinutes": [
+          17,
+          19,
+          12,
+          957,
+          1007
+        ],
+        "stageCounts": [
+          5,
+          5,
+          4,
+          3,
+          3
+        ],
+        "prCounts": [
+          4,
+          3,
+          0,
+          1,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          1,
+          0,
+          2,
+          0
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "0",
+          "2137",
+          "0"
+        ],
+        "spendSplitCents": [
+          "4978",
+          "321",
+          "0",
+          "2137"
+        ]
       },
-      "digest": "0x54f5ff6a677455af84328e6799b0dabcf0fa161bc56ab617efc3fb386febff48",
+      "digest": "0xd6a9e26a2e95a3330b2416e44621c6b993094c747dfab5cbd23b29e8b08c3a76",
       "items": [
         {
           "category": "Built",
@@ -9369,7 +11427,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x1d269cbcd5800254c4534477b796203b8ef157c6d214b54732b09cc5f1e7a9b2519f2ea26c640d8661a765841412a4a66d5ad8ba15627b10b8dbacb6ce95f6c11b",
+      "signature": "0xb6ca266ec729c40ae23695617236a57ddb165e8b221a57d68891b2dcefc52cc6033a1ef5a1f973a8cc23fd6b7b71534dd95e8ce9c3fdeb40155588c150a0ae2d1c",
       "signedAt": "2026-11-02T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -9379,7 +11437,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$42 of AI got 2 things done",
       "oneLiner": "Built 2 things.",
       "message": {
@@ -9419,9 +11477,51 @@
         "itemsRoot": "0xa55f916f926faad57f5024af3d4dd2fd4d9c917beb50727d997459a852506b6d",
         "evidenceRoot": "0xdeec99e3830d67ed72c568b42c678faa8a9cc0dff0f4a95bd9f2378090e27142",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 53,
+        "stageMinutes": [
+          27,
+          4294967295,
+          4294967295,
+          3043,
+          3147
+        ],
+        "stageCounts": [
+          2,
+          0,
+          0,
+          2,
+          2
+        ],
+        "prCounts": [
+          2,
+          2,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          0,
+          1,
+          0,
+          2
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "2536",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "1628",
+          "0",
+          "0",
+          "2536"
+        ]
       },
-      "digest": "0x131577840d2bffd52ee6748a25a55d706c0ccc59cfc7afe6736e3680b7563f6f",
+      "digest": "0x22a4f65de38d929b62c350f5d51da188cf2259d091a27a478de9d2a77f668935",
       "items": [
         {
           "category": "Built",
@@ -9509,7 +11609,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0xe3eeaf8b8568d5c92efa7257f98c3e0d16cd12d89f0b5f986b73d6b8ae1f6d0238a213c7aa49c33a023368350a5389322d116db02ada75906fc273826c69b0e31c",
+      "signature": "0x7682840fa2d9756dfe9e3df40b14395a9237fa3a3d0cabd78f393f8aa60e8e9227f3a434fc51ace298e997c2f77ce723420dd9946eb29bc539e4b9fa2f34e2a91b",
       "signedAt": "2026-11-06T12:00:00.000Z",
       "share": {
         "level": "full",
@@ -9519,7 +11619,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$45 of AI got 2 things done",
       "oneLiner": "Fixed 2 bugs.",
       "message": {
@@ -9561,9 +11661,51 @@
         "itemsRoot": "0x3d63b6f7c7edb98d0c7efdd0fcd684f2c8412638414881061c92e5cb524c7661",
         "evidenceRoot": "0x8d6262e7ffa14e057d1614c4a2b581641488ae9e8b2f0e0a08e87cb73293ac4d",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 60,
+        "stageMinutes": [
+          30,
+          6,
+          9,
+          2080,
+          2165
+        ],
+        "stageCounts": [
+          2,
+          1,
+          1,
+          2,
+          2
+        ],
+        "prCounts": [
+          2,
+          2,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          0,
+          1,
+          0,
+          3
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "3096",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "1400",
+          "0",
+          "0",
+          "3096"
+        ]
       },
-      "digest": "0x64ab70593e489426b82157c51df306ad06d3cd5a9208ac293bb87bd36c4eb197",
+      "digest": "0xcdf91a78be98b71e88271ff15e043d60b6f863713ece4f88e56635cf4263e50a",
       "items": [
         {
           "category": "Fixed",
@@ -9651,7 +11793,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0xc2a00d4b4bde80fb316eb50a82fbb9e33dd32b7ea92452a116d9320645aa6e12659b5467cb8c68317ba66a07c1561b6f8fe7aa147dae7d40e4a3ba9579d24f1a1b",
+      "signature": "0x78740728ccd273ab23a254fa659253fea965958f5bc304de2155f12155ebfaf26b52b5814ab23ef3413661948fcba99f5374791e8d89cf66b154dd7018a2605b1c",
       "signedAt": "2026-10-12T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -9661,7 +11803,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$224 of AI got 4 things done",
       "oneLiner": "Built 2 things, fixed 2 bugs and went in circles once.",
       "message": {
@@ -9701,9 +11843,51 @@
         "itemsRoot": "0xa3e716aca364f6dec5107d2b1cb2435d90db81b7729a34443eb8b434980a01f1",
         "evidenceRoot": "0x2cd923d8d718ab695a9358bed3234ca789900e0036db546d377b776daa6b0150",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 94,
+        "stageMinutes": [
+          13,
+          4294967295,
+          4294967295,
+          2694,
+          2806
+        ],
+        "stageCounts": [
+          5,
+          0,
+          0,
+          4,
+          4
+        ],
+        "prCounts": [
+          5,
+          4,
+          0,
+          1,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          1,
+          3,
+          1,
+          7
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "13328",
+          "2661",
+          "0"
+        ],
+        "spendSplitCents": [
+          "6435",
+          "0",
+          "0",
+          "15989"
+        ]
       },
-      "digest": "0x3cdf80e7f44bcf87caead427807d7c2e7c5769e40d93a628d8d2ada64c39a526",
+      "digest": "0x3403dc58ebe5ee1f57d73478cc978860e2b5612b39b2fa00203b975984029820",
       "items": [
         {
           "category": "Built",
@@ -9854,7 +12038,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x0d68f7b5c961c1ed6717f3a657f7db2f65dcdef5e760b4ffa8c13cba992ad486076aa3bda1a6d59309206ca0d433ff7b6e3468d3169834a6d43a6e2f40d4a3331b",
+      "signature": "0x8f7f4b8509f3049cd0bcd1a56bdd8fc10e6fcad3a0d5a2deb4e38dfc9fee46493ee04e691fe0a792d7f9f7cb98d2ad532d89203abccf48e32d95f75706cef9f81b",
       "signedAt": "2026-10-19T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -9864,7 +12048,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$75 of AI got 4 things done",
       "oneLiner": "Built 1 thing, fixed 2 bugs, researched 1 topic and went in circles twice.",
       "message": {
@@ -9906,9 +12090,51 @@
         "itemsRoot": "0x2fc9b942b5091f9463024a1127a597b13fdb5feb03862be0d7cb597d04cd57fe",
         "evidenceRoot": "0xf21ffd042a22e532205da39d7876ab4c369e8b1509489156eb0f78284b161fd0",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 164,
+        "stageMinutes": [
+          28,
+          43,
+          7,
+          2778,
+          2821
+        ],
+        "stageCounts": [
+          5,
+          3,
+          3,
+          3,
+          3
+        ],
+        "prCounts": [
+          4,
+          3,
+          0,
+          1,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          1,
+          0,
+          2,
+          0
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "0",
+          "4201",
+          "0"
+        ],
+        "spendSplitCents": [
+          "3026",
+          "252",
+          "0",
+          "4201"
+        ]
       },
-      "digest": "0x1381efa1e2eb13146eb1cba592f0809da85a44ca21dcac371d92908260b88848",
+      "digest": "0xae7f023847a521de4e91a07c0c780dbeafd5fadf406e1acb8bb7a1bda026777e",
       "items": [
         {
           "category": "Built",
@@ -10054,7 +12280,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x1e663aa87a8152387225d2cf738f19b5d9e340624791a1d07b14a98e56e811294f216b2959599c11d0ce6ec21cb75d68dbfbc707411666554c4c75d95a29cf981c",
+      "signature": "0xe6c9607f5ca43d34de220e77b58a0fa584251d17e4edf48c20a97e4d1adc540046f141651cdb0f5aa7e26404a8b056df9993f3ba2e1c1426f883e03aaa93e9471c",
       "signedAt": "2026-10-26T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -10064,7 +12290,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$138 of AI got 4 things done",
       "oneLiner": "Built 1 thing, fixed 2 bugs, wrote 1 piece and went in circles once.",
       "message": {
@@ -10104,9 +12330,51 @@
         "itemsRoot": "0xa6333fc5c278b5925fdf2af26e08990dd17c1d323087523b2ab848cf2f7873f6",
         "evidenceRoot": "0xb5bbff69932c1643f157880af59755c7e2a30b53a04fb2f83c7022a100a2d27e",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 142,
+        "stageMinutes": [
+          31,
+          29,
+          7,
+          1635,
+          1804
+        ],
+        "stageCounts": [
+          5,
+          3,
+          3,
+          3,
+          3
+        ],
+        "prCounts": [
+          4,
+          3,
+          1,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          1,
+          1,
+          1,
+          1
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "6361",
+          "945",
+          "0"
+        ],
+        "spendSplitCents": [
+          "4157",
+          "0",
+          "2356",
+          "7306"
+        ]
       },
-      "digest": "0xea4d3768943a6ea20596ad2ecaa46e40b5a057e049b8b2831c22b4b9e2dce709",
+      "digest": "0xdd3f4ccd9ffec44c69f0b9ae6325d7ef9ee464f474342c1d40cd7c1076ff8bf1",
       "items": [
         {
           "category": "Built",
@@ -10244,7 +12512,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0xf900de1e371742f082503b7942af5928adf87ddb016d7f9e7ac1843e0348dd276cc2a0cf00a2b686836afbb1b694a67840b2c5920911ba6b75113f547dee40e71b",
+      "signature": "0x6b4459d01f98cebca34061b431369512e54960af035f8bf95c5c25ae479e4a8d0c312fc017e4108fd4f86692a731730f0e09e363ad57bce078c59026bfa98adb1b",
       "signedAt": "2026-11-02T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -10254,7 +12522,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$40 of AI got 2 things done",
       "oneLiner": "Fixed 1 bug and figured out 1 problem.",
       "message": {
@@ -10296,9 +12564,51 @@
         "itemsRoot": "0xfac31b987af82739c057a5915988400876eaafa716926f3809f92832b6d46123",
         "evidenceRoot": "0x853269c7d71c693a664f3f86cfa8d6dc12c03b43aa61fb07eebca50bbe43634a",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 94,
+        "stageMinutes": [
+          57,
+          4294967295,
+          4294967295,
+          2228,
+          2401
+        ],
+        "stageCounts": [
+          1,
+          0,
+          0,
+          1,
+          1
+        ],
+        "prCounts": [
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          0,
+          1,
+          0,
+          3
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "3500",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "0",
+          "451",
+          "0",
+          "3500"
+        ]
       },
-      "digest": "0x9a753f549faa828210e7e7aadebe7c7eaddaf761807b0e4350b018f1a249cf46",
+      "digest": "0xdc01128d48760dc7d3bd109464e8a31d2544b70777983041d2058ce12ad6813d",
       "items": [
         {
           "category": "Fixed",
@@ -10373,7 +12683,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x34ad9b87c32573bb0f6983ae201fb9ca45713094eef7e17759fdd5fdf6a64eb945b4142a70c9d58355f3f640d874a694b0ba98125ff73433d064889934c2fe101b",
+      "signature": "0x3355e0e5b30f9ad13c097c1f6da6f157bac1c67fee73cd0cbb401ed2c6dd7ae761ffd002da39a3249bfd526bf9c77efed60c5f5722a3bea484266347cdf7fa9a1c",
       "signedAt": "2026-11-06T12:00:00.000Z",
       "share": {
         "level": "full",
@@ -10383,7 +12693,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$131 of AI got 3 things done",
       "oneLiner": "Built 1 thing, fixed 1 bug and planned 1 thing.",
       "message": {
@@ -10423,9 +12733,51 @@
         "itemsRoot": "0x80d11a958b651f4d87e8334b7ac847da52d12301826935c14ec0e6a81bf89972",
         "evidenceRoot": "0x444fc42826e09844d6b1f2dd128387b63f2b9a19eec5dd951f0765b9670afa34",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 78,
+        "stageMinutes": [
+          33,
+          87,
+          11,
+          2428,
+          2558
+        ],
+        "stageCounts": [
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "prCounts": [
+          2,
+          2,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "12928",
+          "148",
+          "0",
+          "0"
+        ]
       },
-      "digest": "0x863f19fe3613ef9f7affb4b38003ea9c1745c2421d80e10b6bfdca41825d2fe1",
+      "digest": "0xee49fbd47cd03a2cee3273fb3bb105ad6620b8487ba61de21e07164f17fbe4e2",
       "items": [
         {
           "category": "Built",
@@ -10521,7 +12873,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x1ee025947da5713b8b550cb2fa68ea81baa5ecb2a3b06b27060ef0ae834e31c72fd1dec033f3fa68bae8f92e7490b5f8c8617920b926720e60bff92ccd4850fa1b",
+      "signature": "0xb9b66d60e1157a04b6d56c08ce0cb53a98b867e98bc93bfdc467ca8de2d8dd525eeedc95f0428c12e99ee0727ac0f5c87f0759aad3d118c234a193b59579c42f1c",
       "signedAt": "2026-10-12T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -10531,7 +12883,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$163 of AI got 5 things done",
       "oneLiner": "Built 2 things, fixed 1 bug, wrote 1 piece, planned 1 thing and went in circles once.",
       "message": {
@@ -10573,9 +12925,51 @@
         "itemsRoot": "0xfcfa41160e5b721f31711e8649746628c83a21d375bbe23f06b4e0b9d83a6b92",
         "evidenceRoot": "0xb0074d0e95ac7120bbb5f6b0184bdccfac29407aa0c9abe734dbaad0c2def8e7",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 105,
+        "stageMinutes": [
+          15,
+          44,
+          12,
+          2095,
+          2195
+        ],
+        "stageCounts": [
+          5,
+          5,
+          4,
+          3,
+          3
+        ],
+        "prCounts": [
+          4,
+          3,
+          1,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          1,
+          0,
+          0,
+          1,
+          0
+        ],
+        "wasteCents": [
+          "432",
+          "0",
+          "0",
+          "1381",
+          "0"
+        ],
+        "spendSplitCents": [
+          "10403",
+          "0",
+          "4104",
+          "1813"
+        ]
       },
-      "digest": "0x1a94453d158b69a1282726f62e2b0c635fbcb6923608b73f6d841df5b8d53467",
+      "digest": "0x507ccc2e66ee832b613828a223be6950ed46a0f866d2ee99162186eb7662ba31",
       "items": [
         {
           "category": "Built",
@@ -10721,7 +13115,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x3097a3eda76a0e4331ccff500d1b17d47298de59a45a2f1581c15c71c353abe82ac55b2218b841f2e51fb84babec6263d6824ddaf8bdbd1d9b0b5b2994b7971e1b",
+      "signature": "0xe9b1f582a879bcee50df6c29e73b38fe180058d826b6fa3ee8b459c994b6cdb17351fe6b0206eb62642b35235870a5bcc17e7e0d436daaea170a3c9dac8c126f1c",
       "signedAt": "2026-10-19T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -10731,7 +13125,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$178 of AI got 7 things done",
       "oneLiner": "Built 4 things, fixed 1 bug, figured out 1 problem and wrote 1 piece.",
       "message": {
@@ -10773,9 +13167,51 @@
         "itemsRoot": "0xa5565fba36647071d30680923fc9b3b3d6083c2addd2abcf912f89dcacad5c63",
         "evidenceRoot": "0x1f544040da93093d202727c53d28a7895253bcff7cbab80b87ce3b4d37fb1404",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 148,
+        "stageMinutes": [
+          20,
+          21,
+          9,
+          2108,
+          2135
+        ],
+        "stageCounts": [
+          6,
+          5,
+          6,
+          6,
+          6
+        ],
+        "prCounts": [
+          6,
+          6,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          2,
+          0,
+          0,
+          0
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "17443",
+          "317",
+          "0",
+          "0"
+        ]
       },
-      "digest": "0xa70e087f3a2701eae10af2cf5903300237f16025cbe218ac37d56115a9472d15",
+      "digest": "0x0068dbde9399a433001a651d68c0f7ec34ea8e48da1c367a59465d140041605a",
       "items": [
         {
           "category": "Built",
@@ -10955,7 +13391,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0xe45c89fdcea3e3a59415960881a0338db12a592b239ac115479874bcd48bd9b60c8b2f795b4b7066bf33a26ee3c5f0b0958b46bf39d44f77e28350399080a12f1c",
+      "signature": "0x29cdfe08e72ac0b270f583f2e615e1b30cf96f27d754893819f2e26d1979ff646bc81b25822808a98e02a6e8e34b4e9fc1e670737159900a331d7ab05d53d44c1b",
       "signedAt": "2026-10-26T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -10965,7 +13401,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$160 of AI got 6 things done",
       "oneLiner": "Built 3 things, fixed 1 bug, figured out 1 problem and planned 1 thing.",
       "message": {
@@ -11007,9 +13443,51 @@
         "itemsRoot": "0xebacc8926c0b3c18d3349378da675169febf2d9804b5e0be7273062d20feb2cd",
         "evidenceRoot": "0x55d6d8d6ee31534da84a94fd2fdf9f4685673e72afeb7f403d116e16d6be4f40",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 118,
+        "stageMinutes": [
+          20,
+          31,
+          9,
+          1666,
+          1748
+        ],
+        "stageCounts": [
+          4,
+          3,
+          3,
+          4,
+          4
+        ],
+        "prCounts": [
+          4,
+          4,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "wasteCents": [
+          "230",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "15526",
+          "293",
+          "0",
+          "230"
+        ]
       },
-      "digest": "0xbe65714e27b05fdb9c47ebfc58720cdc476c078c4a4758d7ffb0a7420b212c73",
+      "digest": "0x6fef4e2b4a596df1c3b828ca5a75131c2db9507c28801ba00742958f081b936d",
       "items": [
         {
           "category": "Built",
@@ -11155,7 +13633,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x988753f0d50f61983ff8af0fac3cbe59b585cba5d2b492f3b1e76e313ccdf42c76a4b95c932f63993e9eb11485cdb2f56b6b32e799dd0d0aef4d1f31918741691c",
+      "signature": "0x69162da432753becafadeaba46a51b84c32386063ef682a5326547d8f11d4ad04d53ddc8f1a4e644be7d30351bdeac9733f6ebe3bb9654205e1c7bdad85722b11b",
       "signedAt": "2026-11-02T00:00:00.000Z",
       "share": {
         "level": "full",
@@ -11165,7 +13643,7 @@
       }
     },
     {
-      "kind": "receipts.v2",
+      "kind": "receipts.v3",
       "headline": "$78 of AI got 3 things done",
       "oneLiner": "Built 3 things.",
       "message": {
@@ -11207,9 +13685,51 @@
         "itemsRoot": "0x931ddc3ea67659c6ec7d89186a517a24957871f1bcd2f516d92af831afa74a4e",
         "evidenceRoot": "0xfbee0fb7744da15fd55a5725108847a38f0dd08d88a954433a9f3a34982a9af3",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "rules",
+        "brainstormMinutes": 138,
+        "stageMinutes": [
+          39,
+          9,
+          10,
+          1927,
+          2037
+        ],
+        "stageCounts": [
+          3,
+          2,
+          2,
+          3,
+          3
+        ],
+        "prCounts": [
+          3,
+          3,
+          0,
+          0,
+          0
+        ],
+        "wasteCounts": [
+          0,
+          0,
+          1,
+          0,
+          2
+        ],
+        "wasteCents": [
+          "0",
+          "0",
+          "4659",
+          "0",
+          "0"
+        ],
+        "spendSplitCents": [
+          "3147",
+          "0",
+          "0",
+          "4659"
+        ]
       },
-      "digest": "0x0c97ce88b4865ceecd9adb8554413582eaee9101b104cd612a1815986e8dbfa7",
+      "digest": "0x8d1523adf64aba23f997eeb3cc054ba83864d3dec610d58793d3e4f8ece7fe3f",
       "items": [
         {
           "category": "Built",
@@ -11318,7 +13838,7 @@
         ],
         "writtenBy": "simple rules"
       },
-      "signature": "0x762842ebd14a51d3788afbb47d6cde46ca0a18b72e3eafa6895b3315073672a1730c38ab7ba9c39568e5e54f4fbf5101484edd3af10b0711e7b4e443f607da551b",
+      "signature": "0x6f6bef3fe3b4d49b3aeb108c03c4056118e0166c8d27072e6ae30035df60e2f12215915255913d92bc32ef412b25a5e4de770f17f029c33baa092d6d51a13bc61b",
       "signedAt": "2026-11-06T12:00:00.000Z",
       "share": {
         "level": "full",

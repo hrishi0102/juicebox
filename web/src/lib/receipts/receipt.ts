@@ -365,9 +365,9 @@ export function fromJsonMessage(m: JsonMessage): ReceiptMessage {
 
 /** The v2 fields only, for verifying receipts made before version 3. */
 function v2Message(m: ReceiptMessage): ReceiptMessage {
-  const { stageMinutes, stageCounts, brainstormMinutes, prCounts, wasteCounts, wasteCents, spendSplitCents, ...rest } = m;
-  void stageMinutes, void stageCounts, void brainstormMinutes, void prCounts, void wasteCounts, void wasteCents, void spendSplitCents;
-  return rest;
+  const out: Record<string, unknown> = {};
+  for (const f of V2_FIELDS) out[f.name] = (m as unknown as Record<string, unknown>)[f.name];
+  return out as unknown as ReceiptMessage;
 }
 
 /** Numbers taken only from the signed message (the `summary` block is not signed). */

@@ -5,7 +5,8 @@ import { CategoryBar } from "@/components/category-badge";
 import { currentSource } from "@/lib/server/data";
 import { loadOrg, personName } from "@/lib/server/org";
 import { ARKIV_SCHEMA_NAME, exampleQuery } from "@/lib/receipts/arkiv";
-import { aggregate, countsLine } from "@/lib/receipts/aggregate";
+import { aggregate, aggregateEfficiency, countsLine } from "@/lib/receipts/aggregate";
+import { EfficiencyPanel } from "@/components/efficiency-panel";
 import { signedNumbers } from "@/lib/receipts/receipt";
 import { pct, plural, usd } from "@/lib/format";
 
@@ -25,6 +26,7 @@ export default async function Team({ searchParams }: { searchParams: Promise<{ w
   const inWeek = all.filter((r) => r.message.period === week && r.verified).sort((a, b) => signedNumbers(b).done - signedNumbers(a).done);
   const members = org.members.filter((m) => m.team === teamId);
   const total = aggregate(inWeek);
+  const eff = aggregateEfficiency(inWeek);
   const sharedBy = new Set(inWeek.map((r) => r.message.owner.toLowerCase()));
   const notSharing = members.filter((m) => !sharedBy.has(m.address.toLowerCase()));
   const q = (w: string) => `/team?team=${teamId}&week=${w}`;
@@ -77,6 +79,8 @@ export default async function Team({ searchParams }: { searchParams: Promise<{ w
               <CategoryBar spend={total.categorySpend} total={total.spend} />
             </div>
           </section>
+
+          {eff && <EfficiencyPanel e={eff} title="How the team worked this week" note="Typical times are the median of each person's median. People are never ranked." />}
 
           <section aria-labelledby="people" className="space-y-3">
             <h2 id="people" className="text-xl font-semibold tracking-tight">

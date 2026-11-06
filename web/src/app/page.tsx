@@ -8,6 +8,7 @@ import { WriteWeekButton } from "@/components/write-week-button";
 import { ZeroGPay } from "@/components/zero-g-pay";
 import { swarmReady } from "@/lib/receipts/swarm";
 import { WeekList } from "@/components/week-list";
+import { EfficiencyPanel } from "@/components/efficiency-panel";
 import { CategoryBar, CategoryLegend } from "@/components/category-badge";
 import { Difficulty } from "@/components/label-badge";
 import { Collapsible } from "@/components/collapsible";
@@ -112,7 +113,7 @@ export default async function ThisWeek({ searchParams }: { searchParams: Promise
               </h2>
               <span className="text-sm text-muted-foreground">{plural(s.items.length, "item")}</span>
             </div>
-            <WeekList items={s.items} />
+            <WeekList items={s.items} timelines={s.efficiency?.items} />
             {s.spendUsd > 0 && (
               <div className="mt-4 space-y-2">
                 <CategoryBar spend={s.categorySpend} total={s.spendUsd} />
@@ -127,6 +128,8 @@ export default async function ThisWeek({ searchParams }: { searchParams: Promise
               </div>
             )}
           </section>
+
+          {s.efficiency && <EfficiencyPanel e={s.efficiency} />}
 
           <div className="space-y-3">
             <Collapsible title="Pull requests" hint={prHint(s.tasks)}>

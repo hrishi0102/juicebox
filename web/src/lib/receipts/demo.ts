@@ -148,6 +148,24 @@ export function memberSessions(name: string, seed: number, plan: Record<Archetyp
               : { Read: 20, Grep: 9 }
           : { Bash: Math.round(toolCalls * 0.5), Edit: Math.round(toolCalls * 0.25), Read: Math.round(toolCalls * 0.25) },
     };
+    // Step times come from a separate random stream seeded by the session id, so everything else
+    // (ids, costs, the weeks the private AI wrote) stays exactly as before.
+    const tr = mulberry32(seedOf(id));
+    const iso = (ms: number) => new Date(ms).toISOString();
+    const endMs = start + minutes * 60_000;
+    const edits = a !== "learn";
+    const firstEdit = edits ? start + Math.min(minutes - 2, 4 + tr() * (a === "loop" ? 60 : 35)) * 60_000 : undefined;
+    const planned = (a === "learn" && learnTitle.startsWith("Plan")) || (edits && tr() < 0.2);
+    s.timeline = {
+      firstPromptAt: iso(start),
+      lastPromptAt: iso(endMs - (3 + tr() * 5) * 60_000),
+      firstEditAt: firstEdit ? iso(firstEdit) : undefined,
+      lastEditAt: firstEdit ? iso(Math.max(firstEdit, endMs - tr() * 8 * 60_000)) : undefined,
+      planAt: planned ? iso(start + (1 + tr() * 6) * 60_000) : undefined,
+      firstCommitAt: edits && a !== "loop" && tr() < 0.85 ? iso(endMs - (2 + tr() * 15) * 60_000) : undefined,
+      lastAnswerAt: iso(endMs),
+      endsOnQuestion: tr() < (a === "learn" ? 0.35 : 0.15),
+    };
     sessions.push(s);
 
     if (a === "learn" || (a === "abandon" && r() > 0.5)) return;
@@ -183,9 +201,16 @@ export function memberSessions(name: string, seed: number, plan: Record<Archetyp
     };
     changes.push(c);
     s.git.prs.push({ repo, number: n, url: c.url, action: "created" });
+    if (s.timeline) s.timeline.firstPrAt = c.createdAt;
     matches.push({ sessionId: id, changeKey: c.key, reason: "pr-link", confidence: 0.97 });
   });
   return { sessions, changes, matches };
+}
+
+function seedOf(id: string) {
+  let h = 2166136261;
+  for (let i = 0; i < id.length; i++) h = Math.imul(h ^ id.charCodeAt(i), 16777619);
+  return h >>> 0;
 }
 
 function uuid(r: () => number) {

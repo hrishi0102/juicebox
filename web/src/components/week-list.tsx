@@ -2,6 +2,18 @@ import Link from "next/link";
 import { CategoryBadge } from "@/components/category-badge";
 import { plural, usd } from "@/lib/format";
 import { TOOL_NAMES, type AiTool, type WeekItem } from "@/lib/receipts/types";
+import { formatMinutes, type ItemTimeline } from "@/lib/receipts/efficiency";
+
+/** "idea to code 54m · code to commit 6m · PR in 15h · merged in 3h" */
+function timelineText(tl?: ItemTimeline) {
+  if (!tl) return "";
+  const parts: string[] = [];
+  if (tl.ideaToCode !== undefined) parts.push(`idea to code ${formatMinutes(tl.ideaToCode)}`);
+  if (tl.codeToCommit !== undefined) parts.push(`code to commit ${formatMinutes(tl.codeToCommit)}`);
+  if (tl.commitToPr !== undefined) parts.push(`PR in ${formatMinutes(tl.commitToPr)}`);
+  if (tl.prToMerge !== undefined) parts.push(`merged in ${formatMinutes(tl.prToMerge)}`);
+  return parts.join(" · ");
+}
 
 function prState(p: WeekItem["prs"][number]) {
   if (p.reverted) return "reverted";
@@ -16,7 +28,17 @@ function prLabel(p: WeekItem["prs"][number]) {
 }
 
 /** "What you got this week": one row per item, the AI's order, waste last. */
-export function WeekList({ items, showCost = true, linkSessions = true }: { items: WeekItem[]; showCost?: boolean; linkSessions?: boolean }) {
+export function WeekList({
+  items,
+  showCost = true,
+  linkSessions = true,
+  timelines,
+}: {
+  items: WeekItem[];
+  showCost?: boolean;
+  linkSessions?: boolean;
+  timelines?: Record<string, ItemTimeline>;
+}) {
   if (!items.length) return <p className="text-muted-foreground">No AI sessions this week yet.</p>;
   return (
     <ol className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
@@ -54,6 +76,7 @@ export function WeekList({ items, showCost = true, linkSessions = true }: { item
               )}
               {i.prs.length > 3 && <span>+{i.prs.length - 3} more</span>}
             </div>
+            {timelineText(timelines?.[i.id]) && <div className="mt-0.5 text-xs text-muted-foreground">{timelineText(timelines?.[i.id])}</div>}
           </div>
           {showCost && <div className="shrink-0 pt-0.5 text-right font-medium">{usd(i.costUsd, 2)}</div>}
         </li>
