@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BadgeCheck, TriangleAlert } from "lucide-react";
+import { BadgeCheck, LockOpen, TriangleAlert } from "lucide-react";
 import { Collapsible } from "@/components/collapsible";
 import { PrTable } from "@/components/pr-table";
 import { WeekList } from "@/components/week-list";
@@ -7,7 +7,23 @@ import { plural, usd } from "@/lib/format";
 import { receiptItems, signedNumbers, type SignedReceipt } from "@/lib/receipts/receipt";
 
 /** One person's shared week, as the company sees it: their signed list, PRs and totals. */
-export function PersonWeek({ r, name, team, verified, arkivKey, defaultOpen }: { r: SignedReceipt; name: string; team?: string; verified: boolean; arkivKey?: string; defaultOpen?: boolean }) {
+export function PersonWeek({
+  r,
+  name,
+  team,
+  verified,
+  arkivKey,
+  defaultOpen,
+  swarm,
+}: {
+  r: SignedReceipt;
+  name: string;
+  team?: string;
+  verified: boolean;
+  arkivKey?: string;
+  defaultOpen?: boolean;
+  swarm?: { ref: string; opened: boolean; error?: string };
+}) {
   const n = signedNumbers(r);
   const items = receiptItems(r);
   const hidden = n.done + n.categoryCounts.Wasted - items.length;
@@ -25,8 +41,16 @@ export function PersonWeek({ r, name, team, verified, arkivKey, defaultOpen }: {
       }
     >
       <div className="space-y-4">
-        {items.length ? <WeekList items={items} linkSessions={false} /> : <p className="text-sm text-muted-foreground">Shared totals only, no list.</p>}
-        {hidden > 0 && <p className="text-sm text-muted-foreground">{plural(hidden, "item")} kept private. They still count in the signed totals.</p>}
+        {items.length ? (
+          <WeekList items={items} linkSessions={false} />
+        ) : swarm && !swarm.opened ? (
+          <p className="text-sm text-muted-foreground">
+            The list is stored on Swarm, encrypted for the company. Only the company key can open it{swarm.error ? ` (${swarm.error.slice(0, 120)})` : ""}.
+          </p>
+        ) : (
+          <p className="text-sm text-muted-foreground">Shared totals only, no list.</p>
+        )}
+        {hidden > 0 && items.length > 0 && <p className="text-sm text-muted-foreground">{plural(hidden, "item")} kept private. They still count in the signed totals.</p>}
         {r.evidence.length > 0 && (
           <div>
             <div className="mb-1 text-sm font-medium">Pull requests</div>
@@ -47,6 +71,11 @@ export function PersonWeek({ r, name, team, verified, arkivKey, defaultOpen }: {
             Written by {r.summary.writtenBy}
             {n.author ? `, signed as ${n.author}` : ""}.
           </span>
+          {swarm?.opened && (
+            <span title={`Swarm reference ${swarm.ref}`} className="inline-flex items-center gap-1">
+              <LockOpen className="size-3.5" aria-hidden="true" /> Opened from Swarm with the company key
+            </span>
+          )}
           {arkivKey && (
             <Link className="text-primary hover:underline" href={`/r/${arkivKey}`}>
               Open on Arkiv

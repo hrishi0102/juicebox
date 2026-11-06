@@ -21,7 +21,7 @@ export async function POST(req: Request) {
   const org = demo ? demo.id : target!.org;
   try {
     const out = await publishReceipt(r, { team, org, level: level === "full" ? "full" : "totals" });
-    r.share = { level: level === "full" ? "full" : "totals", team, org, arkivKey: out.entityKey, arkivTx: out.txHash, publishedAt: new Date().toISOString() };
+    r.share = { level: out.swarm ? "sealed" : level === "full" ? "full" : "totals", team, org, arkivKey: out.entityKey, arkivTx: out.txHash, publishedAt: new Date().toISOString(), swarm: out.swarm };
     saveReceipt(source, r);
     return NextResponse.json({ ok: true, ...out, explorer: `${ARKIV_EXPLORER}/tx/${out.txHash}` });
   } catch (e) {

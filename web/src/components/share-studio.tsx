@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
-import { Check, Copy, Download, FileText, Image as ImageIcon } from "lucide-react";
+import { Check, Copy, Download, FileText, Image as ImageIcon, Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CategoryBadge } from "@/components/category-badge";
 import { cardPostText, type CardInput } from "@/lib/receipts/card";
@@ -22,7 +22,7 @@ export type ShareSeed = {
 const NAME_KEY = "receipts-card-name";
 
 /** Pick what goes on the card, edit the wording, then download, copy, post or print it. */
-export function ShareStudio({ seed }: { seed: ShareSeed }) {
+export function ShareStudio({ seed, swarmReady = false }: { seed: ShareSeed; swarmReady?: boolean }) {
   const [picked, setPicked] = useState<Set<string>>(() => new Set(seed.items.filter((i) => i.category !== "Wasted").map((i) => i.id)));
   const [titles, setTitles] = useState<Record<string, string>>({});
   const [showCost, setShowCost] = useState(false);
@@ -30,6 +30,8 @@ export function ShareStudio({ seed }: { seed: ShareSeed }) {
   const [name, setName] = useState("");
   const [img, setImg] = useState<{ url: string; blob: Blob } | null>(null);
   const [busy, setBusy] = useState(false);
+  const [link, setLink] = useState<{ url: string; for: string } | null>(null);
+  const [linking, setLinking] = useState(false);
   const last = useRef<string | null>(null);
 
   useEffect(() => {
@@ -121,18 +123,41 @@ export function ShareStudio({ seed }: { seed: ShareSeed }) {
     }
   }
 
+  // A Swarm link is only valid for the card exactly as it was when the link was made.
+  const cardKey = card ? JSON.stringify(card) : "";
+  const swarmLink = link && link.for === cardKey ? link.url : null;
+
+  async function makeLink() {
+    if (!card) return;
+    setLinking(true);
+    try {
+      const r = await fetch("/api/card/swarm", { method: "POST", headers: { "Content-Type": "application/json" }, body: cardKey });
+      const j = await r.json();
+      if (!j.ok) throw new Error(j.error);
+      setLink({ url: j.url, for: cardKey });
+      await navigator.clipboard.writeText(j.url).catch(() => {});
+      toast.success("Your card is on Swarm. Link copied.", { description: j.url });
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : String(e));
+    } finally {
+      setLinking(false);
+    }
+  }
+
+  const postText = () => (card ? cardPostText(card) + (swarmLink ? `\n${swarmLink}` : "") : "");
+
   async function copyText() {
     if (!card) return;
-    await navigator.clipboard.writeText(cardPostText(card));
+    await navigator.clipboard.writeText(postText());
     toast.success("Text copied");
   }
 
   function postOnX() {
     if (!card) return;
-    // X cannot take an image through a link, so download it first and attach it to the post.
-    download();
-    window.open(`https://x.com/intent/post?text=${encodeURIComponent(cardPostText(card))}`, "_blank", "noopener,noreferrer");
-    toast("The image was downloaded. Attach it to the post on X.", { duration: 6000 });
+    // X cannot take an image through a link. With a Swarm link the post carries it; else attach the download.
+    if (!swarmLink) download();
+    window.open(`https://x.com/intent/post?text=${encodeURIComponent(postText())}`, "_blank", "noopener,noreferrer");
+    if (!swarmLink) toast("The image was downloaded. Attach it to the post on X.", { duration: 6000 });
   }
 
   return (
@@ -209,7 +234,22 @@ export function ShareStudio({ seed }: { seed: ShareSeed }) {
             <FileText className="size-4" aria-hidden="true" />
             Save as PDF
           </Button>
+          {swarmReady && (
+            <Button size="lg" variant="outline" onClick={makeLink} disabled={!card || linking}>
+              <Link2 className="size-4" aria-hidden="true" />
+              {linking ? "Putting it on Swarm" : swarmLink ? "Link copied" : "Get a Swarm link"}
+            </Button>
+          )}
         </section>
+        {swarmLink && (
+          <p className="text-sm text-muted-foreground">
+            Your card lives on Swarm, not on any server of ours:{" "}
+            <a href={swarmLink} target="_blank" rel="noreferrer" className="break-all text-primary hover:underline">
+              {swarmLink}
+            </a>
+            . Post on X now includes this link. Anyone with the link can see the card.
+          </p>
+        )}
       </div>
 
       <div className="lg:sticky lg:top-20 lg:self-start print:static">

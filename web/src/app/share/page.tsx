@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ShareStudio, type ShareSeed } from "@/components/share-studio";
+import { swarmReady } from "@/lib/receipts/swarm";
 import { writtenBy } from "@/components/receipt-paper";
 import { currentSource, getDataset, weekView } from "@/lib/server/data";
 import { weekRange } from "@/lib/format";
@@ -46,10 +47,11 @@ export default async function SharePage({ searchParams }: { searchParams: Promis
         </Link>
         <h1 className="mt-2 text-balance text-4xl font-semibold tracking-tight">Share what you got done</h1>
         <p className="mt-2 max-w-[65ch] text-[15px] text-muted-foreground">
-          A card for X, LinkedIn or your team chat. It is drawn on this laptop and nothing is uploaded. Cost is hidden unless you turn it on.
+          A card for X, LinkedIn or your team chat. It is drawn on this laptop and nothing is uploaded unless you ask for a Swarm link. Cost is hidden
+          unless you turn it on.
         </p>
       </div>
-      {seed.items.length ? <ShareStudio seed={seed} /> : <p className="text-muted-foreground">Nothing to share for this week yet.</p>}
+      {seed.items.length ? <ShareStudio seed={seed} swarmReady={swarmReady()} /> : <p className="text-muted-foreground">Nothing to share for this week yet.</p>}
     </div>
   );
 }

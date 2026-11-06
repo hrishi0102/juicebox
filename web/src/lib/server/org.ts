@@ -5,9 +5,22 @@ import { fetchOrgReceipts } from "@/lib/receipts/arkiv";
 import { verifyReceipt, type SignedReceipt } from "@/lib/receipts/receipt";
 import type { Source } from "@/lib/receipts/store";
 import type { OrgTeam, TeamMember } from "@/lib/receipts/demo";
+import { headers } from "next/headers";
 import { getDemoOrg, shareTarget } from "./data";
+import { getSession } from "./session";
 
-export type OrgRow = SignedReceipt & { from: "arkiv" | "demo file"; arkivKey?: string; verified: boolean; team: string };
+export type OrgRow = SignedReceipt & { from: "arkiv" | "demo file"; arkivKey?: string; verified: boolean; team: string; swarm?: { ref: string; opened: boolean; error?: string } };
+
+/**
+ * Sealed weeks are only opened for people who should see them: on the laptop itself, in the demo,
+ * or for someone signed in with GitHub as a member of the org. Opening also needs the company key.
+ */
+async function mayOpen(orgId: string, source: Source) {
+  if (source === "demo") return true;
+  const host = ((await headers()).get("host") ?? "").replace(/:\d+$/, "").toLowerCase();
+  if (host === "localhost" || host === "127.0.0.1" || host === "[::1]") return true;
+  return !!(await getSession())?.orgs.some((o) => o.toLowerCase() === orgId.toLowerCase());
+}
 
 export type LoadedOrg = {
   id: string;
@@ -38,7 +51,7 @@ export async function loadOrg(source: Source): Promise<LoadedOrg> {
   // Arkiv's public endpoint can be slow without an access key; never hold the page for it.
   try {
     live = await Promise.race([
-      fetchOrgReceipts(cfg.id),
+      fetchOrgReceipts(cfg.id, undefined, await mayOpen(cfg.id, source)),
       new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Arkiv did not answer within 5 seconds")), 5000)),
     ]);
   } catch (e) {
@@ -49,7 +62,7 @@ export async function loadOrg(source: Source): Promise<LoadedOrg> {
   for (const r of demo?.receipts ?? []) {
     rows.set(r.digest, { ...r, from: "demo file", verified: (await verifyReceipt(r)).ok, team: r.share?.team ?? cfg.teams[0]?.id ?? "" });
   }
-  for (const r of live) rows.set(r.digest, { ...r, from: "arkiv", arkivKey: r.arkiv.key, verified: r.verified, team: r.share?.team ?? "" });
+  for (const r of live) rows.set(r.digest, { ...r, from: "arkiv", arkivKey: r.arkiv.key, verified: r.verified, team: r.share?.team ?? "", swarm: r.swarm });
 
   // Teams that show up on Arkiv but are not in the config still get a row.
   const teams = [...cfg.teams];

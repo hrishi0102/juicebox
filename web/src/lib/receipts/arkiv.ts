@@ -21,6 +21,8 @@ import { hexToString, http, stringToBytes, type Hex } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { envPrivateKey } from "./keys";
 import { totalsOnly, verifyReceipt, type SignedReceipt } from "./receipt";
+import { bytesToHex, decryptBlob, encryptBlob, hexToBytes, openPointer, publicKeyOf, sealPointer } from "./seal";
+import { downloadBytes, swarmReady, uploadBytes } from "./swarm";
 
 export const ARKIV_SCHEMA_NAME = "receipts-ethglobal-mumbai.receipt.v2";
 export const ARKIV_CHAIN_ID = 7794095;
@@ -39,8 +41,23 @@ export const ReceiptSchema = defineSchema(ARKIV_SCHEMA_NAME, {
   merged: i32().indexed(), // merged pull requests
   wasteCents: u64().indexed(),
   digest: str(), // EIP-712 digest of the receipt
-  payload: bytes(), // the signed receipt JSON
+  payload: bytes(), // the signed receipt JSON (totals only when the list is on Swarm)
+  swarm: str().optional(), // Swarm reference of the encrypted full week
+  sealed: str().optional(), // where it is and its key, sealed to the company's public key
 });
+
+/** The company key opens sealed weeks. Defaults to the company wallet that pays for Arkiv. */
+export function companyPrivateKey() {
+  return envPrivateKey("COMPANY_PRIVATE_KEY") ?? envPrivateKey("ARKIV_PRIVATE_KEY");
+}
+
+/** What employees encrypt to: COMPANY_PUBLIC_KEY, or derived from the company key. */
+export function companyPublicKey(): string | undefined {
+  const pub = process.env.COMPANY_PUBLIC_KEY?.trim();
+  if (pub) return pub.replace(/^0x/, "");
+  const key = companyPrivateKey();
+  return key ? publicKeyOf(key) : undefined;
+}
 
 function chain() {
   return rabdi({ accessKey: process.env.ARKIV_ACCESS_KEY ?? "" });
@@ -56,7 +73,7 @@ export function arkivWriterAddress(): string | undefined {
 }
 
 /** Publish (share) a signed receipt. Returns the entity key and tx hash. */
-export async function publishReceipt(r: SignedReceipt, opts: { team: string; org?: string; level: "totals" | "full"; days?: number; keepOwnership?: boolean }) {
+export async function publishReceipt(r: SignedReceipt, opts: { team: string; org?: string; level: "totals" | "full"; days?: number; keepOwnership?: boolean; swarm?: boolean }) {
   const key = envPrivateKey("ARKIV_PRIVATE_KEY");
   if (!key) throw new Error("ARKIV_PRIVATE_KEY is not set. Add a funded Rabdi testnet key to web/.env.local.");
   if (!r.signature) throw new Error("Sign the receipt before sharing it.");
@@ -66,8 +83,20 @@ export async function publishReceipt(r: SignedReceipt, opts: { team: string; org
   const wallet = createWalletClient({ chain: chain(), transport: http(process.env.ARKIV_RPC_URL || undefined), account });
   const org = opts.org ?? r.share?.org ?? "";
   const base = opts.level === "totals" ? totalsOnly(r) : r;
-  const shared: SignedReceipt = { ...base, share: { level: opts.level, team: opts.team, org, publishedAt: new Date().toISOString() } };
+  let shared: SignedReceipt = { ...base, share: { level: opts.level, team: opts.team, org, publishedAt: new Date().toISOString() } };
   const m = r.message;
+
+  // With Swarm: the full week goes to Swarm encrypted, the key is sealed to the company, and the
+  // public Arkiv record keeps only the signed totals. Without it, the full week is the payload.
+  let swarmRef: string | undefined;
+  let sealed: string | undefined;
+  const companyPub = companyPublicKey();
+  if (opts.level === "full" && opts.swarm !== false && swarmReady() && companyPub) {
+    const { key: aes, blob } = encryptBlob(new TextEncoder().encode(JSON.stringify(shared)));
+    swarmRef = await uploadBytes(blob);
+    sealed = sealPointer(companyPub, { ref: swarmRef, key: bytesToHex(aes) });
+    shared = { ...totalsOnly(r), share: { level: "sealed", team: opts.team, org, publishedAt: shared.share!.publishedAt, swarm: swarmRef } };
+  }
   const values = {
     type: "receipt",
     org,
@@ -75,20 +104,21 @@ export async function publishReceipt(r: SignedReceipt, opts: { team: string; org
     period: m.period,
     signer: m.owner.toLowerCase(),
     author: m.author ?? "",
-    level: opts.level,
+    level: sealed ? "sealed" : opts.level,
     spendCents: u64(BigInt(m.spendCents)),
     done: m.done,
     merged: m.mergedPrs,
     wasteCents: u64(BigInt(m.categorySpendCents[6] ?? "0")),
     digest: r.digest,
     payload: stringToBytes(JSON.stringify(shared)),
+    ...(swarmRef && sealed ? { swarm: swarmRef, sealed } : {}),
   };
   const expiration = ExpirationTime.fromDays(opts.days ?? 120);
   const handOver = !opts.keepOwnership && m.owner.toLowerCase() !== account.address.toLowerCase();
   try {
     if (!handOver) {
       const { entityKey, txHash } = await wallet.createEntity(ReceiptSchema, values, { expiration, flags: { readonly: true } });
-      return { entityKey: entityKey as string, txHash: txHash as string, writer: account.address, owner: account.address };
+      return { entityKey: entityKey as string, txHash: txHash as string, writer: account.address, owner: account.address, swarm: swarmRef };
     }
     // Predict the new entity's key so the same transaction can hand it to the signer.
     const [next] = await arkivPublic().predictEntityKeys({ owner: account.address, count: 1 });
@@ -96,7 +126,7 @@ export async function publishReceipt(r: SignedReceipt, opts: { team: string; org
       creates: [{ schema: ReceiptSchema, values, expiration, flags: { readonly: true }, salt: next.salt }],
       ownershipChanges: [{ entityKey: next.key, newOwner: m.owner }],
     });
-    return { entityKey: (out.createdEntities[0] ?? next.key) as string, txHash: out.txHash as string, writer: account.address, owner: m.owner };
+    return { entityKey: (out.createdEntities[0] ?? next.key) as string, txHash: out.txHash as string, writer: account.address, owner: m.owner, swarm: swarmRef };
   } catch (e) {
     throw new Error(explainArkivError(e, account.address));
   }
@@ -113,14 +143,46 @@ export function explainArkivError(e: unknown, writer: string): string {
   return `Arkiv write failed: ${(parts.find((p) => p && p !== "undefined") ?? "unknown error").slice(0, 200)}`;
 }
 
-export type TeamReceipt = SignedReceipt & { arkiv: { key: string; owner?: string; expiresAt?: string }; verified: boolean };
+export type TeamReceipt = SignedReceipt & {
+  arkiv: { key: string; owner?: string; expiresAt?: string };
+  verified: boolean;
+  swarm?: { ref: string; opened: boolean; error?: string };
+};
+
+type Row = { $key?: unknown; $owner?: unknown; $expiresAt?: unknown; payload?: unknown; swarm?: unknown; sealed?: unknown };
+const val = (x: unknown) => (x && typeof x === "object" && "value" in (x as object) ? (x as { value: unknown }).value : x);
+
+/** Turn one Arkiv row into a checked receipt; open the Swarm copy when allowed and possible. */
+async function decodeRow(e: Row, open: boolean): Promise<TeamReceipt> {
+  const raw = val(e.payload);
+  const r = JSON.parse(typeof raw === "string" && raw.startsWith("0x") ? hexToString(raw as Hex) : String(raw)) as SignedReceipt;
+  const arkiv = { key: String(val(e.$key)), owner: String(val(e.$owner) ?? ""), expiresAt: String(val(e.$expiresAt) ?? "") };
+  const ref = val(e.swarm) ? String(val(e.swarm)) : undefined;
+  const sealed = val(e.sealed) ? String(val(e.sealed)) : undefined;
+  const companyKey = companyPrivateKey();
+  if (ref && sealed && open && companyKey) {
+    try {
+      const p = openPointer(companyKey, sealed);
+      const full = JSON.parse(new TextDecoder().decode(decryptBlob(hexToBytes(p.key), await downloadBytes(p.ref)))) as SignedReceipt;
+      // The Swarm copy must be the same signed receipt as the public record.
+      if (full.digest !== r.digest) throw new Error("Swarm copy does not match the signed record");
+      const v = await verifyReceipt(full);
+      return { ...full, share: { ...(full.share ?? r.share!), level: "full" }, arkiv, verified: v.ok, swarm: { ref, opened: true } };
+    } catch (err) {
+      const v = await verifyReceipt(r);
+      return { ...r, arkiv, verified: v.ok, swarm: { ref, opened: false, error: err instanceof Error ? err.message : String(err) } };
+    }
+  }
+  const v = await verifyReceipt(r);
+  return { ...r, arkiv, verified: v.ok, ...(ref ? { swarm: { ref, opened: false } } : {}) };
+}
 
 /** Read every shared receipt for a team (optionally one period) and re-verify each signature. */
-export async function fetchTeamReceipts(team: string, period?: string): Promise<TeamReceipt[]> {
+export async function fetchTeamReceipts(team: string, period?: string, open = true): Promise<TeamReceipt[]> {
   const client = arkivPublic();
   const where = period ? and(eq("type", "receipt"), eq("team", team), eq("period", period)) : and(eq("type", "receipt"), eq("team", team));
   const { entities } = await client
-    .select({ $key: true, $owner: true, $expiresAt: true, payload: true })
+    .select({ $key: true, $owner: true, $expiresAt: true, payload: true, swarm: true, sealed: true })
     .from(ReceiptSchema)
     .where(where)
     .orderBy(desc("spendCents"))
@@ -129,10 +191,7 @@ export async function fetchTeamReceipts(team: string, period?: string): Promise<
   const out: TeamReceipt[] = [];
   for (const e of entities as any[]) {
     try {
-      const raw = e.payload?.value ?? e.payload;
-      const r = JSON.parse(typeof raw === "string" && raw.startsWith("0x") ? hexToString(raw as Hex) : String(raw)) as SignedReceipt;
-      const v = await verifyReceipt(r);
-      out.push({ ...r, arkiv: { key: String(e.$key?.value ?? e.$key), owner: String(e.$owner?.value ?? e.$owner ?? ""), expiresAt: String(e.$expiresAt?.value ?? e.$expiresAt ?? "") }, verified: v.ok });
+      out.push(await decodeRow(e, open));
     } catch {
       // not a valid receipt payload; ignore
     }
@@ -141,43 +200,32 @@ export async function fetchTeamReceipts(team: string, period?: string): Promise<
 }
 
 /** Every shared receipt of a company, across all its teams, re-verified. */
-export async function fetchOrgReceipts(org: string, period?: string): Promise<TeamReceipt[]> {
+export async function fetchOrgReceipts(org: string, period?: string, open = true): Promise<TeamReceipt[]> {
   const client = arkivPublic();
   const where = period ? and(eq("type", "receipt"), eq("org", org), eq("period", period)) : and(eq("type", "receipt"), eq("org", org));
   const out: TeamReceipt[] = [];
   for (let offset = 0; offset < 1000; offset += 100) {
     const { entities } = await client
-      .select({ $key: true, $owner: true, $expiresAt: true, payload: true })
+      .select({ $key: true, $owner: true, $expiresAt: true, payload: true, swarm: true, sealed: true })
       .from(ReceiptSchema)
       .where(where)
       .orderBy(desc("spendCents"))
       .limit(100)
       .offset(offset)
       .fetch();
-    for (const e of entities as any[]) {
-      try {
-        const raw = e.payload?.value ?? e.payload;
-        const r = JSON.parse(typeof raw === "string" && raw.startsWith("0x") ? hexToString(raw as Hex) : String(raw)) as SignedReceipt;
-        const v = await verifyReceipt(r);
-        out.push({ ...r, arkiv: { key: String(e.$key?.value ?? e.$key), owner: String(e.$owner?.value ?? e.$owner ?? "") }, verified: v.ok });
-      } catch {
-        /* not a receipt */
-      }
-    }
+    const decoded = await Promise.all((entities as any[]).map((e) => decodeRow(e, open).catch(() => undefined)));
+    for (const r of decoded) if (r) out.push(r);
     if (entities.length < 100) break;
   }
   return out;
 }
 
 /** Load one shared receipt by its Arkiv entity key. */
-export async function fetchReceiptByKey(entityKey: string): Promise<TeamReceipt | undefined> {
+export async function fetchReceiptByKey(entityKey: string, open = false): Promise<TeamReceipt | undefined> {
   const client = arkivPublic();
   const e: any = await client.getEntity(entityKey as Hex, ReceiptSchema);
   if (!e) return undefined;
-  const raw = e.payload?.value ?? e.payload;
-  const r = JSON.parse(typeof raw === "string" && raw.startsWith("0x") ? hexToString(raw as Hex) : String(raw)) as SignedReceipt;
-  const v = await verifyReceipt(r);
-  return { ...r, arkiv: { key: entityKey, owner: String(e.$owner?.value ?? e.$owner ?? "") }, verified: v.ok };
+  return decodeRow({ ...e, $key: entityKey }, open);
 }
 
 /** A query judges can paste (raw Arkiv query language). */

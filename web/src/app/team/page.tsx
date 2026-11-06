@@ -83,7 +83,7 @@ export default async function Team({ searchParams }: { searchParams: Promise<{ w
               Everyone&apos;s week
             </h2>
             {inWeek.map((r, i) => (
-              <PersonWeek key={r.digest} r={r} name={personName(org, r.message.owner, r.message.author)} verified={r.verified} arkivKey={r.arkivKey} defaultOpen={i === 0} />
+              <PersonWeek key={r.digest} r={r} name={personName(org, r.message.owner, r.message.author)} verified={r.verified} arkivKey={r.arkivKey} swarm={r.swarm} defaultOpen={i === 0} />
             ))}
             {notSharing.map((m) => (
               <div key={m.address} className="rounded-lg border border-dashed border-border px-4 py-3 text-sm text-muted-foreground">

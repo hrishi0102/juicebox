@@ -94,7 +94,7 @@ export default async function OrgPage({ searchParams }: { searchParams: Promise<
               <span className="text-sm text-muted-foreground">Signed by each person. Prompts never included.</span>
             </div>
             {people.map((r) => (
-              <PersonWeek key={r.digest} r={r} name={personName(org, r.message.owner, r.message.author)} team={teamName(r.team)} verified={r.verified} arkivKey={r.arkivKey} />
+              <PersonWeek key={r.digest} r={r} name={personName(org, r.message.owner, r.message.author)} team={teamName(r.team)} verified={r.verified} arkivKey={r.arkivKey} swarm={r.swarm} />
             ))}
             {quiet.map((m) => (
               <div key={m.address} className="rounded-lg border border-dashed border-border px-4 py-3 text-sm text-muted-foreground">
