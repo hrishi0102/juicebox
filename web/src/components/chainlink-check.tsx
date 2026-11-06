@@ -2,10 +2,11 @@ import { ExternalLink, ShieldCheck } from "lucide-react";
 import { usd } from "@/lib/format";
 import { sepoliaAddressUrl, sepoliaTxUrl } from "@/lib/proof-urls";
 import type { TeamCheck } from "@/lib/server/scoreboard";
+import { RunChainlinkCheck } from "@/components/run-chainlink-check";
 
 /** The team's latest monthly check, as written on Ethereum Sepolia by the Chainlink CRE workflow. */
-export function ChainlinkCheck({ check, team, company, demo }: { check: TeamCheck; team: string; company: string; demo: boolean }) {
-  const when = check.postedAt.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
+export function ChainlinkCheck({ check, team, company, demo, canRun }: { check: TeamCheck; team: string; company: string; demo: boolean; canRun: boolean }) {
+  const when = check.postedAt.toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" });
   const rows: [string, string][] = [
     ["Signed weeks counted", `${check.receipts} from ${check.people} ${check.people === 1 ? "person" : "people"}`],
     ["Signatures that failed", check.rejected ? `${check.rejected} (left out)` : "none"],
@@ -44,6 +45,11 @@ export function ChainlinkCheck({ check, team, company, demo }: { check: TeamChec
       </dl>
       {demo && check.prsChecked > 0 && check.prsStillMerged === 0 && (
         <p className="mt-2 text-xs text-muted-foreground">The demo company&apos;s pull requests are made up, so GitHub cannot confirm them. A real team&apos;s PRs are checked the same way.</p>
+      )}
+      {canRun && (
+        <div className="mt-4 border-t border-border pt-4">
+          <RunChainlinkCheck />
+        </div>
       )}
       <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-sm">
         {check.txHash && (

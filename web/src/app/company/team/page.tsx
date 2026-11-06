@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Collapsible } from "@/components/collapsible";
 import { PersonWeek } from "@/components/person-week";
 import { CategoryBar } from "@/components/category-badge";
-import { currentSource, shareTarget } from "@/lib/server/data";
+import { currentSource, onLaptop, shareTarget } from "@/lib/server/data";
 import { companyKnown, loadOrg, personName } from "@/lib/server/org";
 import { CompanyDoor, MemberNote } from "@/components/company-door";
 import { ARKIV_SCHEMA_NAME, exampleQuery } from "@/lib/receipts/arkiv";
@@ -12,6 +12,7 @@ import { signedNumbers } from "@/lib/receipts/receipt";
 import { pct, plural, usd } from "@/lib/format";
 import { ChainlinkCheck } from "@/components/chainlink-check";
 import { teamCheck } from "@/lib/server/scoreboard";
+import { creCli, creTeam } from "@/lib/server/cre-run";
 
 export const metadata = { title: "Teams · Company · Receipts" };
 
@@ -25,6 +26,7 @@ export default async function Team({ searchParams }: { searchParams: Promise<{ w
   const teamId = sp.team && org.teams.some((t) => t.id === sp.team) ? sp.team : (you ?? org.teams[0]?.id ?? "");
   const cfg = org.teams.find((t) => t.id === teamId) ?? { id: teamId, name: teamId };
   const check = teamId ? await teamCheck(teamId) : undefined;
+  const canRun = !!creCli() && creTeam() === teamId && (await onLaptop());
   const all = org.rows.filter((r) => r.team === teamId);
   const arkivForTeam = all.filter((r) => r.from === "arkiv").length;
   const demoForTeam = all.filter((r) => r.from === "demo file").length;
@@ -90,7 +92,7 @@ export default async function Team({ searchParams }: { searchParams: Promise<{ w
             </div>
           </section>
 
-          {check && <ChainlinkCheck check={check} team={cfg.name} company={org.name.replace(/ \(demo company\)$/, "")} demo={source === "demo"} />}
+          {check && <ChainlinkCheck check={check} team={cfg.name} company={org.name.replace(/ \(demo company\)$/, "")} demo={source === "demo"} canRun={canRun} />}
 
           {eff && <EfficiencyPanel e={eff} title="How the team worked this week" note="Typical times are the median of each person's median. People are never ranked." />}
 
