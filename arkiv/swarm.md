@@ -49,6 +49,7 @@ Company wallet that writes (pays gas): `0x09351DC0A6AFa87da28D00914fE87373C5C827
 
 - **Service:** the public Swarm testnet gateway, `https://api.gateway.testnet.ethswarm.org` (Bee HTTP API).
 - **Batch:** we send the all-zero batch id (`0000…0000`); the gateway stamps uploads with its own postage batch, the way Swarm's own upload pages do. No wallet of ours bought it, and no stamps were given to us. The gateway is meant for testing and does not promise how long data stays.
+- **Checked with the Swarm team:** at ETHGlobal Mumbai (Nov 6), the Swarm team confirmed that using the Swarm testnet is fine for this bonus.
 - **Own batch instead:** run a Bee light node on the testnet (`bee start --mainnet=false ...`), fund it with Sepolia ETH and sBZZ, buy a batch, then set `SWARM_API_URL=http://localhost:1633` and `SWARM_POSTAGE_BATCH_ID=<batch id>`. Nothing else changes.
 
 ## Code

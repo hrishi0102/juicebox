@@ -12,7 +12,7 @@ Built but needs you (each needs your account, a captcha or a key):
 2. **Arkiv and Swarm: done.** Your keys are in and the demo company is live: 77 shared weeks on Arkiv (week 45 for all 12 people sealed on Swarm) and 12 public cards on the wall. Swarm uses the free testnet gateway (see `arkiv/swarm.md`). Still yours:
    - Decide whether to share your own week (it publishes your signed totals publicly under your GitHub org; the list itself is encrypted on Swarm for the company).
    - Optional: your own Swarm batch (Bee light node on testnet, Sepolia ETH from ethglobal.com/faucet, sBZZ via Uniswap), then set `SWARM_API_URL` and `SWARM_POSTAGE_BATCH_ID` and update the batch section of `arkiv/swarm.md`.
-   - Optional: ask Swarm staff at the event (Kelly Joo) for stamps or a gift code.
+   - Swarm: the Swarm team confirmed the testnet is fine, so the free testnet gateway stays. Running your own testnet node is optional; it would only add your own batch ID to `arkiv/swarm.md`.
 3. **GitHub sign-in** (optional, 5 min): github.com/settings/developers, New OAuth App, homepage `http://localhost:3000`, callback `http://localhost:3000/api/auth/callback`. Put `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` in `web/.env.local`. A "Sign in" button appears in the header. If your org restricts OAuth apps, approve it as an owner, or use a personal test org.
 4. **Live demo link** (optional, 0G asks for one): deploy `web/` to Vercel (root directory `web`). It runs in demo mode. Add `ZG_API_KEY` only for judging (anyone can spend it with "Write it again") and remove it after. Sign in with 0G does not work there (0G only allows localhost:3000).
 5. **Video** (you): 2:00 to 2:59, at least 720p, your own voice, no speed-up. Script below.
