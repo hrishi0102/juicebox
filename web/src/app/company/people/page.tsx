@@ -3,8 +3,6 @@ import { companyKnown, loadOrg, orgWeek, personName } from "@/lib/server/org";
 import { PersonWeek } from "@/components/person-week";
 import { CompanyDoor, MemberNote, NothingShared, WeekPills } from "@/components/company-door";
 import { signedNumbers } from "@/lib/receipts/receipt";
-import { keyProofsFor, proofKey } from "@/lib/server/key-proofs";
-import { DEMO_ORG } from "@/lib/receipts/demo";
 
 export const metadata = { title: "People · Company · Receipts" };
 
@@ -21,18 +19,13 @@ export default async function CompanyPeople({ searchParams }: { searchParams: Pr
   const sharedBy = new Set(inWeek.map((r) => r.message.owner.toLowerCase()));
   const quiet = org.members.filter((m) => !sharedBy.has(m.address.toLowerCase()));
   const who = sp.who?.toLowerCase();
-  // Is each GitHub login proven by a public gist? Demo people are never looked up on GitHub.
-  const proofs = await keyProofsFor(people.map((r) => ({ login: r.message.author, address: r.message.owner, demo: source === "demo" || org.id === DEMO_ORG.id })));
 
   return (
     <div className="space-y-8">
       <div className="space-y-4">
         <div>
           <h1 className="text-balance text-4xl font-semibold tracking-tight">Everyone&apos;s week</h1>
-          <p className="mt-2 text-[15px] text-muted-foreground">
-            Signed by each person. Prompts are never included. People are not ranked; the order is just things done. A login marked proven has a public
-            gist on that GitHub account signed by the same key.
-          </p>
+          <p className="mt-2 text-[15px] text-muted-foreground">Signed by each person. Prompts are never included. People are not ranked; the order is just things done.</p>
         </div>
         <WeekPills weeks={weeks} week={week} href={(w) => `/company/people?week=${w}`} />
         <MemberNote org={org} />
@@ -52,7 +45,6 @@ export default async function CompanyPeople({ searchParams }: { searchParams: Pr
               arkivKey={r.arkivKey}
               swarm={r.swarm}
               defaultOpen={!!who && r.message.owner.toLowerCase() === who}
-              proof={proofs.get(proofKey(r.message.author, r.message.owner))}
             />
           ))}
           {quiet.map((m) => (

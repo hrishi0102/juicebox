@@ -381,7 +381,6 @@ function FirstRun({ laptop }: { laptop: boolean }) {
             <h2 className="font-semibold">Set up once</h2>
             <ol className="mt-3 list-decimal space-y-1.5 pl-5 text-[15px]">
               <li>Connect GitHub (the GitHub CLI you already use)</li>
-              <li>Prove your key on GitHub: one public gist, so your company sees your login as proven</li>
               <li>Join your company: your GitHub org and team</li>
               <li>Sign in with 0G: the private AI is paid from your own 0G credits</li>
               <li>Read your logs. Nothing leaves your laptop for this step</li>

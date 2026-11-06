@@ -5,8 +5,6 @@ import { CategoryBar } from "@/components/category-badge";
 import { currentSource, shareTarget } from "@/lib/server/data";
 import { companyKnown, loadOrg, personName } from "@/lib/server/org";
 import { CompanyDoor, MemberNote } from "@/components/company-door";
-import { keyProofsFor, proofKey } from "@/lib/server/key-proofs";
-import { DEMO_ORG } from "@/lib/receipts/demo";
 import { ARKIV_SCHEMA_NAME, exampleQuery } from "@/lib/receipts/arkiv";
 import { aggregate, aggregateEfficiency, countsLine } from "@/lib/receipts/aggregate";
 import { EfficiencyPanel } from "@/components/efficiency-panel";
@@ -37,7 +35,6 @@ export default async function Team({ searchParams }: { searchParams: Promise<{ w
   const sharedBy = new Set(inWeek.map((r) => r.message.owner.toLowerCase()));
   const notSharing = members.filter((m) => !sharedBy.has(m.address.toLowerCase()));
   const q = (w: string) => `/company/team?team=${encodeURIComponent(teamId)}&week=${w}`;
-  const proofs = await keyProofsFor(inWeek.map((r) => ({ login: r.message.author, address: r.message.owner, demo: source === "demo" || org.id === DEMO_ORG.id })));
 
   return (
     <div className="space-y-8">
@@ -97,16 +94,7 @@ export default async function Team({ searchParams }: { searchParams: Promise<{ w
               Everyone&apos;s week
             </h2>
             {inWeek.map((r, i) => (
-              <PersonWeek
-                key={r.digest}
-                r={r}
-                name={personName(org, r.message.owner, r.message.author)}
-                verified={r.verified}
-                arkivKey={r.arkivKey}
-                swarm={r.swarm}
-                defaultOpen={i === 0}
-                proof={proofs.get(proofKey(r.message.author, r.message.owner))}
-              />
+              <PersonWeek key={r.digest} r={r} name={personName(org, r.message.owner, r.message.author)} verified={r.verified} arkivKey={r.arkivKey} swarm={r.swarm} defaultOpen={i === 0} />
             ))}
             {notSharing.map((m) => (
               <div key={m.address} className="rounded-lg border border-dashed border-border px-4 py-3 text-sm text-muted-foreground">

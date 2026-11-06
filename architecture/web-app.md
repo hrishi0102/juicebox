@@ -9,7 +9,7 @@ The app is split by who is using it, so nobody sees another role's pages, sign-i
 | Part | Routes | Who | Identity | Runs |
 |---|---|---|---|---|
 | Front door and public pages | `app/(public)`: `/`, `/demo`, `/r/[key]`, `/verify`, `/how` | anyone | none | anywhere |
-| My week (the employee) | `app/me`: `/me`, `/me/send`, `/me/sessions`, `/me/setup` | an employee | the laptop's GitHub login (GitHub CLI or `GITHUB_TOKEN`), proven by a public gist; Sign in with 0G pays the AI | the laptop |
+| My week (the employee) | `app/me`: `/me`, `/me/send`, `/me/sessions`, `/me/setup` | an employee | the laptop's GitHub login (GitHub CLI or `GITHUB_TOKEN`); Sign in with 0G pays the AI | the laptop |
 | Company | `app/company`: `/company`, `/company/team`, `/company/people`, `/company/prs`, `/company/setup` | leads and managers | Sign in with GitHub (or the laptop's GitHub login) | anywhere |
 | For fun (side product) | `app/(personal)`: `/wrapped`, `/card`, `/wall` | anyone | none (Sign in with 0G only for Roast me) | anywhere; cards from logs need the laptop |
 
@@ -39,7 +39,7 @@ Other helpers in `data.ts`: `weekView` (loads the saved week story), `periodView
 | `/demo` | Pick a role at the demo company |
 | `/me` | This week: who you are and where your receipts go, the four steps, the question and the AI's sentence, Write my week (Sign in with 0G) and Review and send; the list (each item with its own timeline); "How the week went"; collapsed PRs, how it was written (0G request ids, who paid), money leaks with a private review, cost by difficulty; the receipt paper and your past receipts (sent or not) |
 | `/me/send` | Review (what the company will see, with a keep-private switch per line; what everyone can see; what stays on the laptop), Sign (laptop key or wallet), Send (to your team and company), then links to the company's view and the public link |
-| `/me/setup` | Set up once: connect GitHub, prove your key on GitHub (one public gist), join your company (your GitHub orgs and teams), Sign in with 0G, read your logs |
+| `/me/setup` | Set up once: connect GitHub, join your company (your GitHub orgs and teams), Sign in with 0G, read your logs |
 | `/me/sessions`, `/me/sessions/[id]` | All sessions; one session's cost, signals, linked changes, private AI record and the exact message the private AI is sent |
 | `/company` | What the company got done this week, how it worked, teams side by side, week by week, spend by AI tool (see [org-view.md](org-view.md)) |
 | `/company/team`, `/company/people`, `/company/prs` | One team; everyone's signed week (`?who=<address>` opens one person); every pull request |
@@ -53,7 +53,7 @@ Old addresses (`/org`, `/team`, `/sessions`, `/share`) redirect to the new ones 
 
 ## API routes (`web/src/app/api`)
 
-`source` (demo on or off), `scan`, `join` (save the company and team you joined), `key-proof` (publish or check the GitHub key proof), `week/browser` (the private AI, paid from your own 0G account: `plan`, `plan-sessions`, `sessions`, `week`), `review` (`plan`, `save`), `wrapped/roast` (`plan`, `save`), `card` (PNG), `card/wrapped`, `card/swarm` (put the card on Swarm and list it on Arkiv), `receipt` (GET build or saved, POST save a wallet-signed receipt), `receipt/sign-local`, `share` (send to the company; `hide` keeps lines private), `verify`, `team`, `auth/login`, `auth/callback`, `auth/logout`. No route spends the app's own 0G key: the browser pays every private AI call with Sign in with 0G (see [sign-in.md](sign-in.md)).
+`source` (demo on or off), `scan`, `join` (save the company and team you joined), `week/browser` (the private AI, paid from your own 0G account: `plan`, `plan-sessions`, `sessions`, `week`), `review` (`plan`, `save`), `wrapped/roast` (`plan`, `save`), `card` (PNG), `card/wrapped`, `card/swarm` (put the card on Swarm and list it on Arkiv), `receipt` (GET build or saved, POST save a wallet-signed receipt), `receipt/sign-local`, `share` (send to the company; `hide` keeps lines private), `verify`, `team`, `auth/login`, `auth/callback`, `auth/logout`. No route spends the app's own 0G key: the browser pays every private AI call with Sign in with 0G (see [sign-in.md](sign-in.md)).
 
 ## Share card (`/api/card`)
 
@@ -72,4 +72,4 @@ Old addresses (`/org`, `/team`, `/sessions`, `/share`) redirect to the new ones 
 
 ## Tests
 
-`npm test` (node:test via tsx): pricing against a real Claude Code cost record, OpenAI pricing, the Claude and Codex readers on synthetic logs built at test time, rules, forgiving parsing of AI answers and safe titles, the week list (grouping, skipped sessions, waste last), receipt v2 signing, tampering, and revealing only some items with proofs, sending with lines kept private (the sealed copy still verifies), the employee's weekly steps (`test/flow.test.ts`), the GitHub key proof (`test/key-proof.test.ts`), and AI Wrapped (`test/wrapped.test.ts`).
+`npm test` (node:test via tsx): pricing against a real Claude Code cost record, OpenAI pricing, the Claude and Codex readers on synthetic logs built at test time, rules, forgiving parsing of AI answers and safe titles, the week list (grouping, skipped sessions, waste last), receipt v2 signing, tampering, and revealing only some items with proofs, sending with lines kept private (the sealed copy still verifies), the employee's weekly steps (`test/flow.test.ts`), and AI Wrapped (`test/wrapped.test.ts`).

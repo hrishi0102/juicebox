@@ -49,12 +49,6 @@ function signingAccount(source: Source) {
   return key ? privateKeyToAccount(key) : laptopAccount(true)!;
 }
 
-/** Sign a plain message (EIP-191) with the key that signs your receipts, for the GitHub key proof. */
-export async function signWithReceiptKey(source: Source, message: string) {
-  const account = signingAccount(source);
-  return { address: account.address, signature: await account.signMessage({ message }) };
-}
-
 /** The name inside the signed receipt: your GitHub login (demo: a made-up handle). */
 export async function authorFor(source: Source) {
   if (source === "demo") return "you";

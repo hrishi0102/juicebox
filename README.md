@@ -12,7 +12,7 @@ A private AI on **0G** writes the list from the sessions, paid from the employee
 
 | | Who | Where | What they do |
 |---|---|---|---|
-| **My week** | each employee | their laptop, `/me` | Set up once (GitHub, prove your key with one public gist, join the company, Sign in with 0G, read logs). Every week: write, review, sign, send |
+| **My week** | each employee | their laptop, `/me` | Set up once (GitHub, join the company, Sign in with 0G, read logs). Every week: write, review, sign, send |
 | **Company** | leads and managers | anywhere, `/company` | Sign in with GitHub, see everyone's week by team and person, every PR, where the money went. Whoever runs it sets up the wallet, the company key and Swarm once (Company, Setup) |
 | **For fun** (side product) | anyone | `/wrapped`, `/card`, `/wall` | AI Wrapped, a card of your week for socials, the wall of public cards. Never signed or sent to a company |
 
@@ -177,7 +177,7 @@ Built but not submitted (three partners max). See [cre/README.md](cre/README.md)
 
 - Linking is best effort. Sessions in folders that were deleted or moved often cannot be linked to a PR; the AI still writes what they got.
 - Cost is the API list price of the tokens in your logs. On a subscription plan your real bill is different.
-- The GitHub login inside a receipt is only proven if the employee published their key proof (one public gist, signed by their laptop key, in My week, Setup); otherwise the company page shows it as claimed. One proof covers one key, so a new laptop needs a new gist.
+- The GitHub login inside a receipt is claimed by the signer; the company page shows the signing address next to it. Joining a company is checked against your GitHub teams, but nothing yet proves to the company that a signing key belongs to that login.
 - 0G requests are not end-to-end sealed today (0G reports `X-0G-E2EE: none` for our model), so 0G's router could read them in transit. The model itself runs in a TEE and its signature is checked on every answer.
 - "Sign in with 0G" uses 0G's own Privy app, which only allows `http://localhost:3000`, so the private AI only runs on the laptop; a hosted copy shows the demo's weeks, already written by 0G. It needs a real login, so it was built and wired but not tested end to end by us. If it fails, `npm run receipts -- write` writes the week with the app's own key.
 

@@ -6,9 +6,6 @@ import { swarmConfig } from "@/lib/receipts/swarm";
 import { ARKIV_EXPLORER, blockDate, fetchReceiptByKey } from "@/lib/receipts/arkiv";
 import { summaryFromReceipt, verifyReceipt } from "@/lib/receipts/receipt";
 import { shortAddr } from "@/lib/format";
-import { GithubProof } from "@/components/github-proof";
-import { keyProofFor, type KeyProof } from "@/lib/server/key-proofs";
-import { DEMO_ORG } from "@/lib/receipts/demo";
 
 // A shared receipt, read straight from Arkiv by its entity key: what anyone with the link sees.
 // This is the link an engineer hands to a manager or a reviewer. Nothing here comes from our own
@@ -39,9 +36,6 @@ export default async function SharedReceipt({ params }: { params: Promise<{ key:
   const summary = summaryFromReceipt(r);
   const expires = r.arkiv.expiresAt ? await blockDate(r.arkiv.expiresAt) : undefined;
   const ownerIsSigner = !!r.arkiv.owner && r.arkiv.owner.toLowerCase() === r.message.owner.toLowerCase();
-  // Is the GitHub login in the receipt proven by a public gist signed by the same key?
-  const author = r.message.author;
-  const proof: KeyProof | undefined = !author ? undefined : r.share?.org === DEMO_ORG.id ? { status: "demo" } : await keyProofFor(author, r.message.owner);
   const swarmGateway = swarmConfig().gateway;
 
   return (
@@ -67,11 +61,6 @@ export default async function SharedReceipt({ params }: { params: Promise<{ key:
           </p>
           <h1 className="mt-1 text-balance text-4xl font-semibold leading-[1.1] tracking-tight">{r.headline}.</h1>
           {r.oneLiner && <p className="mt-3 text-xl">{r.oneLiner}</p>}
-          {author && (
-            <p className="mt-2 text-sm text-muted-foreground">
-              <GithubProof login={author} proof={proof} />
-            </p>
-          )}
         </div>
         {r.swarm && !r.swarm.opened && (
           <section className="rounded-lg border border-border bg-card p-4">

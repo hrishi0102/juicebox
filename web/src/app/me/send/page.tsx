@@ -7,9 +7,6 @@ import { companyPublicKey } from "@/lib/receipts/arkiv";
 import { receiptItems, signedNumbers } from "@/lib/receipts/receipt";
 import { currentSource, getDataset, weekView } from "@/lib/server/data";
 import { employeeTarget, weekReceipt } from "@/lib/server/employee";
-import { keyProofFor } from "@/lib/server/key-proofs";
-import { signerAddress } from "@/lib/server/receipts-store";
-import { githubLogin } from "@/lib/receipts/identity";
 import { usd } from "@/lib/format";
 import { TOOL_NAMES, type AiTool } from "@/lib/receipts/types";
 
@@ -26,9 +23,6 @@ export default async function SendPage({ searchParams }: { searchParams: Promise
   const target = await employeeTarget(source);
   const n = signedNumbers(rc.current);
   const week = wv.id.split("-W")[1];
-  const login = source === "demo" ? undefined : (await githubLogin())?.login;
-  const signer = rc.saved?.message.owner ?? signerAddress(source);
-  const proof = login && signer ? await keyProofFor(login, signer) : undefined;
   const tools = Object.entries(n.toolSpend)
     .sort((a, b) => b[1] - a[1])
     .map(([t]) => TOOL_NAMES[t as AiTool] ?? t)
@@ -66,7 +60,6 @@ export default async function SendPage({ searchParams }: { searchParams: Promise
           arkivReady={!!process.env.ARKIV_PRIVATE_KEY}
           sealed={swarmReady() && !!companyPublicKey()}
           savedJson={rc.saved ? JSON.stringify(rc.saved, null, 2) : undefined}
-          github={login ? { login, proven: proof?.status === "proven", url: proof?.status === "proven" ? proof.url : undefined } : undefined}
         />
         <aside>
           <ReceiptPaper
