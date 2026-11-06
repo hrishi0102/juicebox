@@ -1,10 +1,15 @@
 import Link from "next/link";
-import { ArrowRight, ExternalLink } from "lucide-react";
-import { FlowSteps } from "@/components/flow-steps";
-import { buttonVariants } from "@/components/ui/button";
+import { ArrowUpRight, Check, Lock } from "lucide-react";
 import { arkivWriterAddress } from "@/lib/receipts/arkiv";
-import { arkivAddressUrl, DEMO_SEALED, swarmProofPath, zgProofPath } from "@/lib/proof-urls";
+import { arkivAddressUrl, CRE_SCOREBOARD, DEMO_SEALED, sepoliaAddressUrl, swarmProofPath, zgProofPath } from "@/lib/proof-urls";
 import { providersFor } from "@/lib/server/zerog-providers";
+import { FrontNav, HeroReceipt } from "@/components/front-door";
+import { REPO } from "@/components/repo";
+import { LeavesLaptop } from "@/components/leaves-laptop";
+import { DemoRolesBand } from "@/components/demo-roles-band";
+import { StepIllo } from "@/components/week-steps";
+import { ProofAnchor } from "@/components/proof-links";
+import { Logo } from "@/components/space-header";
 
 // The front door. Two sides of one product (the company, and each employee on their laptop), one
 // side product for anyone (AI Wrapped), the demo company to look around, and what it runs on, each
@@ -13,124 +18,227 @@ export default async function FrontDoor() {
   const [provider] = await providersFor();
   const writer = arkivWriterAddress();
   return (
-    <div className="space-y-12 py-4">
-      <section className="max-w-3xl">
-        <p className="text-sm font-medium text-muted-foreground">Receipts</p>
-        <h1 className="mt-1 text-balance text-5xl font-semibold leading-[1.04] tracking-tight sm:text-6xl">What did your AI spend get done?</h1>
-        <p className="mt-5 text-pretty text-lg text-muted-foreground">
-          Every week, each person&apos;s laptop turns their Claude Code and Codex sessions into a short list of what got done, written by a private AI
-          on 0G and signed with their own key. They send it to the company, which sees everyone&apos;s week and the pull requests behind it. Prompts
-          never leave the laptop.
-        </p>
-      </section>
+    <div className="fd">
+      <FrontNav />
+      <main>
+        <section className="fd-hero" aria-labelledby="hero-h">
+          <div className="fd-wrap fd-hero-grid">
+            <div>
+              <h1 id="hero-h" className="disp h-hero">
+                What did your AI spend get done?
+              </h1>
+              <p className="fd-lede">
+                Every week, your laptop turns your Claude Code and Codex sessions into a short list of what got done. A private AI on 0G writes it, you sign
+                it with your own key, and your company sees everyone&apos;s week with the pull requests behind it.
+              </p>
+              <div className="fd-ctas">
+                <a className="btn btn-primary btn-lg" href="#demo">
+                  Try the demo company
+                </a>
+                <a className="btn btn-secondary btn-lg" href={REPO} target="_blank" rel="noreferrer">
+                  Run it on your laptop
+                  <ArrowUpRight className="size-4" aria-hidden="true" />
+                </a>
+              </div>
+              <ul className="fd-facts">
+                <li>
+                  <Lock className="size-4" aria-hidden="true" />
+                  Your prompts never leave the laptop.
+                </li>
+                {writer && (
+                  <li>
+                    <Check className="size-4" aria-hidden="true" />
+                    Every signed receipt is a record on Arkiv.
+                    <ProofAnchor href={arkivAddressUrl(writer)}>See them on the explorer</ProofAnchor>
+                  </li>
+                )}
+              </ul>
+            </div>
+            <HeroReceipt barcodeHex={DEMO_SEALED.entity} />
+          </div>
+        </section>
 
-      <section aria-label="The two sides" className="grid gap-5 md:grid-cols-2">
-        <Door
-          eyebrow="For companies"
-          title="See what everyone got done"
-          body="Everyone's signed week, by team and by person, with the pull requests behind it and where the AI money went. Leads sign in with GitHub; your company is your GitHub org."
-          steps={["Set up once", "Sign in with GitHub", "See everyone's week"]}
-          href="/company"
-          cta="Open the company page"
-          color="var(--c-researched)"
-        />
-        <Door
-          eyebrow="For employees"
-          title="Send your weekly receipt"
-          body="Runs on your laptop. A private AI on 0G writes your week from your sessions, paid from your own 0G credits. You sign the whole receipt and send it."
-          steps={["Write", "Sign", "Send"]}
-          href="/me"
-          cta="Open my week"
-          color="var(--c-built)"
-        />
-      </section>
+        <section className="fd-sec" aria-labelledby="sides-h">
+          <div className="fd-wrap">
+            <div className="fd-sec-head">
+              <h2 id="sides-h" className="disp h-sec">
+                One receipt, two sides
+              </h2>
+              <p>The person who did the work writes and signs it. The company reads it. After that, nobody can change it, not the company and not us.</p>
+            </div>
+            <div className="fd-ticket">
+              <div className="fd-half">
+                <span className="fd-who">On your laptop</span>
+                <h3 className="disp h-card">For engineers: send your weekly receipt</h3>
+                <p>A private AI on 0G writes your week from your sessions, paid from your own 0G credits. You check it, sign the whole receipt and send it to your team.</p>
+                <ol className="mini-steps" aria-label="Every week">
+                  <li>
+                    <span className="n">1</span>Write
+                  </li>
+                  <li>
+                    <span className="n sign">2</span>Sign
+                  </li>
+                  <li>
+                    <span className="n">3</span>Send
+                  </li>
+                </ol>
+                <Link className="btn btn-primary" href="/me">
+                  Open my week
+                </Link>
+              </div>
+              <div className="fd-perf" aria-hidden="true" />
+              <div className="fd-half">
+                <span className="fd-who">For leads and managers</span>
+                <h3 className="disp h-card">For companies: see what everyone got done</h3>
+                <p>
+                  Everyone&apos;s signed week, by team and by person, with the pull requests behind it and where the AI money went. Leads sign in with GitHub.
+                  Your company is your GitHub org.
+                </p>
+                <ol className="mini-steps" aria-label="For companies">
+                  <li>
+                    <span className="n">1</span>Set up once
+                  </li>
+                  <li>
+                    <span className="n">2</span>Sign in with GitHub
+                  </li>
+                  <li>
+                    <span className="n">3</span>See everyone&apos;s week
+                  </li>
+                </ol>
+                <Link className="btn btn-primary" href="/company">
+                  Open the company page
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
 
-      <section aria-labelledby="runs-on">
-        <h2 id="runs-on" className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-          What it runs on, and where to check it
-        </h2>
-        <div className="mt-3 grid gap-4 md:grid-cols-3">
-          <Service
-            name="0G"
-            color="var(--c-researched)"
-            body="A private AI in a hardware enclave reads each session and writes the week, paid from the employee's own 0G credits."
-            link={provider ? { href: zgProofPath(provider), label: "0G's TEE check of the provider" } : undefined}
-          />
-          <Service
-            name="Arkiv"
-            color="var(--c-figured)"
-            body="Every receipt sent is a read-only record on Arkiv, owned by the person who signed it. The company wallet only pays the fee."
-            link={writer ? { href: arkivAddressUrl(writer), label: "Every record it wrote, on the Arkiv explorer", external: true } : undefined}
-          />
-          <Service
-            name="Swarm"
-            color="var(--c-wrote)"
-            body="Each week's full list is encrypted on the laptop and kept on Swarm, where only the company's key opens it."
-            link={{ href: swarmProofPath(DEMO_SEALED.swarm, DEMO_SEALED.entity), label: "One encrypted week, fetched live" }}
-          />
-        </div>
-      </section>
+        <section id="how" className="fd-sec scroll-mt-4" aria-labelledby="how-h">
+          <div className="fd-wrap">
+            <div className="fd-sec-head">
+              <h2 id="how-h" className="disp h-sec">
+                How a week works
+              </h2>
+              <p>
+                Set up once on your laptop: connect GitHub, join your company, sign in with 0G and let Receipts read your Claude Code and Codex logs. Then
+                every week takes three steps.
+              </p>
+            </div>
+            <ol className="fd-steps">
+              <li className="fd-step">
+                <StepIllo kind="write" />
+                <h3 className="disp h-card">
+                  <span className="num-k">1</span>Write
+                </h3>
+                <p>The private AI on 0G reads a trimmed summary of each session and writes one line for each thing you got done. It costs about a cent a week, from your own 0G credits.</p>
+              </li>
+              <li className="fd-step">
+                <StepIllo kind="sign" />
+                <h3 className="disp h-card">
+                  <span className="num-k">2</span>Sign
+                </h3>
+                <p>You read it and sign it with a key made on your laptop. The signature covers every line, the pull requests and every number. The whole week goes, nothing is picked out.</p>
+              </li>
+              <li className="fd-step">
+                <StepIllo kind="send" />
+                <h3 className="disp h-card">
+                  <span className="num-k">3</span>Send
+                </h3>
+                <p>It becomes one read-only record on Arkiv that you own. The full list goes to Swarm, encrypted on your laptop, so only your company&apos;s key opens it.</p>
+              </li>
+            </ol>
+            <div className="fd-monthly">
+              <span className="svc">Chainlink</span>
+              <p>
+                And once a month, Chainlink checks each team on its own: every signature, the signed totals, and whether what shipped is still there. The
+                score goes on Ethereum Sepolia, where nobody can change it.
+              </p>
+              <ProofAnchor href="/company/team">See a team&apos;s monthly check</ProofAnchor>
+            </div>
+            <p className="mt-6 text-[15px] text-[var(--ink-2)]">
+              <Link className="plink" href="/how">
+                The whole story, step by step
+              </Link>{" "}
+              <span className="host">Opens here</span>
+            </p>
+          </div>
+        </section>
 
-      <section aria-label="More" className="grid gap-4 md:grid-cols-3">
-        <Small title="Just for fun" body="AI Wrapped: how you talk to AI, for anyone. Nothing to do with receipts, never sent to a company." href="/wrapped" cta="Open AI Wrapped" />
-        <Small title="Just looking?" body="Try the demo company Acme: 12 made-up people, five weeks of signed receipts." href="/demo" cta="Try the demo" />
-        <Small title="Got a receipt link?" body="Anyone can check a receipt's signature and numbers, without trusting us." href="/verify" cta="Check a receipt" />
-      </section>
-    </div>
-  );
-}
+        <section className="fd-sec" aria-labelledby="leaves-h">
+          <div className="fd-wrap">
+            <div className="fd-sec-head">
+              <h2 id="leaves-h" className="disp h-sec">
+                What leaves your laptop
+              </h2>
+              <p>Very little, and each piece has one reader. Here is the same week, seen three ways.</p>
+            </div>
+            <LeavesLaptop />
+          </div>
+        </section>
 
-function Door({ eyebrow, title, body, steps, href, cta, color }: { eyebrow: string; title: string; body: string; steps: string[]; href: string; cta: string; color: string }) {
-  return (
-    <div className="flex flex-col rounded-2xl border border-border bg-card p-6 sm:p-7">
-      <p className="inline-flex items-center gap-1.5 text-sm font-medium" style={{ color }}>
-        <span className="size-1.5 rounded-full" style={{ background: color }} aria-hidden="true" />
-        {eyebrow}
-      </p>
-      <h2 className="mt-1 text-2xl font-semibold tracking-tight">{title}</h2>
-      <p className="mt-2 text-[15px] text-muted-foreground">{body}</p>
-      <div className="mt-5">
-        <FlowSteps label={`${eyebrow}: steps`} steps={steps.map((label) => ({ label }))} />
-      </div>
-      <div className="mt-6">
-        <Link href={href} className={buttonVariants({ size: "lg" })}>
-          {cta}
-          <ArrowRight className="size-4" aria-hidden="true" />
-        </Link>
-      </div>
-    </div>
-  );
-}
+        <section className="fd-sec" aria-labelledby="runs-h">
+          <div className="fd-wrap fd-runs">
+            <div className="fd-runs-intro">
+              <h2 id="runs-h" className="disp h-sec">
+                What it runs on, and where to check it
+              </h2>
+              <p>You do not have to trust us. Each piece has a public place where you can see it working.</p>
+              <p className="fd-check-line">
+                Got a receipt file or link? <ProofAnchor href="/verify">Check a receipt</ProofAnchor>
+              </p>
+            </div>
+            <ul className="fd-proofs">
+              <Service name="0G" body="A private AI in a hardware enclave reads each session and writes the week, paid from the employee's own 0G credits." href={provider ? zgProofPath(provider) : undefined} label="0G's TEE check of the provider" />
+              <Service
+                name="Arkiv"
+                body="Every receipt sent is a read-only record on Arkiv, owned by the person who signed it. The company wallet only pays the fee."
+                href={writer ? arkivAddressUrl(writer) : undefined}
+                label="Every record it wrote, on the Arkiv explorer"
+              />
+              <Service name="Swarm" body="Each week's full list is encrypted on the laptop and kept on Swarm, where only the company's key opens it." href={swarmProofPath(DEMO_SEALED.swarm, DEMO_SEALED.entity)} label="One encrypted week, fetched live" />
+              <Service
+                name="Chainlink"
+                body="Once a month, a Chainlink CRE workflow reads each team's receipts from Arkiv, checks every signature, re-checks on GitHub that what shipped is still there and writes the score to Ethereum Sepolia. Only Chainlink can post it."
+                href={`${sepoliaAddressUrl(CRE_SCOREBOARD.address)}#events`}
+                label="Every score on Sepolia Etherscan"
+              />
+              <Service name="GitHub" body="Your company is your GitHub org and your team is your GitHub team. All of the code is open." href={REPO} label="The code on GitHub" />
+            </ul>
+          </div>
+        </section>
 
-function Service({ name, color, body, link }: { name: string; color: string; body: string; link?: { href: string; label: string; external?: boolean } }) {
-  return (
-    <div className="rounded-xl border border-border bg-card p-5">
-      <p className="text-lg font-semibold" style={{ color }}>
-        {name}
-      </p>
-      <p className="mt-1 text-sm text-muted-foreground">{body}</p>
-      {link &&
-        (link.external ? (
-          <a href={link.href} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
-            {link.label} <ExternalLink className="size-3" aria-hidden="true" />
-          </a>
-        ) : (
-          <Link href={link.href} className="mt-3 inline-block text-sm font-medium text-primary hover:underline">
-            {link.label}
+        <DemoRolesBand id="demo" />
+      </main>
+
+      <footer className="fd-foot">
+        <div className="fd-wrap fd-foot-in">
+          <Link className="t-logo" href="/" aria-label="Receipts, front door">
+            <Logo />
+            <span className="t-logo-word">Receipts</span>
           </Link>
-        ))}
+          <p>Built at ETHGlobal Mumbai, November 2026. Testnets only.</p>
+          <nav aria-label="Footer">
+            <a href="#how">How it works</a>
+            <Link href="/verify">Check a receipt</Link>
+            <Link href="/wrapped">AI Wrapped</Link>
+            <a href={REPO} target="_blank" rel="noreferrer">
+              GitHub
+            </a>
+          </nav>
+        </div>
+      </footer>
     </div>
   );
 }
 
-function Small({ title, body, href, cta }: { title: string; body: string; href: string; cta: string }) {
+function Service({ name, body, href, label }: { name: string; body: string; href?: string; label: string }) {
   return (
-    <div className="rounded-xl border border-border p-5">
-      <h2 className="font-semibold">{title}</h2>
-      <p className="mt-1 text-sm text-muted-foreground">{body}</p>
-      <Link href={href} className="mt-3 inline-block text-sm font-medium text-primary hover:underline">
-        {cta}
-      </Link>
-    </div>
+    <li className="fd-proof">
+      <span className="svc">{name}</span>
+      <div>
+        <p>{body}</p>
+        {href && <ProofAnchor href={href}>{label}</ProofAnchor>}
+      </div>
+    </li>
   );
 }

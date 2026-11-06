@@ -23,7 +23,7 @@ export function Difficulty({ value }: { value: number }) {
   return (
     <span className="inline-flex items-center gap-0.5" title={`Difficulty ${value} of 5`} aria-label={`Difficulty ${value} of 5`}>
       {[1, 2, 3, 4, 5].map((i) => (
-        <span key={i} className={`h-2.5 w-1.5 rounded-[2px] ${i <= value ? "bg-foreground/75" : "bg-foreground/15"}`} />
+        <span key={i} className={`h-2.5 w-1.5 rounded-[2px] ${i <= value ? "bg-[var(--ink-2)]" : "bg-[var(--line)]"}`} />
       ))}
     </span>
   );
