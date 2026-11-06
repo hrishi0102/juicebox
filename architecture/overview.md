@@ -55,6 +55,7 @@ Keep these files in sync with the code. When a module changes shape, update its 
 | 7c | Sign-in (GitHub, 0G) | `lib/server/session.ts`, `app/api/auth`, `components/zero-g-pay.tsx` | [sign-in.md](sign-in.md) |
 | 8 | Web app, API and CLI | `web/src/app`, `web/src/lib/server`, `web/scripts` | [web-app.md](web-app.md) |
 | 9 | CRE job and contracts (optional) | `cre/`, `contracts/` | [cre-and-contracts.md](cre-and-contracts.md) |
+| 10 | AI Wrapped (fun segments, persona, chat exports) | `chat-stats.ts`, `wrapped.ts`, `chat-import.ts`, `app/wrapped` | [wrapped.md](wrapped.md) |
 
 Key decisions and their reasons are in [decisions.md](decisions.md).
 
@@ -65,6 +66,7 @@ Key decisions and their reasons are in [decisions.md](decisions.md).
 | Raw Claude Code and Codex logs | `~/.claude/projects`, `~/.codex/sessions` | Never |
 | Parsed dataset, week stories, signed receipts, GitHub cache | `~/.receipts` (or `RECEIPTS_DATA_DIR`, `/tmp/receipts` on Vercel) | Never |
 | The laptop's signing key | `~/.receipts/identity.json` (mode 0600) | Never |
+| AI Wrapped roast lines | `~/.receipts/wrapped-roasts.json` | Never |
 | Synthetic demo company (Acme, 3 teams, 12 people) | `web/fixtures/demo` (`dataset.json`, `org.json`, `weeks/`) | Yes |
 | Shared receipts | Arkiv testnet Rabdi | Public chain data |
 | Shared weeks' lists (encrypted) and public cards | Swarm (testnet gateway by default) | Public network data; the lists are ciphertext |

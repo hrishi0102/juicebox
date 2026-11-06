@@ -26,6 +26,7 @@ After reviewing V1, the human team member changed the direction: the front door 
 - The two-call private AI on 0G (per session, then per week), its prompts and parsers (`judge-core.ts`, `judge.ts`, `week.ts`, `story.ts`), live-tested on the author's logs.
 - The new home page, the share studio and card (`app/share`, `app/api/card`), receipt v2 with item proofs, the laptop signing key, signer-owned read-only Arkiv records, the company and team pages, GitHub identity and sign-in, and Sign in with 0G.
 - The architecture docs, README, Arkiv docs and this submission kit.
+- AI Wrapped (`/wrapped`), from the human team member's request for a general, non-coding Wrapped with fun segments (overthinking, AI as a therapist, just saying hi): the counting rules, persona, page, card, ChatGPT and Claude.ai export reader, and the optional roast on 0G. The rules were tuned on counts from the author's own logs; no messages were committed.
 
 The human team member supplied the 0G key, made every product call above, and does the sign-ins, key setup, demo video and submission.
 

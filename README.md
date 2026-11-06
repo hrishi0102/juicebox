@@ -20,6 +20,10 @@ Built at ETHGlobal Mumbai (Nov 5 to 7, 2026).
 
 On the author's own logs this week: 9 sessions, 9 private AI calls plus 1 weekly call on 0G, all TEE verified, about 20 seconds and under $0.01 in total.
 
+## AI Wrapped (for everyone, not just coders)
+
+`/wrapped` shows how you talk to AI: your AI personality (The Overthinker, The Brain Dumper, The 2 a.m. Philosopher, The Most Polite Human Alive...) and how much time went into overthinking, treating the AI as a therapist, student mode, just saying hi, "yes, go ahead", rage moments and brain dumps, plus your AI clock, streaks and fun facts. It works on your Claude Code and Codex logs, or on a **ChatGPT or Claude.ai data export**, which is read in your browser and never uploaded. Simple rules count everything, with no AI. The share card carries numbers only. **Roast me** optionally sends those numbers (never your messages) to the private AI on 0G for one playful line, about $0.0003. Details: [architecture/wrapped.md](architecture/wrapped.md).
+
 ## Run it
 
 Needs Node 20+ and a GitHub login (`gh auth login`) or a `GITHUB_TOKEN`.
@@ -140,6 +144,8 @@ Built but not submitted (three partners max). See [cre/README.md](cre/README.md)
 | The list's titles, for the weekly summary | The same private model | The same |
 | PR numbers, repo names | GitHub API with your token | GitHub |
 | The share card | Nowhere, unless you post it | Whoever you show it to |
+| Your messages, for AI Wrapped | Nowhere: counted on the laptop (logs) or in the browser tab (ChatGPT and Claude.ai exports) | Only you |
+| The Wrapped numbers, when you click Roast me | 0G Private Computer, private mode (numbers only, never messages) | The model in the TEE, and 0G's router in transit |
 | Your signed totals, when you share with your company | Arkiv testnet, read-only, owned by you | Anyone |
 | Your list, PRs and AI records, when you share with your company | Swarm, encrypted on your laptop; the key is sealed to your company's key on Arkiv | Your company |
 | A card you make public with Get a Swarm link | Swarm, listed on Arkiv | Anyone |

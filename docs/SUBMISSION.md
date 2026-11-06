@@ -4,7 +4,7 @@ Deadline: **Sat Nov 7, 9:00 AM IST** (submissions close, late ones are rejected)
 
 ## What is done and what is left
 
-Done and tested: reading Claude Code and Codex logs, linking PRs, the private AI on 0G writing your week (live, TEE verified), the new home page, the share card (download, copy, X, PDF), receipt v2 signed with a laptop key, the company and team pages, GitHub identity from your token, and a production build.
+Done and tested: reading Claude Code and Codex logs, linking PRs, the private AI on 0G writing your week (live, TEE verified), the new home page, the share card (download, copy, X, PDF), receipt v2 signed with a laptop key, the company and team pages, GitHub identity from your token, and a production build. Also **AI Wrapped** (`/wrapped`): fun segments (overthinking, therapy, hellos, rage...), a persona, the AI clock, a share card, ChatGPT and Claude.ai exports read in the browser, and an optional roast by the private AI (tested once, $0.0003).
 
 Built but needs you (each needs your account, a captcha or a key):
 
@@ -18,6 +18,7 @@ Built but needs you (each needs your account, a captcha or a key):
 5. **Video** (you): 2:00 to 2:59, at least 720p, your own voice, no speed-up. Script below.
 6. **Submit** on the ETHGlobal dashboard. Partners: **0G, Arkiv, Ethereum Foundation**. For Arkiv, pick **Build on Arkiv** and also tick the **Arkiv + Swarm bonus** (it does not use another pick). After recording, put the Swarm timestamp in `arkiv/swarm.md` (it is a required field). Text below.
 7. **AI usage**: keep `docs/AI_USAGE.md` honest and add what you changed yourself.
+8. **Try AI Wrapped with a ChatGPT or Claude.ai export** (optional, 5 min plus the export email): ChatGPT, Settings, Data controls, Export data; or Claude.ai, Settings, Privacy, Export data. Drop the zip on `/wrapped`. It is read in the browser only.
 
 ## Video script (about 2:45)
 
@@ -29,6 +30,8 @@ Built but needs you (each needs your account, a captcha or a key):
 6. **Verify (2:20 to 2:40).** Download the receipt, paste it in Verify: all checks pass. Change one title: it fails.
 7. **Close (2:40 to 2:55).** "No server of ours, prompts stay on your laptop, MIT licensed. What did you get done this week?"
 
+Optional extra beat (about 15 s, take it from step 6 if you need the time): open **Wrapped**. "And for everyone, not just coders: how you talk to AI. Overthinking, therapy, just saying hi. Counted on my laptop with no AI; it also reads a ChatGPT export in the browser." Show the persona and the card.
+
 Tip: record with the Demo company for the company page, and with your own data for the home page if you are happy to show it (titles are written to avoid secrets, but check them first).
 
 ## Submission text
@@ -38,7 +41,7 @@ Tip: record with the Demo company for the company page, and with your own data f
 **Short description (one line):** What did you get done this week? A private AI on 0G reads your Claude Code and Codex sessions and writes the answer; share it as a card, or signed with your company on Arkiv.
 
 **Description:**
-AI tools make it easy to spend a lot and hard to say what came out of it, and token leaderboards reward burning tokens, not getting things done. Receipts reads your Claude Code and Codex logs on your laptop, links sessions to the pull requests they produced, and, when you click Write my week, has a private AI on the 0G Private Computer, running inside a hardware enclave (TEE), read each session and write one line: Built, Fixed, Figured out, Researched, Wrote, Planned or Wasted, with a short title. A second call merges those lines into your week and one sentence about it. You can post it as a card (cost hidden by default), or sign it with a key made on your laptop and share it with your company. Your company, which is just your GitHub org, sees everyone's signed list, the PRs behind it and the totals by category and AI tool. Never prompts.
+AI tools make it easy to spend a lot and hard to say what came out of it, and token leaderboards reward burning tokens, not getting things done. Receipts reads your Claude Code and Codex logs on your laptop, links sessions to the pull requests they produced, and, when you click Write my week, has a private AI on the 0G Private Computer, running inside a hardware enclave (TEE), read each session and write one line: Built, Fixed, Figured out, Researched, Wrote, Planned or Wasted, with a short title. A second call merges those lines into your week and one sentence about it. You can post it as a card (cost hidden by default), or sign it with a key made on your laptop and share it with your company. Your company, which is just your GitHub org, sees everyone's signed list, the PRs behind it and the totals by category and AI tool. Never prompts. And for everyone, not just coders, there is AI Wrapped: how much time you spent overthinking, treating the AI as your therapist or just saying hi, and your AI personality, counted with simple rules from your logs or a ChatGPT or Claude.ai export that never leaves your browser.
 
 **How it's made:**
 Next.js 16 and TypeScript with shadcn/ui, running locally. Streaming readers for Claude Code (with subagents) and Codex logs price every call and match Claude Code's own cost tracker within 2%. Sessions are linked to PRs through the PR links and git operations in the logs, branches and file overlap. The private AI calls the 0G router in private trust mode (TEE-only), model `0gm-1.0-35b-a3b-sia` with thinking off (about 2 seconds and $0.001 a call), falling back to `glm-5.3`; the router verifies each TEE signature and we re-check it with the 0G SDK. The weekly call sees only the titles, never prompts. Sign in with 0G uses 0G's Privy app and the router's `/v1/auth/privy` session, so each person can pay from their own credits while the laptop's server keeps building every message. The share card is drawn with `next/og`. Receipts are EIP-712 typed data with three Merkle roots (the items, the PRs and the 0G calls), so an owner can hide one item with proofs while the signed totals stay intact, and any edit breaks the signature. Sharing is one Arkiv transaction that creates a read-only entity and hands its ownership to the signer; the company and team pages query Arkiv by org and re-verify every signature.

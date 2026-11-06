@@ -112,3 +112,12 @@ Reason: the company should be able to trust the timeline and waste numbers as mu
 
 ## 37. Count each log line once across copies of a conversation
 Reason: continued conversations are stored as growing copies; counting per file inflated spend several times over. Files with fewer message lines are read first so the original owns the shared history.
+
+## 38. AI Wrapped counts with rules, not with the AI
+Overthinking, therapy, hellos, rage and the rest come from keyword rules and timestamps on the person's own messages. Reason: it has to read every message, which we would not send anywhere for a fun page, and rules are free, instant and the same every time. The private AI only writes the optional one-line roast, from numbers.
+
+## 39. ChatGPT and Claude.ai exports are read in the browser
+Reason: they hold years of private chats. The page only needs counts, so the file is parsed in the tab and never uploaded, and the card is drawn from numbers.
+
+## 40. A message's time runs to the next one, capped at 15 minutes
+Reason: logs have no "reading" or "thinking" events, and the gap until the next message is the best signal of time spent on it. The cap stops a message sent before lunch from counting for an hour, like the active-time rule.
