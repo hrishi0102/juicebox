@@ -1,11 +1,11 @@
 # How Receipts uses Arkiv
 
-Arkiv is where a person's week goes when they share it with their company. It is the only shared storage in the product.
+Arkiv is where a person's week goes when they send it to their company. It is the only shared storage in the product.
 
 ## Write path
 
-1. The person's private AI writes their week ("what did you get done this week?") and they sign it (EIP-712) with a key made on their laptop.
-2. They click **Share with my company**. The company is their GitHub org and the team is their GitHub team.
+1. On their laptop (My week), the private AI on 0G writes the person's week, paid from their own 0G credits. They review what the company will see (and can keep single lines private), then sign it (EIP-712) with a key made on their laptop.
+2. They click **Send to <company>**. The company is the GitHub org and the team is the GitHub team they joined in My week, Setup.
 3. `publishReceipt()` checks the signature again and sends **one transaction** with two operations:
    - **create** a `readonly` entity with indexed attributes (org, team, week, signer, GitHub login, numbers) and the signed JSON as a `bytes` payload, expiring after 120 days;
    - **change ownership** of that entity to the signer's address.
@@ -16,12 +16,12 @@ With Swarm set up, the full week goes to Swarm encrypted and the entity keeps on
 
 Public cards work the same way in the other direction: the image is on Swarm and a small read-only card entity on Arkiv points to it, which is what the wall page (`/wall`) queries.
 
-Code: [`publishReceipt` in web/src/lib/receipts/arkiv.ts](../web/src/lib/receipts/arkiv.ts), called from [`/api/share`](../web/src/app/api/share/route.ts) (the "Share with my company" button) and the CLI (`npm run receipts -- share 2026-W45`).
+Code: [`publishReceipt` in web/src/lib/receipts/arkiv.ts](../web/src/lib/receipts/arkiv.ts), called from [`/api/share`](../web/src/app/api/share/route.ts) (the Send button on My week, Send) and the CLI (`npm run receipts -- share 2026-W45`).
 
 ## Read path (what users see)
 
-- **Company page** (`/org`): one query by `org`, every payload decoded and its EIP-712 signature and Merkle roots re-verified, totals built only from signed fields, then everyone's list with their PRs.
-- **Team page** (`/team`): the same, for one team.
+- **Company side** (`/company`, `/company/people`, `/company/prs`): one query by `org`, every payload decoded and its EIP-712 signature and Merkle roots re-verified, totals built only from signed fields, then everyone's list with their PRs (opened from Swarm for members of the org).
+- **Team page** (`/company/team`): the same, for one team.
 - **Shared receipt page** (`/r/<entity key>`): one entity, checked and shown with its list.
 - **Verify page** (`/verify`): paste an Arkiv entity key and the app loads and checks it.
 - **API** (`GET /api/team?team=...&period=...`) and **CLI** (`npm run receipts -- arkiv <team>`).

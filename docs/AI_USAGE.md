@@ -30,6 +30,15 @@ After reviewing V1, the human team member changed the direction: the front door 
 
 The human team member supplied the 0G key, made every product call above, and does the sign-ins, key setup, demo video and submission.
 
+## Day 3 (Nov 7): one flow per role
+
+The human team member found the app confusing: every role (employee, company, public, demo, Wrapped) and every sign-in (GitHub, 0G, the laptop key) shared one header and one home page. They set the direction: the company product is the main one (employees send signed receipts, the company sees everyone's), AI Wrapped is a separate side product, each kind of user gets its own flow shown on its own, keep only one way to pay for the AI, and keep Sign in with 0G because the 0G bonus rewards it. Claude Code proposed the split (a diagram of the two sides and the side product), answered where GitHub, 0G and the receipt-versus-card line belong, then built it:
+
+- A front door; separate parts with their own layouts, headers, tabs and identity: My week (`app/me`: setup, this week, review, sign, send), Company (`app/company`: overview, teams, people, pull requests, setup), For fun (`app/(personal)`), and public pages; redirects from the old addresses.
+- Sign in with 0G as the one way to pay, shared across the app (`components/zero-g.tsx`, `lib/zerog-tasks.ts`), with the balance shown before and after; the review and roast routes moved to the same browser-pays path; the app-key web routes removed.
+- Joining a company from your GitHub teams (`/api/join`), lists opened by org membership (`lib/server/viewer.ts`), keeping single lines private when sending (`/api/share`), the `/demo` role picker and banner, and the company setup checklist.
+- Tests for the weekly steps and for sending with lines kept private; docs and decisions 41 to 46.
+
 ## What tools generated
 
 - `web/` scaffold: `create-next-app` (Next.js 16).

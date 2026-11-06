@@ -32,9 +32,9 @@ We keep: category, title, difficulty, kind, reason, the 0G request id, chat id, 
 
 ## Writing a week (`week.ts`)
 
-`writeWeekStory(source, week)`: sessions in the week whose judgement is still rules-only (`needsAi`) go to call 1 (6 at a time); then call 2 writes the list. The result is a `WeekStory` saved to `~/.receipts/weeks/<week>.json` (demo: `~/.receipts/demo-weeks/`, with a committed copy in `web/fixtures/demo/weeks/`). The demo has no transcripts, so only call 2 runs for it.
+In the web app, every private AI call is paid from the person's own 0G account (Sign in with 0G) and made from the browser, in three steps behind `/api/week/browser`: `browserPlan` (the private message for each session that still needs the AI), `browserSessions` (the answers become judgements), `browserWeek` (the weekly answer becomes the list). `browserPlanSessions` does the same for chosen sessions (one session's page). See [sign-in.md](sign-in.md).
 
-Paying with your own 0G account ("Sign in with 0G") runs the same three steps from the browser instead: `browserPlan` (messages), `browserSessions` (answers to judgements), `browserWeek` (answer to story), behind `/api/week/browser`. See [sign-in.md](sign-in.md).
+The command line keeps a server-side path with the app's own key (`ZG_API_KEY`), for developers and as a fallback: `writeWeekStory(source, week)` sends sessions in the week whose judgement is still rules-only (`needsAi`) to call 1 (6 at a time), then call 2 writes the list. Either way the result is a `WeekStory` saved to `~/.receipts/weeks/<week>.json` (demo: `~/.receipts/demo-weeks/`, with a committed copy in `web/fixtures/demo/weeks/`), with `payer` set to the 0G wallet that paid (or "app key"). The demo has no transcripts, so only call 2 runs for it.
 
 A rescan keeps earlier AI judgements for sessions whose activity and GitHub outcome did not change.
 
@@ -42,4 +42,4 @@ A rescan keeps earlier AI judgements for sessions whose activity and GitHub outc
 
 ## Weekly review
 
-`review.ts` sends one line per session of a week and gets back a two-sentence summary and three tips about where money leaked. Saved in `~/.receipts/reviews`.
+`review.ts` builds one line per session of a week (`reviewPlan`); the browser sends it to 0G with the person's own 0G session and `reviewFromAnswer` turns the answer into a two-sentence summary and three tips about where money leaked (`/api/review`, `plan` then `save`). Saved in `~/.receipts/reviews`.

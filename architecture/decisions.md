@@ -121,3 +121,21 @@ Reason: they hold years of private chats. The page only needs counts, so the fil
 
 ## 40. A message's time runs to the next one, capped at 15 minutes
 Reason: logs have no "reading" or "thinking" events, and the gap until the next message is the best signal of time spent on it. The cap stops a message sent before lunch from counting for an hour, like the active-time rule.
+
+## 41. The company product comes first; Wrapped and cards are a side product
+The main product is the company's: each employee sends a signed weekly receipt from their laptop, and the company sees everyone's. AI Wrapped, week cards and the wall are a separate side product for anyone. This narrows decision 19: "What did you get done this week?" is still the employee's question, but the front door now leads with the company and its employees. Reason: monitoring what AI spend gets done across a company was the original idea and is what the product is for; the fun pages are for people who want them.
+
+## 42. One part of the app per role, each with its own header, identity and fallbacks
+Front door and public pages, My week (the employee), Company (leads and managers), For fun. Each has its own routes, layout, tabs and identity, and its fallbacks are explained only where they belong (a company with no wallet shows up in Company, Setup, not on an employee's page). Reason: with one header and one home page for everyone, people could not tell whose data they were looking at, which sign-in did what, or which flow they were in.
+
+## 43. GitHub is the one identity; each side proves it where it is
+Employees use the GitHub login their laptop already has (it is needed for pull requests anyway) and join their company by picking one of their GitHub teams, checked against GitHub. Leads sign in with GitHub on the company side; on the laptop its GitHub login counts too. Lists open for members of the org (and in the demo), not for anyone who happens to open the app on localhost. Reason: one account system that every engineering team already has, and the right to read lists follows org membership rather than the address the app was opened at.
+
+## 44. One way to pay for the private AI: Sign in with 0G
+Every private AI call in the web app (Write my week, one session, the private review, Roast me) is made from the browser with the person's own 0G session, and the page shows their credits going down. The app's own key (`ZG_API_KEY`) is only used by the command line. Replaces decision 29, which made it optional next to the app key. Reason: two ways to pay side by side confused people; 0G's bonus rewards users spending their own daily credits; and a company should not hand an AI key to every laptop. Trade-off: on a hosted copy (0G only allows localhost:3000), the AI does not run; the demo's weeks are already written by 0G.
+
+## 45. A receipt is not a card
+The receipt is evidence for the company: signed, nobody can edit it, sent only to the company, and single lines can be kept private while still counting in the signed totals. The card is a picture for socials: not signed, every line editable, cost hidden by default, never sent to a company, and it lives on the side product. Reason: both started from the same week and sat next to each other as two "share" buttons; separating them by audience makes it clear what each one is for.
+
+## 46. The demo is a place you choose, not a fallback
+The demo company is entered from `/demo` by picking a role (the lead, an engineer, someone with a link, just for fun), with a banner until you leave. Without logs, the employee side asks you to read them instead of showing the demo person's week. A hosted copy opens on the demo, since it has no logs. Reason: silently showing made-up data as "my week" was the most confusing fallback, and a role picker shows each flow on its own.

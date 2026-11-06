@@ -62,8 +62,8 @@ Company wallet that writes (pays gas): `0x09351DC0A6AFa87da28D00914fE87373C5C827
 | Share sealed: encrypt, upload, seal, write the entity (`publishReceipt`) | [`web/src/lib/receipts/arkiv.ts`](../web/src/lib/receipts/arkiv.ts) |
 | Read: open the pointer, download, check size and SHA-256, decrypt, check it is the same signed receipt (`decodeRow`) | [`web/src/lib/receipts/arkiv.ts`](../web/src/lib/receipts/arkiv.ts) |
 | Public cards: upload the PNG and write the card entity | [`web/src/app/api/card/swarm/route.ts`](../web/src/app/api/card/swarm/route.ts), [`web/src/lib/receipts/cards.ts`](../web/src/lib/receipts/cards.ts) |
-| The wall (reads card entities, shows images from Swarm) | [`web/src/app/wall/page.tsx`](../web/src/app/wall/page.tsx) |
-| Who may open sealed weeks on the company page | [`web/src/lib/server/org.ts`](../web/src/lib/server/org.ts) (`mayOpen`) |
+| The wall (reads card entities, shows images from Swarm) | [`web/src/app/(personal)/wall/page.tsx`](../web/src/app/(personal)/wall/page.tsx) |
+| Who may open sealed weeks on the company page (members of the org, and the demo) | [`web/src/lib/server/viewer.ts`](../web/src/lib/server/viewer.ts) (`isMember`), used by [`org.ts`](../web/src/lib/server/org.ts) |
 | CLI: share sealed, seed cards, read one entity | [`web/scripts/receipts.ts`](../web/scripts/receipts.ts) (`publish-demo`, `publish-demo-cards`, `entity`) |
 | Tests for sealing | [`web/test/receipts.test.ts`](../web/test/receipts.test.ts) ("sealing: only the company key opens a shared week") |
 
@@ -83,7 +83,7 @@ npm run receipts -- entity 0x<entity key>
 
 "As the company" opens the Swarm copy (size, SHA-256 and signature checked) and prints the list; "As the public" shows only the signed totals. The raw ciphertext is at `https://api.gateway.testnet.ethswarm.org/bytes/<swarm ref>`.
 
-For a card: `npm run dev`, open http://localhost:3000/share, click **Get a Swarm link**, then open http://localhost:3000/wall.
+For a card: `npm run dev`, open http://localhost:3000/card, click **Get a Swarm link**, then open http://localhost:3000/wall.
 
 ## Demo video
 
