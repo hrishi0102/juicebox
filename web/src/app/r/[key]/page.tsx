@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ReceiptPaper } from "@/components/receipt-paper";
 import { PrTable } from "@/components/pr-table";
 import { WeekList } from "@/components/week-list";
+import { swarmConfig } from "@/lib/receipts/swarm";
 import { ARKIV_EXPLORER, fetchReceiptByKey } from "@/lib/receipts/arkiv";
 import { summaryFromReceipt, verifyReceipt } from "@/lib/receipts/receipt";
 import { shortAddr } from "@/lib/format";
@@ -32,6 +33,7 @@ export default async function SharedReceipt({ params }: { params: Promise<{ key:
 
   const v = await verifyReceipt(r);
   const summary = summaryFromReceipt(r);
+  const swarmGateway = swarmConfig().gateway;
 
   return (
     <div className="grid gap-10 lg:grid-cols-[380px_1fr]">
@@ -57,6 +59,22 @@ export default async function SharedReceipt({ params }: { params: Promise<{ key:
           <h1 className="mt-1 text-balance text-4xl font-semibold leading-[1.1] tracking-tight">{r.headline}.</h1>
           {r.oneLiner && <p className="mt-3 text-xl">{r.oneLiner}</p>}
         </div>
+        {r.swarm && !r.swarm.opened && (
+          <section className="rounded-lg border border-border bg-card p-4">
+            <h2 className="font-semibold">The list is private</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              This week&apos;s list, pull requests and AI records are stored on Swarm, encrypted on the author&apos;s laptop. Only{" "}
+              {r.share?.org ? `the ${r.share.org} company key` : "the company key"} can open them. Everyone can check the signed totals above.
+            </p>
+            <p className="mt-2 break-all text-xs text-muted-foreground">
+              Swarm reference{" "}
+              <a className="hover:underline" href={`${swarmGateway}/bytes/${r.swarm.ref}`} target="_blank" rel="noreferrer">
+                {r.swarm.ref}
+              </a>{" "}
+              (encrypted bytes)
+            </p>
+          </section>
+        )}
         {summary.items.length > 0 && (
           <section>
             <h2 className="text-lg font-semibold">What they got done</h2>
@@ -83,7 +101,7 @@ export default async function SharedReceipt({ params }: { params: Promise<{ key:
             <a className="hover:underline" href={`${ARKIV_EXPLORER}/entity/${key}`} target="_blank" rel="noreferrer">
               {key}
             </a>
-            {r.arkiv.owner ? `, written by ${r.arkiv.owner}` : ""}.
+            {r.arkiv.owner ? `, owned by ${r.arkiv.owner}${r.arkiv.owner.toLowerCase() === r.message.owner.toLowerCase() ? " (the person who signed it)" : ""}` : ""}.
           </p>
         </section>
         {r.evidence.length > 0 && (

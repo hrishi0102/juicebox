@@ -422,7 +422,8 @@ export async function verifyReceipt(r: SignedReceipt): Promise<VerifyResult> {
   if (r.evidence.length) {
     const evOk = r.evidence.every((e) => evidenceLeaf({ ...e, survival: e.survivalBps === 65535 ? null : e.survivalBps / 10000, costUsd: e.costCents / 100, state: e.state as Task["state"] }).leaf === e.leaf);
     checks.push({ name: "Pull requests match the signed list", ok: evOk && merkleRoot(r.evidence.map((e) => e.leaf)) === m.evidenceRoot });
-  } else if (m.evidenceRoot !== ZERO) checks.push({ name: "Pull requests match the signed list", ok: true, detail: "Pull requests not shared (totals only)" });
+  } else if (m.evidenceRoot !== ZERO)
+    checks.push({ name: "Pull requests match the signed list", ok: true, detail: r.share?.level === "sealed" ? "Pull requests are in the encrypted copy on Swarm" : "Pull requests not shared (totals only)" });
   if (r.judges.length) {
     const jOk = r.judges.every((j) => judgeLeafHash(j) === j.leaf);
     checks.push({ name: "Private AI records match their Merkle root", ok: jOk && merkleRoot(r.judges.map((j) => j.leaf)) === m.judgeRoot });

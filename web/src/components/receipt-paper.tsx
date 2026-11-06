@@ -1,4 +1,4 @@
-import { CATEGORY_COPY, LABEL_COPY, LABEL_ORDER, plural, shortAddr, shortHash, usd, weekRange } from "@/lib/format";
+import { CATEGORY_COPY, plural, shortAddr, shortHash, usd, weekRange } from "@/lib/format";
 import { CATEGORIES, TOOL_NAMES, type AiTool, type PeriodSummary } from "@/lib/receipts/types";
 
 export type ReceiptPaperProps = {
@@ -23,7 +23,8 @@ export function ReceiptPaper(p: ReceiptPaperProps) {
   const s = p.summary;
   const week = p.weekId.split("-W")[1];
   const showCost = p.showCost ?? true;
-  const done = s.items.filter((i) => i.category !== "Wasted").length;
+  // Without the list (private or totals only), the signed counts still say how much got done.
+  const done = s.items.length ? s.items.filter((i) => i.category !== "Wasted").length : CATEGORIES.filter((c) => c !== "Wasted").reduce((a, c) => a + (s.categoryCounts[c] ?? 0), 0);
   return (
     <div className={`receipt-shadow ${p.animate ? "print-in" : ""}`}>
       <article className="receipt-paper relative text-[13px] leading-[1.55]" aria-label={`Receipt for week ${week}`}>
@@ -63,14 +64,18 @@ export function ReceiptPaper(p: ReceiptPaperProps) {
           </div>
         ) : (
           <>
-            <div className="mb-1 text-paper-faint">Sessions by outcome</div>
-            <ul className="space-y-0.5" aria-label="Sessions by outcome">
-              {LABEL_ORDER.map((l) => (
-                <li key={l} className="flex items-baseline">
-                  <span>{LABEL_COPY[l].name}</span>
-                  <span className="ml-2 text-paper-faint">x{s.labelCounts[l] ?? 0}</span>
-                  <span className="leader" />
-                  <span>{usd(s.labelSpend[l] ?? 0, 2)}</span>
+            <div className="mb-1 text-paper-faint">{p.sharedLevel === "sealed" ? "The list is private. Signed counts:" : "Signed counts:"}</div>
+            <ul className="space-y-0.5" aria-label="Items per category">
+              {CATEGORIES.filter((c) => (s.categoryCounts[c] ?? 0) > 0).map((c) => (
+                <li key={c} className="flex items-baseline">
+                  <span>{CATEGORY_COPY[c].name}</span>
+                  <span className="ml-2 text-paper-faint">x{s.categoryCounts[c]}</span>
+                  {showCost && (
+                    <>
+                      <span className="leader" />
+                      <span>{usd(s.categorySpend[c] ?? 0, 2)}</span>
+                    </>
+                  )}
                 </li>
               ))}
             </ul>
@@ -89,7 +94,7 @@ export function ReceiptPaper(p: ReceiptPaperProps) {
           {showCost && s.wasteUsd > 0 && <Row k="Of which wasted" v={usd(s.wasteUsd, 2)} />}
         </div>
 
-        {s.items.length > 0 && (
+        {(s.items.length > 0 || done > 0) && (
           <div className="mt-5 mb-2 flex justify-center">
             <div className="stamp px-4 py-1.5 text-center leading-tight">
               <div className="text-[24px]">{done}</div>
@@ -103,7 +108,7 @@ export function ReceiptPaper(p: ReceiptPaperProps) {
         <div className="space-y-0.5 text-[12px]">
           <Row k="Written by" v={p.judgeLine} />
           {!p.compact && <Row k="Signature" v={p.signed ? "signed (EIP-712)" : p.stale ? "out of date, sign again" : "not signed yet"} />}
-          {p.sharedLevel && <Row k="Shared" v={p.sharedLevel === "full" ? "with company, incl. list" : "totals only"} />}
+          {p.sharedLevel && <Row k="Shared" v={p.sharedLevel === "full" ? "with company, incl. list" : p.sharedLevel === "sealed" ? "list encrypted on Swarm" : "totals only"} />}
         </div>
 
         {p.digest && !p.compact && (
