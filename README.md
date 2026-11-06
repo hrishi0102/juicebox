@@ -64,6 +64,7 @@ Put them in `web/.env.local` (see `web/.env.example`). Everything is optional: w
 | `NEXT_PUBLIC_PRIVY_APP_ID` | 0G's Privy app (default `cmn5w697g01xp0bl80c8dskc8`) | "Sign in with 0G" to pay from your own 0G credits |
 | `ARKIV_PRIVATE_KEY` | A throwaway key funded with tGLM at https://hub.arkiv.network/faucet | The company wallet that pays for shared receipts |
 | `ARKIV_ACCESS_KEY` | https://hub.arkiv.network/access-keys | Higher Arkiv rate limits (recommended) |
+| `SWARM_API_URL`, `SWARM_GATEWAY_URL`, `SWARM_POSTAGE_BATCH_ID` | The free Swarm testnet gateway (see `web/.env.example`), or your own Bee node and batch | Private weeks and public cards on Swarm |
 | `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` | A GitHub OAuth App, callback `http://localhost:3000/api/auth/callback` | "Sign in with GitHub" for the company view |
 
 ## Architecture
@@ -96,12 +97,22 @@ The private AI is the product's core: to say what you got done, it has to read w
 
 Code: `web/src/lib/receipts/judge-core.ts`, `judge.ts`, `week.ts`, `web/src/components/zero-g-pay.tsx`.
 
-### Arkiv: Build on Arkiv
+### Arkiv: Build on Arkiv (+ Swarm bonus)
 
 Shared weeks are Arkiv entities (schema `receipts-ethglobal-mumbai.receipt.v2` on the Rabdi testnet), created **read-only** and handed to the signer in the same transaction, with indexed org, team, week, signer, GitHub login and numbers, and the signed JSON as payload, expiring after 120 days. The company and team pages read them back with one query and re-verify every signature, so they work without our server and ignore anything unsigned. Details in [`/arkiv`](arkiv/).
 
+**Swarm:** the full week (list, PRs, AI records) is encrypted on the laptop and stored on Swarm; the public Arkiv record keeps only the signed totals, the Swarm reference, and a pointer sealed to the company's key, so only the company can open the list. Public cards are stored on Swarm and listed on Arkiv (schema `receipts-ethglobal-mumbai.card.v1`), shown on `/wall`. See [arkiv/swarm.md](arkiv/swarm.md).
+
+- **Writer wallet** (the demo company's wallet, pays gas; every record is handed to its signer): `0x09351DC0A6AFa87da28D00914fE87373C5C82747`
+- **Live data:** 77 shared weeks for the demo company Acme (12 people, 5 weeks; week 45 for everyone is sealed on Swarm) and the public cards on the wall.
+- **Example entities:** a sealed week [`0xb68e…735c`](https://rabdi.explorer.arkiv.network/entity/0xb68e90172784a003d42f4ebee3262bb00d4db637685c10de96f3bbae6391735c) (Swarm `46901a99…083e`), a plain week [`0xf2d3…16f7`](https://rabdi.explorer.arkiv.network/entity/0xf2d3453735d6a71bf660ac37344e42f827929205930cfbcb5ef4297513e416f7), a public card [`0xd478…3819`](https://rabdi.explorer.arkiv.network/entity/0xd4785a1b1487ae296e6c0ccc79a7f85a5254b1d2572d32da9979d8211afa3819) ([the card on Swarm](https://api.gateway.testnet.ethswarm.org/bzz/edca15e00de285fe548539a746674a8115b90a86c3f4aac494891bbfac475a38/)).
+
+Queries you can run as is:
+
 ```
-arkiv.schema = str('receipts-ethglobal-mumbai.receipt.v2') AND type = str('receipt') AND org = str('acme')
+arkiv.schema = str('receipts-ethglobal-mumbai.receipt.v2') AND type = str('receipt') AND org = str('acme') AND period = str('2026-W45')
+arkiv.schema = str('receipts-ethglobal-mumbai.receipt.v2') AND org = str('acme') AND level = str('sealed')
+arkiv.schema = str('receipts-ethglobal-mumbai.card.v1') AND type = str('card') AND org = str('acme')
 ```
 
 ### Ethereum Foundation: Best CROPS App
@@ -129,7 +140,9 @@ Built but not submitted (three partners max). See [cre/README.md](cre/README.md)
 | The list's titles, for the weekly summary | The same private model | The enclave |
 | PR numbers, repo names | GitHub API with your token | GitHub |
 | The share card | Nowhere, unless you post it | Whoever you show it to |
-| Your signed list, PRs and totals, when you share with your company | Arkiv testnet, read-only, owned by you | Anyone |
+| Your signed totals, when you share with your company | Arkiv testnet, read-only, owned by you | Anyone |
+| Your list, PRs and AI records, when you share with your company | Swarm, encrypted on your laptop; the key is sealed to your company's key on Arkiv | Your company |
+| A card you make public with Get a Swarm link | Swarm, listed on Arkiv | Anyone |
 
 ## Honest limits
 

@@ -12,6 +12,10 @@ Arkiv is where a person's week goes when they share it with their company. It is
 
 So the company wallet pays the gas, but the record belongs to the employee and nobody can edit it. This is our answer to "the person who signs should own the record, without every employee going through a faucet".
 
+With Swarm set up, the full week goes to Swarm encrypted and the entity keeps only the signed totals plus a pointer sealed to the company key (`level = sealed`). Arkiv stays the public, queryable index; Swarm holds the private details. See [swarm.md](swarm.md).
+
+Public cards work the same way in the other direction: the image is on Swarm and a small read-only card entity on Arkiv points to it, which is what the wall page (`/wall`) queries.
+
 Code: [`publishReceipt` in web/src/lib/receipts/arkiv.ts](../web/src/lib/receipts/arkiv.ts), called from [`/api/share`](../web/src/app/api/share/route.ts) (the "Share with my company" button) and the CLI (`npm run receipts -- share 2026-W45`).
 
 ## Read path (what users see)

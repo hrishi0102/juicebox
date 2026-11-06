@@ -26,6 +26,10 @@ import { envPrivateKey } from "../src/lib/receipts/keys";
 import { githubLogin, githubTeams, laptopAccount } from "../src/lib/receipts/identity";
 import { demoKey } from "../src/lib/receipts/demo";
 import { loadWeekStory, writeWeekStory } from "../src/lib/receipts/week";
+import { publishCard } from "../src/lib/receipts/cards";
+import { uploadFile } from "../src/lib/receipts/swarm";
+import { sha256 } from "@noble/hashes/sha2";
+import { bytesToHex } from "@noble/hashes/utils";
 
 loadEnvLocal();
 const [cmd = "help", ...rest] = process.argv.slice(2);
@@ -216,6 +220,48 @@ async function main() {
       console.log(`${rs.length} receipts for team ${team}`);
       break;
     }
+    case "publish-demo-cards": {
+      // Puts demo people's cards for one week on Swarm and lists them on Arkiv, so the wall has
+      // something to show. Needs the app running (it draws the cards): npm run dev
+      const week = opt("week") ?? "2026-W45";
+      const base = process.env.RECEIPTS_URL || "http://127.0.0.1:3000";
+      const org = readJson<OrgData | null>("demo", "org.json", null);
+      if (!org) throw new Error("No demo org. Run: demo");
+      const skip = new Set((opt("skip") ?? "").split(",").filter(Boolean));
+      for (const r of org.receipts.filter((x) => x.message.period === week && !skip.has(x.message.author))) {
+        const items = r.items.filter((i) => i.category !== "Wasted").slice(0, 10);
+        if (!items.length) continue;
+        const start = new Date(Number(r.message.periodStart) * 1000).toISOString();
+        const end = new Date(Number(r.message.periodEnd) * 1000).toISOString();
+        const card = {
+          week,
+          range: weekRangeText(start, end),
+          name: `@${r.message.author}`,
+          sentence: r.message.judge.startsWith("0g") ? r.oneLiner.slice(0, 200) : undefined,
+          items: items.map((i) => ({ category: i.category, title: i.title.slice(0, 90) })),
+          sessions: r.message.sessions,
+          tools: r.message.tools.map((t) => (t === "claude-code" ? "Claude Code" : t === "codex" ? "Codex" : t)),
+          writtenBy: r.summary.writtenBy,
+        };
+        const res = await fetch(`${base}/api/card`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(card) });
+        if (!res.ok) throw new Error(`Could not draw the card (${res.status}). Is the app running at ${base}?`);
+        const png = new Uint8Array(await res.arrayBuffer());
+        const ref = await uploadFile(png, `what-i-got-done-${week}.png`, "image/png");
+        const out = await publishCard({
+          ref,
+          sha256: bytesToHex(sha256(png)),
+          size: png.length,
+          period: week,
+          author: r.message.author,
+          org: org.id,
+          owner: r.message.owner as `0x${string}`,
+          done: items.length,
+          caption: card.sentence ?? r.oneLiner,
+        });
+        console.log(`${r.message.author}: Swarm ${ref} -> Arkiv ${out.entityKey}`);
+      }
+      break;
+    }
     case "entity": {
       // Read one shared week from Arkiv: as the company (opens the sealed Swarm copy with the
       // company key) and as the public. npm run receipts -- entity 0x<entity key>
@@ -235,6 +281,11 @@ async function main() {
     default:
       console.log("Commands: scan, write, week, sign, share, team, org, demo, publish-demo, arkiv, entity, doctor. See scripts/receipts.ts for flags.");
   }
+}
+
+function weekRangeText(start: string, end: string) {
+  const day = (iso: string) => new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
+  return `${day(start)} to ${day(new Date(Date.parse(end) - 1000).toISOString())}, ${new Date(start).getUTCFullYear()}`;
 }
 
 function weekById(id: string) {
