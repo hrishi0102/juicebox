@@ -159,7 +159,8 @@ export type SignedReceipt = {
   judges: JudgeLeaf[];
   summary: { buckets: PeriodSummary["buckets"]; writtenBy: string; model?: string };
   // sealed = signed totals in public, the full week on Swarm encrypted for the company
-  share?: { level: "totals" | "full" | "sealed"; team: string; org?: string; arkivKey?: string; arkivTx?: string; publishedAt?: string; swarm?: string };
+  // `hidden` (local copy only): how many lines the owner kept private when sending; they still count in the totals
+  share?: { level: "totals" | "full" | "sealed"; team: string; org?: string; arkivKey?: string; arkivTx?: string; publishedAt?: string; swarm?: string; hidden?: number };
 };
 
 const ZERO = ("0x" + "0".repeat(64)) as Hex;

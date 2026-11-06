@@ -11,7 +11,7 @@ export default async function Sessions({ searchParams }: { searchParams: Promise
   const sp = await searchParams;
   const source = await currentSource();
   const d = getDataset(source);
-  if (!d) return <p className="text-muted-foreground">No data yet. Scan your logs from the home page, or switch to the demo team.</p>;
+  if (!d) return <p className="text-muted-foreground">No sessions yet. Read your logs in Setup, or try the demo company.</p>;
 
   const judgeBy = new Map(d.judgements.map((j) => [j.sessionId, j]));
   const changeBy = new Map(d.changes.map((c) => [c.key, c]));
@@ -36,13 +36,13 @@ export default async function Sessions({ searchParams }: { searchParams: Promise
       </div>
 
       <div className="flex flex-wrap items-center gap-2 text-sm" role="group" aria-label="Filter by category">
-        <Link href="/sessions" className={`rounded-full border px-3 py-1 ${!filter ? "border-primary bg-accent text-accent-foreground" : "border-border hover:bg-card"}`}>
+        <Link href="/me/sessions" className={`rounded-full border px-3 py-1 ${!filter ? "border-primary bg-accent text-accent-foreground" : "border-border hover:bg-card"}`}>
           All {d.sessions.length}
         </Link>
         {CATEGORIES.filter((c) => counts[c] > 0).map((c) => (
           <Link
             key={c}
-            href={`/sessions?category=${encodeURIComponent(c)}`}
+            href={`/me/sessions?category=${encodeURIComponent(c)}`}
             className={`rounded-full border px-3 py-1 ${filter === c ? "border-primary bg-accent text-accent-foreground" : "border-border hover:bg-card"}`}
           >
             {c} {counts[c]}
@@ -71,7 +71,7 @@ export default async function Sessions({ searchParams }: { searchParams: Promise
               <tr key={s.id} className="align-top hover:bg-background/60">
                 <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">{dayTime(s.startedAt)}</td>
                 <td className="max-w-[280px] px-4 py-3">
-                  <Link href={`/sessions/${s.id}`} className="font-medium hover:underline">
+                  <Link href={`/me/sessions/${s.id}`} className="font-medium hover:underline">
                     {j?.title || s.title || "Untitled session"}
                   </Link>
                   <div className="truncate text-muted-foreground">

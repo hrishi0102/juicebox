@@ -58,7 +58,7 @@ export function WeekList({
             <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
               {i.sessions.length > 0 &&
                 (linkSessions && i.sessions.length === 1 ? (
-                  <Link href={`/sessions/${i.sessions[0]}`} className="hover:text-foreground hover:underline">
+                  <Link href={`/me/sessions/${i.sessions[0]}`} className="hover:text-foreground hover:underline">
                     1 session
                   </Link>
                 ) : (

@@ -1,32 +1,37 @@
 import Link from "next/link";
-import { Share2 } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { ReceiptPaper, storyCalls, writtenBy } from "@/components/receipt-paper";
-import { UseDemoButton } from "@/components/source-switch";
-import { ReceiptActions } from "@/components/receipt-actions";
-import { ReviewButton, ScanButton } from "@/components/pipeline-controls";
-import { WriteWeekButton } from "@/components/write-week-button";
-import { ZeroGPay } from "@/components/zero-g-pay";
-import { swarmReady } from "@/lib/receipts/swarm";
+import { ScanButton } from "@/components/pipeline-controls";
+import { ReviewWeekButton, WriteWeekButton } from "@/components/ai-actions";
 import { WeekList } from "@/components/week-list";
 import { EfficiencyPanel } from "@/components/efficiency-panel";
 import { CategoryBar, CategoryLegend } from "@/components/category-badge";
 import { Difficulty } from "@/components/label-badge";
 import { Collapsible } from "@/components/collapsible";
+import { FlowSteps } from "@/components/flow-steps";
+import { EnterDemo } from "@/components/demo";
 import { buttonVariants } from "@/components/ui/button";
 import { readJson } from "@/lib/receipts/store";
 import type { WeeklyReview } from "@/lib/receipts/review";
-import { currentSource, getDataset, getDemoOrg, shareTarget, weekView, weeksWithData } from "@/lib/server/data";
-import { loadSavedReceipt, signerAddress } from "@/lib/server/receipts-store";
+import { currentSource, getDataset, getDemoOrg, onLaptop, weekView, weeksWithData } from "@/lib/server/data";
+import { employeeTarget, payerText, weekReceipt } from "@/lib/server/employee";
+import { IdentityLine } from "@/components/identity-line";
+import { loadSavedReceipt } from "@/lib/server/receipts-store";
+import { githubLogin } from "@/lib/receipts/identity";
 import { median } from "@/lib/receipts/heuristics";
-import { buildReceipt } from "@/lib/receipts/receipt";
+import { receiptStatus, weekFlow } from "@/lib/receipts/flow";
 import { CATEGORY_COPY, plural, usd, weekRange } from "@/lib/format";
 import { CATEGORIES, TOOL_NAMES, type AiTool, type PeriodSummary, type Task } from "@/lib/receipts/types";
 
-export default async function ThisWeek({ searchParams }: { searchParams: Promise<{ week?: string }> }) {
+export const metadata = { title: "My week · Receipts" };
+
+// The employee's week. One question, one answer, and one next step: write it, review and sign it,
+// send it. What the company will see is on the next page (Review and send).
+export default async function MyWeek({ searchParams }: { searchParams: Promise<{ week?: string }> }) {
   const sp = await searchParams;
   const source = await currentSource();
   const d = getDataset(source);
-  if (!d) return <Empty />;
+  if (!d) return <FirstRun laptop={await onLaptop()} />;
 
   const weeks = weeksWithData(d);
   const wv = weekView(d, sp.week);
@@ -34,23 +39,19 @@ export default async function ThisWeek({ searchParams }: { searchParams: Promise
   const older = weeks[idx + 1];
   const newer = idx > 0 ? weeks[idx - 1] : undefined;
   const s = wv.summary;
-  const saved = loadSavedReceipt(source, wv.id);
-  const owner = saved?.message.owner ?? signerAddress(source) ?? d.owner;
-  const preview = owner
-    ? buildReceipt({ owner: owner as `0x${string}`, author: saved?.message.author ?? "", periodId: wv.id, summary: { ...s, owner }, judgements: wv.judgements })
-    : undefined;
-  // A saved receipt is stale when the data changed after it was signed (rescan, a new write-up).
-  const stale = !!saved && !!preview && saved.digest !== preview.digest;
-  const digest = stale ? preview?.digest : (saved?.digest ?? preview?.digest);
-  const aiReady = !!process.env.ZG_API_KEY;
+  const rc = weekReceipt(source, d, wv);
   const aiStory = s.story.engine !== "rules";
+  const flow = weekFlow({ aiWritten: aiStory, storyStale: s.story.stale, signed: !!rc.saved?.signature, receiptStale: rc.stale, sent: !!rc.saved?.share?.arkivKey });
   const review = readJson<WeeklyReview | null>("local", `reviews/${source}-${wv.id}.json`, null);
   const teamBuckets = source === "demo" ? teamMedians() : undefined;
-  const target = source === "demo" ? undefined : await shareTarget();
-  const shareTo = target ? `${target.teamName} at ${target.orgName}${target.from === "github" || target.from === "github sign-in" ? " (from GitHub)" : ""}` : "Payments at Acme (demo)";
+  const target = await employeeTarget(source);
+  const login = source === "demo" ? "you" : (await githubLogin())?.login;
+  const sendHref = `/me/send?week=${wv.id}`;
 
   return (
     <div className="space-y-8">
+      <IdentityLine login={login} target={target} />
+
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex items-center gap-1 text-sm">
           <WeekLink week={older?.id} label="Older week" dir="prev" />
@@ -59,6 +60,15 @@ export default async function ThisWeek({ searchParams }: { searchParams: Promise
           </span>
           <WeekLink week={newer?.id} label="Newer week" dir="next" />
         </div>
+        <FlowSteps
+          label={`Week ${wv.id.split("-W")[1]} steps`}
+          steps={[
+            { label: "Write", state: flow.write },
+            { label: "Review", state: flow.review, href: sendHref },
+            { label: "Sign", state: flow.sign, href: sendHref },
+            { label: "Send", state: flow.send, href: sendHref },
+          ]}
+        />
         {source === "local" && (
           <div className="ml-auto">
             <ScanButton label="Refresh from my logs" variant="outline" />
@@ -74,32 +84,37 @@ export default async function ThisWeek({ searchParams }: { searchParams: Promise
           {plural(s.sessions, "AI session")}, {usd(s.spendUsd)}
           {toolText(s)}.
         </p>
-        <div className="mt-6 flex flex-wrap items-center gap-3">
-          <WriteWeekButton
-            week={wv.id}
-            aiReady={aiReady}
-            variant={aiStory && !s.story.stale ? "outline" : "default"}
-            label={!aiStory ? "Write my week" : s.story.stale ? "Update with new sessions" : "Write it again"}
-          />
-          <Link href={`/share?week=${wv.id}`} className={buttonVariants({ variant: aiStory && !s.story.stale ? "default" : "outline", size: "lg" })}>
-            <Share2 className="size-4" aria-hidden="true" />
-            Share it
-          </Link>
+
+        <div className="mt-6 flex flex-wrap items-start gap-3">
+          {(flow.next === "write" || aiStory) && (
+            <WriteWeekButton week={wv.id} variant={flow.next === "write" ? "default" : "outline"} label={!aiStory ? "Write my week" : s.story.stale ? "Update with new sessions" : "Write it again"} />
+          )}
+          {flow.next === "done" ? (
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="inline-flex h-10 items-center gap-1.5 rounded-lg bg-accent px-3 text-sm font-medium text-accent-foreground">
+                <Check className="size-4" aria-hidden="true" /> Sent to {target.orgName}
+              </span>
+              <Link href={sendHref} className="text-sm text-primary hover:underline">
+                See what they got
+              </Link>
+            </div>
+          ) : (
+            <Link href={sendHref} className={buttonVariants({ variant: flow.next === "write" ? "outline" : "default", size: "lg" })}>
+              {flow.next === "send" ? `Send it to ${target.orgName}` : "Review and send"}
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </Link>
+          )}
         </div>
-        <div className="mt-3">
-          <ZeroGPay week={wv.id} />
-        </div>
+
         <p className="mt-3 text-sm text-muted-foreground">
           {aiStory ? (
             <>
               Written privately by {s.story.model} on 0G{s.story.verified ? ", TEE verified" : ""}
-              {s.story.payer && s.story.payer !== "app key" ? `, paid from 0G account ${s.story.payer.slice(0, 6)}…${s.story.payer.slice(-4)}` : ""}.{" "}
+              {s.story.payer ? `, ${payerText(s.story.payer)}` : ""}.{" "}
               {s.story.stale ? `${plural(s.story.newSessions, "new session")} since then, shown below with simple rules.` : ""}
             </>
-          ) : aiReady ? (
-            "This list comes from simple rules. Write my week asks the private AI on 0G for a better one. Only a trimmed summary of each session goes to 0G, where the model runs in a hardware enclave."
           ) : (
-            "This list comes from simple rules. Add a 0G key to have a private AI write it (see How it works)."
+            "Simple rules drafted this list. Write my week has the private AI on 0G read each session and write a better one. Only a trimmed summary of each session goes to 0G, where the model runs in a hardware enclave."
           )}
         </p>
       </section>
@@ -150,8 +165,8 @@ export default async function ThisWeek({ searchParams }: { searchParams: Promise
                     ))}
                   </ul>
                   <p className="mt-3 text-xs text-muted-foreground">
-                    Private review by {review.judge.model} on 0G ({review.judge.trustMode ?? "private"} mode{review.judge.verified ? ", TEE verified" : ""}). Request{" "}
-                    {review.judge.requestId ?? "n/a"}.
+                    Private review by {review.judge.model} on 0G ({review.judge.trustMode ?? "private"} mode{review.judge.verified ? ", TEE verified" : ""}
+                    {review.judge.payer ? `, ${payerText(review.judge.payer)}` : ""}). Request {review.judge.requestId ?? "n/a"}.
                   </p>
                 </div>
               )}
@@ -162,7 +177,7 @@ export default async function ThisWeek({ searchParams }: { searchParams: Promise
               </ul>
               {source === "local" && (
                 <div className="mt-4">
-                  <ReviewButton week={wv.id} judgeReady={aiReady} label={review ? "Get a new private review" : "Get a private AI review"} />
+                  <ReviewWeekButton week={wv.id} label={review ? "Get a new private review" : "Get a private AI review"} />
                 </div>
               )}
             </Collapsible>
@@ -204,32 +219,40 @@ export default async function ThisWeek({ searchParams }: { searchParams: Promise
           </div>
         </div>
 
-        <aside className="space-y-4">
+        <aside className="space-y-6">
           <ReceiptPaper
             weekId={wv.id}
             start={wv.start}
             end={wv.end}
             summary={s}
-            owner={owner}
+            owner={rc.owner}
             judgeLine={writtenBy(s.story)}
-            digest={digest}
-            signed={!!saved?.signature && !stale}
-            stale={stale}
-            sharedLevel={stale ? undefined : saved?.share?.level}
+            digest={rc.digest}
+            signed={rc.signed}
+            stale={rc.stale}
+            sharedLevel={rc.sent?.level}
             animate
           />
-          <ReceiptActions
-            week={wv.id}
-            source={source}
-            signed={!!saved?.signature && !stale}
-            stale={stale}
-            shared={stale ? null : (saved?.share ?? null)}
-            canSignLocally
-            arkivReady={!!process.env.ARKIV_PRIVATE_KEY}
-            savedJson={saved ? JSON.stringify(saved, null, 2) : undefined}
-            shareTo={shareTo}
-            swarmReady={swarmReady()}
-          />
+          <section aria-labelledby="past">
+            <h2 id="past" className="text-sm font-medium">
+              Your receipts
+            </h2>
+            <ul className="mt-2 divide-y divide-border rounded-lg border border-border bg-card text-sm">
+              {weeks.slice(0, 8).map((w) => {
+                const st = w.id === wv.id ? (flow.next === "done" ? "sent" : rc.signed ? "signed" : "not signed") : receiptStatus(loadSavedReceipt(source, w.id));
+                return (
+                  <li key={w.id}>
+                    <Link href={`/me?week=${w.id}`} className={`flex items-center justify-between gap-3 px-3 py-2 hover:bg-accent/50 ${w.id === wv.id ? "font-medium" : ""}`}>
+                      <span>
+                        Week {w.id.split("-W")[1]} <span className="font-normal text-muted-foreground">{weekRange(w.start, w.end)}</span>
+                      </span>
+                      <span className={st === "sent" ? "text-[var(--c-built)]" : "text-muted-foreground"}>{st === "sent" ? `Sent` : st === "signed" ? "Signed, not sent" : "Not sent"}</span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
         </aside>
       </div>
     </div>
@@ -246,7 +269,7 @@ function toolText(s: PeriodSummary) {
 function prHint(tasks: Task[]) {
   if (!tasks.length) return "None linked this week";
   const merged = tasks.filter((t) => (t.state === "merged" || t.state === "direct") && !t.reverted).length;
-  return `${plural(tasks.length, "PR")}, ${merged} merged. Always included when you share with your company`;
+  return `${plural(tasks.length, "PR")}, ${merged} merged. Always included when you send your receipt`;
 }
 
 function PrList({ tasks }: { tasks: Task[] }) {
@@ -280,7 +303,7 @@ function HowWritten({ s, firstSession }: { s: PeriodSummary; firstSession?: stri
         </p>
         <p className="text-muted-foreground">
           The private AI does better: it reads what you asked and what the AI answered on 0G, where the model runs inside a hardware enclave (TEE),
-          and writes one line per session. A second call merges the lines into this list. It never sees anything else.
+          and writes one line per session. A second call merges the lines into this list. It is paid from your own 0G account with Sign in with 0G.
         </p>
       </div>
     );
@@ -290,6 +313,7 @@ function HowWritten({ s, firstSession }: { s: PeriodSummary; firstSession?: stri
         Written by <span className="font-medium">{s.story.model}</span> on the 0G Private Computer, in private mode: only providers running the model
         inside a TEE could answer{s.story.verified ? ", and every answer's TEE signature was checked" : ""}. The requests reach 0G over HTTPS
         through its router and are not end-to-end sealed today, so the router could read them in transit.
+        {s.story.payer ? ` It was ${payerText(s.story.payer)}.` : ""}
       </p>
       <ol className="list-decimal space-y-1 pl-5 text-muted-foreground">
         <li>Each session went in as a private digest: what you asked, what the AI said at the end, tool counts, the GitHub outcome and the cost.</li>
@@ -308,7 +332,7 @@ function HowWritten({ s, firstSession }: { s: PeriodSummary; firstSession?: stri
         </div>
       )}
       {firstSession && (
-        <Link href={`/sessions/${firstSession}`} className="text-sm text-primary hover:underline">
+        <Link href={`/me/sessions/${firstSession}`} className="text-sm text-primary hover:underline">
           See exactly what was sent for one session
         </Link>
       )}
@@ -325,7 +349,7 @@ function WeekLink({ week, label, dir }: { week?: string; label: string; dir: "pr
       </span>
     );
   return (
-    <Link href={`/?week=${week}`} aria-label={label} className="rounded-md px-2 py-1 text-lg leading-none hover:bg-accent">
+    <Link href={`/me?week=${week}`} aria-label={label} className="rounded-md px-2 py-1 text-lg leading-none hover:bg-accent">
       {glyph}
     </Link>
   );
@@ -340,31 +364,56 @@ function teamMedians() {
   return Object.fromEntries(Object.entries(by).map(([k, v]) => [Number(k), median(v)])) as Record<number, number>;
 }
 
-function Empty() {
+/** No logs read yet: set up first. On a hosted copy there are no logs, so it points at the demo. */
+function FirstRun({ laptop }: { laptop: boolean }) {
   return (
-    <div className="mx-auto max-w-2xl py-16">
-      <h1 className="text-balance text-5xl font-semibold leading-[1.05] tracking-tight">What did you get done this week?</h1>
+    <div className="mx-auto max-w-2xl py-10">
+      <p className="text-sm font-medium text-muted-foreground">For employees</p>
+      <h1 className="mt-1 text-balance text-5xl font-semibold leading-[1.05] tracking-tight">Your weekly receipt</h1>
       <p className="mt-5 text-lg text-muted-foreground">
-        Receipts reads your Claude Code and Codex sessions on this laptop and writes the answer for you: what you built, fixed, figured out and
-        researched, and what it cost. Share it as a card, or as a signed receipt with your company.
+        Receipts reads your Claude Code and Codex sessions on this laptop and writes down what they got done: what you built, fixed, figured out and
+        researched, and what it cost. You check it, sign it with a key that stays here, and send it to your company. Your prompts never leave the
+        laptop.
       </p>
-      <ol className="mt-8 space-y-3 text-[15px]">
-        <li>
-          <span className="font-medium">1. Read my logs.</span> <span className="text-muted-foreground">Nothing leaves your laptop for this step.</span>
-        </li>
-        <li>
-          <span className="font-medium">2. Write my week.</span>{" "}
-          <span className="text-muted-foreground">A private AI on 0G, running inside a hardware enclave, reads each session and writes one line.</span>
-        </li>
-        <li>
-          <span className="font-medium">3. Share it.</span> <span className="text-muted-foreground">Post a card, or sign the receipt and share it with your company.</span>
-        </li>
-      </ol>
-      <div className="mt-8 flex flex-wrap gap-3">
-        <ScanButton label="Read my logs" />
-        <UseDemoButton />
-      </div>
-      <p className="mt-6 text-sm text-muted-foreground">Pull requests are found with your GitHub login (GITHUB_TOKEN, or the GitHub CLI: gh auth login).</p>
+      {laptop ? (
+        <>
+          <div className="mt-8 rounded-xl border border-border bg-card p-5">
+            <h2 className="font-semibold">Set up once</h2>
+            <ol className="mt-3 list-decimal space-y-1.5 pl-5 text-[15px]">
+              <li>Connect GitHub (the GitHub CLI you already use)</li>
+              <li>Join your company: your GitHub org and team</li>
+              <li>Sign in with 0G: the private AI is paid from your own 0G credits</li>
+              <li>Read your logs. Nothing leaves your laptop for this step</li>
+            </ol>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <Link href="/me/setup" className={buttonVariants({ size: "lg" })}>
+                Start setup
+              </Link>
+              <ScanButton label="Just read my logs" variant="outline" />
+            </div>
+          </div>
+          <p className="mt-6 text-sm text-muted-foreground">
+            Just looking?{" "}
+            <EnterDemo href="/me" className="text-primary hover:underline">
+              Be an engineer at the demo company
+            </EnterDemo>
+            .
+          </p>
+        </>
+      ) : (
+        <div className="mt-8 rounded-xl border border-border bg-card p-5">
+          <h2 className="font-semibold">This part runs on your laptop</h2>
+          <p className="mt-2 text-[15px] text-muted-foreground">
+            Your logs are on your laptop, so is this app: clone the repo, then <code>npm install</code> and <code>npm run dev</code> in <code>web</code>, and
+            open http://localhost:3000.
+          </p>
+          <div className="mt-4">
+            <EnterDemo href="/me" className={buttonVariants({ size: "lg" })}>
+              Try it as an engineer at the demo company
+            </EnterDemo>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

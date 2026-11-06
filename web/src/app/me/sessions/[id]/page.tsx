@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Difficulty } from "@/components/label-badge";
 import { CategoryBadge } from "@/components/category-badge";
-import { JudgeButton } from "@/components/pipeline-controls";
+import { JudgeSessionButton } from "@/components/ai-actions";
 import { currentSource, getDataset } from "@/lib/server/data";
 import { sessionUsd, totalTokens } from "@/lib/receipts/pricing";
 import { loopScore } from "@/lib/receipts/heuristics";
@@ -33,7 +33,7 @@ export default async function SessionDetail({ params }: { params: Promise<{ id: 
   return (
     <div className="max-w-4xl space-y-8">
       <div>
-        <Link href="/sessions" className="text-sm text-muted-foreground hover:text-foreground">
+        <Link href="/me/sessions" className="text-sm text-muted-foreground hover:text-foreground">
           All sessions
         </Link>
         <h1 className="mt-2 text-3xl font-semibold tracking-tight">{j?.title || s.title || "Untitled session"}</h1>
@@ -45,7 +45,7 @@ export default async function SessionDetail({ params }: { params: Promise<{ id: 
           {j?.category && <CategoryBadge category={j.category} />}
           {j && <Difficulty value={j.difficulty} />}
           <span className="text-2xl font-semibold">{usd(sessionUsd(s))}</span>
-          {source === "local" && <JudgeButton label="Ask the private AI about this session" sessionIds={[s.id]} judgeReady={!!process.env.ZG_API_KEY} />}
+          {source === "local" && <JudgeSessionButton sessionId={s.id} />}
         </div>
         {j && <p className="mt-3 max-w-[70ch]">{j.reason}</p>}
       </div>
@@ -128,7 +128,7 @@ export default async function SessionDetail({ params }: { params: Promise<{ id: 
             {j.judge.sealed !== undefined && <Item k="Sealed end to end" v={j.judge.sealed ? "yes" : "no"} />}
             {j.judge.teeVerified !== undefined && <Item k="Router checked TEE signature" v={j.judge.teeVerified ? "yes" : "no"} />}
             {j.judge.selfVerified !== undefined && <Item k="We checked TEE signature" v={j.judge.selfVerified ? "yes" : "no"} />}
-            {j.judge.payer && <Item k="Paid by" v={j.judge.payer === "app key" ? "the app's 0G key" : `0G account ${j.judge.payer}`} />}
+            {j.judge.payer && <Item k="Paid by" v={j.judge.payer === "app key" ? "the app's own 0G key (command line)" : `your 0G account ${j.judge.payer}`} />}
             {j.judge.costUsd !== undefined && <Item k="Cost of this call" v={`$${j.judge.costUsd.toFixed(4)}`} />}
             {j.judge.requestHash && <Item k="Hash of what was sent" v={shortHash(j.judge.requestHash, 10)} />}
             {j.judge.responseHash && <Item k="Hash of the answer" v={shortHash(j.judge.responseHash, 10)} />}
