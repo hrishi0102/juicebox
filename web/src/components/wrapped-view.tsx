@@ -7,6 +7,8 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import type { FunSegment } from "@/lib/receipts/chat-stats";
 import { DAY_NAMES, SEGMENT_COPY, SOURCE_NAMES, hourLabel, minutesLabel, shareText, toCard, type Wrapped } from "@/lib/receipts/wrapped";
 import { IMPORT_RANGES, readExportFile, wrappedFromExport, type ImportedExport, type ImportRange } from "@/lib/receipts/chat-import";
+import { spentLine, useZeroG } from "@/components/zero-g";
+import { roast as askZeroG } from "@/lib/zerog-tasks";
 
 type Period = { id: string; label: string; href: string; active: boolean };
 type Roast = { line: string; model?: string; verified?: boolean };
@@ -25,7 +27,7 @@ const n0 = (x: number) => Math.round(x).toLocaleString("en-US");
 const pct = (x: number) => `${Math.round(x * 100)}%`;
 const WEEK_ORDER = [1, 2, 3, 4, 5, 6, 0]; // Monday first
 
-export function WrappedView({ initial, periods, source, aiReady }: { initial?: Wrapped; periods: Period[]; source?: "local" | "demo"; aiReady: boolean }) {
+export function WrappedView({ initial, periods, source }: { initial?: Wrapped; periods: Period[]; source?: "local" | "demo" }) {
   const [imp, setImp] = useState<ImportedExport>();
   const [range, setRange] = useState<ImportRange>("year");
   const [busy, setBusy] = useState(false);
@@ -94,7 +96,7 @@ export function WrappedView({ initial, periods, source, aiReady }: { initial?: W
           </>
         ) : source === "demo" ? (
           <>
-            This is the demo person. Switch to My data at the top for your own logs, or{" "}
+            This is the demo person. Leave the demo for your own logs, or{" "}
             <a href="#import" className="underline underline-offset-2 hover:text-foreground">
               bring a ChatGPT or Claude.ai export
             </a>
@@ -110,7 +112,8 @@ export function WrappedView({ initial, periods, source, aiReady }: { initial?: W
         ) : null}
       </p>
 
-      {w ? <WrappedBody key={`${imp?.tool ?? source}-${w.label}`} w={w} aiReady={aiReady} /> : <NoData imported={!!imp} />}
+      {/* No logs and no export yet: the export is the way in, so it comes first. */}
+      {w ? <WrappedBody key={`${imp?.tool ?? source}-${w.label}`} w={w} /> : imp ? <NoData imported /> : null}
 
       <ImportPanel busy={busy} error={error} imported={imp} onFile={onFile} />
     </div>
@@ -122,14 +125,16 @@ function NoData({ imported }: { imported: boolean }) {
     <div className="rounded-2xl border border-border bg-card p-8 text-center">
       <p className="text-lg font-medium">{imported ? "No messages in this period." : "No messages to count yet."}</p>
       <p className="mt-2 text-sm text-muted-foreground">
-        {imported ? "Pick a longer period above." : "Read your logs on the My week page, or bring a ChatGPT or Claude.ai export below."}
+        {imported ? "Pick a longer period above." : "Bring a ChatGPT or Claude.ai export below, or read your Claude Code and Codex logs in My week, Setup."}
       </p>
     </div>
   );
 }
 
-function WrappedBody({ w, aiReady }: { w: Wrapped; aiReady: boolean }) {
+function WrappedBody({ w }: { w: Wrapped }) {
+  const zg = useZeroG();
   const [roast, setRoast] = useState<Roast>();
+  const [spent, setSpent] = useState("");
   const [roastBusy, setRoastBusy] = useState(false);
   const [roastError, setRoastError] = useState<string>();
   const card = useMemo(() => ({ ...toCard(w), ...(roast ? { r: roast.line } : {}) }), [w, roast]);
@@ -159,21 +164,19 @@ function WrappedBody({ w, aiReady }: { w: Wrapped; aiReady: boolean }) {
     };
   }, [cardKey]);
 
+  // Paid from your own 0G account (Sign in with 0G). Only these numbers are sent, never a message.
   async function askRoast() {
+    if (!zg.signedIn) return zg.signIn();
     setRoastBusy(true);
     setRoastError(undefined);
+    const before = zg.balance;
     try {
-      const r = await fetch("/api/wrapped/roast", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          card: toCard(w),
-          extra: { conversations: w.conversations, words: w.words, manners: w.manners, questions: w.questions, whys: w.whys, avalanches: w.avalanches, activeDays: w.activeDays, peakDay: w.peakDay },
-        }),
+      const j = await askZeroG(zg, {
+        card: toCard(w),
+        extra: { conversations: w.conversations, words: w.words, manners: w.manners, questions: w.questions, whys: w.whys, avalanches: w.avalanches, activeDays: w.activeDays, peakDay: w.peakDay },
       });
-      const j = await r.json();
-      if (!j.ok) throw new Error(j.error ?? "The private AI did not answer.");
       setRoast({ line: j.line, model: j.model, verified: j.verified });
+      if (!j.cached) setSpent(spentLine(before, await zg.refreshBalance()));
     } catch (e) {
       setRoastError(e instanceof Error ? e.message : String(e));
     } finally {
@@ -199,7 +202,8 @@ function WrappedBody({ w, aiReady }: { w: Wrapped; aiReady: boolean }) {
             <p className="mt-4 max-w-xl text-pretty text-xl leading-snug text-white/90">{roast ? `"${roast.line}"` : w.persona.line}</p>
             {roast && (
               <p className="mt-2 text-sm text-white/75">
-                Written privately by {roast.model ?? "the private AI"} on 0G{roast.verified ? ", TEE verified" : ""}. Only the numbers were sent.
+                Written privately by {roast.model ?? "the private AI"} on 0G{roast.verified ? ", TEE verified" : ""}, paid from your 0G account. Only the numbers were sent.
+                {spent ? ` ${spent}` : ""}
               </p>
             )}
             {w.traits.length > 0 && (
@@ -212,20 +216,25 @@ function WrappedBody({ w, aiReady }: { w: Wrapped; aiReady: boolean }) {
                 ))}
               </div>
             )}
-            {aiReady && !roast && (
+            {!roast && zg.available && (
               <div className="mt-6">
                 <button
                   type="button"
                   onClick={askRoast}
-                  disabled={roastBusy}
+                  disabled={roastBusy || !zg.ready || zg.connecting}
                   className="inline-flex h-9 items-center gap-2 rounded-lg bg-white px-3.5 text-sm font-semibold text-[#2c46c9] shadow-sm transition-opacity hover:opacity-90 disabled:opacity-60"
                 >
                   <Sparkles className="size-4" aria-hidden="true" />
-                  {roastBusy ? "Asking the private AI…" : "Roast me (private AI)"}
+                  {roastBusy ? "Asking the private AI…" : zg.signedIn ? "Roast me (private AI)" : zg.connecting ? "Connecting to 0G" : "Sign in with 0G to roast me"}
                 </button>
-                <p className="mt-2 max-w-md text-xs text-white/75">Sends only these numbers to a model in a hardware enclave on 0G. Never your messages. Under $0.001.</p>
+                <p className="mt-2 max-w-md text-xs text-white/75">
+                  Sends only these numbers to a model in a hardware enclave on 0G, paid from your own 0G credits. Never your messages. Under $0.001.
+                </p>
                 {roastError && <p className="mt-2 text-sm font-medium text-white">{roastError}</p>}
               </div>
+            )}
+            {!roast && !zg.available && (
+              <p className="mt-6 max-w-md text-xs text-white/75">Roast me runs on your laptop, at http://localhost:3000, with Sign in with 0G.</p>
             )}
           </div>
           <dl className="grid grid-cols-2 gap-3 self-end">

@@ -12,5 +12,5 @@ export default async function WrappedPage({ searchParams }: { searchParams: Prom
   const d = getDataset(source);
   const w = d ? wrappedFor(d, period) : undefined;
   const periods = WRAPPED_PERIODS.map((p) => ({ id: p.id, label: p.label, href: `/wrapped?period=${p.id}`, active: p.id === period }));
-  return <WrappedView initial={w} periods={periods} source={d ? source : undefined} aiReady={!!process.env.ZG_API_KEY} />;
+  return <WrappedView initial={w} periods={periods} source={d ? source : undefined} />;
 }

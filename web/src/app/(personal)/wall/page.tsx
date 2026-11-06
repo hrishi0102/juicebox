@@ -56,7 +56,7 @@ export default async function Wall({ searchParams }: { searchParams: Promise<{ o
       ) : cards.length === 0 ? (
         <div className="max-w-2xl rounded-lg border border-border bg-card p-6">
           <h2 className="text-lg font-semibold">No public cards yet</h2>
-          <p className="mt-2 text-muted-foreground">Open Share it, pick what goes on your card, and click Get a Swarm link. It shows up here.</p>
+          <p className="mt-2 text-muted-foreground">Open Week card, pick what goes on your card, and click Get a Swarm link. It shows up here.</p>
         </div>
       ) : (
         <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
