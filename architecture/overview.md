@@ -29,6 +29,8 @@ Keep these files in sync with the code. When a module changes shape, update its 
                                               |  signed with a key made on the laptop
                                               v
                                    [7 Arkiv] read-only record, owned by the signer
+                                              |  signed totals in public; the full week
+                                              |  encrypted on Swarm, key sealed to the company
                                               |
                      +------------------------+------------------------+
                      v                        v                        v
@@ -48,6 +50,7 @@ Keep these files in sync with the code. When a module changes shape, update its 
 | 5 | Share card | `card.ts`, `app/api/card`, `app/share` | [web-app.md](web-app.md) |
 | 6 | Receipts and signing | `receipt.ts`, `identity.ts` | [receipts-and-signing.md](receipts-and-signing.md) |
 | 7 | Arkiv sharing | `arkiv.ts` | [arkiv-sharing.md](arkiv-sharing.md) |
+| 7a | Swarm storage: sealed weeks and public cards | `swarm.ts`, `seal.ts`, `cards.ts`, `app/wall` | [../arkiv/swarm.md](../arkiv/swarm.md) |
 | 7b | Company and team view | `app/org`, `app/team`, `lib/server/org.ts` | [org-view.md](org-view.md) |
 | 7c | Sign-in (GitHub, 0G) | `lib/server/session.ts`, `app/api/auth`, `components/zero-g-pay.tsx` | [sign-in.md](sign-in.md) |
 | 8 | Web app, API and CLI | `web/src/app`, `web/src/lib/server`, `web/scripts` | [web-app.md](web-app.md) |
@@ -64,6 +67,7 @@ Key decisions and their reasons are in [decisions.md](decisions.md).
 | The laptop's signing key | `~/.receipts/identity.json` (mode 0600) | Never |
 | Synthetic demo company (Acme, 3 teams, 12 people) | `web/fixtures/demo` (`dataset.json`, `org.json`, `weeks/`) | Yes |
 | Shared receipts | Arkiv testnet Rabdi | Public chain data |
+| Shared weeks' lists (encrypted) and public cards | Swarm (testnet gateway by default) | Public network data; the lists are ciphertext |
 
 A pre-commit hook (`.githooks/pre-commit`, enabled with `git config core.hooksPath .githooks`) blocks `.jsonl` files, the data folders, and any file containing Claude Code transcript lines.
 

@@ -88,3 +88,12 @@ On the laptop the existing GitHub token is enough; the hosted company view uses 
 
 ## 29. Sign in with 0G to pay from your own credits
 Optional, on localhost:3000. The browser makes the AI calls with the person's 0G session; the local server builds the messages and keeps the results. Reason: a shared app key does not scale to many people, and 0G's iAI credits belong to the person.
+
+## 30. Private lists on Swarm, signed totals on Arkiv
+When Swarm is set up, a shared week's list, PRs and AI records are encrypted on the laptop and stored on Swarm; the public Arkiv record keeps the signed totals, the Swarm reference, and the pointer and key sealed to the company's key. Reason: Arkiv is public, and work titles can name customers or unreleased features. The company still gets the details, everyone can still check the numbers, and no server of ours holds anything. We encrypt ourselves rather than use Swarm's encrypted references, which carry their key and could not go on public Arkiv.
+
+## 31. Public cards on Swarm, listed on Arkiv
+"Get a Swarm link" stores the card on Swarm and writes a small read-only card entity owned by its maker; `/wall` reads them. Reason: posts get a permanent link that does not depend on us, and anyone can see what people chose to share, with a SHA-256 to check the bytes.
+
+## 32. The public Swarm testnet gateway for storage, for now
+It stamps uploads with its own batch, so it costs nothing and needs no node. Reason: no stamps were offered at the event, and the user is not spending money without being asked. Trade-off: the gateway is for testing and does not promise how long data lives; switching to our own node and batch is two environment variables.

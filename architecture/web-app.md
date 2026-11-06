@@ -25,12 +25,13 @@ A cookie picks **My logs** (`~/.receipts/dataset.json`) or **Demo** (`web/fixtur
 | `/org` | Company view: what the company got done, everyone's signed week, teams, PRs, tools, weeks (see [org-view.md](org-view.md)) |
 | `/team?team=<id>` | One team: headline, everyone's week |
 | `/r/[key]` | One shared receipt loaded from Arkiv and checked, with its list and PRs |
+| `/wall` | Everyone's public cards: Arkiv card entities, images straight from Swarm |
 | `/verify` | Paste a receipt JSON or an Arkiv key and run the checks |
 | `/how` | How it works and what leaves the laptop |
 
 ## API routes (`web/src/app/api`)
 
-`source`, `scan`, `week` (write a week with the app key), `week/browser` (the three steps for paying with your own 0G account), `card` (PNG), `judge`, `review`, `receipt` (GET build or saved, POST save a wallet-signed receipt), `receipt/sign-local`, `share`, `verify`, `team`, `auth/login`, `auth/callback`, `auth/logout`.
+`source`, `scan`, `week` (write a week with the app key), `week/browser` (the three steps for paying with your own 0G account), `card` (PNG), `card/swarm` (put the card on Swarm and list it on Arkiv), `judge`, `review`, `receipt` (GET build or saved, POST save a wallet-signed receipt), `receipt/sign-local`, `share`, `verify`, `team`, `auth/login`, `auth/callback`, `auth/logout`.
 
 ## Share card (`/api/card`)
 
@@ -45,7 +46,7 @@ A cookie picks **My logs** (`~/.receipts/dataset.json`) or **Demo** (`web/fixtur
 
 ## CLI (`web/scripts/receipts.ts`)
 
-`scan`, `judge`, `week` (print a week's list), `write` (have the private AI write a week; `--demo` for the demo), `sign`, `team`, `org`, `share`, `demo`, `publish-demo`, `arkiv`, `doctor`. Run with `npm run receipts -- <command>`. Loads `web/.env.local` itself.
+`scan`, `judge`, `week` (print a week's list), `write` (have the private AI write a week; `--demo` for the demo), `sign`, `team`, `org`, `share`, `demo`, `publish-demo` (`--week`, `--who`, `--from`, `--limit`; sealed on Swarm when it is set up), `publish-demo-cards` (needs the app running to draw cards), `arkiv`, `entity <key>` (read one shared week as the company and as the public), `doctor` (keys, company wallet and its tGLM balance). Run with `npm run receipts -- <command>`. Loads `web/.env.local` itself.
 
 ## Tests
 

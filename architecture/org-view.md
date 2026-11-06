@@ -15,7 +15,7 @@ Code: `web/src/app/org/page.tsx`, `web/src/app/team/page.tsx`, `web/src/componen
 - Demo mode: `web/fixtures/demo/org.json` (Acme: Payments, Platform, Mobile; 12 people; Claude Code and Codex; "You" uses the weeks written by the 0G model), merged with anything live on Arkiv for org `acme`.
 - My logs mode: the org and team from `shareTarget()`: CLI settings in `~/.receipts/org.json` if present, else the GitHub sign-in, else the orgs and teams of the GitHub token the app already uses. Receipts are read from Arkiv by the indexed `org` attribute (5 second limit).
 
-Every receipt is re-verified; only verified ones count, and only signed fields are used.
+Every receipt is re-verified; only verified ones count, and only signed fields are used. Sealed weeks (list encrypted on Swarm) are opened only on the laptop, in the demo, or for a GitHub-signed-in member of the org, and only with the company key; a row then says "Opened from Swarm with the company key". Without the key, the row shows the signed totals and says the list is private.
 
 ## Company page (`/org`)
 
