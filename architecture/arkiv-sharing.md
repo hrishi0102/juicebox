@@ -22,6 +22,7 @@ So the company wallet (`ARKIV_PRIVATE_KEY`) pays the gas, and the employee owns 
 
 ## Read
 
+- Every read selects the system fields too (`$owner`, `$creator`, `$createdAt`, `$expiresAt`, `$creationFlags`), kept as `arkiv` on each receipt (`ArkivMeta`). The public receipt page shows them: read-only, owned by the signer, written by the company wallet, expiry as a date (`blockDate`, 2 second blocks).
 - `fetchOrgReceipts(org, period?, open)`: every team of a company in one query (paged by 100), each payload decoded and re-verified. Used by the company and team pages, with a 5 second limit so pages never hang on a slow endpoint. With `open` (decided by `mayOpen` in `lib/server/org.ts`: on the laptop, in the demo, or for a GitHub-signed-in member of the org) and the company key, `decodeRow` opens sealed weeks: it unseals the pointer, downloads the ciphertext, checks size and SHA-256, decrypts, and keeps it only if it is the same signed receipt (same digest, valid signature). Otherwise the page shows the signed totals and says the list is private.
 - `fetchTeamReceipts(team, period?)`: one team, for the CLI and `/api/team`.
 - `fetchReceiptByKey(key)`: one entity, for `/r/<key>` and the Verify page.

@@ -64,19 +64,33 @@ One per card someone makes public ("Get a Swarm link"). Read-only, handed to its
 | `mediaType` | `str` | no | `image/png` |
 | `caption` | `str` | no | The week in one line, at most 120 characters |
 
+## System fields we read
+
+Every read also selects these, so the app can show what Arkiv itself guarantees:
+
+| Field | What we use it for |
+|---|---|
+| `$owner` | The person who signed the receipt (after the handover). The public receipt page says "Only they can delete it or keep it longer" |
+| `$creator` | The company wallet that wrote it and paid the fee |
+| `$creationFlags` | `readonly: true`, shown as "nobody can change it, not even its owner" |
+| `$createdAt` | The block it was created at. When a week was sent twice, readers keep the one sent last |
+| `$expiresAt` | The block it expires at, shown as a date (2 second blocks) |
+
 ## Queries
 
-A whole company's week:
+Arkiv's public endpoint refuses anonymous queries (`ANON_COST_LIMITED`), so run these with a free access key from https://hub.arkiv.network/access-keys; the README has a ready `curl` command. Counts are from Nov 7.
+
+A whole company's week (37 entities for week 45: 12 people, several of whom sent the week more than once; the app keeps the latest per person):
 ```
 arkiv.schema = str('receipts-ethglobal-mumbai.receipt.v2') AND type = str('receipt') AND org = str('acme') AND period = str('2026-W45')
 ```
 
-One team:
+One team (40):
 ```
 arkiv.schema = str('receipts-ethglobal-mumbai.receipt.v2') AND type = str('receipt') AND team = str('acme-payments')
 ```
 
-Big weeks that went in circles:
+Big weeks that went in circles (10):
 ```
 arkiv.schema = str('receipts-ethglobal-mumbai.receipt.v2') AND org = str('acme') AND spendCents > u64(10000) AND wasteCents > u64(2000)
 ```
@@ -85,7 +99,7 @@ From code (what the company page does):
 
 ```ts
 await publicClient
-  .select({ $key: true, $owner: true, $expiresAt: true, payload: true })
+  .select({ $key: true, $owner: true, $creator: true, $createdAt: true, $expiresAt: true, $creationFlags: true, payload: true, swarm: true, sealed: true })
   .from(ReceiptSchema)
   .where(and(eq("type", "receipt"), eq("org", org)))
   .orderBy(desc("spendCents"))

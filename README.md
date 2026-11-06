@@ -114,23 +114,33 @@ The private AI is the product's core: to say what you got done, it has to read w
 
 Code: `web/src/lib/receipts/judge-core.ts`, `judge.ts`, `week.ts`, `web/src/components/zero-g.tsx`, `web/src/lib/zerog-tasks.ts`.
 
-### Arkiv: Build on Arkiv (+ Swarm bonus)
+### Arkiv: Build on Arkiv (from scratch), with the Arkiv + Swarm bonus
 
-Shared weeks are Arkiv entities (schema `receipts-ethglobal-mumbai.receipt.v2` on the Rabdi testnet), created **read-only** and handed to the signer in the same transaction, with indexed org, team, week, signer, GitHub login and numbers, and the signed JSON as payload, expiring after 120 days. The company side reads them back with one query and re-verifies every signature, so they work without our server and ignore anything unsigned. Details in [`/arkiv`](arkiv/).
+Every receipt an employee sends is an Arkiv entity (schema `receipts-ethglobal-mumbai.receipt.v2`, Arkiv testnet Rabdi, chain `7794095`, `@arkiv-network/sdk` 1.0.1). It is created **read-only** and handed to the person who signed it in the same transaction, with indexed org, team, week, signer, GitHub login and numbers, the signed JSON as payload, and an expiry of 120 days. The company wallet only pays the fee: nobody can change a receipt, and only the employee can delete it or keep it longer. The company side reads them back with one query and re-verifies every signature, so it works without our server and ignores anything unsigned.
 
-**Swarm:** the full week (list, PRs, AI records) is encrypted on the laptop and stored on Swarm; the public Arkiv record keeps only the signed totals, the Swarm reference, and a pointer sealed to the company's key, so only the company can open the list. Public cards are stored on Swarm and listed on Arkiv (schema `receipts-ethglobal-mumbai.card.v1`), shown on `/wall`. See [arkiv/swarm.md](arkiv/swarm.md).
+**Swarm:** the full week (list, PRs, AI records) is encrypted on the laptop and stored on Swarm; the public Arkiv record keeps only the signed totals, the Swarm reference (`swarm`), and a pointer sealed to the company's key (`sealed`), so only the company can open the list. Public cards are stored on Swarm and listed on Arkiv (schema `receipts-ethglobal-mumbai.card.v1`), shown on `/wall`. See [arkiv/swarm.md](arkiv/swarm.md).
 
-- **Writer wallet** (the demo company's wallet, pays gas; every record is handed to its signer): `0x09351DC0A6AFa87da28D00914fE87373C5C82747`
-- **Live data:** 89 shared weeks for the demo company Acme (12 people, 5 weeks; week 45 for everyone is a sealed v3 receipt with its list on Swarm) and the public cards on the wall.
-- **Example entities:** a sealed v3 week [`0xea50…9ca6`](https://rabdi.explorer.arkiv.network/entity/0xea50b76a7c871350d819fac561481bfb8070e3da040b3828e9369d0d99cb9ca6) (Swarm `6483e194…eb75`), a plain week [`0xf2d3…16f7`](https://rabdi.explorer.arkiv.network/entity/0xf2d3453735d6a71bf660ac37344e42f827929205930cfbcb5ef4297513e416f7), a public card [`0xd478…3819`](https://rabdi.explorer.arkiv.network/entity/0xd4785a1b1487ae296e6c0ccc79a7f85a5254b1d2572d32da9979d8211afa3819) ([the card on Swarm](https://api.gateway.testnet.ethswarm.org/bzz/edca15e00de285fe548539a746674a8115b90a86c3f4aac494891bbfac475a38/)).
+Features people see that read Arkiv: the company side (`/company`, Teams, People, Pull requests), a shared receipt (`/r/<entity key>`), Check a receipt (`/verify`), and the wall (`/wall`).
 
-Queries you can run as is:
+- **Wallet that wrote the entities** (the demo company's wallet; it pays the fee and hands every record to its signer): `0x09351DC0A6AFa87da28D00914fE87373C5C82747`. The records are owned by 12 signer addresses, one per person.
+- **Live data (checked Nov 7):** 89 receipt entities for the demo company Acme (12 people, 5 weeks; 60 with the full list on Arkiv, 29 sealed with the list on Swarm) and 12 card entities on the wall.
+- **Example entities:** a sealed v3 week [`0xea50…9ca6`](https://rabdi.explorer.arkiv.network/entity/0xea50b76a7c871350d819fac561481bfb8070e3da040b3828e9369d0d99cb9ca6) (Swarm [`6483e194…eb75`](https://api.gateway.testnet.ethswarm.org/bytes/6483e19496c5b16f1f7b35da826f42ff140caedb31732c4e7a7fa90d597eeb75), ciphertext), a plain week [`0xf2d3…16f7`](https://rabdi.explorer.arkiv.network/entity/0xf2d3453735d6a71bf660ac37344e42f827929205930cfbcb5ef4297513e416f7), a public card [`0xd478…3819`](https://rabdi.explorer.arkiv.network/entity/0xd4785a1b1487ae296e6c0ccc79a7f85a5254b1d2572d32da9979d8211afa3819) ([the card on Swarm](https://api.gateway.testnet.ethswarm.org/bzz/edca15e00de285fe548539a746674a8115b90a86c3f4aac494891bbfac475a38/)).
+
+**One query to run.** Acme's receipts for week 45 (37 entities):
 
 ```
 arkiv.schema = str('receipts-ethglobal-mumbai.receipt.v2') AND type = str('receipt') AND org = str('acme') AND period = str('2026-W45')
-arkiv.schema = str('receipts-ethglobal-mumbai.receipt.v2') AND org = str('acme') AND level = str('sealed')
-arkiv.schema = str('receipts-ethglobal-mumbai.card.v1') AND type = str('card') AND org = str('acme')
 ```
+
+Arkiv's public endpoint refuses anonymous queries (`ANON_COST_LIMITED`), so use a free access key from https://hub.arkiv.network/access-keys, which goes at the end of the RPC address:
+
+```bash
+curl -s https://rpc.rabdi.db-chain.testnet.arkiv.network/<ACCESS_KEY> -H 'Content-Type: application/json' -d "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"arkiv_query\",\"params\":[\"arkiv.schema = str('receipts-ethglobal-mumbai.receipt.v2') AND type = str('receipt') AND org = str('acme') AND period = str('2026-W45')\",{\"select\":{\"key\":true,\"owner\":true},\"limit\":\"0x64\"}]}"
+```
+
+More queries (sealed weeks, cards, one team, big weeks that went in circles) are in [arkiv/schema.md](arkiv/schema.md). The same data, read by the app: open `/demo` and be Acme's lead.
+
+**Judging files:** [schema.md](arkiv/schema.md), [friction.md](arkiv/friction.md) (Arkiv feedback), [reach.md](arkiv/reach.md), [why-arkiv.md](arkiv/why-arkiv.md), [how-you-use-arkiv.md](arkiv/how-you-use-arkiv.md) (who can edit each entity, and when it expires), [swarm.md](arkiv/swarm.md) (the bonus).
 
 ### Ethereum Foundation: Best CROPS App
 

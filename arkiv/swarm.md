@@ -20,7 +20,7 @@ Why this matters: Arkiv is public, and work titles can name customers or unrelea
 
 Both entity types are created **read-only** and handed to the person who signed or made them in the same transaction (`executeBatch`: create, then change ownership), so the company wallet pays gas but the record belongs to the employee.
 
-## Live examples (Arkiv testnet Rabdi, Swarm testnet)
+## Live examples (Arkiv testnet Rabdi, Swarm testnet; every link below checked on Nov 7)
 
 A sealed week (demo company Acme, @you, week 45, receipt v3 with the efficiency numbers):
 
@@ -49,7 +49,7 @@ Company wallet that writes (pays gas): `0x09351DC0A6AFa87da28D00914fE87373C5C827
 ## Batch and node
 
 - **Service:** the public Swarm testnet gateway, `https://api.gateway.testnet.ethswarm.org` (Bee HTTP API).
-- **Batch:** we send the all-zero batch id (`0000…0000`); the gateway stamps uploads with its own postage batch, the way Swarm's own upload pages do. No wallet of ours bought it, and no stamps were given to us. The gateway is meant for testing and does not promise how long data stays.
+- **Batch:** we send the all-zero batch id (`0000000000000000000000000000000000000000000000000000000000000000`); the gateway stamps uploads with its own postage batch, the way Swarm's own upload pages do. No wallet of ours bought it, and no stamps were given to us: the batch belongs to the gateway, run by the Swarm team. We tried to read its id, but the gateway does not publish it (`/stamps` and `/addresses` answer 404). The gateway is meant for testing and does not promise how long data stays.
 - **Checked with the Swarm team:** at ETHGlobal Mumbai (Nov 6), the Swarm team confirmed that using the Swarm testnet is fine for this bonus.
 - **Own batch instead:** run a Bee light node on the testnet (`bee start --mainnet=false ...`), fund it with Sepolia ETH and sBZZ, buy a batch, then set `SWARM_API_URL=http://localhost:1633` and `SWARM_POSTAGE_BATCH_ID=<batch id>`. Nothing else changes.
 
@@ -69,25 +69,45 @@ Company wallet that writes (pays gas): `0x09351DC0A6AFa87da28D00914fE87373C5C827
 
 ## Run one upload and one read
 
-From `web/`, with `ARKIV_PRIVATE_KEY`, `ARKIV_ACCESS_KEY` and the `SWARM_*` lines from `.env.example` in `.env.local`:
+You need: Node 20+, `npm install` in `web/`, and in `web/.env.local` the `SWARM_*` lines from `.env.example` (the free testnet gateway), `ARKIV_ACCESS_KEY` (free, from https://hub.arkiv.network/access-keys), and for the upload a funded `ARKIV_PRIVATE_KEY` (tGLM from the faucet; it pays the Arkiv fee). The read needs no wallet.
+
+**One read** (no fee). From `web/`:
+
+```bash
+npm run receipts -- entity 0xea50b76a7c871350d819fac561481bfb8070e3da040b3828e9369d0d99cb9ca6
+```
+
+What to expect (this is the output on Nov 7):
+
+```
+As the company (with the company key):
+  signature verified, level full, owner 0xfFC57B874f841B7B849Ff3F194907A2e903F7a74
+  5 items shown, 4 PRs, 0 private AI records
+    Built        Team spend dashboard
+    ...
+  Swarm 6483e194...eb75: opened and checked (SHA-256, signature)
+
+As the public (no key):
+  signature verified, level sealed, owner 0xfFC57B874f841B7B849Ff3F194907A2e903F7a74
+  0 items shown, 0 PRs, 0 private AI records
+  Swarm 6483e194...eb75: not opened
+```
+
+"As the company" opens the pointer with the company key, downloads the ciphertext from Swarm, checks its size and SHA-256, decrypts it and checks it is the same signed receipt. "As the public" sees only the signed totals. The raw ciphertext is at `https://api.gateway.testnet.ethswarm.org/bytes/<swarm ref>`. (Opening the list needs the company key, which for the demo is the writer wallet's key; without it you see the public view.)
+
+**One upload** (pays a small Arkiv fee from the company wallet):
 
 ```bash
 npm run receipts -- publish-demo --week 2026-W45 --who you
 ```
 
-This signs nothing new: it takes the demo's signed week, encrypts it, uploads it to Swarm, seals the pointer and writes the Arkiv entity. It prints the entity key and the Swarm reference. Then read it back both ways:
+It takes the demo engineer's signed week, encrypts it on your machine, uploads the ciphertext to Swarm (waiting until it is on the network), seals the pointer to the company key, and writes one read-only Arkiv entity handed to the signer. It prints the entity key and the Swarm reference; read it back with the `entity` command above.
 
-```bash
-npm run receipts -- entity 0x<entity key>
-```
-
-"As the company" opens the Swarm copy (size, SHA-256 and signature checked) and prints the list; "As the public" shows only the signed totals. The raw ciphertext is at `https://api.gateway.testnet.ethswarm.org/bytes/<swarm ref>`.
-
-For a card: `npm run dev`, open http://localhost:3000/card, click **Get a Swarm link**, then open http://localhost:3000/wall.
+**In the app:** be an engineer in the demo (`/demo`), Review and send, then Send: the list goes to Swarm and the Arkiv record keeps the totals. Be Acme's lead: People shows each list "Opened from Swarm with the company key". Be someone with a public link: the list is private. For a card: Week card, then **Get a Swarm link**, then the wall (`/wall`).
 
 ## Demo video
 
-Swarm appears at: **TODO (add the timestamp after recording)**: the company page opening sealed weeks ("Opened from Swarm with the company key"), the public receipt page saying the list is private, and Get a Swarm link plus the wall.
+Swarm appears at: **TODO (add the timestamps after recording)**. Planned, following the video script in `docs/SUBMISSION.md`: around 1:40, sending a week ("my list goes to Swarm, encrypted on my laptop"); around 2:10, the company's People page opening each list from Swarm ("Opened from Swarm with the company key"); around 2:35, the public link saying the list is private.
 
 ## What got in our way
 
