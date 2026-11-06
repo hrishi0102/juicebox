@@ -138,10 +138,10 @@ test("wrapped exports: the whole export zip works too, and a zip without convers
   const { readExportFile } = await import("../src/lib/receipts/chat-import");
   const convs = [{ uuid: "1", created_at: "2026-11-01T20:00:00Z", chat_messages: [{ sender: "human", text: "hello", created_at: "2026-11-01T20:00:00Z" }] }];
   const zip = zipSync({ "users.json": strToU8("[]"), "conversations.json": strToU8(JSON.stringify(convs)) });
-  const x = await readExportFile(new File([zip], "data-export.zip"));
+  const x = await readExportFile(new File([zip.slice().buffer as ArrayBuffer], "data-export.zip"));
   assert.equal(x.tool, "claude-ai");
   assert.equal(x.conversations[0].msgs[0].text, "hello");
   const empty = zipSync({ "users.json": strToU8("[]") });
-  await assert.rejects(() => readExportFile(new File([empty], "other.zip")), /No conversations.json/);
+  await assert.rejects(() => readExportFile(new File([empty.slice().buffer as ArrayBuffer], "other.zip")), /No conversations.json/);
   await assert.rejects(() => readExportFile(new File(["not json"], "conversations.json")), /JSON/);
 });
