@@ -67,7 +67,7 @@ export function ZeroGButton({ label, busyLabel, run, size = "default", variant =
       {accountLine && (
         <p className="text-sm text-muted-foreground">
           {zg.signedIn
-            ? `Paid from your 0G account ${shortWallet(zg.wallet)}${zg.balance ? `, ${zg.balance.text} left` : ""}. About a cent a week.`
+            ? `Paid from your 0G account ${shortWallet(zg.wallet)}${zg.balance ? ` (balance ${zg.balance.text})` : ""}.`
             : "The private AI is paid from your own 0G credits, about a cent a week."}
           {spent && <span className="ml-1 font-medium text-foreground">{spent}</span>}
         </p>

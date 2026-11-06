@@ -11,11 +11,12 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { PrivyProvider, usePrivy } from "@privy-io/react-auth";
 import { toast } from "sonner";
 import { chatBody, readChatReply, ZG_MODELS, ZG_ROUTER, type ChatReply } from "@/lib/receipts/judge-core";
+import { formatAmount, parseBalance, spentLine, type ZgBalance } from "@/lib/zerog-balance";
+
+export { formatAmount, spentLine, type ZgBalance };
 
 const APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID || "cmn5w697g01xp0bl80c8dskc8";
 export const ZERO_G_ORIGIN = "http://localhost:3000";
-
-export type ZgBalance = { text: string; value?: number };
 
 export type ZeroG = {
   /** This address can use 0G sign-in (only http://localhost:3000). */
@@ -175,41 +176,11 @@ function Session({ children }: { children: React.ReactNode }) {
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 
-/**
- * The balance answer's exact shape is not documented: use the first dollar amount we can find,
- * else the first credit count. Small amounts keep four decimals, so a one-cent week shows up.
- */
-function parseBalance(j: unknown): ZgBalance | null {
-  const flat: Record<string, unknown> = {};
-  const walk = (o: unknown, p = "") => {
-    if (o && typeof o === "object") for (const [k, v] of Object.entries(o)) walk(v, p ? `${p}.${k}` : k);
-    else flat[p] = o;
-  };
-  walk(j);
-  const find = (re: RegExp) => {
-    const hit = Object.entries(flat).find(([k, v]) => re.test(k) && v !== null && v !== "" && !Number.isNaN(Number(v)));
-    return hit ? Number(hit[1]) : undefined;
-  };
-  const micro = find(/usd_micro/i);
-  const usd = micro !== undefined ? micro / 1e6 : find(/usd/i);
-  if (usd !== undefined) return { text: `$${usd < 10 ? usd.toFixed(4) : usd.toFixed(2)}`, value: usd };
-  const credits = find(/credit/i) ?? find(/balance/i);
-  if (credits !== undefined) return { text: `${credits < 10 ? credits.toFixed(4) : credits.toFixed(2)} credits`, value: credits };
-  return null;
-}
-
 export function shortWallet(w?: string) {
   return w ? `${w.slice(0, 6)}…${w.slice(-4)}` : "";
 }
 
-/** "Your 0G credits went from $4.2100 to $4.2031." Shown after every paid call. */
-export function spentLine(before?: ZgBalance | null, after?: ZgBalance | null) {
-  if (before?.value !== undefined && after?.value !== undefined && after.value < before.value) return `Your 0G credits went from ${before.text} to ${after.text}.`;
-  if (after) return `Your 0G credits: ${after.text}.`;
-  return "";
-}
-
-/** The small "0G 0xab…cd, $4.21" chip in the header, or the Sign in with 0G button. */
+/** The small "0G 0xab…cd, 4.2158 0G" chip in the header, or the Sign in with 0G button. */
 export function ZeroGAccount() {
   const zg = useZeroG();
   if (!zg.available || !zg.ready) return null;
@@ -225,7 +196,7 @@ export function ZeroGAccount() {
       <ZeroGMark />
       <span>
         {shortWallet(zg.wallet)}
-        {zg.balance ? <span className="text-muted-foreground">, {zg.balance.text} left</span> : null}
+        {zg.balance ? <span className="text-muted-foreground">, {zg.balance.text}</span> : null}
       </span>
       <button type="button" className="text-muted-foreground hover:text-foreground" onClick={zg.signOut}>
         Sign out
