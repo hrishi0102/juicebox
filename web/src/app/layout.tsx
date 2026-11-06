@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fragment_Mono, Schibsted_Grotesk } from "next/font/google";
+import { Archivo, Commissioner, Martian_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ZeroGProvider } from "@/components/zero-g";
@@ -7,8 +7,11 @@ import { DemoBanner } from "@/components/demo";
 import { currentSource, zeroGAllowed } from "@/lib/server/data";
 import "./globals.css";
 
-const ui = Schibsted_Grotesk({ variable: "--font-ui", subsets: ["latin"] });
-const receipt = Fragment_Mono({ variable: "--font-receipt", subsets: ["latin"], weight: "400" });
+// Archivo (variable width) for the app, Martian Mono for the receipt paper, hashes and keys, and
+// Commissioner for AI Wrapped only.
+const ui = Archivo({ variable: "--font-ui", subsets: ["latin"], axes: ["wdth"] });
+const receipt = Martian_Mono({ variable: "--font-receipt", subsets: ["latin"], axes: ["wdth"] });
+const fun = Commissioner({ variable: "--font-fun", subsets: ["latin"], axes: ["FLAR", "VOLM"] });
 
 export const metadata: Metadata = {
   title: "Receipts",
@@ -22,7 +25,7 @@ export const dynamic = "force-dynamic";
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const source = await currentSource();
   return (
-    <html lang="en" className={`${ui.variable} ${receipt.variable} h-full antialiased`}>
+    <html lang="en" className={`${ui.variable} ${receipt.variable} ${fun.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <TooltipProvider>
           <ZeroGProvider allowed={await zeroGAllowed()}>
@@ -30,7 +33,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             {children}
           </ZeroGProvider>
         </TooltipProvider>
-        <Toaster />
+        <Toaster position="bottom-center" />
       </body>
     </html>
   );
