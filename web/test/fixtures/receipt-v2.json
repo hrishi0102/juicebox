@@ -1,0 +1,171 @@
+{
+  "kind": "receipts.v2",
+  "headline": "$98 of AI got 4 things done",
+  "oneLiner": "Built checkout tests and ledger exports while debugging webhook performance",
+  "message": {
+    "owner": "0xfFC57B874f841B7B849Ff3F194907A2e903F7a74",
+    "author": "you",
+    "period": "2026-W41",
+    "periodStart": "1791158400",
+    "periodEnd": "1791763200",
+    "sessions": 5,
+    "spendCents": "9757",
+    "done": 4,
+    "categories": [
+      2,
+      0,
+      1,
+      1,
+      0,
+      0,
+      0
+    ],
+    "categorySpendCents": [
+      "8946",
+      "0",
+      "397",
+      "414",
+      "0",
+      "0",
+      "0"
+    ],
+    "mergedPrs": 3,
+    "tools": [
+      "claude-code",
+      "codex"
+    ],
+    "toolSpendCents": [
+      "8589",
+      "1168"
+    ],
+    "itemsRoot": "0xc10e982cc1d607f71d3e785206235b5468f989ec89b58996a4b8c3fd3fabc569",
+    "evidenceRoot": "0x9d3bed955664b08ad87d526694cdccfff8394f51e1b60764c63144ed1319f057",
+    "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
+    "judge": "0g-private-computer:0gm-1.0-35b-a3b-sia:0/5"
+  },
+  "digest": "0x4a36f832580d956945e9230ae536439f5123b1edcb491e4cad80c075104a5e26",
+  "items": [
+    {
+      "category": "Built",
+      "title": "CSV export for ledgers",
+      "costCents": 1168,
+      "prs": [
+        "acme-demo/infra#100"
+      ],
+      "inProgress": false,
+      "leaf": "0x3902d2c13f09c6378e1049183a6d39e13294ed9215e9398b437438b23099c3e2"
+    },
+    {
+      "category": "Built",
+      "title": "E2e tests for checkout",
+      "costCents": 7778,
+      "prs": [
+        "acme-demo/payments-api#102",
+        "acme-demo/web-app#101"
+      ],
+      "inProgress": false,
+      "leaf": "0xa483f1f4745a1e6830229f1f180b19f1f15fb4c0e3fb03f2f5b7e35a174f30af"
+    },
+    {
+      "category": "Figured out",
+      "title": "Reason for slow webhook test",
+      "costCents": 397,
+      "prs": [],
+      "inProgress": false,
+      "leaf": "0x907b4f51e803f28d7b91eb8f43aaa4fb17d95bfcc203e15c9e075195ea90d5fb"
+    },
+    {
+      "category": "Researched",
+      "title": "Options for payouts compared",
+      "costCents": 414,
+      "prs": [],
+      "inProgress": false,
+      "leaf": "0x2d4051035ddeeb32a2af7dcdc0c7b8f242d287299a67bd68d499cef51243fe7c"
+    }
+  ],
+  "evidence": [
+    {
+      "changeKey": "acme-demo/payments-api#102",
+      "title": "test: e2e for checkout",
+      "url": "https://github.com/acme-demo/payments-api/pull/102",
+      "state": "merged",
+      "reverted": false,
+      "survivalBps": 6868,
+      "costCents": 5831,
+      "difficulty": 4,
+      "leaf": "0x0fb3c2dbc89f456772c393040e9d3c83ea56e1046371e651e6232d32c4f41458"
+    },
+    {
+      "changeKey": "acme-demo/web-app#101",
+      "title": "test: e2e for checkout",
+      "url": "https://github.com/acme-demo/web-app/pull/101",
+      "state": "merged",
+      "reverted": false,
+      "survivalBps": 9511,
+      "costCents": 1947,
+      "difficulty": 2,
+      "leaf": "0x0159b29fc0517fb4130f3ae9363a11ec04c2790e96d5f74482bcc0058259aca6"
+    },
+    {
+      "changeKey": "acme-demo/infra#100",
+      "title": "feat: CSV export for ledgers",
+      "url": "https://github.com/acme-demo/infra/pull/100",
+      "state": "merged",
+      "reverted": false,
+      "survivalBps": 8690,
+      "costCents": 1168,
+      "difficulty": 4,
+      "leaf": "0x3109cf227cb565e27995c50817132bd01922dbfc6b971a65851e1f957457b61b"
+    }
+  ],
+  "judges": [],
+  "summary": {
+    "buckets": [
+      {
+        "difficulty": 1,
+        "tasks": 0,
+        "keptWork": 0,
+        "costUsd": 0,
+        "costPerKept": null
+      },
+      {
+        "difficulty": 2,
+        "tasks": 1,
+        "keptWork": 0.95,
+        "costUsd": 19.47,
+        "costPerKept": 20.47
+      },
+      {
+        "difficulty": 3,
+        "tasks": 0,
+        "keptWork": 0,
+        "costUsd": 0,
+        "costPerKept": null
+      },
+      {
+        "difficulty": 4,
+        "tasks": 2,
+        "keptWork": 1.56,
+        "costUsd": 69.99,
+        "costPerKept": 44.99
+      },
+      {
+        "difficulty": 5,
+        "tasks": 0,
+        "keptWork": 0,
+        "costUsd": 0,
+        "costPerKept": null
+      }
+    ],
+    "writtenBy": "0G private AI, TEE verified",
+    "model": "0gm-1.0-35b-a3b-sia"
+  },
+  "signature": "0x354ba9ff56c381dd13114bef1ef5285446880b60b01ece96006b37674af1219178492e4dc65831488443c9cc1edffa2874ed40c1249e524a0268ee1afd050f0b1c",
+  "signedAt": "2026-10-12T00:00:00.000Z",
+  "share": {
+    "level": "full",
+    "team": "acme-payments",
+    "org": "acme",
+    "publishedAt": "2026-10-12T00:00:00.000Z"
+  }
+}

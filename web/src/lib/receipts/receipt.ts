@@ -1,4 +1,6 @@
-// Signed weekly receipts (EIP-712), version 2: "what I got done this week", signed.
+// Signed weekly receipts (EIP-712), version 3: "what I got done this week", and how efficiently, signed.
+// Version 3 adds the efficiency numbers (timeline medians, PR funnel, waste by reason, where the money
+// went). Version 2 receipts (already shared on Arkiv) still verify with their own types.
 //
 // The signed message holds the week's numbers (spend, sessions, things done, items and spend per
 // category, merged PRs, spend per AI tool) plus three Merkle roots:
@@ -11,15 +13,16 @@
 // The domain has no chainId on purpose: a receipt is not tied to one chain, and wallets refuse to
 // sign typed data whose chainId differs from the connected chain.
 
-import { encodeAbiParameters, hashTypedData, keccak256, recoverTypedDataAddress, stringToHex, type Address, type Hex } from "viem";
+import { encodeAbiParameters, hashTypedData, keccak256, recoverTypedDataAddress, stringToHex, type Address, type Hex, type TypedDataDefinition } from "viem";
 import { headline } from "./score";
 import { countLine } from "./story";
+import { SPEND, STAGES, WASTE, type Efficiency, type Stage, type WasteKind } from "./efficiency";
 import { CATEGORIES, type Category, type Judgement, type PeriodSummary, type Task, type WeekItem } from "./types";
 
-export const RECEIPT_DOMAIN = { name: "Receipts", version: "2" } as const;
+export const RECEIPT_DOMAIN = { name: "Receipts", version: "3" } as const;
+const RECEIPT_DOMAIN_V2 = { name: "Receipts", version: "2" } as const;
 
-export const RECEIPT_TYPES = {
-  Receipt: [
+const V2_FIELDS = [
     { name: "owner", type: "address" },
     { name: "author", type: "string" }, // GitHub login when signed in, else ""
     { name: "period", type: "string" },
@@ -37,10 +40,28 @@ export const RECEIPT_TYPES = {
     { name: "evidenceRoot", type: "bytes32" },
     { name: "judgeRoot", type: "bytes32" },
     { name: "judge", type: "string" },
+] as const;
+
+const RECEIPT_TYPES_V2 = { Receipt: V2_FIELDS } as const;
+
+export const RECEIPT_TYPES = {
+  Receipt: [
+    ...V2_FIELDS,
+    { name: "stageMinutes", type: "uint32[5]" }, // medians: idea to code, code to commit, commit to PR, PR to merge, idea to merged (4294967295 = none)
+    { name: "stageCounts", type: "uint16[5]" }, // how many items each median is over
+    { name: "brainstormMinutes", type: "uint32" }, // time with the AI before the first code edit
+    { name: "prCounts", type: "uint16[5]" }, // opened, merged, open, closed, reverted
+    { name: "wasteCounts", type: "uint16[5]" }, // plans nobody acted on, left on the AI's question, loops, never shipped, stopped answers
+    { name: "wasteCents", type: "uint64[5]" }, // dollars for the same reasons
+    { name: "spendSplitCents", type: "uint64[4]" }, // shipped, learning, in progress, wasted
   ],
 } as const;
 
+const NONE = 4294967295;
+
 type Seven<T> = readonly [T, T, T, T, T, T, T];
+type Five<T> = readonly [T, T, T, T, T];
+type Four<T> = readonly [T, T, T, T];
 
 export type ReceiptMessage = {
   owner: Address;
@@ -60,6 +81,14 @@ export type ReceiptMessage = {
   evidenceRoot: Hex;
   judgeRoot: Hex;
   judge: string;
+  // Version 3
+  stageMinutes?: Five<number>;
+  stageCounts?: Five<number>;
+  brainstormMinutes?: number;
+  prCounts?: Five<number>;
+  wasteCounts?: Five<number>;
+  wasteCents?: Five<bigint>;
+  spendSplitCents?: Four<bigint>;
 };
 
 export type ItemLeaf = {
@@ -98,18 +127,27 @@ export type JudgeLeaf = {
   leaf: Hex;
 };
 
-type JsonMessage = Omit<ReceiptMessage, "periodStart" | "periodEnd" | "spendCents" | "categorySpendCents" | "toolSpendCents" | "categories"> & {
+type JsonMessage = Omit<
+  ReceiptMessage,
+  "periodStart" | "periodEnd" | "spendCents" | "categorySpendCents" | "toolSpendCents" | "categories" | "stageMinutes" | "stageCounts" | "prCounts" | "wasteCounts" | "wasteCents" | "spendSplitCents"
+> & {
   periodStart: string;
   periodEnd: string;
   spendCents: string;
   categories: number[];
   categorySpendCents: string[];
   toolSpendCents: string[];
+  stageMinutes?: number[];
+  stageCounts?: number[];
+  prCounts?: number[];
+  wasteCounts?: number[];
+  wasteCents?: string[];
+  spendSplitCents?: string[];
 };
 
 // JSON-friendly form (bigints as strings). This is what gets saved, shared and published.
 export type SignedReceipt = {
-  kind: "receipts.v2";
+  kind: "receipts.v3" | "receipts.v2";
   headline: string;
   oneLiner: string; // the AI's sentence about the week (not signed; the items are)
   message: JsonMessage;
@@ -248,9 +286,10 @@ export function buildReceipt(opts: { owner: Address; author?: string; periodId: 
     evidenceRoot: merkleRoot(evidence.map((e) => e.leaf)),
     judgeRoot: merkleRoot(judges.map((j) => j.leaf)),
     judge: judgeLabel(opts.judgements, s.story),
+    ...efficiencyFields(s),
   };
   return {
-    kind: "receipts.v2",
+    kind: "receipts.v3",
     headline: headline(s),
     oneLiner: s.oneLiner,
     message: toJsonMessage(message),
@@ -266,7 +305,23 @@ export function buildReceipt(opts: { owner: Address; author?: string; periodId: 
   };
 }
 
-export function toJsonMessage(m: ReceiptMessage): JsonMessage {
+/** The efficiency numbers, as signed fields. */
+function efficiencyFields(s: PeriodSummary) {
+  const e = s.efficiency;
+  const st = (k: Stage) => e?.stages[k];
+  return {
+    stageMinutes: STAGES.map((k) => (st(k)?.medianMin ?? null) === null ? NONE : Math.min(NONE - 1, st(k)!.medianMin!)) as unknown as Five<number>,
+    stageCounts: STAGES.map((k) => Math.min(65535, st(k)?.n ?? 0)) as unknown as Five<number>,
+    brainstormMinutes: Math.min(NONE - 1, Math.round(e?.brainstormMinutes ?? 0)),
+    prCounts: [e?.prs.opened ?? 0, e?.prs.merged ?? 0, e?.prs.open ?? 0, e?.prs.closed ?? 0, e?.prs.reverted ?? 0].map((n) => Math.min(65535, n)) as unknown as Five<number>,
+    wasteCounts: WASTE.map((k) => Math.min(65535, e?.waste[k].count ?? 0)) as unknown as Five<number>,
+    wasteCents: WASTE.map((k) => cents(e?.waste[k].usd ?? 0)) as unknown as Five<bigint>,
+    spendSplitCents: SPEND.map((k) => cents(e?.spend[k] ?? 0)) as unknown as Four<bigint>,
+  };
+}
+
+export function toJsonMessage(full: ReceiptMessage): JsonMessage {
+  const { stageMinutes, stageCounts, prCounts, wasteCounts, wasteCents, spendSplitCents, ...m } = full;
   return {
     ...m,
     periodStart: m.periodStart.toString(),
@@ -275,6 +330,16 @@ export function toJsonMessage(m: ReceiptMessage): JsonMessage {
     categories: [...m.categories],
     categorySpendCents: m.categorySpendCents.map((x) => x.toString()),
     toolSpendCents: m.toolSpendCents.map((x) => x.toString()),
+    ...(stageMinutes
+      ? {
+          stageMinutes: [...stageMinutes],
+          stageCounts: [...stageCounts!],
+          prCounts: [...prCounts!],
+          wasteCounts: [...wasteCounts!],
+          wasteCents: wasteCents!.map((x) => x.toString()),
+          spendSplitCents: spendSplitCents!.map((x) => x.toString()),
+        }
+      : {}),
   };
 }
 
@@ -289,7 +354,20 @@ export function fromJsonMessage(m: JsonMessage): ReceiptMessage {
     categorySpendCents: m.categorySpendCents.map((x) => BigInt(x)) as unknown as Seven<bigint>,
     tools: m.tools ?? [],
     toolSpendCents: (m.toolSpendCents ?? []).map((x) => BigInt(x)),
+    stageMinutes: m.stageMinutes as unknown as Five<number> | undefined,
+    stageCounts: m.stageCounts as unknown as Five<number> | undefined,
+    prCounts: m.prCounts as unknown as Five<number> | undefined,
+    wasteCounts: m.wasteCounts as unknown as Five<number> | undefined,
+    wasteCents: m.wasteCents?.map((x) => BigInt(x)) as unknown as Five<bigint> | undefined,
+    spendSplitCents: m.spendSplitCents?.map((x) => BigInt(x)) as unknown as Four<bigint> | undefined,
   };
+}
+
+/** The v2 fields only, for verifying receipts made before version 3. */
+function v2Message(m: ReceiptMessage): ReceiptMessage {
+  const { stageMinutes, stageCounts, brainstormMinutes, prCounts, wasteCounts, wasteCents, spendSplitCents, ...rest } = m;
+  void stageMinutes, void stageCounts, void brainstormMinutes, void prCounts, void wasteCounts, void wasteCents, void spendSplitCents;
+  return rest;
 }
 
 /** Numbers taken only from the signed message (the `summary` block is not signed). */
@@ -308,7 +386,22 @@ export function signedNumbers(r: SignedReceipt) {
     wasteUsd: categorySpend.Wasted,
     toolSpend: Object.fromEntries((m.tools ?? []).map((t, i) => [t, Number(m.toolSpendCents?.[i] ?? 0) / 100])) as Record<string, number>,
     author: m.author,
+    efficiency: signedEfficiency(m),
   };
+}
+
+export type EfficiencyView = Pick<Efficiency, "stages" | "brainstormMinutes" | "prs" | "spend" | "costPerMergedPr"> & {
+  waste: Record<WasteKind, { count: number; usd: number }>;
+};
+
+/** Efficiency numbers from a signed v3 message (undefined for v2 receipts). */
+function signedEfficiency(m: JsonMessage): EfficiencyView | undefined {
+  if (!m.stageMinutes || !m.stageCounts || !m.prCounts || !m.wasteCounts || !m.wasteCents || !m.spendSplitCents) return undefined;
+  const stages = Object.fromEntries(STAGES.map((k, i) => [k, { medianMin: m.stageMinutes![i] === NONE ? null : m.stageMinutes![i], n: m.stageCounts![i] }])) as Efficiency["stages"];
+  const waste = Object.fromEntries(WASTE.map((k, i) => [k, { count: m.wasteCounts![i], usd: Number(m.wasteCents![i]) / 100 }])) as EfficiencyView["waste"];
+  const spend = Object.fromEntries(SPEND.map((k, i) => [k, Number(m.spendSplitCents![i]) / 100])) as Efficiency["spend"];
+  const [opened, merged, open, closed, reverted] = m.prCounts;
+  return { stages, brainstormMinutes: m.brainstormMinutes ?? 0, prs: { opened, merged, open, closed, reverted }, waste, spend, costPerMergedPr: merged ? Math.round((spend.shipped / merged) * 100) / 100 : null };
 }
 
 /** Items as the week list shows them, from the revealed (and checked) item leaves. */
@@ -356,6 +449,7 @@ export function summaryFromReceipt(r: SignedReceipt): PeriodSummary {
     oneLiner: r.oneLiner || countLine(items),
     countLine: countLine(items),
     story: { engine: r.message.judge.startsWith("0g") ? "0g-tee" : r.message.judge.startsWith("openai") ? "openai-compatible" : "rules", model: r.summary.model, requestIds: r.judges.map((j) => j.requestId).filter(Boolean), stale: false, newSessions: 0 },
+    efficiency: n.efficiency ? { ...n.efficiency, waste: Object.fromEntries(WASTE.map((k) => [k, { ...n.efficiency!.waste[k], sessions: [] as string[] }])) as unknown as Efficiency["waste"], items: {} } : undefined,
     buckets: r.summary.buckets,
     tasks: r.evidence.map((e) => ({
       changeKey: e.changeKey,
@@ -378,12 +472,15 @@ export function summaryFromReceipt(r: SignedReceipt): PeriodSummary {
   };
 }
 
-export function receiptDigest(m: ReceiptMessage): Hex {
-  return hashTypedData({ domain: RECEIPT_DOMAIN, types: RECEIPT_TYPES, primaryType: "Receipt", message: m });
+export function receiptDigest(m: ReceiptMessage, kind: SignedReceipt["kind"] = "receipts.v3"): Hex {
+  if (kind === "receipts.v2") return hashTypedData({ domain: RECEIPT_DOMAIN_V2, types: RECEIPT_TYPES_V2, primaryType: "Receipt", message: v2Message(m) });
+  return hashTypedData({ domain: RECEIPT_DOMAIN, types: RECEIPT_TYPES, primaryType: "Receipt", message: m as Required<ReceiptMessage> });
 }
 
-export function typedDataFor(r: SignedReceipt) {
-  return { domain: RECEIPT_DOMAIN, types: RECEIPT_TYPES, primaryType: "Receipt" as const, message: fromJsonMessage(r.message) };
+export function typedDataFor(r: SignedReceipt): TypedDataDefinition {
+  const m = fromJsonMessage(r.message);
+  if (r.kind === "receipts.v2") return { domain: RECEIPT_DOMAIN_V2, types: RECEIPT_TYPES_V2, primaryType: "Receipt", message: v2Message(m) } as unknown as TypedDataDefinition;
+  return { domain: RECEIPT_DOMAIN, types: RECEIPT_TYPES, primaryType: "Receipt", message: m } as unknown as TypedDataDefinition;
 }
 
 export type VerifyResult = {
@@ -395,9 +492,17 @@ export type VerifyResult = {
 /** Check the signature, the digest, and every Merkle root of a receipt. */
 export async function verifyReceipt(r: SignedReceipt): Promise<VerifyResult> {
   const checks: VerifyResult["checks"] = [];
-  if (r.kind !== "receipts.v2") return { ok: false, checks: [{ name: "Receipt format", ok: false, detail: `Unknown format ${String(r.kind)}` }] };
-  const m = fromJsonMessage(r.message);
-  const digest = receiptDigest(m);
+  if (r.kind !== "receipts.v3" && r.kind !== "receipts.v2") return { ok: false, checks: [{ name: "Receipt format", ok: false, detail: `Unknown format ${String(r.kind)}` }] };
+  let m: ReceiptMessage;
+  let digest: Hex;
+  try {
+    m = fromJsonMessage(r.message);
+    if (r.kind === "receipts.v3" && !m.stageMinutes) throw new Error("Version 3 receipt without its efficiency fields");
+    digest = receiptDigest(m, r.kind);
+  } catch (e) {
+    // Malformed or out-of-range fields: not a valid receipt, never a crash.
+    return { ok: false, checks: [{ name: "Receipt fields are well formed", ok: false, detail: String(e instanceof Error ? e.message : e).slice(0, 160) }] };
+  }
   checks.push({ name: "Digest matches the receipt fields", ok: digest === r.digest });
   let signer: Address | undefined;
   if (r.signature) {

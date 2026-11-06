@@ -3,7 +3,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, writeFileSync } from "node:fs";
+import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
@@ -247,6 +247,13 @@ test("receipts: sign the week list, verify, catch tampering, reveal only some it
   badEvidence.evidence[0].costCents += 1;
   assert.equal((await verifyReceipt(badEvidence)).ok, false);
 
+  // Version 3 signs the efficiency numbers too.
+  assert.equal(r.kind, "receipts.v3");
+  assert.ok(n.efficiency, "efficiency numbers are in the signed message");
+  const slower = structuredClone(r);
+  slower.message.stageMinutes![0] = slower.message.stageMinutes![0] === 4294967295 ? 5 : slower.message.stageMinutes![0] + 60;
+  assert.equal((await verifyReceipt(slower)).ok, false, "changing a timeline number breaks the signature");
+
   // Hide one item: the rest still verify with proofs, and the signed counts still include it.
   const partial = revealItems(r, (_, i) => i > 0);
   assert.equal(partial.items.length, r.items.length - 1);
@@ -260,6 +267,14 @@ test("receipts: sign the week list, verify, catch tampering, reveal only some it
   const root = merkleRoot(leaves);
   assert.equal(root, r.message.evidenceRoot);
   assert.equal(verifyProof(root, leaves[0], merkleProof(leaves, leaves[0])), true);
+});
+
+test("receipts: a version 2 receipt (already shared on Arkiv) still verifies", async () => {
+  const v2 = JSON.parse(readFileSync(join(__dirname, "fixtures", "receipt-v2.json"), "utf8"));
+  assert.equal(v2.kind, "receipts.v2");
+  const v = await verifyReceipt(v2);
+  assert.equal(v.ok, true, JSON.stringify(v.checks));
+  assert.equal(signedNumbers(v2).efficiency, undefined, "v2 has no efficiency numbers");
 });
 
 test("sealing: only the company key opens a shared week", () => {

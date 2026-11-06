@@ -17,8 +17,8 @@ function receiptFile(source: Source, weekId: string) {
 
 export function loadSavedReceipt(source: Source, weekId: string): SignedReceipt | undefined {
   const r = readJson<SignedReceipt | null>("local", receiptFile(source, weekId), null);
-  // Receipts from before version 2 are simply signed again.
-  return r?.kind === "receipts.v2" ? r : undefined;
+  // Receipts from before version 3 are simply signed again.
+  return r?.kind === "receipts.v3" ? r : undefined;
 }
 
 export function saveReceipt(source: Source, r: SignedReceipt) {
