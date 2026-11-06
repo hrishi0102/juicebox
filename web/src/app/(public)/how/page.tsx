@@ -13,8 +13,7 @@ const EMPLOYEE: [string, string][] = [
     "Write",
     "Write my week sends each session to a private AI on 0G, which runs inside a hardware enclave (TEE): what you asked, what the AI said at the end, tool counts, the GitHub outcome and the cost. It answers with one line, a category and a short title. One more call sees only those lines and merges them into your list. It is paid from your own 0G account, about a cent a week, and you see your credits go down.",
   ],
-  ["Review", "See exactly what your company will see, what everyone can see, and what stays on your laptop. Untick any line to keep it private; it still counts in the signed totals."],
-  ["Sign", "Sign the week with a key made on your laptop (no wallet needed). The signature covers the list, the pull requests and every number, so nobody can change them later."],
+  ["Sign", "Look at the receipt and sign it with a key made on your laptop (no wallet needed). The signature covers every line, the pull requests and every number, so nobody can change them later. The whole week goes; nothing is picked out."],
   [
     "Send",
     "One read-only Arkiv record that you own, under your GitHub org and team, with your signed totals. The list and pull requests go to Swarm, encrypted on your laptop, and only your company's key opens them.",
@@ -39,8 +38,7 @@ const FLOWS: [string, string, string][] = [
   ["PR numbers and repo names", "GitHub API, with your own token", "GitHub (it already has them)"],
   ["Your signed totals, when you send your receipt", `Arkiv testnet, schema ${ARKIV_SCHEMA_NAME}, read-only and owned by you`, "Anyone. That is the point: the numbers can be checked"],
   ["Your list, PRs and AI records, when you send your receipt", "Swarm testnet, encrypted on your laptop; the key is sealed to your company's key on Arkiv", "Your company"],
-  ["A week card or AI Wrapped card", "Nowhere, unless you post it", "Whoever you show it to"],
-  ["A card you make public with Get a Swarm link", "Swarm, listed on Arkiv and shown on the wall", "Anyone"],
+  ["Your AI Wrapped card (numbers only)", "Nowhere, unless you post it", "Whoever you show it to"],
 ];
 
 export default function How() {
@@ -115,12 +113,12 @@ export default function How() {
 
       <section aria-labelledby="fun">
         <h2 id="fun" className="text-2xl font-semibold tracking-tight">
-          Just for fun: a separate side
+          Just for fun: AI Wrapped
         </h2>
         <p className="mt-2 max-w-[68ch] text-muted-foreground">
-          A receipt is evidence for your company: signed, and nobody can edit it. A card is a picture for socials: not signed, you can edit every line,
-          and it never goes to a company. Cards live on their own side with AI Wrapped (how you talk to AI, from your logs or a ChatGPT or Claude.ai
-          export read in your browser) and the wall of public cards.{" "}
+          A separate page for anyone, coder or not: how you talk to AI (overthinking, therapy sessions, just saying hi) and your AI personality, from your
+          logs or a ChatGPT or Claude.ai export read in your browser. Share it as a card with numbers only. It has nothing to do with receipts and never
+          goes to a company.{" "}
           <Link href="/wrapped" className="text-primary hover:underline">
             Open AI Wrapped
           </Link>

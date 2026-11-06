@@ -1,11 +1,17 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ExternalLink } from "lucide-react";
 import { FlowSteps } from "@/components/flow-steps";
 import { buttonVariants } from "@/components/ui/button";
+import { arkivWriterAddress } from "@/lib/receipts/arkiv";
+import { arkivAddressUrl, DEMO_SEALED, swarmProofPath, zgProofPath } from "@/lib/proof-urls";
+import { providersFor } from "@/lib/server/zerog-providers";
 
 // The front door. Two sides of one product (the company, and each employee on their laptop), one
-// side product for anyone (AI Wrapped and week cards), and the demo company to look around.
-export default function FrontDoor() {
+// side product for anyone (AI Wrapped), the demo company to look around, and what it runs on, each
+// with a live place to check it.
+export default async function FrontDoor() {
+  const [provider] = await providersFor();
+  const writer = arkivWriterAddress();
   return (
     <div className="space-y-12 py-4">
       <section className="max-w-3xl">
@@ -31,16 +37,42 @@ export default function FrontDoor() {
         <Door
           eyebrow="For employees"
           title="Send your weekly receipt"
-          body="Runs on your laptop. A private AI on 0G writes your week from your sessions, paid from your own 0G credits. You check what your company will see, sign it, and send it."
-          steps={["Write", "Review", "Sign", "Send"]}
+          body="Runs on your laptop. A private AI on 0G writes your week from your sessions, paid from your own 0G credits. You sign the whole receipt and send it."
+          steps={["Write", "Sign", "Send"]}
           href="/me"
           cta="Open my week"
           color="var(--c-built)"
         />
       </section>
 
+      <section aria-labelledby="runs-on">
+        <h2 id="runs-on" className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+          What it runs on, and where to check it
+        </h2>
+        <div className="mt-3 grid gap-4 md:grid-cols-3">
+          <Service
+            name="0G"
+            color="var(--c-researched)"
+            body="A private AI in a hardware enclave reads each session and writes the week, paid from the employee's own 0G credits."
+            link={provider ? { href: zgProofPath(provider), label: "0G's TEE check of the provider" } : undefined}
+          />
+          <Service
+            name="Arkiv"
+            color="var(--c-figured)"
+            body="Every receipt sent is a read-only record on Arkiv, owned by the person who signed it. The company wallet only pays the fee."
+            link={writer ? { href: arkivAddressUrl(writer), label: "Every record it wrote, on the Arkiv explorer", external: true } : undefined}
+          />
+          <Service
+            name="Swarm"
+            color="var(--c-wrote)"
+            body="Each week's full list is encrypted on the laptop and kept on Swarm, where only the company's key opens it."
+            link={{ href: swarmProofPath(DEMO_SEALED.swarm, DEMO_SEALED.entity), label: "One encrypted week, fetched live" }}
+          />
+        </div>
+      </section>
+
       <section aria-label="More" className="grid gap-4 md:grid-cols-3">
-        <Small title="Just for fun" body="AI Wrapped and a card of your week, for anyone. Not signed, never sent to a company." href="/wrapped" cta="Open AI Wrapped" />
+        <Small title="Just for fun" body="AI Wrapped: how you talk to AI, for anyone. Nothing to do with receipts, never sent to a company." href="/wrapped" cta="Open AI Wrapped" />
         <Small title="Just looking?" body="Try the demo company Acme: 12 made-up people, five weeks of signed receipts." href="/demo" cta="Try the demo" />
         <Small title="Got a receipt link?" body="Anyone can check a receipt's signature and numbers, without trusting us." href="/verify" cta="Check a receipt" />
       </section>
@@ -66,6 +98,27 @@ function Door({ eyebrow, title, body, steps, href, cta, color }: { eyebrow: stri
           <ArrowRight className="size-4" aria-hidden="true" />
         </Link>
       </div>
+    </div>
+  );
+}
+
+function Service({ name, color, body, link }: { name: string; color: string; body: string; link?: { href: string; label: string; external?: boolean } }) {
+  return (
+    <div className="rounded-xl border border-border bg-card p-5">
+      <p className="text-lg font-semibold" style={{ color }}>
+        {name}
+      </p>
+      <p className="mt-1 text-sm text-muted-foreground">{body}</p>
+      {link &&
+        (link.external ? (
+          <a href={link.href} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+            {link.label} <ExternalLink className="size-3" aria-hidden="true" />
+          </a>
+        ) : (
+          <Link href={link.href} className="mt-3 inline-block text-sm font-medium text-primary hover:underline">
+            {link.label}
+          </Link>
+        ))}
     </div>
   );
 }
