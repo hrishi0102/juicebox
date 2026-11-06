@@ -1,28 +1,29 @@
 import Link from "next/link";
 import { currentSource } from "@/lib/server/data";
-import { loadOrg, personName } from "@/lib/server/org";
+import { companyKnown, loadOrg, orgWeek } from "@/lib/server/org";
 import { Collapsible } from "@/components/collapsible";
-import { PrTable, type PrRow } from "@/components/pr-table";
-import { PersonWeek } from "@/components/person-week";
 import { CategoryBar } from "@/components/category-badge";
+import { CompanyDoor, MemberNote, NothingShared, WeekPills } from "@/components/company-door";
 import { ARKIV_SCHEMA_NAME } from "@/lib/receipts/arkiv";
 import { aggregate, aggregateEfficiency, countsLine } from "@/lib/receipts/aggregate";
 import { EfficiencyPanel } from "@/components/efficiency-panel";
-import { signedNumbers } from "@/lib/receipts/receipt";
 import { CATEGORY_COPY, pct, plural, usd } from "@/lib/format";
 import { CATEGORIES, TOOL_NAMES, type AiTool } from "@/lib/receipts/types";
+
+export const metadata = { title: "Company · Receipts" };
 
 const TOOL_COLOR: Record<string, string> = { "claude-code": "var(--primary)", codex: "var(--chart-2)" };
 const toolName = (t: string) => TOOL_NAMES[t as AiTool] ?? t;
 
-export default async function OrgPage({ searchParams }: { searchParams: Promise<{ week?: string }> }) {
+// The company overview: what everyone's AI spend got done this week, team by team. People are
+// on the People tab, every pull request on its own tab. Teams are compared; people are not ranked.
+export default async function CompanyOverview({ searchParams }: { searchParams: Promise<{ week?: string }> }) {
   const sp = await searchParams;
   const source = await currentSource();
+  if (!(await companyKnown(source))) return <CompanyDoor />;
   const org = await loadOrg(source);
-  const verified = org.rows.filter((r) => r.verified);
-  const weeks = [...new Set(verified.map((r) => r.message.period))].sort();
-  const week = sp.week && weeks.includes(sp.week) ? sp.week : weeks[weeks.length - 1];
-  const inWeek = verified.filter((r) => r.message.period === week);
+  const { verified, weeks, week, inWeek } = orgWeek(org, sp.week);
+  const name = org.name.replace(/ \(demo company\)$/, "");
   const total = aggregate(inWeek);
   const eff = aggregateEfficiency(inWeek);
   const toolTotal = Object.values(total.tools).reduce((a, b) => a + b, 0);
@@ -30,40 +31,19 @@ export default async function OrgPage({ searchParams }: { searchParams: Promise<
     .sort((a, b) => b[1] - a[1])
     .map(([t, v]) => `${toolName(t)} ${toolTotal ? Math.round((v / toolTotal) * 100) : 0}%`)
     .join(", ");
-  const teamName = (id: string) => org.teams.find((t) => t.id === id)?.name ?? id;
-  const prs: PrRow[] = inWeek
-    .flatMap((r) => r.evidence.map((e) => ({ ...e, person: personName(org, r.message.owner, r.message.author), team: teamName(r.team) })))
-    .sort((a, b) => b.costCents - a.costCents);
-  const people = [...inWeek].sort((a, b) => signedNumbers(b).done - signedNumbers(a).done);
   const sharedBy = new Set(inWeek.map((r) => r.message.owner.toLowerCase()));
-  const quiet = org.members.filter((m) => !sharedBy.has(m.address.toLowerCase()));
+  const members = org.members.length;
 
   return (
     <div className="space-y-8">
-      <div>
-        <p className="text-sm text-muted-foreground">Company view</p>
-        <h1 className="mt-1 text-balance text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl">What did {org.name.replace(/ \(demo company\)$/, "")} get done this week?</h1>
-        <div className="mt-4 flex flex-wrap gap-2 text-sm" role="group" aria-label="Week">
-          {[...weeks].reverse().map((w) => (
-            <Link
-              key={w}
-              href={`/org?week=${w}`}
-              className={`rounded-full border px-3 py-1 ${w === week ? "border-primary bg-accent text-accent-foreground" : "border-border hover:bg-card"}`}
-            >
-              Week {w.split("-W")[1]}
-            </Link>
-          ))}
-        </div>
+      <div className="space-y-4">
+        <h1 className="text-balance text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl">What did {name} get done this week?</h1>
+        <WeekPills weeks={weeks} week={week} href={(w) => `/company?week=${w}`} />
+        <MemberNote org={org} />
       </div>
 
       {inWeek.length === 0 ? (
-        <div className="max-w-2xl rounded-lg border border-border bg-card p-6">
-          <h2 className="text-lg font-semibold">No receipts shared yet</h2>
-          <p className="mt-2 text-muted-foreground">
-            When people in &quot;{org.id}&quot; sign and share their week, their lists show up here. Set your company with{" "}
-            <code>npm run receipts -- org &lt;id&gt; &quot;Name&quot;</code>, or try the demo company.
-          </p>
-        </div>
+        <NothingShared org={org} />
       ) : (
         <>
           <section aria-labelledby="kpis" className="max-w-4xl">
@@ -86,32 +66,21 @@ export default async function OrgPage({ searchParams }: { searchParams: Promise<
                 ))}
               </div>
             </div>
+            <p className="mt-4 text-[15px]">
+              {members ? `${sharedBy.size} of ${members} people sent their receipt this week.` : `${plural(sharedBy.size, "person")} sent a receipt this week.`}{" "}
+              <Link href={`/company/people?week=${week}`} className="text-primary hover:underline">
+                See everyone&apos;s week
+              </Link>
+            </p>
           </section>
 
           {eff && (
             <EfficiencyPanel
               e={eff}
-              title="How the company worked this week"
+              title={`How ${name} worked this week`}
               note="Typical times are the median of each person's median. Counts and dollars are added up across everyone's signed receipts. People are never ranked."
             />
           )}
-
-          <section aria-labelledby="people" className="space-y-3">
-            <div className="flex items-baseline justify-between gap-3">
-              <h2 id="people" className="text-xl font-semibold tracking-tight">
-                Everyone&apos;s week
-              </h2>
-              <span className="text-sm text-muted-foreground">Signed by each person. Prompts never included.</span>
-            </div>
-            {people.map((r) => (
-              <PersonWeek key={r.digest} r={r} name={personName(org, r.message.owner, r.message.author)} team={teamName(r.team)} verified={r.verified} arkivKey={r.arkivKey} swarm={r.swarm} />
-            ))}
-            {quiet.map((m) => (
-              <div key={m.address} className="rounded-lg border border-dashed border-border px-4 py-3 text-sm text-muted-foreground">
-                <span className="font-medium text-foreground">{m.name}</span> has not shared this week yet.
-              </div>
-            ))}
-          </section>
 
           <section aria-labelledby="teams">
             <h2 id="teams" className="text-xl font-semibold tracking-tight">
@@ -138,7 +107,7 @@ export default async function OrgPage({ searchParams }: { searchParams: Promise<
                     return (
                       <tr key={t.id}>
                         <td className="px-4 py-3 font-medium">
-                          <Link className="text-primary hover:underline" href={`/team?team=${t.id}&week=${week}`}>
+                          <Link className="text-primary hover:underline" href={`/company/team?team=${encodeURIComponent(t.id)}&week=${week}`}>
                             {t.name}
                           </Link>
                         </td>
@@ -162,10 +131,6 @@ export default async function OrgPage({ searchParams }: { searchParams: Promise<
           </section>
 
           <div className="space-y-3">
-            <Collapsible title="Every pull request" hint={`${plural(prs.length, "PR")}, most expensive first`}>
-              <PrTable evidence={prs} showPerson />
-            </Collapsible>
-
             <Collapsible title="Spend by AI tool" hint={toolHint}>
               <div className="max-w-2xl space-y-2">
                 <div className="flex h-4 w-full overflow-hidden rounded-full bg-muted" role="img" aria-label="Spend split by AI tool">
@@ -195,7 +160,7 @@ export default async function OrgPage({ searchParams }: { searchParams: Promise<
                   const max = Math.max(...weeks.map((x) => aggregate(verified.filter((r) => r.message.period === x)).spend), 1);
                   return (
                     <li key={w} className="grid grid-cols-[5rem_1fr] items-center gap-3 text-sm sm:grid-cols-[5rem_1fr_16rem]">
-                      <Link href={`/org?week=${w}`} className="hover:underline">
+                      <Link href={`/company?week=${w}`} className="hover:underline">
                         Week {w.split("-W")[1]}
                       </Link>
                       <div className="flex h-3 overflow-hidden rounded-full bg-muted" style={{ width: `${Math.max(4, (a.spend / max) * 100)}%` }}>
@@ -215,10 +180,13 @@ export default async function OrgPage({ searchParams }: { searchParams: Promise<
             <Collapsible title="What the company can and cannot see">
               <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
                 <li>Can see: each person&apos;s signed list of what they got done, the pull requests behind it, and the totals per category and AI tool.</li>
-                <li>Cannot see: prompts, the AI&apos;s answers, file names or session details. Those are never shared with the company. People can also keep single items private; they still count in the signed totals.</li>
                 <li>
-                  The lists themselves are stored on Swarm, encrypted on each person&apos;s laptop. This page opens them with the company key; anyone
-                  else reading Arkiv sees only the signed totals.
+                  Cannot see: prompts, the AI&apos;s answers, file names or session details. Those never leave the employee&apos;s laptop. People can also keep
+                  single lines private; they still count in the signed totals.
+                </li>
+                <li>
+                  The lists are stored on Swarm, encrypted on each person&apos;s laptop. This page opens them with the company key, for members of the org.
+                  Anyone else reading Arkiv sees only the signed totals.
                 </li>
                 <li>
                   Every number comes from receipts signed by the person they describe, read from Arkiv (schema <code>{ARKIV_SCHEMA_NAME}</code>, company

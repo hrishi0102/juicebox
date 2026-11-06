@@ -28,7 +28,7 @@ export async function GET(req: Request) {
     const tok = (await r.json()) as { access_token?: string; error_description?: string };
     if (!tok.access_token) throw new Error(tok.error_description ?? "GitHub did not return a token");
     const profile = await githubProfile(tok.access_token);
-    const res = NextResponse.redirect(new URL(saved.back ?? "/org", url.origin));
+    const res = NextResponse.redirect(new URL(saved.back ?? "/company", url.origin));
     res.cookies.set(SESSION_COOKIE, encodeSession({ ...profile, at: new Date().toISOString() }), {
       httpOnly: true,
       sameSite: "lax",

@@ -2,19 +2,24 @@ import Link from "next/link";
 import { Collapsible } from "@/components/collapsible";
 import { PersonWeek } from "@/components/person-week";
 import { CategoryBar } from "@/components/category-badge";
-import { currentSource } from "@/lib/server/data";
-import { loadOrg, personName } from "@/lib/server/org";
+import { currentSource, shareTarget } from "@/lib/server/data";
+import { companyKnown, loadOrg, personName } from "@/lib/server/org";
+import { CompanyDoor, MemberNote } from "@/components/company-door";
 import { ARKIV_SCHEMA_NAME, exampleQuery } from "@/lib/receipts/arkiv";
 import { aggregate, aggregateEfficiency, countsLine } from "@/lib/receipts/aggregate";
 import { EfficiencyPanel } from "@/components/efficiency-panel";
 import { signedNumbers } from "@/lib/receipts/receipt";
 import { pct, plural, usd } from "@/lib/format";
 
+export const metadata = { title: "Teams · Company · Receipts" };
+
+// One team: its headline, then everyone's week (the first one open). Default: your own team.
 export default async function Team({ searchParams }: { searchParams: Promise<{ week?: string; team?: string }> }) {
   const sp = await searchParams;
   const source = await currentSource();
+  if (!(await companyKnown(source))) return <CompanyDoor />;
   const org = await loadOrg(source);
-  const you = org.members.find((m) => m.you)?.team;
+  const you = source === "demo" ? org.members.find((m) => m.you)?.team : (await shareTarget()).team;
   const teamId = sp.team && org.teams.some((t) => t.id === sp.team) ? sp.team : (you ?? org.teams[0]?.id ?? "");
   const cfg = org.teams.find((t) => t.id === teamId) ?? { id: teamId, name: teamId };
   const all = org.rows.filter((r) => r.team === teamId);
@@ -29,13 +34,13 @@ export default async function Team({ searchParams }: { searchParams: Promise<{ w
   const eff = aggregateEfficiency(inWeek);
   const sharedBy = new Set(inWeek.map((r) => r.message.owner.toLowerCase()));
   const notSharing = members.filter((m) => !sharedBy.has(m.address.toLowerCase()));
-  const q = (w: string) => `/team?team=${teamId}&week=${w}`;
+  const q = (w: string) => `/company/team?team=${encodeURIComponent(teamId)}&week=${w}`;
 
   return (
     <div className="space-y-8">
       <div>
-        <Link href={`/org${week ? `?week=${week}` : ""}`} className="text-sm text-muted-foreground hover:text-foreground">
-          {org.name}
+        <Link href={`/company${week ? `?week=${week}` : ""}`} className="text-sm text-muted-foreground hover:text-foreground">
+          ‹ {org.name.replace(/ \(demo company\)$/, "")}
         </Link>
         <h1 className="mt-1 text-balance text-4xl font-semibold tracking-tight">What did {cfg.name} get done?</h1>
         <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
@@ -43,7 +48,7 @@ export default async function Team({ searchParams }: { searchParams: Promise<{ w
             org.teams.map((t) => (
               <Link
                 key={t.id}
-                href={`/team?team=${t.id}${week ? `&week=${week}` : ""}`}
+                href={`/company/team?team=${encodeURIComponent(t.id)}${week ? `&week=${week}` : ""}`}
                 className={`rounded-lg border px-3 py-1 ${t.id === teamId ? "border-primary bg-primary text-primary-foreground" : "border-border hover:bg-card"}`}
               >
                 {t.name}
@@ -59,10 +64,12 @@ export default async function Team({ searchParams }: { searchParams: Promise<{ w
         </div>
       </div>
 
+      <MemberNote org={org} />
+
       {!week ? (
         <div className="max-w-2xl rounded-lg border border-border bg-card p-6">
           <h2 className="text-lg font-semibold">Nothing shared yet</h2>
-          <p className="mt-2 text-muted-foreground">When people on this team sign and share their week, their lists show up here with the pull requests behind them.</p>
+          <p className="mt-2 text-muted-foreground">When people on this team sign and send their week, their lists show up here with the pull requests behind them.</p>
         </div>
       ) : (
         <>
@@ -91,7 +98,7 @@ export default async function Team({ searchParams }: { searchParams: Promise<{ w
             ))}
             {notSharing.map((m) => (
               <div key={m.address} className="rounded-lg border border-dashed border-border px-4 py-3 text-sm text-muted-foreground">
-                <span className="font-medium text-foreground">{m.name}</span> has not shared this week yet.
+                <span className="font-medium text-foreground">{m.name}</span> has not sent this week&apos;s receipt yet.
               </div>
             ))}
           </section>

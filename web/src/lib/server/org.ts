@@ -5,22 +5,11 @@ import { fetchOrgReceipts } from "@/lib/receipts/arkiv";
 import { verifyReceipt, type SignedReceipt } from "@/lib/receipts/receipt";
 import type { Source } from "@/lib/receipts/store";
 import type { OrgTeam, TeamMember } from "@/lib/receipts/demo";
-import { headers } from "next/headers";
+import { companyPrivateKey } from "@/lib/receipts/arkiv";
 import { getDemoOrg, shareTarget } from "./data";
-import { getSession } from "./session";
+import { isMember, viewer, type Viewer } from "./viewer";
 
 export type OrgRow = SignedReceipt & { from: "arkiv" | "demo file"; arkivKey?: string; verified: boolean; team: string; swarm?: { ref: string; opened: boolean; error?: string } };
-
-/**
- * Sealed weeks are only opened for people who should see them: on the laptop itself, in the demo,
- * or for someone signed in with GitHub as a member of the org. Opening also needs the company key.
- */
-async function mayOpen(orgId: string, source: Source) {
-  if (source === "demo") return true;
-  const host = ((await headers()).get("host") ?? "").replace(/:\d+$/, "").toLowerCase();
-  if (host === "localhost" || host === "127.0.0.1" || host === "[::1]") return true;
-  return !!(await getSession())?.orgs.some((o) => o.toLowerCase() === orgId.toLowerCase());
-}
 
 export type LoadedOrg = {
   id: string;
@@ -31,8 +20,26 @@ export type LoadedOrg = {
   rows: OrgRow[];
   arkivCount: number;
   arkivError?: string;
+  /** Who is looking, and whether this page may open the sealed lists for them. */
+  viewer: Viewer;
+  member: boolean;
+  hasCompanyKey: boolean;
 };
 
+/**
+ * The company side starts here. In the demo it is Acme. Otherwise it is the company this laptop
+ * joined (My week, Setup), else the GitHub org of whoever is signed in. False means we do not
+ * know yet, and the page shows the door: Sign in with GitHub.
+ */
+export async function companyKnown(source: Source) {
+  if (source === "demo") return true;
+  return (await shareTarget()).from !== "default";
+}
+
+/**
+ * Sealed weeks are only opened for members of the org (signed in with GitHub, or this laptop's
+ * GitHub login) and in the demo. Opening also needs the company key.
+ */
 export async function loadOrg(source: Source): Promise<LoadedOrg> {
   const demo = source === "demo" ? getDemoOrg() : undefined;
   // Your own company: the GitHub org from sign-in (or your GitHub token), or the CLI settings.
@@ -46,12 +53,14 @@ export async function loadOrg(source: Source): Promise<LoadedOrg> {
     receipts: [] as SignedReceipt[],
   };
 
+  const v = await viewer(source);
+  const member = isMember(v, cfg.id);
   let live: Awaited<ReturnType<typeof fetchOrgReceipts>> = [];
   let arkivError: string | undefined;
   // Arkiv's public endpoint can be slow without an access key; never hold the page for it.
   try {
     live = await Promise.race([
-      fetchOrgReceipts(cfg.id, undefined, await mayOpen(cfg.id, source)),
+      fetchOrgReceipts(cfg.id, undefined, member),
       new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Arkiv did not answer within 5 seconds")), 5000)),
     ]);
   } catch (e) {
@@ -84,7 +93,18 @@ export async function loadOrg(source: Source): Promise<LoadedOrg> {
     rows: [...rows.values()],
     arkivCount: live.length,
     arkivError,
+    viewer: v,
+    member,
+    hasCompanyKey: !!companyPrivateKey(),
   };
+}
+
+/** The verified receipts, the weeks they cover, and the chosen week (default: the newest). */
+export function orgWeek(org: LoadedOrg, want?: string) {
+  const verified = org.rows.filter((r) => r.verified);
+  const weeks = [...new Set(verified.map((r) => r.message.period))].sort();
+  const week = want && weeks.includes(want) ? want : weeks[weeks.length - 1];
+  return { verified, weeks, week, inWeek: verified.filter((r) => r.message.period === week) };
 }
 
 /** A known name (demo), else the GitHub login inside the signed receipt, else a short address. */
