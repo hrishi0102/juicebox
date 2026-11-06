@@ -18,6 +18,8 @@ export type ChatStats = {
   avalanches?: number; // messages with three or more questions in one go
   hours: number[]; // messages per local hour, 24 bins
   days: number[]; // messages per weekday, 7 bins, 0 = Sunday
+  minutes?: number; // time in all exchanges (each message to the next, capped)
+  dayKeys?: string[]; // local dates with a message (YYYY-MM-DD), for streaks
   nightMinutes: number; // time spent between midnight and 5 a.m.
   latestMinuteOfNight?: number; // latest message after midnight, minutes past 00:00
   seg: Record<FunSegment, { n: number; min: number }>;
@@ -92,6 +94,8 @@ export function emptyChatStats(): ChatStats {
     avalanches: 0,
     hours: Array(24).fill(0),
     days: Array(7).fill(0),
+    minutes: 0,
+    dayKeys: [],
     nightMinutes: 0,
     seg: Object.fromEntries(FUN.map((f) => [f, { n: 0, min: 0 }])) as ChatStats["seg"],
     topWords: [],
@@ -117,6 +121,8 @@ export class ChatStatsBuilder {
     const st = emptyChatStats();
     const counts = new Map<string, number>();
     const msgs = [...this.msgs].sort((a, b) => a.ts - b.ts);
+    const dayKeys = new Set<string>();
+    let total = 0;
     msgs.forEach((m, i) => {
       const next = i + 1 < msgs.length ? msgs[i + 1].ts : Math.max(this.lastTs, m.ts);
       const min = Math.min(CAP_MIN, Math.max(0, (next - m.ts) / 60000));
@@ -131,6 +137,8 @@ export class ChatStatsBuilder {
       st.images += m.images;
       if (c.pasted) st.pasted++;
       if (c.avalanche) st.avalanches = (st.avalanches ?? 0) + 1;
+      total += min;
+      dayKeys.add(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`);
       st.hours[d.getHours()]++;
       st.days[d.getDay()]++;
       if (d.getHours() < 5) {
@@ -149,6 +157,8 @@ export class ChatStatsBuilder {
       }
     });
     st.nightMinutes = Math.round(st.nightMinutes);
+    st.minutes = Math.round(total * 10) / 10;
+    st.dayKeys = [...dayKeys].sort();
     for (const f of FUN) st.seg[f].min = Math.round(st.seg[f].min * 10) / 10;
     st.topWords = [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 25);
     return st;
