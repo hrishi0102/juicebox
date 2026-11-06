@@ -48,7 +48,7 @@ Each segment has a rough "typical" share of messages (overthinking 7%, therapy 1
 | Message text | Only read while counting. Never stored. Exports stay in the browser tab's memory until it is closed |
 | Counts, minutes, hours, days | `~/.receipts/dataset.json` with the sessions (logs), or the browser tab (exports) |
 | Most used words | Same place. Shown only on the page, never on the card or sent anywhere |
-| The share card | Drawn by the local server from numbers only: persona, minutes, message count, top 4 segments, night share, peak hour, streak, messages per hour scaled 0 to 100 (`/api/card/wrapped`, checked with `wrapped-schema.ts`) |
+| The share card | Drawn by the local server from numbers only: persona, minutes, message count, top 4 segments, night share, peak hour, streak, messages per hour scaled 0 to 100 (`/api/card/wrapped`, checked with `wrapped-schema.ts`). Shared from the buttons under it: Share (the image itself, where the browser can share files, as on phones), Post on X (downloads the PNG and opens X with the text, since X cannot take an image through a link), Download the card, Copy the text. Never uploaded or stored by the app |
 | "Roast me" | Optional. Sends the same numbers (plus a few counts) to the private AI on 0G, which writes one playful line. Never a message or a word the person typed. Kept in `~/.receipts/wrapped-roasts.json` so the same numbers never cost twice, and capped at 30 new calls an hour. About $0.0003 a call |
 
 ## Code
@@ -59,7 +59,7 @@ Each segment has a rough "typical" share of messages (overthinking 7%, therapy 1
 | Totals, persona, facts, the card's numbers | `web/src/lib/receipts/wrapped.ts`, `wrapped-schema.ts` |
 | ChatGPT and Claude.ai exports | `web/src/lib/receipts/chat-import.ts` |
 | Periods for the laptop's logs | `web/src/lib/server/wrapped-data.ts` |
-| The page | `web/src/app/wrapped/page.tsx`, `web/src/components/wrapped-view.tsx` |
+| The page (the whole For fun side: one page, My AI Wrapped, then Share it) | `web/src/app/(personal)/wrapped/page.tsx`, `web/src/components/wrapped-view.tsx` |
 | The card and the roast | `web/src/lib/server/wrapped-card.tsx`, `app/api/card/wrapped`, `app/api/wrapped/roast` |
 | Demo habits for the 12 demo people | `demoChat` in `web/src/lib/receipts/demo.ts` |
 | Tests (made-up messages and exports only) | `web/test/wrapped.test.ts` |

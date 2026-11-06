@@ -12,9 +12,9 @@ A private AI on **0G** writes the list from the sessions, paid from the employee
 
 | | Who | Where | What they do |
 |---|---|---|---|
-| **My week** | each employee | their laptop, `/me` | Set up once (GitHub, join the company, Sign in with 0G, read logs). Every week: write, review, sign, send |
+| **My week** | each employee | their laptop, `/me` | Set up once (GitHub, join the company, Sign in with 0G, read logs). Every week: write, sign, send |
 | **Company** | leads and managers | anywhere, `/company` | Sign in with GitHub, see everyone's week by team and person, every PR, where the money went. Whoever runs it sets up the wallet, the company key and Swarm once (Company, Setup) |
-| **For fun** (side product) | anyone | `/wrapped`, `/card`, `/wall` | AI Wrapped, a card of your week for socials, the wall of public cards. Never signed or sent to a company |
+| **For fun** (side product) | anyone | `/wrapped` | AI Wrapped: how you talk to AI, shared as a card. Nothing to do with receipts, never sent to a company |
 
 Anyone with a link can check a shared receipt (`/r/<key>`, `/verify`). To look around, open `/demo` and pick who you want to be at the demo company.
 
@@ -25,16 +25,15 @@ Built at ETHGlobal Mumbai (Nov 5 to 7, 2026).
 1. **Read your logs.** Claude Code (`~/.claude/projects`, with subagents) and Codex (`~/.codex/sessions`) already log every session. Receipts prices every AI call from its token counts and checks it against Claude Code's own cost tracker (within 2% on real logs). Nothing leaves the laptop.
 2. **Link the work.** With your GitHub token it finds the pull requests and commits each session turned into (PR links and commits in the log, branch, files), and what happened to them.
 3. **Write.** Only when you click **Write my week**, after **Sign in with 0G**: every private AI call is paid from your own 0G account (your iAI daily credits or a top-up), about a cent a week, and the page shows your credits going down. Each session goes to a private AI on the **0G Private Computer** (TEE-only "private" mode): what you asked, what the AI said at the end, tool counts, the GitHub outcome and the cost. It answers with one line: a category (**Built, Fixed, Figured out, Researched, Wrote, Planned, Wasted**) and a short title. One more call sees only those lines and merges them into your list, plus one sentence about the week. Every answer's TEE signature is checked by the router and again by us. Until then, simple rules draft the list.
-4. **Review.** See exactly what your company will see, what everyone can see (the signed totals), and what stays on your laptop. Untick any line to keep it private; it still counts in the signed totals.
-5. **Sign and send.** Sign the week with a key made on your laptop (no wallet needed). The signature covers the list, the PRs and every number, including how efficient the week was: idea to code, code to commit, commit to PR and PR to merge, the PR funnel, and waste by reason (plans nobody acted on, questions left hanging, loops, code that never shipped). Sending writes it to Arkiv in one transaction that creates a **read-only** record and hands its **ownership to you**; the company wallet only pays gas. Your company is your GitHub org and your team is your GitHub team: you join it once in My week, Setup, from your own GitHub teams.
+4. **Sign and send.** The receipt is the whole week as the AI wrote it: nothing can be left out or edited. Sign it with a key made on your laptop (no wallet needed). The signature covers the list, the PRs and every number, including how efficient the week was: idea to code, code to commit, commit to PR and PR to merge, the PR funnel, and waste by reason (plans nobody acted on, questions left hanging, loops, code that never shipped). Sending writes it to Arkiv in one transaction that creates a **read-only** record and hands its **ownership to you**; the company wallet only pays gas. Your company is your GitHub org and your team is your GitHub team: you join it once in My week, Setup, from your own GitHub teams.
 
 On the author's own logs this week: 9 sessions, 9 private AI calls plus 1 weekly call on 0G, all TEE verified, about 20 seconds and under $0.01 in total.
 
-## For fun: AI Wrapped and week cards (a separate side product)
+## For fun: AI Wrapped (a separate side product)
 
-A receipt is evidence for your company: signed, and nobody can edit it. A card is a picture for socials: not signed, you can edit every line, cost is hidden by default, and it never goes to a company. Cards (`/card`), AI Wrapped (`/wrapped`) and the wall of public cards (`/wall`) live on their own side of the app.
+One page, `/wrapped`, for anyone, coder or not. It has nothing to do with receipts and is never sent to a company.
 
-`/wrapped` shows how you talk to AI: your AI personality (The Overthinker, The Brain Dumper, The 2 a.m. Philosopher, The Most Polite Human Alive...) and how much time went into overthinking, treating the AI as a therapist, student mode, just saying hi, "yes, go ahead", rage moments and brain dumps, plus your AI clock, streaks and fun facts. It works on your Claude Code and Codex logs, or on a **ChatGPT or Claude.ai data export**, which is read in your browser and never uploaded. Simple rules count everything, with no AI. The share card carries numbers only. **Roast me** optionally sends those numbers (never your messages) to the private AI on 0G for one playful line, about $0.0003, paid with Sign in with 0G. Details: [architecture/wrapped.md](architecture/wrapped.md).
+`/wrapped` shows how you talk to AI: your AI personality (The Overthinker, The Brain Dumper, The 2 a.m. Philosopher, The Most Polite Human Alive...) and how much time went into overthinking, treating the AI as a therapist, student mode, just saying hi, "yes, go ahead", rage moments and brain dumps, plus your AI clock, streaks and fun facts. It works on your Claude Code and Codex logs, or on a **ChatGPT or Claude.ai data export**, which is read in your browser and never uploaded. Simple rules count everything, with no AI. The share card carries numbers only: share it from your device's share sheet, post it on X, or download it. **Roast me** optionally sends those numbers (never your messages) to the private AI on 0G for one playful line, about $0.0003, paid with Sign in with 0G. Details: [architecture/wrapped.md](architecture/wrapped.md).
 
 ## Run it
 
@@ -71,7 +70,7 @@ Other commands (`npm run receipts -- <command>`):
 
 ## Keys
 
-Put them in `web/.env.local` (see `web/.env.example`). Everything is optional: without keys the app still reads logs, links PRs, writes the list with rules, signs, and makes cards.
+Put them in `web/.env.local` (see `web/.env.example`). Everything is optional: without keys the app still reads logs, links PRs, writes the list with rules, and signs.
 
 | Variable | Where to get it | Used for |
 |---|---|---|
@@ -81,7 +80,7 @@ Put them in `web/.env.local` (see `web/.env.example`). Everything is optional: w
 | `ARKIV_PRIVATE_KEY` | A throwaway key funded with tGLM at https://hub.arkiv.network/faucet | The wallet that pays the fee for each receipt (and, unless `COMPANY_PRIVATE_KEY` is set, the company key that opens the lists) |
 | `COMPANY_PRIVATE_KEY` / `COMPANY_PUBLIC_KEY` | Any secp256k1 key | The company key that opens the lists (company copy only); employees get only the public key. Company, Setup shows what to hand out |
 | `ARKIV_ACCESS_KEY` | https://hub.arkiv.network/access-keys | Higher Arkiv rate limits (recommended) |
-| `SWARM_API_URL`, `SWARM_GATEWAY_URL`, `SWARM_POSTAGE_BATCH_ID` | The free Swarm testnet gateway (see `web/.env.example`), or your own Bee node and batch | Private weeks and public cards on Swarm |
+| `SWARM_API_URL`, `SWARM_GATEWAY_URL`, `SWARM_POSTAGE_BATCH_ID` | The free Swarm testnet gateway (see `web/.env.example`), or your own Bee node and batch | The encrypted weeks on Swarm |
 | `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` | A GitHub OAuth App, callback `http://localhost:3000/api/auth/callback` | "Sign in with GitHub" on the company side (on the laptop, its GitHub login counts too) |
 
 ## Architecture
@@ -92,7 +91,6 @@ flowchart LR
     L["Claude Code + Codex logs"] --> P["Readers + pricing"]
     P --> M["Link to PRs"]
     M --> W["Week list"]
-    W --> C["Week card (PNG, side product)"]
     W --> K["Sign (EIP-712, laptop key)"]
   end
   GH["GitHub: PRs, your org and team"] --> M
@@ -108,7 +106,7 @@ Module by module, with the reasons behind each decision: [architecture/](archite
 
 ### 0G: Build with 0G Private Computer
 
-The private AI is the product's core: to say what you got done, it has to read what you asked and what the AI answered. Receipts never sends that to an ordinary AI API. Every call goes to the 0G router with `X-0G-Provider-Trust-Mode: private` (only providers running the model inside a TEE may answer) and `verify_tee: true`, and we re-check each TEE signature ourselves with the 0G SDK (`processResponse`) against the signer registered on 0G mainnet. In the web app every call is paid with **Sign in with 0G** (0G's Privy app, then `/v1/auth/privy`): the employee signs in with their 0G account as part of setup, and Write my week, the private review and Roast me spend their own daily credits; the page shows the balance before and after. Default model `0gm-1.0-35b-a3b-sia` with thinking off (about 2 seconds a call), falling back to `glm-5.3` when its provider is down. Each result keeps the 0G **request id**, provider, TEE checks, cost and hashes of exactly what was sent and returned; they go into the signed receipt as Merkle leaves. The browser makes the calls with the person's 0G session; the laptop's server builds the messages and keeps the results (who paid is kept too). The app's own key is only used by the command line.
+The private AI is the product's core: to say what you got done, it has to read what you asked and what the AI answered. Receipts never sends that to an ordinary AI API. Every call goes to the 0G router with `X-0G-Provider-Trust-Mode: private` (only providers running the model inside a TEE may answer) and `verify_tee: true`, and we re-check each TEE signature ourselves with the 0G SDK (`processResponse`) against the signer registered on 0G mainnet. In the web app every call is paid with **Sign in with 0G** (0G's Privy app, then `/v1/auth/privy`): the employee signs in with their 0G account as part of setup, and Write my week, the private review and Roast me spend their own daily credits; the page shows the balance (in 0G) before and after, and what the call cost. Every week links to **0G's own TEE check** of the provider that wrote it (`/proof/0g/<provider>`: 0G's router publishes its attestation verdicts per provider), the provider on 0G ChainScan, and your calls on pc.0g.ai. Default model `0gm-1.0-35b-a3b-sia` with thinking off (about 2 seconds a call), falling back to `glm-5.3` when its provider is down. Each result keeps the 0G **request id**, provider, TEE checks, cost and hashes of exactly what was sent and returned; they go into the signed receipt as Merkle leaves. The browser makes the calls with the person's 0G session; the laptop's server builds the messages and keeps the results (who paid is kept too). The app's own key is only used by the command line.
 
 **What breaks if 0G is removed:** the AI that writes the list. Without a private computer we would have to send prompts to an ordinary API, which we refuse to do, so the list falls back to rules that name things after PR titles and cannot tell research from a dead end.
 
@@ -118,13 +116,13 @@ Code: `web/src/lib/receipts/judge-core.ts`, `judge.ts`, `week.ts`, `web/src/comp
 
 Every receipt an employee sends is an Arkiv entity (schema `receipts-ethglobal-mumbai.receipt.v2`, Arkiv testnet Rabdi, chain `7794095`, `@arkiv-network/sdk` 1.0.1). It is created **read-only** and handed to the person who signed it in the same transaction, with indexed org, team, week, signer, GitHub login and numbers, the signed JSON as payload, and an expiry of 120 days. The company wallet only pays the fee: nobody can change a receipt, and only the employee can delete it or keep it longer. The company side reads them back with one query and re-verifies every signature, so it works without our server and ignores anything unsigned.
 
-**Swarm:** the full week (list, PRs, AI records) is encrypted on the laptop and stored on Swarm; the public Arkiv record keeps only the signed totals, the Swarm reference (`swarm`), and a pointer sealed to the company's key (`sealed`), so only the company can open the list. Public cards are stored on Swarm and listed on Arkiv (schema `receipts-ethglobal-mumbai.card.v1`), shown on `/wall`. See [arkiv/swarm.md](arkiv/swarm.md).
+**Swarm:** the full week (list, PRs, AI records) is encrypted on the laptop and stored on Swarm; the public Arkiv record keeps only the signed totals, the Swarm reference (`swarm`), and a pointer sealed to the company's key (`sealed`), so only the company can open the list. `/proof/swarm/<ref>` fetches the encrypted file from Swarm live and, for members of the company, checks it against the SHA-256 sealed in the Arkiv record. See [arkiv/swarm.md](arkiv/swarm.md).
 
-Features people see that read Arkiv: the company side (`/company`, Teams, People, Pull requests), a shared receipt (`/r/<entity key>`), Check a receipt (`/verify`), and the wall (`/wall`).
+Features people see that read Arkiv: the company side (`/company`, Teams, People, Pull requests), a shared receipt (`/r/<entity key>`) and Check a receipt (`/verify`). Every receipt in the app links to its record and transaction on the Arkiv explorer ("Check it yourself").
 
 - **Wallet that wrote the entities** (the demo company's wallet; it pays the fee and hands every record to its signer): `0x09351DC0A6AFa87da28D00914fE87373C5C82747`. The records are owned by 12 signer addresses, one per person.
-- **Live data (checked Nov 7):** 89 receipt entities for the demo company Acme (12 people, 5 weeks; 60 with the full list on Arkiv, 29 sealed with the list on Swarm) and 12 card entities on the wall.
-- **Example entities:** a sealed v3 week [`0xea50…9ca6`](https://rabdi.explorer.arkiv.network/entity/0xea50b76a7c871350d819fac561481bfb8070e3da040b3828e9369d0d99cb9ca6) (Swarm [`6483e194…eb75`](https://api.gateway.testnet.ethswarm.org/bytes/6483e19496c5b16f1f7b35da826f42ff140caedb31732c4e7a7fa90d597eeb75), ciphertext), a plain week [`0xf2d3…16f7`](https://rabdi.explorer.arkiv.network/entity/0xf2d3453735d6a71bf660ac37344e42f827929205930cfbcb5ef4297513e416f7), a public card [`0xd478…3819`](https://rabdi.explorer.arkiv.network/entity/0xd4785a1b1487ae296e6c0ccc79a7f85a5254b1d2572d32da9979d8211afa3819) ([the card on Swarm](https://api.gateway.testnet.ethswarm.org/bzz/edca15e00de285fe548539a746674a8115b90a86c3f4aac494891bbfac475a38/)).
+- **Live data (checked Nov 7):** 89 receipt entities for the demo company Acme (12 people, 5 weeks; 60 with the full list on Arkiv, 29 sealed with the list on Swarm).
+- **Example entities:** a sealed v3 week [`0xea50…9ca6`](https://rabdi.explorer.arkiv.network/entity/0xea50b76a7c871350d819fac561481bfb8070e3da040b3828e9369d0d99cb9ca6) (Swarm [`6483e194…eb75`](https://api.gateway.testnet.ethswarm.org/bytes/6483e19496c5b16f1f7b35da826f42ff140caedb31732c4e7a7fa90d597eeb75), ciphertext), a plain week [`0xf2d3…16f7`](https://rabdi.explorer.arkiv.network/entity/0xf2d3453735d6a71bf660ac37344e42f827929205930cfbcb5ef4297513e416f7), and every record the wallet wrote: [the wallet on the Arkiv explorer](https://rabdi.explorer.arkiv.network/address/0x09351DC0A6AFa87da28D00914fE87373C5C82747).
 
 **One query to run.** Acme's receipts for week 45 (37 entities):
 
@@ -138,7 +136,7 @@ Arkiv's public endpoint refuses anonymous queries (`ANON_COST_LIMITED`), so use 
 curl -s https://rpc.rabdi.db-chain.testnet.arkiv.network/<ACCESS_KEY> -H 'Content-Type: application/json' -d "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"arkiv_query\",\"params\":[\"arkiv.schema = str('receipts-ethglobal-mumbai.receipt.v2') AND type = str('receipt') AND org = str('acme') AND period = str('2026-W45')\",{\"select\":{\"key\":true,\"owner\":true},\"limit\":\"0x64\"}]}"
 ```
 
-More queries (sealed weeks, cards, one team, big weeks that went in circles) are in [arkiv/schema.md](arkiv/schema.md). The same data, read by the app: open `/demo` and be Acme's lead.
+More queries (sealed weeks, one team, big weeks that went in circles) are in [arkiv/schema.md](arkiv/schema.md). The same data, read by the app: open `/demo` and be Acme's lead.
 
 **Judging files:** [schema.md](arkiv/schema.md), [friction.md](arkiv/friction.md) (Arkiv feedback), [reach.md](arkiv/reach.md), [why-arkiv.md](arkiv/why-arkiv.md), [how-you-use-arkiv.md](arkiv/how-you-use-arkiv.md) (who can edit each entity, and when it expires), [swarm.md](arkiv/swarm.md) (the bonus).
 
@@ -166,12 +164,11 @@ Built but not submitted (three partners max). See [cre/README.md](cre/README.md)
 | One session's trimmed prompts and the AI's last answers, when you click Write my week | 0G Private Computer, private mode (model in a TEE) | The model in the TEE, and 0G's router in transit (not end-to-end sealed today) |
 | The list's titles, for the weekly summary | The same private model | The same |
 | PR numbers, repo names | GitHub API with your token | GitHub |
-| A week card | Nowhere, unless you post it | Whoever you show it to |
+| Your AI Wrapped card (numbers only) | Nowhere, unless you post it | Whoever you show it to |
 | Your messages, for AI Wrapped | Nowhere: counted on the laptop (logs) or in the browser tab (ChatGPT and Claude.ai exports) | Only you |
 | The Wrapped numbers, when you click Roast me | 0G Private Computer, private mode (numbers only, never messages) | The model in the TEE, and 0G's router in transit |
 | Your signed totals, when you send your receipt | Arkiv testnet, read-only, owned by you | Anyone |
-| Your list, PRs and AI records, when you send your receipt (minus lines you keep private) | Swarm, encrypted on your laptop; the key is sealed to your company's key on Arkiv | Members of your company |
-| A card you make public with Get a Swarm link | Swarm, listed on Arkiv | Anyone |
+| Your list, PRs and AI records, when you send your receipt | Swarm, encrypted on your laptop; the key is sealed to your company's key on Arkiv | Members of your company |
 
 ## Honest limits
 

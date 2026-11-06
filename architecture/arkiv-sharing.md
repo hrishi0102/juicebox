@@ -23,15 +23,18 @@ So the company wallet (`ARKIV_PRIVATE_KEY`) pays the gas, and the employee owns 
 ## Read
 
 - Every read selects the system fields too (`$owner`, `$creator`, `$createdAt`, `$expiresAt`, `$creationFlags`), kept as `arkiv` on each receipt (`ArkivMeta`). The public receipt page shows them: read-only, owned by the signer, written by the company wallet, expiry as a date (`blockDate`, 2 second blocks).
-- `fetchOrgReceipts(org, period?, open)`: every team of a company in one query (paged by 100), each payload decoded and re-verified. Used by the company and team pages, with a 5 second limit so pages never hang on a slow endpoint. With `open` (decided by `mayOpen` in `lib/server/org.ts`: on the laptop, in the demo, or for a GitHub-signed-in member of the org) and the company key, `decodeRow` opens sealed weeks: it unseals the pointer, downloads the ciphertext, checks size and SHA-256, decrypts, and keeps it only if it is the same signed receipt (same digest, valid signature). Otherwise the page shows the signed totals and says the list is private.
+- `fetchOrgReceipts(org, period?, open)`: every team of a company in one query (paged by 100), each payload decoded and re-verified. Used by the company and team pages, with a 5 second limit so pages never hang on a slow endpoint. With `open` (decided by `isMember` in `lib/server/viewer.ts`: a member of the org, signed in with GitHub or through the laptop's GitHub login, or anyone in the demo) and the company key, `decodeRow` opens sealed weeks: it unseals the pointer, downloads the ciphertext, checks size and SHA-256, decrypts, and keeps it only if it is the same signed receipt (same digest, valid signature). Otherwise the page shows the signed totals and says the list is private.
 - `fetchTeamReceipts(team, period?)`: one team, for the CLI and `/api/team`.
 - `fetchReceiptByKey(key)`: one entity, for `/r/<key>` and the Verify page.
+- `swarmPointer(key)`: the Swarm reference, SHA-256 and size sealed inside one entity, opened with the company key; `/proof/swarm/<ref>?entity=<key>` uses it to check the bytes it just fetched from Swarm, for members of the org only.
 - The CRE job reads the same entities with a raw `arkiv_query` JSON-RPC call.
 
 ## Privacy
 
-Arkiv is public. With Swarm set up, only the signed totals, the Swarm reference and the sealed pointer go there; the list, PR titles and AI request ids sit on Swarm as ciphertext only the company can open. Without Swarm, a full share puts the signed list, PRs and totals on Arkiv. Never prompts, the AI's answers, file names or session ids. People can hide single items; they still count in the signed totals.
+Arkiv is public. With Swarm set up, only the signed totals, the Swarm reference and the sealed pointer go there; the list, PR titles and AI request ids sit on Swarm as ciphertext only the company can open. Without Swarm, a full share puts the signed list, PRs and totals on Arkiv. Never prompts, the AI's answers, file names or session ids. The employee cannot leave items out: the whole signed week goes, so what the company opens is everything the AI wrote.
 
-## Public cards
+## Checking it outside the app
 
-`cards.ts`: when someone clicks Get a Swarm link, the card PNG goes to Swarm (`uploadFile`, served at `<gateway>/bzz/<ref>/`) and one read-only entity with schema `receipts-ethglobal-mumbai.card.v1` (company, week, author, signer, things done, Swarm reference, SHA-256, size, media type, caption) is created and handed to the card's owner, expiring after 60 days. `fetchCards` reads them for `/wall`. See [../arkiv/swarm.md](../arkiv/swarm.md).
+Every page that shows a sent receipt links to it on the Arkiv explorer (`https://rabdi.explorer.arkiv.network/entity/<key>`, `/tx/<hash>`, `/address/<owner or writer>`). The links are built in `web/src/lib/proof-urls.ts`; the transaction hash comes back from `publishReceipt` and is kept with the sent week.
+
+Public week cards (`receipts-ethglobal-mumbai.card.v1`) are no longer written (decision 50); the 12 on Rabdi expire on their own.

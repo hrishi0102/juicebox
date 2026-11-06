@@ -6,7 +6,7 @@ Three things used to look like logins. Each now has one job and lives in one pla
 |---|---|---|
 | **GitHub** | Who you are. Your company is your GitHub org, your team is your GitHub team | Employee: the laptop's GitHub login, no extra sign-in (My week, Setup). Company: Sign in with GitHub (header and the company door) |
 | **Sign in with 0G** | Who pays for the private AI: your own 0G account (iAI daily credits or a top-up) | Employee side: header chip, My week, Setup, and every private AI button. Also Roast me on AI Wrapped |
-| **The laptop key** | Your signature on the receipt | The Sign step of My week, Send. A wallet works too |
+| **The laptop key** | Your signature on the receipt | Step 1 (Sign it) of Sign and send. A wallet works too |
 
 ## GitHub: one identity, proven where you are
 
@@ -20,14 +20,14 @@ Code: `web/src/lib/server/session.ts`, `web/src/lib/server/viewer.ts`, `web/src/
 
 ## 0G: every private AI call is paid from your own 0G account
 
-Code: `web/src/components/zero-g.tsx` (the session), `zero-g-button.tsx`, `ai-actions.tsx`, `zero-g-setup.tsx`, `web/src/lib/zerog-tasks.ts`, `web/src/app/api/week/browser/route.ts`, `api/review`, `api/wrapped/roast`, `browserPlan` / `browserPlanSessions` / `browserSessions` / `browserWeek` / `browserJudgeInfo` in `web/src/lib/receipts/week.ts`
+Code: `web/src/components/zero-g.tsx` (the session), `web/src/lib/zerog-balance.ts` (reading the balance), `zero-g-button.tsx`, `ai-actions.tsx`, `zero-g-setup.tsx`, `web/src/lib/zerog-tasks.ts`, `web/src/app/api/week/browser/route.ts`, `api/review`, `api/wrapped/roast`, `browserPlan` / `browserPlanSessions` / `browserSessions` / `browserWeek` / `browserJudgeInfo` in `web/src/lib/receipts/week.ts`
 
 One way to pay, so there is no choice to make: **Sign in with 0G**. Nobody hands out an AI key, and the 0G bonus ("users sign in with their 0G account and spend their own daily credits") is the main flow, not an option.
 
 1. The browser logs in with 0G's Privy app (`NEXT_PUBLIC_PRIVY_APP_ID`, default `cmn5w697g01xp0bl80c8dskc8`, the one pc.0g.ai uses). Privy only allows `http://localhost:3000` for apps like ours, so the server tells the page whether it was opened there (`zeroGAllowed`), and `ZeroGProvider` in the root layout only loads Privy then. Anywhere else, every AI button says where it works instead.
-2. It swaps the Privy token for a 0G router session: `POST https://router-api.0g.ai/v1/auth/privy` with `{ token }` returns `{ token, wallet_address }`. The balance comes from `GET /v1/account/balance` (dollars if the answer has them, else credits).
+2. It swaps the Privy token for a 0G router session: `POST https://router-api.0g.ai/v1/auth/privy` with `{ token }` returns `{ token, wallet_address }`. The balance comes from `GET /v1/account/balance`, in neuron (10^18 neuron = 1 0G): `total_balance` (deposit plus credits), `credit_balance`, `pending_charge`. `parseBalance` shows what you can spend now, total minus pending, in 0G (an account billed in dollars, `currency: "usd"`, is in micro-dollars instead). The header chip shows your wallet and that number; Setup shows it larger, with credits and pending charges called out, and links to your balance and calls on pc.0g.ai and to your account on 0G ChainScan.
 3. Each task asks this laptop's server for the private message (`plan`), calls 0G from the browser with `Authorization: Bearer <0G token>` in private trust mode (same models, same fallback), and sends the answer back (`save`, or `sessions` and `week` for Write my week). Tasks: Write my week, one session again (its page), the private review of a week, and Roast me.
-4. After each task the balance is read again and the page says how it changed ("Your 0G credits went from $4.2100 to $4.2031"), so you see your own credits go down.
+4. After each task the balance is read again and the page says what the call cost ("This cost 0.000312 0G: your 0G balance went from 4.2158 0G to 4.2155 0G."), so you see your own balance go down. 0G sometimes charges a moment later; then it says so.
 
 The server builds every message and keeps the results, so nothing changes about what is stored. It re-checks each answer's TEE signature itself, hashes exactly what was sent (the hash is fixed when the message is built), and records the paying wallet (`payer`). Prompts only travel between the local server, its browser tab and 0G (its router, then the model in a TEE).
 

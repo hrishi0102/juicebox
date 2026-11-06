@@ -16,7 +16,7 @@ Version 2 receipts (the first ones shared on Arkiv) still verify: `verifyReceipt
 
 Sorted-pair keccak trees (same rule as OpenZeppelin `MerkleProof`).
 
-- **Item leaves**, one per line of the list: category, title, cost, linked PR keys, in progress. `revealItems` keeps only some items, each with a proof; the counts and spend for every category stay signed, so hiding an item never changes the totals.
+- **Item leaves**, one per line of the list: category, title, cost, linked PR keys, in progress. `revealItems` keeps only some items, each with a proof; the counts and spend for every category stay signed, so hiding an item never changes the totals. The app no longer hides items when sending (decision 48: the whole week goes); it uses `revealItems` only to make totals-only copies, and older receipts on Arkiv that hid items still verify.
 - **Evidence leaves**, one per PR or commit: change key, title, URL, state, reverted, survival, cost, difficulty.
 - **Judge leaves**, one per session the private AI read: hash of the session id, category, difficulty, engine, model, provider, 0G request id, hashes of the request and response, verified flag.
 

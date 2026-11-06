@@ -39,6 +39,15 @@ The human team member found the app confusing: every role (employee, company, pu
 - Joining a company from your GitHub teams (`/api/join`), lists opened by org membership (`lib/server/viewer.ts`), keeping single lines private when sending (`/api/share`), the `/demo` role picker and banner, and the company setup checklist.
 - Tests for the weekly steps and for sending with lines kept private; docs and decisions 41 to 46.
 - At the human team member's request, a check of every Arkiv and Swarm prize requirement against the repo and live data: the documented queries and links were run (read-only), the README got a runnable query (Arkiv refuses anonymous queries), the judging files were brought up to date, the company page now keeps the latest of a week sent twice by `$createdAt`, and the public receipt page shows read-only, owner, writer and expiry from Arkiv.
+- At the human team member's request, a GitHub key proof (a public gist signed by the laptop key) was built and then removed the same day when they found it unclear (decisions 47 and 49).
+
+After testing the whole flow themselves, the human team member asked for these changes, and Claude Code made them:
+
+- Sending without picking or editing: the Send page shows the whole receipt with two steps, sign and send; the keep-private switch and the review step are gone (decision 48).
+- For fun as one page: My AI Wrapped with Share, Post on X, Download and Copy; week cards, the wall and their Swarm and Arkiv code removed, with redirects (decision 50).
+- "Check it yourself" links wherever the app claims something happened on 0G, Arkiv or Swarm, and two live proof pages: `/proof/swarm/<ref>` (fetches the ciphertext, so the Swarm link no longer just downloads a file) and `/proof/0g/<provider>` (0G's TEE verdicts) (decision 51).
+- The 0G balance read in neuron and shown in 0G, with what each call cost (decision 52), and a sidebar for the company and employee pages (decision 53).
+- Tests for the 0G balance and for sending the whole week sealed on Swarm; docs brought up to date.
 
 ## What tools generated
 

@@ -2,13 +2,13 @@
 
 Code: `web/src/app/company/*` (Overview, Teams, People, Pull requests, Setup), `web/src/components/company-door.tsx`, `company-identity.tsx`, `person-week.tsx`, `web/src/lib/server/org.ts`, `viewer.ts`, `web/src/lib/receipts/aggregate.ts`
 
-This is the main product's other half: leads and managers see everyone's signed week. It has its own header (Company, the company name, its tabs, and who is signed in), and nothing from the employee side (writing, signing, 0G) appears here.
+This is the main product's other half: leads and managers see everyone's signed week. It has its own header (Company, the company name, and who is signed in) and a sidebar with its pages (Overview, Teams, People, Pull requests, Setup), and nothing from the employee side (writing, signing, 0G) appears here.
 
 ## Policy
 
 - A company is a GitHub org and a team is a GitHub team.
 - Everyone shares a signed week: their list of what they got done (category, title, cost), the pull requests behind it, and the totals (spend, spend per AI tool and per category, things done, merged PRs).
-- Prompts, the AI's answers, session titles and file names are never collected. People can keep single items private; they still count in the signed totals.
+- Prompts, the AI's answers, session titles and file names are never collected. Employees cannot leave items out or edit them: the company gets the whole signed week, as the private AI wrote it.
 
 ## Data
 
@@ -29,7 +29,7 @@ Every receipt is re-verified; only verified ones count, and only signed fields a
 
 ## People (`/company/people`)
 
-Everyone's week: one collapsible row per person (name or GitHub login, team, things done, spend, merged PRs, their AI sentence) that opens to their signed list, their PRs, and whether the signature checked out. People who did not send are listed as such (when their names are known, as in the demo). `?who=<signing address>` opens that person's row; the employee's "See it as your company sees it" link uses it.
+Everyone's week: one collapsible row per person (name or GitHub login, team, things done, spend, merged PRs, their AI sentence) that opens to their signed list, their PRs, and whether the signature checked out. People who did not send are listed as such (when their names are known, as in the demo). `?who=<signing address>` opens that person's row; the employee's "See it as your company sees it" link uses it. Each open row ends with a Check it line: the record on the Arkiv explorer, the encrypted copy on Swarm (`/proof/swarm/<ref>`, checked against the SHA-256 sealed in the record), the 0G provider's TEE check, and what anyone sees (`/r/<key>`).
 
 ## Teams (`/company/team?team=<id>`)
 
@@ -45,13 +45,13 @@ For whoever runs Receipts for the company. Read-only; everything is set in `web/
 
 1. The company on GitHub (org and teams).
 2. Sign in with GitHub for leads (OAuth App and its callback for this address).
-3. The wallet that pays for records (`ARKIV_PRIVATE_KEY`) and its tGLM balance.
+3. The wallet that pays for records (`ARKIV_PRIVATE_KEY`), its tGLM balance, and every record it wrote, on the Arkiv explorer.
 4. The company key that opens the lists (`COMPANY_PRIVATE_KEY`, default the wallet key) and its public key. When they are the same key, the page warns: set a separate company key before giving employees a wallet for fees, and give them only `COMPANY_PUBLIC_KEY`.
 5. Swarm, where the encrypted lists live.
 6. Invite your people: what each employee runs, and the only lines their `.env.local` needs (`ARKIV_PRIVATE_KEY` for fees, `COMPANY_PUBLIC_KEY`, the `SWARM_*` lines). They pay for the private AI themselves with Sign in with 0G.
 
 ## Not built yet
 
-- Proving that a signing key belongs to a GitHub login (today the login inside the signed receipt is shown as claimed, next to the signing address). A one-time "link my key" step could post a signed note to the employee's GitHub that the company page checks.
+- Proving that a signing key belongs to a GitHub login (today the login inside the signed receipt is shown as claimed, next to the signing address). We built a public-gist version and took it out the same day (decisions 47 and 49): one more setup step for a check no prize asks for.
 - Automatic weekly sending (today: a button, or the CLI `share`).
 - Restricting the company page to managers (today any member of the org can open the lists; GitHub can tell us who is an org owner or team maintainer).

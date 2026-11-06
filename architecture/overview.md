@@ -1,16 +1,16 @@
 # Architecture overview
 
-Receipts answers one question for a company: **what did everyone's AI spend get done?** It runs on each person's laptop, reads the local logs of their AI tools (Claude Code and Codex today), links sessions to GitHub, and has a private AI on 0G (paid from the person's own 0G credits) write the week as a short list (Built, Fixed, Figured out, Researched, Wrote, Planned, Wasted). The person reviews it, signs it and sends it to their company, which sees everyone's signed lists and totals but never prompts. As a side product, anyone can post their week as a card or see their AI Wrapped.
+Receipts answers one question for a company: **what did everyone's AI spend get done?** It runs on each person's laptop, reads the local logs of their AI tools (Claude Code and Codex today), links sessions to GitHub, and has a private AI on 0G (paid from the person's own 0G credits) write the week as a short list (Built, Fixed, Figured out, Researched, Wrote, Planned, Wasted). The person signs it and sends the whole week to their company (nothing can be picked out or edited), which sees everyone's signed lists and totals but never prompts. As a side product, anyone can see their AI Wrapped and share it.
 
 ## Who it is for
 
 One main product with two sides, joined by the signed receipt, and one side product:
 
-- **The employee** runs Receipts on their laptop (My week, `/me`). Set up once (GitHub, join the company, Sign in with 0G, read logs), then every week: write (the private AI on 0G, paid from their own 0G credits), review what the company will see, sign, send.
+- **The employee** runs Receipts on their laptop (My week, `/me`). Set up once (GitHub, join the company, Sign in with 0G, read logs), then every week: write (the private AI on 0G, paid from their own 0G credits), sign, send.
 - **The company** (leads and managers) signs in with GitHub and sees everyone's signed week, by team and person, with the pull requests behind it (`/company`). Whoever runs it sets up a wallet for fees, a company key and Swarm once (Company, Setup).
-- **For fun**, for anyone: AI Wrapped, a card of your week for socials, and the wall (`/wrapped`, `/card`, `/wall`). Nothing there is signed or sent to a company.
+- **For fun**, for anyone: one page, My AI Wrapped (`/wrapped`), then share it to socials. Nothing there is signed, stored or sent to a company.
 
-Anyone with a link can check a shared receipt (`/r/<key>`, `/verify`); the demo company has a role picker (`/demo`). Details: [web-app.md](web-app.md).
+Anyone with a link can check a shared receipt (`/r/<key>`, `/verify`); the demo company has a role picker (`/demo`). Wherever the app says something happened on 0G, Arkiv or Swarm, it links to where that can be checked outside the app (the Arkiv explorer, `/proof/swarm/<ref>`, `/proof/0g/<provider>`, 0G ChainScan, pc.0g.ai). Details: [web-app.md](web-app.md).
 
 Keep these files in sync with the code. When a module changes shape, update its file here in the same commit.
 
@@ -33,10 +33,12 @@ Keep these files in sync with the code. When a module changes shape, update its 
           |
           v
    [4 Week story + scoring] --> what you got, spend by category and tool
-          |                                   |
-          v                                   v
-   [5 Share card] (PNG drawn locally)   [6 Receipt v2: EIP-712, Merkle roots over items, PRs, AI calls]
-                                              |  signed with a key made on the laptop
+          |
+          v
+   [6 Receipt v3: EIP-712, Merkle roots over items, PRs, AI calls]
+          |  the whole week, signed with a key made on the laptop
+          |  (nothing picked out or edited)
+          +-----------------------------------+
                                               v
                                    [7 Arkiv] read-only record, owned by the signer
                                               |  signed totals in public; the full week
@@ -57,13 +59,13 @@ Keep these files in sync with the code. When a module changes shape, update its 
 | 2 | GitHub outcomes and matching | `github.ts`, `outcomes.ts`, `match.ts` | [github-outcomes-and-matching.md](github-outcomes-and-matching.md) |
 | 3 | Rules and the private AI | `heuristics.ts`, `judge-core.ts`, `judge.ts`, `week.ts`, `review.ts` | [judge.md](judge.md) |
 | 4 | Week story and scoring | `story.ts`, `score.ts`, `aggregate.ts` | [scoring.md](scoring.md) |
-| 5 | Week card (side product) | `card.ts`, `app/api/card`, `app/(personal)/card` | [web-app.md](web-app.md) |
 | 6 | Receipts and signing | `receipt.ts`, `identity.ts` | [receipts-and-signing.md](receipts-and-signing.md) |
 | 7 | Arkiv sharing | `arkiv.ts` | [arkiv-sharing.md](arkiv-sharing.md) |
-| 7a | Swarm storage: sealed weeks and public cards | `swarm.ts`, `seal.ts`, `cards.ts`, `app/(personal)/wall` | [../arkiv/swarm.md](../arkiv/swarm.md) |
+| 7a | Swarm storage: sealed weeks | `swarm.ts`, `seal.ts`, `app/(public)/proof/swarm` | [../arkiv/swarm.md](../arkiv/swarm.md) |
 | 7b | The company side | `app/company`, `lib/server/org.ts`, `lib/server/viewer.ts` | [org-view.md](org-view.md) |
-| 7c | Who you are, who pays, who signs (GitHub, Sign in with 0G, the laptop key) | `lib/server/session.ts`, `app/api/auth`, `app/api/join`, `components/zero-g.tsx`, `lib/zerog-tasks.ts` | [sign-in.md](sign-in.md) |
-| 7d | The employee side (My week): set up, write, review, sign, send | `app/me`, `components/send-flow.tsx`, `lib/server/employee.ts`, `lib/receipts/flow.ts` | [web-app.md](web-app.md) |
+| 7c | Who you are, who pays, who signs (GitHub, Sign in with 0G, the laptop key) | `lib/server/session.ts`, `app/api/auth`, `app/api/join`, `components/zero-g.tsx`, `lib/zerog-balance.ts`, `lib/zerog-tasks.ts` | [sign-in.md](sign-in.md) |
+| 7d | The employee side (My week): set up, write, sign, send | `app/me`, `components/send-flow.tsx`, `lib/server/employee.ts`, `lib/receipts/flow.ts` | [web-app.md](web-app.md) |
+| 7e | Check it yourself: links to the Arkiv explorer, Swarm and 0G, and the live proof pages | `lib/proof-urls.ts`, `components/proof-links.tsx`, `app/(public)/proof`, `lib/server/zerog-providers.ts` | [web-app.md](web-app.md) |
 | 8 | Web app, API and CLI | `web/src/app`, `web/src/lib/server`, `web/scripts` | [web-app.md](web-app.md) |
 | 9 | CRE job and contracts (optional) | `cre/`, `contracts/` | [cre-and-contracts.md](cre-and-contracts.md) |
 | 10 | AI Wrapped (fun segments, persona, chat exports) | `chat-stats.ts`, `wrapped.ts`, `chat-import.ts`, `app/(personal)/wrapped` | [wrapped.md](wrapped.md) |
