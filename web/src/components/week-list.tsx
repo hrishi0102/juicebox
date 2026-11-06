@@ -22,10 +22,13 @@ export function WeekList({ items, showCost = true, linkSessions = true }: { item
     <ol className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
       {items.map((i) => (
         <li key={i.id} className={`flex items-start gap-3 px-4 py-3.5 sm:gap-4 ${i.category === "Wasted" ? "bg-muted/40" : ""}`}>
-          <div className="w-[104px] shrink-0 pt-0.5">
+          <div className="hidden w-[104px] shrink-0 pt-0.5 sm:block">
             <CategoryBadge category={i.category} />
           </div>
           <div className="min-w-0 flex-1">
+            <div className="mb-1.5 sm:hidden">
+              <CategoryBadge category={i.category} />
+            </div>
             <div className="text-[16px] font-medium leading-snug text-balance">
               {i.title}
               {i.inProgress && <span className="ml-2 align-middle text-xs font-normal text-muted-foreground">in progress</span>}
