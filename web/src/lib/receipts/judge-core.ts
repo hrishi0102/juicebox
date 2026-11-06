@@ -173,6 +173,11 @@ export function parseWeekAnswer(content: string): { items: WeekAnswerItem[]; sum
   return { items, summary: cleanTitle(a.summary, 160) };
 }
 
+export const ZG_ROUTER = "https://router-api.0g.ai/v1";
+// 0G's own model in its "sia" build runs inside a TEE and answers in about 2 seconds with thinking
+// off. The others are also served by TEE providers in private mode, used only if it is down.
+export const ZG_MODELS = ["0gm-1.0-35b-a3b-sia", "glm-5.3", "0gm-1.0-35b-a3b"];
+
 /** 0G's own models think before answering unless told not to; the answer is the same, 10x faster. */
 export function thinkingOffFor(model: string) {
   return /^0gm-/i.test(model);
@@ -215,7 +220,8 @@ export function readChatReply(json: Record<string, unknown>, header: (name: stri
     content: j.choices?.[0]?.message?.content ?? "",
     model: j.model ?? model,
     requestId: trace.request_id ?? header("x-request-id") ?? j.id,
-    chatId: header("ZG-Res-Key") ?? j.id,
+    // The browser may not see the ZG-Res-Key header; the response id carries the same value.
+    chatId: header("ZG-Res-Key") ?? j.id?.replace(/^chatcmpl-/, ""),
     provider: trace.provider,
     sealed: zeroG ? header("X-0G-E2EE") === "sealed" : undefined,
     teeVerified: typeof trace.tee_verified === "boolean" ? trace.tee_verified : undefined,

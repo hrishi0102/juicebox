@@ -179,6 +179,7 @@ export type JudgeInfo = {
   requestHash?: string; // keccak256 of exactly what was sent (proves what was judged, without revealing it)
   responseHash?: string;
   costUsd?: number; // what the AI call cost, as reported by 0G
+  payer?: string; // "app key", or the 0G wallet of the person who signed in with 0G and paid
   at: string;
 };
 
@@ -231,6 +232,7 @@ export type WeekStory = {
   model?: string;
   requestIds: string[];
   verified?: boolean;
+  payer?: string; // "app key" or the 0G wallet that paid
   sessionsHash: string; // which sessions it was written from, to spot new ones
   createdAt: string;
 };
@@ -256,7 +258,7 @@ export type PeriodSummary = {
   categorySpend: Record<Category, number>; // spend per category
   oneLiner: string; // the AI's sentence about the week (or the count line when there is no AI)
   countLine: string; // "Built 3 things, fixed 2 bugs and figured out 4 problems."
-  story: { engine: WeekStory["engine"]; model?: string; requestIds: string[]; verified?: boolean; stale: boolean; newSessions: number; createdAt?: string };
+  story: { engine: WeekStory["engine"]; model?: string; requestIds: string[]; verified?: boolean; stale: boolean; newSessions: number; createdAt?: string; payer?: string };
   buckets: BucketStat[];
   tasks: Task[];
   tips: string[];

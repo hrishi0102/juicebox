@@ -5,6 +5,7 @@ import { UseDemoButton } from "@/components/source-switch";
 import { ReceiptActions } from "@/components/receipt-actions";
 import { ReviewButton, ScanButton } from "@/components/pipeline-controls";
 import { WriteWeekButton } from "@/components/write-week-button";
+import { ZeroGPay } from "@/components/zero-g-pay";
 import { WeekList } from "@/components/week-list";
 import { CategoryBar, CategoryLegend } from "@/components/category-badge";
 import { Difficulty } from "@/components/label-badge";
@@ -83,10 +84,14 @@ export default async function ThisWeek({ searchParams }: { searchParams: Promise
             Share it
           </Link>
         </div>
+        <div className="mt-3">
+          <ZeroGPay week={wv.id} />
+        </div>
         <p className="mt-3 text-sm text-muted-foreground">
           {aiStory ? (
             <>
-              Written privately by {s.story.model} on 0G{s.story.verified ? ", TEE verified" : ""}.{" "}
+              Written privately by {s.story.model} on 0G{s.story.verified ? ", TEE verified" : ""}
+              {s.story.payer && s.story.payer !== "app key" ? `, paid from 0G account ${s.story.payer.slice(0, 6)}…${s.story.payer.slice(-4)}` : ""}.{" "}
               {s.story.stale ? `${plural(s.story.newSessions, "new session")} since then, shown below with simple rules.` : ""}
             </>
           ) : aiReady ? (

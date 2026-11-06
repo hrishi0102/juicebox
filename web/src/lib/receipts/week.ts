@@ -8,13 +8,15 @@
 // The story is saved to ~/.receipts/weeks/<week>.json. Demo stories go to ~/.receipts/demo-weeks/,
 // with a committed copy in fixtures/demo/weeks/ so the hosted demo has one too.
 
-import { chat, judgeConfigFromEnv, judgeInfoFor, judgeSessions, needsAi, type JudgeConfig } from "./judge";
-import { parseWeekAnswer, weekMessage, WEEK_SYSTEM } from "./judge-core";
+import { keccak256, stringToHex, type Hex } from "viem";
+import { chat, judgeConfigFromEnv, judgeInfoFor, judgementFromAnswer, judgeSessions, needsAi, selfVerifyTee, sessionPrompt, type JudgeConfig } from "./judge";
+import { parseWeekAnswer, weekMessage, SESSION_SYSTEM, WEEK_SYSTEM, type ChatReply } from "./judge-core";
+import { judgeAllHeuristic, loopScore } from "./heuristics";
 import { loadDataset, saveDataset, type Dataset } from "./pipeline";
 import { buildTasks, weekOf } from "./score";
 import { countLine, itemsFromAnswer, ruleStory, sessionLines, sessionsHash, type StoryInput } from "./story";
 import { readJson, writeJson, type Source } from "./store";
-import type { Session, WeekStory } from "./types";
+import type { JudgeInfo, Session, WeekStory } from "./types";
 
 export type WeekProgress = (stage: "sessions" | "week" | "done", detail: string) => void;
 
@@ -95,6 +97,7 @@ export async function writeWeekStory(source: Source, week: string, opts: { cfg?:
         model: info.model,
         requestIds: [info.requestId, ...sessionCalls.map((j) => j.judge.requestId)].filter((x): x is string => !!x),
         verified: !!info.verified && sessionCalls.every((j) => j.judge.verified),
+        payer: "app key",
         sessionsHash: sessionsHash(sessions),
         createdAt: new Date().toISOString(),
       };
@@ -106,4 +109,110 @@ export async function writeWeekStory(source: Source, week: string, opts: { cfg?:
   writeJson("local", storyPath(source, week), story);
   progress("done", `${story.items.length} items`);
   return { story, judged, failed, error };
+}
+
+// ---- Paying with your own 0G credits ("Sign in with 0G") ----
+// The browser makes the AI calls with the person's 0G session, so the cost lands on their own 0G
+// account. This server still builds every message and keeps the results, in three steps.
+
+export type PlanItem = { sessionId: string; user: string; hash: Hex };
+export type BrowserAnswer = { sessionId?: string; content: string; hash: Hex; reply: ChatReply };
+
+function mustLoad(source: Source) {
+  const d = loadDataset(source);
+  if (!d) throw new Error("No data yet. Read your logs first.");
+  return d;
+}
+
+/** Step 1: the private message for each session that still needs the AI (local logs only). */
+export async function browserPlan(source: Source, week: string): Promise<{ system: string; sessions: PlanItem[]; next?: ReturnType<typeof weekPlan> }> {
+  const d = mustLoad(source);
+  const sessions = sessionsInWeek(d, week);
+  if (source !== "local") return { system: SESSION_SYSTEM, sessions: [], next: weekPlan(d, week) };
+  const base = new Map(judgeAllHeuristic(d.sessions, d.matches, d.changes).map((j) => [j.sessionId, j]));
+  const judgeBy = new Map(d.judgements.map((j) => [j.sessionId, j]));
+  const out: PlanItem[] = [];
+  for (const s of sessions.filter((x) => needsAi(judgeBy.get(x.id)))) {
+    const p = await sessionPrompt(s, base.get(s.id)!, d.matches, d.changes, d.meta.logRoot);
+    out.push({ sessionId: s.id, user: p.user, hash: keccak256(stringToHex(p.sent)) });
+  }
+  return { system: SESSION_SYSTEM, sessions: out, next: out.length ? undefined : weekPlan(d, week) };
+}
+
+function weekPlan(d: Dataset, week: string) {
+  const input: StoryInput = { sessions: sessionsInWeek(d, week), judgements: d.judgements, tasks: d.tasks };
+  const user = weekMessage(week, sessionLines(input));
+  return { system: WEEK_SYSTEM, user, hash: keccak256(stringToHex(WEEK_SYSTEM + "\n" + user)) };
+}
+
+async function browserInfo(a: BrowserAnswer, payer: string): Promise<JudgeInfo> {
+  const r = a.reply;
+  const selfVerified = r.provider && r.chatId && process.env.ZG_SELF_VERIFY !== "0" ? await selfVerifyTee(r.provider, r.chatId) : undefined;
+  return {
+    engine: "0g-tee",
+    model: r.model,
+    provider: r.provider,
+    requestId: r.requestId,
+    chatId: r.chatId,
+    trustMode: "private",
+    sealed: r.sealed,
+    teeVerified: r.teeVerified,
+    selfVerified,
+    verified: !!(r.teeVerified || selfVerified),
+    requestHash: a.hash,
+    responseHash: keccak256(stringToHex(a.content)),
+    costUsd: r.costUsd,
+    payer,
+    at: new Date().toISOString(),
+  };
+}
+
+/** Step 2: the AI's answers (from the browser) become judgements. Returns the weekly message. */
+export async function browserSessions(source: Source, week: string, answers: BrowserAnswer[], payer: string) {
+  const d = mustLoad(source);
+  const base = new Map(judgeAllHeuristic(d.sessions, d.matches, d.changes).map((j) => [j.sessionId, j]));
+  const judgeBy = new Map(d.judgements.map((j) => [j.sessionId, j]));
+  let judged = 0;
+  let failed = 0;
+  for (const a of answers) {
+    const s = d.sessions.find((x) => x.id === a.sessionId);
+    if (!s) continue;
+    try {
+      judgeBy.set(s.id, judgementFromAnswer(s, base.get(s.id)!, loopScore(s), a.content, await browserInfo(a, payer)));
+      judged++;
+    } catch {
+      failed++;
+    }
+  }
+  d.judgements = [...judgeBy.values()];
+  d.tasks = buildTasks(d.sessions, d.matches, d.changes, d.judgements);
+  saveDataset(d);
+  return { judged, failed, next: weekPlan(d, week) };
+}
+
+/** Step 3: the weekly answer (from the browser) becomes the saved list. */
+export async function browserWeek(source: Source, week: string, answer: BrowserAnswer, payer: string): Promise<WeekStory> {
+  const d = mustLoad(source);
+  const sessions = sessionsInWeek(d, week);
+  const input: StoryInput = { sessions, judgements: d.judgements, tasks: d.tasks };
+  const parsed = parseWeekAnswer(answer.content);
+  const items = itemsFromAnswer(parsed.items, sessionLines(input), input);
+  const info = await browserInfo(answer, payer);
+  const ids = new Set(sessions.map((s) => s.id));
+  const sessionCalls = d.judgements.filter((j) => ids.has(j.sessionId) && j.judge.engine !== "heuristic");
+  const story: WeekStory = {
+    week,
+    source,
+    items,
+    oneLiner: parsed.summary || countLine(items),
+    engine: "0g-tee",
+    model: info.model,
+    requestIds: [info.requestId, ...sessionCalls.map((j) => j.judge.requestId)].filter((x): x is string => !!x),
+    verified: !!info.verified && sessionCalls.every((j) => j.judge.verified),
+    payer,
+    sessionsHash: sessionsHash(sessions),
+    createdAt: new Date().toISOString(),
+  };
+  writeJson("local", storyPath(source, week), story);
+  return story;
 }

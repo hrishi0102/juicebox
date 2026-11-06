@@ -160,6 +160,7 @@ export function summarize(opts: {
       stale,
       newSessions: applied.newSessions,
       createdAt: opts.story?.createdAt,
+      payer: opts.story?.payer,
     },
     buckets,
     tasks,

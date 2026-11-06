@@ -13,7 +13,8 @@
 import { keccak256, stringToHex } from "viem";
 import { buildPrivateDigest, DEFAULT_LOG_ROOT } from "./parse";
 import { judgeAllHeuristic, labelFor, linkedChanges, loopScore } from "./heuristics";
-import { chatBody, parseSessionVerdict, readChatReply, sessionMessage, SESSION_SYSTEM, type ChatReply } from "./judge-core";
+import { chatBody, parseSessionVerdict, readChatReply, sessionMessage, SESSION_SYSTEM, ZG_MODELS, ZG_ROUTER, type ChatReply } from "./judge-core";
+export { SESSION_SYSTEM, WEEK_SYSTEM } from "./judge-core";
 import { pool } from "./match";
 import type { Change, Judgement, JudgeInfo, Session, SessionMatch } from "./types";
 
@@ -27,11 +28,9 @@ export type JudgeConfig = {
   selfVerify?: boolean; // 0G only: re-check the TEE signature ourselves with the 0G SDK
 };
 
-export const ZG_ROUTER_URL = process.env.ZG_ROUTER_URL || "https://router-api.0g.ai/v1";
-// 0G's own model in its "sia" build: runs inside a TEE, answers in about 2 seconds with thinking off.
-export const ZG_DEFAULT_MODEL = "0gm-1.0-35b-a3b-sia";
-// Also served by TEE providers in private mode. Used only if the main model's provider is down.
-export const ZG_FALLBACK_MODELS = ["glm-5.3", "0gm-1.0-35b-a3b"];
+export const ZG_ROUTER_URL = process.env.ZG_ROUTER_URL || ZG_ROUTER;
+export const ZG_DEFAULT_MODEL = ZG_MODELS[0];
+export const ZG_FALLBACK_MODELS = ZG_MODELS.slice(1);
 
 export function judgeConfigFromEnv(): JudgeConfig {
   const engine = (process.env.JUDGE_ENGINE as JudgeConfig["engine"]) || (process.env.ZG_API_KEY ? "0g" : "heuristic");
@@ -143,9 +142,10 @@ export async function selfVerifyTee(provider: string, chatId: string): Promise<b
 }
 
 /** The record we keep about one AI call: enough to look it up and prove what was sent, nothing private. */
-export async function judgeInfoFor(cfg: JudgeConfig, r: ChatResult, sent: string): Promise<JudgeInfo> {
+export async function judgeInfoFor(cfg: JudgeConfig, r: ChatResult, sent: string, payer = "app key"): Promise<JudgeInfo> {
   const selfVerified = cfg.engine === "0g" && cfg.selfVerify && r.provider && r.chatId ? await selfVerifyTee(r.provider, r.chatId) : undefined;
   return {
+    payer: cfg.engine === "0g" ? payer : undefined,
     engine: cfg.engine === "0g" ? "0g-tee" : "openai-compatible",
     model: r.model,
     provider: r.provider,
@@ -168,6 +168,32 @@ export function needsAi(j: Judgement | undefined) {
   return !j || j.judge.engine === "heuristic" || !j.category || !j.title;
 }
 
+/** The private message for one session, plus the rule-based verdict it starts from. */
+export async function sessionPrompt(s: Session, base: Judgement, matches: SessionMatch[], changes: Change[], logRoot = DEFAULT_LOG_ROOT) {
+  const byKey = new Map(changes.map((c) => [c.key, c]));
+  const digest = await buildPrivateDigest(s, logRoot, outcomeText(linkedChanges(s, matches, byKey)));
+  const loops = loopScore(s);
+  const user = sessionMessage(digest, `${base.category}: "${base.title}", difficulty ${base.difficulty}, loop score ${loops}`);
+  return { user, loops, sent: SESSION_SYSTEM + "\n" + user };
+}
+
+/** Turn the AI's answer for one session into a judgement. */
+export function judgementFromAnswer(s: Session, base: Judgement, loops: number, content: string, judge: JudgeInfo): Judgement {
+  const v = parseSessionVerdict(content);
+  return {
+    sessionId: s.id,
+    category: v.category,
+    title: v.title,
+    inProgress: v.inProgress,
+    label: labelFor(v.category, v.inProgress, base.label, loops),
+    difficulty: v.difficulty,
+    kind: v.kind,
+    confidence: 0.8,
+    reason: [v.reason, v.tip].filter(Boolean).join(" Tip: "),
+    judge,
+  };
+}
+
 /**
  * Judge sessions. Always computes the rule-based verdict first; when an AI engine is configured,
  * each session (or each one in `only`) goes to it, and its answer replaces the rules if it parses.
@@ -181,32 +207,15 @@ export async function judgeSessions(
 ): Promise<Judgement[]> {
   const base = judgeAllHeuristic(sessions, matches, changes);
   if (cfg.engine === "heuristic") return base;
-  const byKey = new Map(changes.map((c) => [c.key, c]));
   const baseBy = new Map(base.map((j) => [j.sessionId, j]));
   let done = 0;
   const targets = sessions.filter((s) => !opts.only || opts.only.has(s.id));
   const judged = await pool(targets, opts.concurrency ?? 4, async (s) => {
     const h = baseBy.get(s.id)!;
-    const linked = linkedChanges(s, matches, byKey);
     try {
-      const digest = await buildPrivateDigest(s, opts.logRoot ?? DEFAULT_LOG_ROOT, outcomeText(linked));
-      const loops = loopScore(s);
-      const hint = `${h.category}: "${h.title}", difficulty ${h.difficulty}, loop score ${loops}`;
-      const userMsg = sessionMessage(digest, hint);
-      const r = await chat(cfg, SESSION_SYSTEM, userMsg);
-      const v = parseSessionVerdict(r.content);
-      const j: Judgement = {
-        sessionId: s.id,
-        category: v.category,
-        title: v.title,
-        inProgress: v.inProgress,
-        label: labelFor(v.category, v.inProgress, h.label, loops),
-        difficulty: v.difficulty,
-        kind: v.kind,
-        confidence: 0.8,
-        reason: [v.reason, v.tip].filter(Boolean).join(" Tip: "),
-        judge: await judgeInfoFor(cfg, r, SESSION_SYSTEM + "\n" + userMsg),
-      };
+      const p = await sessionPrompt(s, h, matches, changes, opts.logRoot);
+      const r = await chat(cfg, SESSION_SYSTEM, p.user);
+      const j = judgementFromAnswer(s, h, p.loops, r.content, await judgeInfoFor(cfg, r, p.sent));
       done++;
       opts.onProgress?.(done, targets.length, j);
       return j;
