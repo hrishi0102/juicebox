@@ -1,7 +1,7 @@
 // Server-side data access for pages and API routes.
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { loadDataset, type Dataset } from "@/lib/receipts/pipeline";
-import { hasData, readJson, type Source } from "@/lib/receipts/store";
+import { readJson, type Source } from "@/lib/receipts/store";
 import { summarize, weekOf } from "@/lib/receipts/score";
 import { loadWeekStory } from "@/lib/receipts/week";
 import type { OrgData, OrgTeam } from "@/lib/receipts/demo";
@@ -14,11 +14,31 @@ import { getSession } from "./session";
 
 export const SOURCE_COOKIE = "receipts-source";
 
+/**
+ * Your own data, unless you picked the demo company on /demo. There is no silent fallback to the
+ * demo: without logs, the employee pages ask you to read them. A hosted copy has no logs to read,
+ * so it opens on the demo until someone leaves it.
+ */
 export async function currentSource(): Promise<Source> {
   const c = (await cookies()).get(SOURCE_COOKIE)?.value;
-  if (c === "local" && hasData("local")) return "local";
   if (c === "demo") return "demo";
-  return hasData("local") ? "local" : "demo";
+  if (c === "local") return "local";
+  return process.env.VERCEL ? "demo" : "local";
+}
+
+/** True when the app is opened on this machine (localhost), not on a hosted copy. */
+export async function onLaptop() {
+  if (process.env.VERCEL) return false;
+  const host = ((await headers()).get("host") ?? "").replace(/:\d+$/, "").toLowerCase();
+  return host === "localhost" || host === "127.0.0.1" || host === "[::1]";
+}
+
+/** 0G's sign-in (its Privy app) only allows this exact address. */
+export const ZERO_G_ORIGIN = "http://localhost:3000";
+
+/** True when this page was opened at the one address where Sign in with 0G works. */
+export async function zeroGAllowed() {
+  return !process.env.VERCEL && (await headers()).get("host") === "localhost:3000";
 }
 
 export function getDataset(source: Source): Dataset | undefined {

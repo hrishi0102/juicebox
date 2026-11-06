@@ -7,8 +7,9 @@ import { ARKIV_EXPLORER, fetchReceiptByKey } from "@/lib/receipts/arkiv";
 import { summaryFromReceipt, verifyReceipt } from "@/lib/receipts/receipt";
 import { shortAddr } from "@/lib/format";
 
-// A shared receipt, read straight from Arkiv by its entity key. This is the link an engineer
-// hands to a manager or a reviewer. Nothing here comes from our own storage.
+// A shared receipt, read straight from Arkiv by its entity key: what anyone with the link sees.
+// This is the link an engineer hands to a manager or a reviewer. Nothing here comes from our own
+// storage, and the list stays sealed (only the company page opens it, for members of the org).
 export default async function SharedReceipt({ params }: { params: Promise<{ key: string }> }) {
   const { key } = await params;
   let r: Awaited<ReturnType<typeof fetchReceiptByKey>>;
@@ -64,7 +65,8 @@ export default async function SharedReceipt({ params }: { params: Promise<{ key:
             <h2 className="font-semibold">The list is private</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               This week&apos;s list, pull requests and AI records are stored on Swarm, encrypted on the author&apos;s laptop. Only{" "}
-              {r.share?.org ? `the ${r.share.org} company key` : "the company key"} can open them. Everyone can check the signed totals above.
+              {r.share?.org ? `the ${r.share.org} company key` : "the company key"} can open them, for members of {r.share?.org ?? "the company"} on its
+              company page. Everyone can check the signed totals above.
             </p>
             <p className="mt-2 break-all text-xs text-muted-foreground">
               Swarm reference{" "}
