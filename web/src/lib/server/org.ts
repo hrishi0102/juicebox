@@ -9,7 +9,15 @@ import { companyPrivateKey } from "@/lib/receipts/arkiv";
 import { getDemoOrg, shareTarget } from "./data";
 import { isMember, viewer, type Viewer } from "./viewer";
 
-export type OrgRow = SignedReceipt & { from: "arkiv" | "demo file"; arkivKey?: string; verified: boolean; team: string; swarm?: { ref: string; opened: boolean; error?: string } };
+export type OrgRow = SignedReceipt & {
+  from: "arkiv" | "demo file";
+  arkivKey?: string;
+  /** The Arkiv block the entity was created at: the chain's own answer to "which was sent last". */
+  arkivCreatedAt?: number;
+  verified: boolean;
+  team: string;
+  swarm?: { ref: string; opened: boolean; error?: string };
+};
 
 export type LoadedOrg = {
   id: string;
@@ -67,18 +75,22 @@ export async function loadOrg(source: Source): Promise<LoadedOrg> {
     arkivError = e instanceof Error ? e.message : String(e);
   }
 
-  // One receipt per person per week. The same week can exist several times (shared again after a
-  // rescan, shared sealed, or in an older receipt version); keep the best: verified, newest version,
-  // read from Arkiv, opened from Swarm.
+  // One receipt per person per week. Receipts are read-only, so the same week can exist several
+  // times (sent again after new sessions or with a line kept private, sent sealed, or in an older
+  // receipt version); keep the best: verified, newest version, read from Arkiv, opened from Swarm,
+  // and among equals the one sent last.
   const rows = new Map<string, OrgRow>();
   const rank = (r: OrgRow) => (r.verified ? 8 : 0) + (r.kind === "receipts.v3" ? 4 : 0) + (r.from === "arkiv" ? 2 : 0) + (r.swarm?.opened ? 1 : 0);
+  // "Sent last": the Arkiv block it was created at, else the time the app wrote into the share.
+  const later = (a: OrgRow, b: OrgRow) =>
+    a.arkivCreatedAt !== undefined && b.arkivCreatedAt !== undefined ? a.arkivCreatedAt > b.arkivCreatedAt : (Date.parse(a.share?.publishedAt ?? "") || 0) > (Date.parse(b.share?.publishedAt ?? "") || 0);
   const keep = (row: OrgRow) => {
     const k = `${row.message.owner.toLowerCase()}|${row.message.period}`;
     const prev = rows.get(k);
-    if (!prev || rank(row) > rank(prev)) rows.set(k, row);
+    if (!prev || rank(row) > rank(prev) || (rank(row) === rank(prev) && later(row, prev))) rows.set(k, row);
   };
   for (const r of demo?.receipts ?? []) keep({ ...r, from: "demo file", verified: (await verifyReceipt(r)).ok, team: r.share?.team ?? cfg.teams[0]?.id ?? "" });
-  for (const r of live) keep({ ...r, from: "arkiv", arkivKey: r.arkiv.key, verified: r.verified, team: r.share?.team ?? "", swarm: r.swarm });
+  for (const r of live) keep({ ...r, from: "arkiv", arkivKey: r.arkiv.key, arkivCreatedAt: r.arkiv.createdAt, verified: r.verified, team: r.share?.team ?? "", swarm: r.swarm });
 
   // Teams that show up on Arkiv but are not in the config still get a row.
   const teams = [...cfg.teams];

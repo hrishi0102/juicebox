@@ -11,7 +11,7 @@ type Result = {
   headline?: string;
   period?: string;
   judge?: string;
-  arkiv?: { key: string; owner?: string };
+  arkiv?: { key: string; owner?: string; creator?: string; readonly?: boolean };
   evidence?: number;
   judges?: number;
 };
@@ -82,7 +82,14 @@ export function VerifyForm() {
             </ul>
           )}
           {res.judge && <p className="mt-3 text-sm text-muted-foreground">Judge: {res.judge}</p>}
-          {res.arkiv && <p className="mt-1 break-all text-sm text-muted-foreground">Loaded from Arkiv entity {res.arkiv.key}, written by {res.arkiv.owner}</p>}
+          {res.arkiv && (
+            <p className="mt-1 break-all text-sm text-muted-foreground">
+              Loaded from Arkiv entity {res.arkiv.key}. Owned by {res.arkiv.owner}
+              {res.arkiv.owner && res.signer && res.arkiv.owner.toLowerCase() === res.signer.toLowerCase() ? " (the person who signed it)" : ""}
+              {res.arkiv.creator && res.arkiv.creator.toLowerCase() !== res.arkiv.owner?.toLowerCase() ? `, written by ${res.arkiv.creator} (which only paid the fee)` : ""}
+              {res.arkiv.readonly ? ". Read-only: nobody can change it." : "."}
+            </p>
+          )}
           {res.evidence !== undefined && (
             <p className="mt-1 text-sm text-muted-foreground">
               {res.evidence} evidence items and {res.judges} judge records included.

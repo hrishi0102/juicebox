@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { fetchReceiptByKey } from "@/lib/receipts/arkiv";
+import { fetchReceiptByKey, type ArkivMeta } from "@/lib/receipts/arkiv";
 import { verifyReceipt, type SignedReceipt } from "@/lib/receipts/receipt";
 import { rejectCrossSite } from "@/lib/server/guard";
 
@@ -10,7 +10,7 @@ export async function POST(req: Request) {
   const body = (await req.json()) as { receipt?: SignedReceipt; entityKey?: string };
   try {
     let receipt = body.receipt;
-    let arkiv: { key: string; owner?: string } | undefined;
+    let arkiv: ArkivMeta | undefined;
     if (!receipt && body.entityKey) {
       const r = await fetchReceiptByKey(body.entityKey.trim());
       if (!r) return NextResponse.json({ ok: false, error: "No entity with that key on Arkiv (it may have expired)." }, { status: 404 });

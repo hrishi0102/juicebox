@@ -3,7 +3,7 @@ import { ReceiptPaper } from "@/components/receipt-paper";
 import { PrTable } from "@/components/pr-table";
 import { WeekList } from "@/components/week-list";
 import { swarmConfig } from "@/lib/receipts/swarm";
-import { ARKIV_EXPLORER, fetchReceiptByKey } from "@/lib/receipts/arkiv";
+import { ARKIV_EXPLORER, blockDate, fetchReceiptByKey } from "@/lib/receipts/arkiv";
 import { summaryFromReceipt, verifyReceipt } from "@/lib/receipts/receipt";
 import { shortAddr } from "@/lib/format";
 
@@ -34,6 +34,8 @@ export default async function SharedReceipt({ params }: { params: Promise<{ key:
 
   const v = await verifyReceipt(r);
   const summary = summaryFromReceipt(r);
+  const expires = r.arkiv.expiresAt ? await blockDate(r.arkiv.expiresAt) : undefined;
+  const ownerIsSigner = !!r.arkiv.owner && r.arkiv.owner.toLowerCase() === r.message.owner.toLowerCase();
   const swarmGateway = swarmConfig().gateway;
 
   return (
@@ -98,13 +100,33 @@ export default async function SharedReceipt({ params }: { params: Promise<{ key:
               </li>
             ))}
           </ul>
-          <p className="mt-3 break-all text-sm text-muted-foreground">
-            Read from Arkiv entity{" "}
-            <a className="hover:underline" href={`${ARKIV_EXPLORER}/entity/${key}`} target="_blank" rel="noreferrer">
-              {key}
-            </a>
-            {r.arkiv.owner ? `, owned by ${r.arkiv.owner}${r.arkiv.owner.toLowerCase() === r.message.owner.toLowerCase() ? " (the person who signed it)" : ""}` : ""}.
-          </p>
+        </section>
+        <section>
+          <h2 className="text-lg font-semibold">On Arkiv</h2>
+          <ul className="mt-2 space-y-1 text-sm">
+            <li className="break-all">
+              Entity{" "}
+              <a className="text-primary hover:underline" href={`${ARKIV_EXPLORER}/entity/${key}`} target="_blank" rel="noreferrer">
+                {key}
+              </a>
+            </li>
+            {r.arkiv.readonly !== undefined && <li>{r.arkiv.readonly ? "Read-only: nobody can change it, not even its owner." : "Not read-only: its owner could change it."}</li>}
+            {r.arkiv.owner && (
+              <li className="break-all">
+                Owned by {r.arkiv.owner}
+                {ownerIsSigner ? ", the person who signed it. Only they can delete it or keep it longer." : "."}
+              </li>
+            )}
+            {r.arkiv.creator && r.arkiv.creator.toLowerCase() !== r.arkiv.owner?.toLowerCase() && (
+              <li className="break-all">Written by {r.arkiv.creator}, the company wallet, which only paid the fee.</li>
+            )}
+            {r.arkiv.expiresAt !== undefined && (
+              <li>
+                Expires at block {r.arkiv.expiresAt.toLocaleString("en-US")}
+                {expires ? `, around ${expires.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" })}` : ""}, unless its owner keeps it longer.
+              </li>
+            )}
+          </ul>
         </section>
         {r.evidence.length > 0 && (
           <section>

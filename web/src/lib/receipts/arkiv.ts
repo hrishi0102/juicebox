@@ -36,7 +36,7 @@ export const ReceiptSchema = defineSchema(ARKIV_SCHEMA_NAME, {
   period: str().indexed(), // ISO week, e.g. 2026-W45
   signer: str().indexed(), // lowercased address that signed the receipt (EIP-712)
   author: str().indexed(), // GitHub login inside the signed receipt, or ""
-  level: str().indexed(), // totals | full
+  level: str().indexed(), // totals | full | sealed (signed totals here, the full week encrypted on Swarm)
   spendCents: u64().indexed(),
   done: i32().indexed(), // things done (items that were not wasted)
   merged: i32().indexed(), // merged pull requests
@@ -152,20 +152,43 @@ export function explainArkivError(e: unknown, writer: string): string {
   return `Arkiv write failed: ${(parts.find((p) => p && p !== "undefined") ?? "unknown error").slice(0, 200)}`;
 }
 
+/**
+ * What Arkiv itself says about the entity: who owns it (the signer), who created it (the company
+ * wallet, which only paid the fee), the block it was created at and the block it expires at, and
+ * whether it was created read-only.
+ */
+export type ArkivMeta = { key: string; owner?: string; creator?: string; createdAt?: number; expiresAt?: number; readonly?: boolean };
+
 export type TeamReceipt = SignedReceipt & {
-  arkiv: { key: string; owner?: string; expiresAt?: string };
+  arkiv: ArkivMeta;
   verified: boolean;
   swarm?: { ref: string; opened: boolean; error?: string };
 };
 
-type Row = { $key?: unknown; $owner?: unknown; $expiresAt?: unknown; payload?: unknown; swarm?: unknown; sealed?: unknown };
+type Row = { $key?: unknown; $owner?: unknown; $creator?: unknown; $createdAt?: unknown; $expiresAt?: unknown; $creationFlags?: unknown; payload?: unknown; swarm?: unknown; sealed?: unknown };
 const val = (x: unknown) => (x && typeof x === "object" && "value" in (x as object) ? (x as { value: unknown }).value : x);
+const block = (x: unknown) => (val(x) === undefined || val(x) === null || val(x) === "" ? undefined : Number(val(x)));
+
+/** The system fields every read selects, so pages can show ownership, expiry and read-only. */
+const SYSTEM = { $key: true, $owner: true, $creator: true, $createdAt: true, $expiresAt: true, $creationFlags: true } as const;
+
+function arkivMeta(e: Row): ArkivMeta {
+  const flags = val(e.$creationFlags) as { readonly?: boolean } | undefined;
+  return {
+    key: String(val(e.$key)),
+    owner: val(e.$owner) ? String(val(e.$owner)) : undefined,
+    creator: val(e.$creator) ? String(val(e.$creator)) : undefined,
+    createdAt: block(e.$createdAt),
+    expiresAt: block(e.$expiresAt),
+    readonly: typeof flags?.readonly === "boolean" ? flags.readonly : undefined,
+  };
+}
 
 /** Turn one Arkiv row into a checked receipt; open the Swarm copy when allowed and possible. */
 async function decodeRow(e: Row, open: boolean): Promise<TeamReceipt> {
   const raw = val(e.payload);
   const r = JSON.parse(typeof raw === "string" && raw.startsWith("0x") ? hexToString(raw as Hex) : String(raw)) as SignedReceipt;
-  const arkiv = { key: String(val(e.$key)), owner: String(val(e.$owner) ?? ""), expiresAt: String(val(e.$expiresAt) ?? "") };
+  const arkiv = arkivMeta(e);
   const ref = val(e.swarm) ? String(val(e.swarm)) : undefined;
   const sealedRaw = val(e.sealed);
   const sealed = sealedRaw instanceof Uint8Array ? bytesToHex(sealedRaw) : sealedRaw ? String(sealedRaw).replace(/^0x/, "") : undefined;
@@ -196,7 +219,7 @@ export async function fetchTeamReceipts(team: string, period?: string, open = tr
   const client = arkivPublic();
   const where = period ? and(eq("type", "receipt"), eq("team", team), eq("period", period)) : and(eq("type", "receipt"), eq("team", team));
   const { entities } = await client
-    .select({ $key: true, $owner: true, $expiresAt: true, payload: true, swarm: true, sealed: true })
+    .select({ ...SYSTEM, payload: true, swarm: true, sealed: true })
     .from(ReceiptSchema)
     .where(where)
     .orderBy(desc("spendCents"))
@@ -220,7 +243,7 @@ export async function fetchOrgReceipts(org: string, period?: string, open = true
   const out: TeamReceipt[] = [];
   for (let offset = 0; offset < 1000; offset += 100) {
     const { entities } = await client
-      .select({ $key: true, $owner: true, $expiresAt: true, payload: true, swarm: true, sealed: true })
+      .select({ ...SYSTEM, payload: true, swarm: true, sealed: true })
       .from(ReceiptSchema)
       .where(where)
       .orderBy(desc("spendCents"))
@@ -240,6 +263,16 @@ export async function fetchReceiptByKey(entityKey: string, open = false): Promis
   const e: any = await client.getEntity(entityKey as Hex, ReceiptSchema);
   if (!e) return undefined;
   return decodeRow({ ...e, $key: entityKey }, open);
+}
+
+/** About when a block is (or was) reached, from the current block and Arkiv's 2 second block time. */
+export async function blockDate(target: number): Promise<Date | undefined> {
+  try {
+    const now = Number(await arkivPublic().getBlockNumber());
+    return new Date(Date.now() + (target - now) * 2000);
+  } catch {
+    return undefined;
+  }
 }
 
 /** A query judges can paste (raw Arkiv query language). */
