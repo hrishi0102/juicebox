@@ -12,7 +12,7 @@ Domain `{ name: "Receipts", version: "1" }`, with no `chainId` on purpose: a rec
 
 Sorted-pair keccak tree (same rule as OpenZeppelin `MerkleProof`).
 
-- **Evidence leaves**, one per task: change key, URL, state, reverted, survivalBps, costCents, difficulty. An owner can reveal one task with a proof without showing the rest.
+- **Evidence leaves**, one per task: change key, PR title, URL, state, reverted, survivalBps, costCents, difficulty. An owner can reveal one task with a proof without showing the rest.
 - **Judge leaves**, one per judged session: hash of the session id, label, difficulty, engine, model, provider, 0G request id, hashes of the request and response, verified flag.
 
 ## The JSON file

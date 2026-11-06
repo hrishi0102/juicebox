@@ -49,3 +49,9 @@ The company requires signed weekly totals from everyone (including spend per AI 
 
 ## 16. Per-tool spend inside the signed receipt
 `tools` and `toolSpendCents` are part of the EIP-712 message, not the unsigned summary. Reason: the org's Claude vs Codex split must be as tamper-proof as the totals.
+
+## 17. The PR list is always shared with the company
+Replaces the opt-in part of decision 15. Every shared receipt includes its pull requests (title, link, status, survival, AI cost), and the title is inside the signed evidence. Reason: the company needs to check what work its AI spend paid for; PRs are already visible to it on GitHub, so this adds accountability without exposing prompts.
+
+## 18. Clean first screen, details on demand
+Each page leads with one sentence, one headline and the PR list; secondary analysis sits in collapsible sections with a one-line hint. Reason: a first-time visitor should understand in seconds that this shows "what the AI money bought", without reading tables of metrics first.

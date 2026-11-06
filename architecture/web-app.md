@@ -2,6 +2,14 @@
 
 Next.js 16 (App Router, Turbopack), React 19, shadcn/ui on Base UI, Tailwind 4. Fonts: Schibsted Grotesk for the UI, Fragment Mono only on receipt paper. Everything renders on the server from local files; client components only handle buttons.
 
+## UI rules
+
+- Nav: My week, My sessions, Team, Company. How it works and Check a receipt live in the header and footer.
+- Each page opens with one sentence saying what it shows, then the headline, then the list that matters (PRs). Everything else goes in a `Collapsible` (`components/collapsible.tsx`, native `<details>`) with a one-line hint.
+- PR lists always use `PrTable` (`components/pr-table.tsx`): title, link, status, AI cost, optionally who and team.
+- Sign and share is one step at a time (`components/receipt-actions.tsx`): sign first, then "Share with my team".
+- Phones show the headline before the receipt paper.
+
 ## Data source
 
 A cookie picks **My logs** (`~/.receipts/dataset.json`) or **Demo team** (`web/fixtures/demo`). Without a local dataset the app falls back to the demo. Helpers in `web/src/lib/server/data.ts` (`currentSource`, `weekView`, `periodView`).
@@ -10,7 +18,7 @@ A cookie picks **My logs** (`~/.receipts/dataset.json`) or **Demo team** (`web/f
 
 | Route | What it shows |
 |---|---|
-| `/` | Weekly receipt (thermal paper), headline, what it bought, where it leaked, private review, cost per kept task by difficulty, sign and share buttons, 0G request ids |
+| `/` (My week) | Intro sentence, headline, what it bought (PRs), receipt with sign and share; collapsed: not merged, where money leaked (tips, private review), cost by difficulty, how sessions were judged (0G request ids), label meanings |
 | `/sessions` | All sessions with label, difficulty, linked work, judge, cost; filter by label |
 | `/sessions/[id]` | Cost breakdown, signals, linked changes, judge record, the exact message the private judge would get |
 | `/team?team=<id>` | One team: totals from signed fields, who shared, each shared receipt; team switcher |

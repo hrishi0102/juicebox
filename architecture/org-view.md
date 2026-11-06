@@ -2,13 +2,12 @@
 
 Code: `web/src/app/org/page.tsx`, `web/src/app/team/page.tsx`, `web/src/lib/server/org.ts`
 
-## Policy (the "middle path")
+## Policy
 
-- Everyone in the org shares their signed weekly **totals**: spend, spend per AI tool, sessions, shipped tasks, % still alive, kept work, waste, label counts.
-- Sharing the **PR list** (evidence) is each person's choice.
-- Prompts, session titles, file names and unshared sessions are never collected.
+- Everyone in the org shares a signed weekly receipt: spend, spend per AI tool, sessions, shipped tasks, % still alive, kept work, waste, label counts, **and the list of pull requests** the spend went into (title, link, status, % alive, AI cost each).
+- Prompts, session titles, file names and the AI conversations themselves are never collected. They stay on the laptop.
 
-The company gets real numbers across people and AI tools; the employee keeps their prompts private and owns a signed record nobody can edit.
+The company can check exactly which PRs its AI money paid for; the employee keeps their prompts private and owns a signed record nobody can edit. (Earlier versions made the PR list optional; see decision 17.)
 
 ## Data
 
@@ -19,17 +18,19 @@ The company gets real numbers across people and AI tools; the employee keeps the
 
 Every receipt is re-verified; only verified ones count, and only signed fields are used (`signedNumbers`).
 
-## Org page (`/org`)
+## Company page (`/org`)
+
+Top to bottom, most important first:
 
 - Period: last 4 weeks or one week.
-- Totals: AI spend, shipped tasks, % still alive, waste, kept work per $100.
-- Spend by AI tool (from the signed `tools` and `toolSpendCents` fields).
-- By team: people (and how many share PRs), spend, shipped, alive, waste, kept per $100, tool mix. Teams are compared, people are not ranked.
-- Week by week: spend bar split by tool, with shipped tasks and % alive.
+- One headline ("$X bought N shipped tasks, Y% still alive") and four numbers: AI spend (with tool split), shipped tasks, still alive, waste.
+- **Pull requests it paid for**: the 8 most expensive with title, who, team, status and AI cost; "All N pull requests" opens the full list.
+- Teams table: people, spend, shipped, alive, waste, tool mix; links to each team. Teams are compared, people are not ranked.
+- Collapsed: spend by AI tool, week by week, what the company can and cannot see.
 
 ## Team page (`/team?team=<id>`)
 
-A team lead's view: team totals for a week, each person's headline and share level, their receipt paper, and evidence when shared. People without a receipt that week are listed as such.
+A team lead's view: team and week switchers, the team headline and four numbers, then one collapsible row per person (headline and PR count) that opens to their PR table and receipt. People without a receipt that week are listed as such.
 
 ## Not built yet
 
