@@ -18,4 +18,4 @@ Shared receipts need a home with four properties:
 
 ## The trade-off we accept
 
-Arkiv data is public. That is fine for what we store (signed totals the owner chose to share, or totals plus PR links), and it is why prompts, titles and file names never go there. Encrypting payloads for a private team is a natural next step.
+Arkiv data is public. That is fine for what we store (the signed list, PR titles and links, and totals the owner chose to share), and it is why prompts, session titles and file names never go there. Encrypting payloads for a private team is a natural next step.

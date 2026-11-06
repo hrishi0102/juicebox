@@ -1,25 +1,24 @@
 # Receipts
 
-See what your AI coding spend actually bought.
+**What did you get done this week?**
 
-Companies hand out big AI budgets, then rank people by how many tokens they burn. Those leaderboards get gamed, and tokens are a small part of what a pull request costs anyway. Receipts flips it: for every Claude Code session it shows the cost, what the session turned into on GitHub (merged, reverted, still alive 30 days later), and a label from a private AI judge. Every week you get a receipt you sign and own, like:
+AI tools make it easy to spend a lot and hard to say what came out of it, and token leaderboards reward burning tokens, not getting things done. Receipts reads your Claude Code and Codex sessions on your laptop and answers the question for you:
 
-> **$2,140 bought 14 shipped tasks, 91% still alive.**
+> **Built** the team spend dashboard and the API quickstart. **Fixed** the double charge on retry. **Figured out** how settlement batching works. 7 AI sessions, Claude Code + Codex. **5 things done.**
 
-It is your evidence at review time. Managers only see team totals and the receipts people choose to share. Never prompts.
+A private AI on **0G** writes the list from your sessions inside a sealed enclave, so your prompts are never sent to an ordinary AI API. You can post the list as a card, or sign it and share it with your company on **Arkiv**, where it becomes a read-only record that you own. Your company sees everyone's signed list, the pull requests behind it and the totals. Never prompts.
 
 Built at ETHGlobal Mumbai (Nov 5 to 7, 2026).
 
-## What it does
+## How it works
 
-1. **Cost.** Reads Claude Code's own logs in `~/.claude/projects` (including subagents), prices every API call from its token counts, and cross-checks Claude Code's own cost tracker.
-2. **Outcome.** Asks GitHub what happened to the work: merged, open, closed, or reverted later. For merged work it runs `git blame` (GitHub GraphQL) on the base branch 30 days after the merge and counts how many added lines are still there.
-3. **Match.** Links sessions to pull requests using the PR links and commits Claude Code records, the branch the session worked on, and files edited around the same time. Every link keeps its reason and a confidence.
-4. **Judge.** Labels each session **Shipped, Learned, Looped, Abandoned or Overkill** and rates its difficulty 1 to 5. Offline rules always run. The private judge runs on **0G Private Computer** in private mode, so the prompts are only read inside a hardware enclave (TEE).
-5. **Score.** Kept Work per Dollar. A shipped task counts as the share of its code still alive. Cost per kept task is only compared between tasks of the same difficulty, never across people.
-6. **Sign and share.** You sign the weekly receipt (EIP-712) with your own key. Sharing writes it to **Arkiv**, either totals only or with PR links as evidence. The team view reads it back from Arkiv and checks every signature.
+1. **Read your logs.** Claude Code (`~/.claude/projects`, with subagents) and Codex (`~/.codex/sessions`) already log every session. Receipts prices every AI call from its token counts and checks it against Claude Code's own cost tracker (within 2% on real logs). Nothing leaves the laptop.
+2. **Link the work.** With your GitHub token it finds the pull requests and commits each session turned into (PR links and commits in the log, branch, files), and what happened to them.
+3. **Write what you got.** Only when you click **Write my week**. Each session goes to a private AI on the **0G Private Computer** (TEE-only "private" mode): what you asked, what the AI said at the end, tool counts, the GitHub outcome and the cost. It answers with one line: a category (**Built, Fixed, Figured out, Researched, Wrote, Planned, Wasted**) and a short title. One more call sees only those lines and merges them into your list, plus one sentence about the week. Every answer's TEE signature is checked by the router and again by us. Without a key, simple rules write the list.
+4. **Share it for fun.** Tick and edit the lines, then download a card (1080x1350), copy it, post it on X or save it as a PDF. Cost is hidden unless you turn it on. Nothing is uploaded.
+5. **Share it with your company.** Sign the week with a key made on your laptop (no wallet needed). The signature covers the list, the PRs and every number. Sharing writes it to Arkiv in one transaction that creates a **read-only** record and hands its **ownership to you**; the company wallet only pays gas. Your company is your GitHub org and your team is your GitHub team.
 
-On the author's own logs (last 30 days, 49 sessions): the parser's price matches Claude Code's own tracker within 2%, 27 of 49 sessions link to 39 pull requests or commits, and the first real receipt read "$684 bought 30 shipped tasks, 87% still alive".
+On the author's own logs this week: 9 sessions, 9 private AI calls plus 1 weekly call on 0G, all TEE verified, about 20 seconds and under $0.01 in total.
 
 ## Run it
 
@@ -38,86 +37,71 @@ npm run receipts -- scan
 npm run dev
 ```
 
-Open http://localhost:3000. Use the switch in the top right to flip between **My logs** and the **Demo team** (a fictional team with synthetic data, safe to show on screen).
+Open **http://localhost:3000** (use `localhost`, not 127.0.0.1: "Sign in with 0G" only works on that address). Use the switch in the top right to flip between **My data** and the **Demo** company (Acme, 12 people, synthetic data, safe to show on screen).
 
 Other commands (`npm run receipts -- <command>`):
 
 | Command | What it does |
 |---|---|
-| `scan [--days 30] [--no-survival]` | Read logs, link to GitHub, label, save to `~/.receipts` |
-| `judge [--limit 5]` | Re-label sessions with the private 0G judge |
-| `week 2026-W45 [--demo]` | Print one week's summary |
-| `sign 2026-W45` | Sign that week's receipt with `RECEIPTS_SIGNER_KEY` |
-| `team <id> "Name"` | Set the team id used when sharing |
-| `share 2026-W45 [--level full]` | Publish a signed receipt to Arkiv |
-| `publish-demo` | Publish the demo team's signed receipts to Arkiv |
+| `scan [--days 30] [--no-survival]` | Read logs and link to GitHub (rules only, no AI) |
+| `write [2026-W45] [--demo]` | Have the private AI on 0G write a week |
+| `week [2026-W45] [--demo]` | Print a week's list |
+| `sign 2026-W45` | Sign that week's receipt |
+| `team <id> "Name"`, `org <id> "Name"` | Override the team and company used when sharing (default: your GitHub team) |
+| `share 2026-W45` | Publish a signed receipt to Arkiv |
+| `publish-demo` | Publish the demo company's signed receipts to Arkiv |
 | `arkiv [team]` | Read a team's shared receipts back from Arkiv |
 | `doctor` | Show which keys are set |
 
 ## Keys
 
-Copy `web/.env.example` to `web/.env.local`. Everything is optional: without keys the app still scans, links, labels with offline rules, and signs demo receipts.
+Put them in `web/.env.local` (see `web/.env.example`). Everything is optional: without keys the app still reads logs, links PRs, writes the list with rules, signs, and makes cards.
 
 | Variable | Where to get it | Used for |
 |---|---|---|
-| `GITHUB_TOKEN` | GitHub settings, or nothing if `gh auth login` is done | PR outcomes and blame |
-| `ZG_API_KEY` | https://pc.0g.ai, Dashboard, API Keys (teams get hackathon credits) | The private judge |
-| `ARKIV_PRIVATE_KEY` | Any throwaway key, funded with tGLM at https://hub.arkiv.network/faucet | Sharing receipts |
-| `ARKIV_ACCESS_KEY` | https://hub.arkiv.network/access-keys | Higher Arkiv RPC limits (optional) |
-| `RECEIPTS_SIGNER_KEY` | Any throwaway key | One-click signing without a browser wallet |
+| `GITHUB_TOKEN` | GitHub settings, or nothing if `gh auth login` is done | PRs, your GitHub login, org and team |
+| `ZG_API_KEY` | https://pc.0g.ai, Dashboard, API Keys | The private AI (or skip it and use "Sign in with 0G") |
+| `NEXT_PUBLIC_PRIVY_APP_ID` | 0G's Privy app (default `cmn5w697g01xp0bl80c8dskc8`) | "Sign in with 0G" to pay from your own 0G credits |
+| `ARKIV_PRIVATE_KEY` | A throwaway key funded with tGLM at https://hub.arkiv.network/faucet | The company wallet that pays for shared receipts |
+| `ARKIV_ACCESS_KEY` | https://hub.arkiv.network/access-keys | Higher Arkiv rate limits (recommended) |
+| `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` | A GitHub OAuth App, callback `http://localhost:3000/api/auth/callback` | "Sign in with GitHub" for the company view |
 
 ## Architecture
 
 ```mermaid
 flowchart LR
   subgraph Laptop["Your laptop (nothing leaves without you)"]
-    L["~/.claude/projects logs"] --> P["Parser + pricing"]
-    P --> M["Matcher"]
-    M --> S["Scorer"]
-    S --> R["Weekly receipt"]
-    R --> K["Sign with your key (EIP-712)"]
+    L["Claude Code + Codex logs"] --> P["Readers + pricing"]
+    P --> M["Link to PRs"]
+    M --> W["Week list"]
+    W --> C["Share card (PNG)"]
+    W --> K["Sign (EIP-712, laptop key)"]
   end
-  GH["GitHub API: PRs, reverts, blame"] --> M
-  P -- "trimmed prompts of one session" --> ZG["0G Private Computer (TEE only, sealed)"]
-  ZG -- "label, difficulty, request id, TEE check" --> S
-  K -- "share: totals or evidence" --> AK["Arkiv (public, expiring entities)"]
-  AK --> T["Team view: totals + shared receipts, every signature re-checked"]
+  GH["GitHub: PRs, your org and team"] --> M
+  P -- "one session's private digest" --> ZG["0G Private Computer (TEE only)"]
+  ZG -- "category + title, request id, TEE check" --> W
+  K -- "one transaction: read-only record, owned by you" --> AK["Arkiv"]
+  AK --> O["Company and team pages: every signature re-checked"]
 ```
 
-| Piece | Code |
-|---|---|
-| Log parser and pricing | `web/src/lib/receipts/parse.ts`, `pricing.ts` |
-| GitHub client, outcomes, survival | `web/src/lib/receipts/github.ts`, `outcomes.ts` |
-| Session to PR matching | `web/src/lib/receipts/match.ts` |
-| Offline judge rules | `web/src/lib/receipts/heuristics.ts` |
-| Private judge on 0G | `web/src/lib/receipts/judge.ts` |
-| Scoring | `web/src/lib/receipts/score.ts` |
-| Receipts, EIP-712, Merkle evidence | `web/src/lib/receipts/receipt.ts` |
-| Arkiv read and write | `web/src/lib/receipts/arkiv.ts` |
-| Web app | `web/src/app` |
-| CLI | `web/scripts/receipts.ts` |
-| Monthly scoring job (Chainlink CRE, optional) | `cre/receipts-monthly/main.ts` |
-| On-chain team scores (CRE consumer, optional) | `contracts/src/TeamScoreboard.sol` |
+Module by module, with the reasons behind each decision: [architecture/](architecture/overview.md).
 
 ## Partner tracks
 
 ### 0G: Build with 0G Private Computer
 
-The judge is the core of the product, and it has to read prompts to be any good. Receipts never sends prompts to a normal AI API. Each judge call goes to the 0G router with `X-0G-Provider-Trust-Mode: private`, so only a provider whose model runs inside a TEE can serve it (model `0gm-1.0-35b-a3b`), and the request is sealed end to end. We ask the router to verify the TEE signature (`verify_tee`), and we also check it ourselves with the 0G SDK (`processResponse`) against the signer registered on 0G mainnet. Every judgement keeps the 0G **request id**, provider, chat id, whether it was sealed and verified, and hashes of exactly what was sent and returned. Those go into the signed receipt as Merkle leaves.
+The private AI is the product's core: to say what you got done, it has to read what you asked and what the AI answered. Receipts never sends that to an ordinary AI API. Every call goes to the 0G router with `X-0G-Provider-Trust-Mode: private` (only providers running the model inside a TEE may answer) and `verify_tee: true`, and we re-check each TEE signature ourselves with the 0G SDK (`processResponse`) against the signer registered on 0G mainnet. Default model `0gm-1.0-35b-a3b-sia` with thinking off (about 2 seconds a call), falling back to `glm-5.3` when its provider is down. Each result keeps the 0G **request id**, provider, TEE checks, cost and hashes of exactly what was sent and returned; they go into the signed receipt as Merkle leaves. **Sign in with 0G** (0G's Privy app, then `/v1/auth/privy`) lets each person pay from their own 0G credits: the browser makes the calls, the laptop's server builds the messages and keeps the results.
 
-**What breaks if 0G is removed:** the AI judge. Without 0G's private computer we would have to send prompts to an ordinary API, which we refuse to do, so every session falls back to rules that cannot tell real learning from a dead end or see why a session went in circles.
+**What breaks if 0G is removed:** the AI that writes the list. Without a private computer we would have to send prompts to an ordinary API, which we refuse to do, so the list falls back to rules that name things after PR titles and cannot tell research from a dead end.
 
-Code: `web/src/lib/receipts/judge.ts` (`chat`, `selfVerifyTee`, `judgeSessions`), UI: "Ask the private judge" on the home page and each session page, request ids on `/sessions/[id]`.
+Code: `web/src/lib/receipts/judge-core.ts`, `judge.ts`, `week.ts`, `web/src/components/zero-g-pay.tsx`.
 
 ### Arkiv: Build on Arkiv
 
-Shared receipts are Arkiv entities (schema `receipts-ethglobal-mumbai.receipt.v1` on the Rabdi testnet). The team page reads them back with a query and re-verifies every signature, so it works without our server and ignores anything unsigned. Details in [`/arkiv`](arkiv/): [schema](arkiv/schema.md), [how we use it](arkiv/how-you-use-arkiv.md), [why Arkiv](arkiv/why-arkiv.md), [reach](arkiv/reach.md), [friction log](arkiv/friction.md).
-
-- Writer wallet: _add after funding (run `npm run receipts -- doctor`)_
-- Query judges can run:
+Shared weeks are Arkiv entities (schema `receipts-ethglobal-mumbai.receipt.v2` on the Rabdi testnet), created **read-only** and handed to the signer in the same transaction, with indexed org, team, week, signer, GitHub login and numbers, and the signed JSON as payload, expiring after 120 days. The company and team pages read them back with one query and re-verify every signature, so they work without our server and ignore anything unsigned. Details in [`/arkiv`](arkiv/).
 
 ```
-arkiv.schema = str('receipts-ethglobal-mumbai.receipt.v1') AND type = str('receipt') AND team = str('acme-payments')
+arkiv.schema = str('receipts-ethglobal-mumbai.receipt.v2') AND type = str('receipt') AND org = str('acme')
 ```
 
 ### Ethereum Foundation: Best CROPS App
@@ -126,14 +110,14 @@ See the CROPS section below. The lead property is **Private**.
 
 ### Optional: Chainlink CRE monthly scoring job
 
-Built but not submitted (three partners max). A CRE workflow reads a team's shared receipts straight from Arkiv, re-checks the evidence PRs on GitHub, takes the median across DON nodes and writes a verified monthly team score to `TeamScoreboard` on Arc testnet. See [cre/README.md](cre/README.md). Swap it in for one of the three tracks if you prefer; it needs `cre login` to simulate.
+Built but not submitted (three partners max). See [cre/README.md](cre/README.md).
 
 ## CROPS
 
-- **C (censorship resistance).** There is no Receipts server. The app runs on your machine. It depends on the GitHub API (your own token), the 0G router (optional, the offline judge works without it) and an Arkiv RPC (set `ARKIV_RPC_URL` to any Rabdi endpoint). If this project disappears, your receipts are still JSON files signed with your key that anyone can verify with a standard EIP-712 library, and shared receipts stay readable on Arkiv until they expire (we set 120 days).
-- **O (open source).** MIT license. Everything builds and runs from this repo with `npm install`, no hosted service of ours involved.
-- **P (private).** Raw logs and prompts never leave the laptop. Session titles and file names stay in `~/.receipts`. GitHub learns which PRs you look up (it already has them). The 0G router learns the model name, sizes and timing, and only a TEE-hosted model reads the trimmed prompts of a session you choose to judge. Arkiv (public) only gets what you share: signed totals, or totals plus PR links. The browser makes no third-party requests and there are no trackers or analytics (fonts are self-hosted by Next.js).
-- **S (secure).** Receipts are signed with your own key (browser wallet, or a local key in `.env.local` that never leaves the machine). Any change to a signed number breaks the signature, and any change to evidence breaks its Merkle root. Shared receipts are re-verified on read, so writing junk to the same Arkiv schema does nothing. Local data files are created with owner-only permissions. The app only listens on 127.0.0.1, only answers requests addressed to localhost (no DNS rebinding), and its API rejects cross-site requests, so another website cannot make it sign or publish anything. Trust assumptions: the 0G TEE attestation (Intel TDX plus GPU TEE), GitHub's API answers, and that the Arkiv testnet keeps data until expiry.
+- **C (censorship resistance).** There is no Receipts server. The app runs on your laptop and depends only on GitHub (your token), the 0G router (optional) and an Arkiv RPC. If this project disappears, your receipts are still JSON files signed with your key that anyone can verify with a standard EIP-712 library, and shared ones stay on Arkiv, owned by you, until they expire.
+- **O (open source).** MIT license. Everything builds and runs from this repo with `npm install`.
+- **P (private).** Raw logs and prompts never leave the laptop except one session's digest into a TEE, on demand. Session titles and file names stay in `~/.receipts`. GitHub learns which PRs you look up (it already has them). The 0G router learns the model, sizes and timing. Arkiv (public) only gets what you share: the signed list, PR titles and links, and totals. The share card is drawn locally. No trackers or analytics.
+- **S (secure).** Receipts are signed with a key that never leaves `~/.receipts` (mode 0600). Any change to a number breaks the signature; any change to an item, PR or AI record breaks its Merkle root. Shared records are read-only and owned by the signer, and re-verified on read. The app only listens on 127.0.0.1, only answers requests addressed to localhost, and rejects cross-site requests, so another website cannot make it sign, publish or spend. Trust assumptions: the 0G TEE attestation, GitHub's API answers, and that the Arkiv testnet keeps data until expiry.
 
 ## What leaves your laptop
 
@@ -141,25 +125,18 @@ Built but not submitted (three partners max). A CRE workflow reads a team's shar
 |---|---|---|
 | Raw logs and prompts | Nowhere | Only you |
 | Session titles, file names | `~/.receipts` on your laptop | Only you |
-| Trimmed prompts of one session, when you ask the private judge | 0G Private Computer, private mode, sealed | The enclave (router sees model, size, timing) |
+| One session's trimmed prompts and the AI's last answers, when you click Write my week | 0G Private Computer, private mode | The enclave (the router sees model, size, timing) |
+| The list's titles, for the weekly summary | The same private model | The enclave |
 | PR numbers, repo names | GitHub API with your token | GitHub |
-| Signed weekly totals, when you share | Arkiv testnet | Anyone |
-| PR links and per-task cost, when you share with evidence | Arkiv, inside the signed receipt | Anyone |
-
-## Definitions
-
-- **Shipped task**: a merged PR (or a commit pushed straight to the default branch) linked to the session. A task reverted later still counts as shipped, at 0% alive.
-- **Still alive**: lines added by shipped tasks that are still attributed to them by blame, measured 30 days after merge (or today, marked "so far").
-- **Kept work**: the sum of each shipped task's alive share. Reverted, closed or unmerged work counts 0.
-- **Waste**: spend on Looped and Abandoned sessions, plus the part of Overkill spend above what similar small tasks cost.
-- **Open**: not judged yet (open PR, fresh edits, or a folder with no GitHub repo we could find). Never counted as waste.
+| The share card | Nowhere, unless you post it | Whoever you show it to |
+| Your signed list, PRs and totals, when you share with your company | Arkiv testnet, read-only, owned by you | Anyone |
 
 ## Honest limits
 
-- Matching is best effort. Sessions in folders that were deleted or moved (old worktrees, scratch folders) often cannot be linked.
-- Survival samples the 8 files with the most added lines per task.
-- Cost is the Claude API list price of the tokens in your logs. On a subscription plan your real bill is different; the number shows what the work would cost at API prices.
-- The offline rules are conservative. The private judge is what tells Learned from Abandoned and spots loops reliably.
+- Linking is best effort. Sessions in folders that were deleted or moved often cannot be linked to a PR; the AI still writes what they got.
+- Cost is the API list price of the tokens in your logs. On a subscription plan your real bill is different.
+- The GitHub login inside a receipt is claimed by the signer; the company page shows the signing address next to it.
+- "Sign in with 0G" uses 0G's own Privy app, which only allows `http://localhost:3000`. It needs a real login, so it was built and wired but not tested end to end by us.
 
 ## AI usage
 

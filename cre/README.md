@@ -2,6 +2,8 @@
 
 Optional module. Not one of the three partner tracks we submit to (0G, Arkiv, EF), because a project can enter at most three; swap it in if you prefer the Chainlink track.
 
+> **Out of date:** this job was written for receipt v1 (schema `receipt.v1`: shipped tasks, kept work, survival, waste). Receipt v2 signs the week list instead (things done, categories, merged PRs; see `architecture/receipts-and-signing.md`), so the job needs its schema name and summed fields updated before it can run against new receipts.
+
 ## What it does
 
 Once a month (the simulator runs it immediately):
