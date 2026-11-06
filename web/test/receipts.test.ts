@@ -159,3 +159,47 @@ test("receipts: sign, verify, catch tampering, prove one task", async () => {
   assert.equal(root, r.message.evidenceRoot);
   assert.equal(verifyProof(root, leaves[0], merkleProof(leaves, leaves[0])), true);
 });
+
+test("codex: prices OpenAI usage with cached tokens inside input", async () => {
+  const { priceOpenAiUsage, openAiPriceFor } = await import("../src/lib/receipts/pricing");
+  // gpt-5.5: $5 input, $0.50 cached, $30 output per 1M
+  const r = priceOpenAiUsage("gpt-5.5", { input_tokens: 200_000, cached_input_tokens: 80_000, output_tokens: 10_000 });
+  assert.ok(Math.abs(r.usd - (0.12 * 5 + 0.08 * 0.5 + 0.01 * 30)) < 1e-9, `got ${r.usd}`);
+  assert.equal(r.tokens.cacheRead, 80_000);
+  // over 272K input tokens the long-context rate applies
+  const long = priceOpenAiUsage("gpt-5.4", { input_tokens: 300_000, output_tokens: 0 });
+  assert.ok(Math.abs(long.usd - 0.3 * 5) < 1e-9);
+  assert.equal(openAiPriceFor("gpt-5.2-codex").known, true, "codex variants use the base model price");
+});
+
+test("codex: reads a synthetic rollout (usage records, patch edits, exit codes, PR links)", async () => {
+  const { parseCodexSession, parsePatch } = await import("../src/lib/receipts/codex");
+  const p = parsePatch("*** Begin Patch\n*** Update File: src/a.ts\n@@\n-old\n+new\n+more\n*** Add File: src/b.ts\n+x\n*** End Patch\n");
+  assert.deepEqual(p, { files: ["src/a.ts", "src/b.ts"], added: 3, removed: 1 });
+
+  const dir = mkdtempSync(join(tmpdir(), "receipts-codex-"));
+  const file = join(dir, "rollout-2026-11-02T10-00-00-01a0a470-5bc2-7612-ae63-f6d73ddd0394.jsonl");
+  const t = (m: number) => new Date(Date.parse("2026-11-02T10:00:00Z") + m * 60_000).toISOString();
+  const rows = [
+    { timestamp: t(0), type: "session_meta", payload: { id: "01a0a470-5bc2-7612-ae63-f6d73ddd0394", cwd: "/Users/x/code/app" } },
+    { timestamp: t(0), type: "turn_context", payload: { model: "gpt-5.5", cwd: "/Users/x/code/app" } },
+    { timestamp: t(0), type: "event_msg", payload: { type: "user_message", message: "fix the login bug" } },
+    { timestamp: t(1), type: "response_item", payload: { type: "custom_tool_call", name: "apply_patch", call_id: "c1", input: "*** Begin Patch\n*** Update File: src/login.ts\n-a\n+b\n*** End Patch" } },
+    { timestamp: t(2), type: "response_item", payload: { type: "function_call", name: "exec_command", call_id: "c2", arguments: JSON.stringify({ cmd: "npm test" }) } },
+    { timestamp: t(3), type: "response_item", payload: { type: "function_call_output", call_id: "c2", output: "Process exited with code 1\nOutput:\nfail" } },
+    { timestamp: t(4), type: "response_item", payload: { type: "function_call", name: "exec_command", call_id: "c3", arguments: JSON.stringify({ cmd: "gh pr create" }) } },
+    { timestamp: t(5), type: "response_item", payload: { type: "function_call_output", call_id: "c3", output: "Process exited with code 0\nOutput:\nhttps://github.com/acme/app/pull/9\n" } },
+    { timestamp: t(5), type: "token_usage_record", payload: { response_id: "r1", usage: { input_tokens: 1000, cached_input_tokens: 0, output_tokens: 100 } } },
+    { timestamp: t(6), type: "token_usage_record", payload: { response_id: "r1", usage: { input_tokens: 1000, cached_input_tokens: 0, output_tokens: 100 } } },
+  ];
+  writeFileSync(file, rows.map((r) => JSON.stringify(r)).join("\n"));
+  const s = (await parseCodexSession(file))!;
+  assert.equal(s.tool, "codex");
+  assert.equal(s.signals.assistantTurns, 1, "usage is counted once per response id");
+  assert.ok(Math.abs(s.cost.usd - (1000 * 5 + 100 * 30) / 1e6) < 1e-6);
+  assert.deepEqual(s.filesEdited, ["/Users/x/code/app/src/login.ts"]);
+  assert.equal(s.signals.toolErrors, 1);
+  assert.equal(s.signals.testRuns, 1);
+  assert.deepEqual(s.git.prs.map((x) => x.url), ["https://github.com/acme/app/pull/9"]);
+  assert.equal(s.signals.userPrompts, 1);
+});
