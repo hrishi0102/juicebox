@@ -9,7 +9,7 @@ Receipts are written by employees and read by their company, and both sides have
 1. **reads the team's receipts straight from Arkiv** (one `arkiv_query` JSON-RPC call),
 2. **checks every receipt's EIP-712 signature** against the person it is about, and drops any that fail,
 3. **adds up the signed numbers**, one receipt per person per week (the one written last): spend, things done, spend that went in circles, merged PRs,
-4. **asks GitHub** whether each PR a receipt claims as merged is still merged.
+4. **asks GitHub** whether what each receipt claims as shipped is still there: each merged PR still merged, and each commit pushed straight to main (no PR) still in main's history (`compare/HEAD...<sha>` is `behind` or `identical`).
 
 The nodes agree on every number (median), and the result goes on chain to [`TeamScoreboard`](../contracts/src/TeamScoreboard.sol) on **Ethereum Sepolia** through Chainlink's forwarder. Only the forwarder can post, and a month can never be rewritten, so nobody (not the manager, not the employees, not us) can post or change a team's score. The company's Team page in the app reads the latest score from the contract and links to it on Etherscan.
 

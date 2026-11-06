@@ -10,7 +10,7 @@ Cron trigger (00:00 UTC on the 1st of each month; the simulator runs it at once)
 2. Keeps entities whose `creator` is in `trustedWriters` (the company wallet) and whose week ended inside `windowDays` (45).
 3. Recomputes each receipt's EIP-712 digest (the same types as `web/src/lib/receipts/receipt.ts`, v2 and v3) and recovers the signer with `@noble/curves` (synchronous, so it works in the WASM runtime). A receipt whose signer is not `message.owner` is counted in `rejected` and left out. Of the rest, one per person per week: the highest `createdAt`.
 4. Sums the signed fields: `spendCents`, `done`, `categorySpendCents[6]` (Wasted), `mergedPrs`; counts receipts and people.
-5. Asks GitHub about each PR a full receipt claims as merged (sorted, at most `maxPrChecks` and never more than what is left of 14 HTTP calls after Arkiv), counting `prsStillMerged`.
+5. Asks GitHub about each change a full receipt claims as shipped: a merged PR (`/pulls/<n>`, still merged?) or a commit pushed straight to main (`/compare/HEAD...<sha>?per_page=1`, `behind` or `identical` means main still contains it) (sorted, at most `maxPrChecks` and never more than what is left of 14 HTTP calls after Arkiv), counting `prsStillMerged`.
 
 Consensus: median of every field (`ConsensusAggregationByFields`). The report is ABI-encoded (`REPORT_ABI` in `score.ts`) and written with `EVMClient.writeReport` to `TeamScoreboard` on `ethereum-testnet-sepolia`. A zero `consumerAddress` skips the write and returns the report.
 
