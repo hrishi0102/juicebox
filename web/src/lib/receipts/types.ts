@@ -1,4 +1,5 @@
 // Shared types for Receipts.
+import type { Efficiency } from "./efficiency";
 // Everything here is derived data. Raw prompts never get stored in these shapes,
 // except `PrivateDigest`, which only lives in memory or in the private local cache.
 
@@ -273,6 +274,7 @@ export type PeriodSummary = {
   oneLiner: string; // the AI's sentence about the week (or the count line when there is no AI)
   countLine: string; // "Built 3 things, fixed 2 bugs and figured out 4 problems."
   story: { engine: WeekStory["engine"]; model?: string; requestIds: string[]; verified?: boolean; stale: boolean; newSessions: number; createdAt?: string; payer?: string };
+  efficiency?: Efficiency; // timeline, waste and where the money went (missing on receipts from before v3)
   buckets: BucketStat[];
   tasks: Task[];
   tips: string[];

@@ -64,7 +64,7 @@ export function weekView(d: Dataset, weekId?: string): WeekView {
   });
   const ids = new Set(sessions.map((s) => s.id));
   const story = loadWeekStory(d.source, w.id);
-  const summary = summarize({ periodStart: w.start, periodEnd: w.end, sessions: d.sessions, judgements: d.judgements, tasks: d.tasks, changes: d.changes, owner: d.owner, story });
+  const summary = summarize({ periodStart: w.start, periodEnd: w.end, sessions: d.sessions, judgements: d.judgements, tasks: d.tasks, changes: d.changes, owner: d.owner, story, now: nowFor(d).getTime() });
   return { ...w, summary, sessions, judgements: d.judgements.filter((j) => ids.has(j.sessionId)) };
 }
 
@@ -81,7 +81,7 @@ export function weeksWithData(d: Dataset) {
 export function periodView(d: Dataset, days: number) {
   const end = nowFor(d);
   const start = new Date(end.getTime() - days * 86400_000);
-  return summarize({ periodStart: start.toISOString(), periodEnd: new Date(end.getTime() + 1).toISOString(), sessions: d.sessions, judgements: d.judgements, tasks: d.tasks, changes: d.changes });
+  return summarize({ periodStart: start.toISOString(), periodEnd: new Date(end.getTime() + 1).toISOString(), sessions: d.sessions, judgements: d.judgements, tasks: d.tasks, changes: d.changes, now: end.getTime() });
 }
 
 export type ShareTarget = { org: string; orgName: string; team: string; teamName: string; from: "settings" | "github sign-in" | "github" | "default" };

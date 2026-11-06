@@ -253,7 +253,7 @@ export async function makeDemoDataset(): Promise<{ dataset: Dataset; org: OrgDat
     for (const w of weeks) {
       // "You" uses the weeks the private AI wrote (fixtures/demo/weeks); others use the rules.
       const story = m.you ? (readJson<WeekStory | null>("demo", `weeks/${w.id}.json`, null) ?? undefined) : undefined;
-      const summary = summarize({ periodStart: w.start, periodEnd: w.end, sessions, judgements, tasks, changes, owner: account.address, story });
+      const summary = summarize({ periodStart: w.start, periodEnd: w.end, sessions, judgements, tasks, changes, owner: account.address, story, now: DEMO_END });
       if (!summary.sessions) continue;
       const ids = new Set(sessions.filter((s) => Date.parse(s.startedAt) >= Date.parse(w.start) && Date.parse(s.startedAt) < Date.parse(w.end)).map((s) => s.id));
       let r = buildReceipt({ owner: account.address, author: m.you ? "you" : login, periodId: w.id, summary, judgements: judgements.filter((j) => ids.has(j.sessionId)) });

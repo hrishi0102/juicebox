@@ -6,6 +6,7 @@ import { attributeCost } from "./match";
 import { sessionUsd } from "./pricing";
 import { changeDifficulty, median } from "./heuristics";
 import { applyStory, categoryTotals, countLine, ruleItems, sessionsHash } from "./story";
+import { computeEfficiency } from "./efficiency";
 import { toolOf, type BucketStat, type Change, type Judgement, type PeriodSummary, type Session, type SessionLabel, type SessionMatch, type Task, type WeekStory } from "./types";
 
 const ALL_LABELS: SessionLabel[] = ["Shipped", "Learned", "Looped", "Abandoned", "Overkill", "Pending"];
@@ -57,6 +58,7 @@ export function summarize(opts: {
   changes: Change[];
   owner?: string;
   story?: WeekStory; // the saved write-up for this week, if there is one
+  now?: number; // "now" for deciding whether a plan was dropped (the demo is frozen in time)
 }): PeriodSummary {
   const start = Date.parse(opts.periodStart);
   const end = Date.parse(opts.periodEnd);
@@ -120,6 +122,9 @@ export function summarize(opts: {
   const counts = countLine(items);
   const stale = !!opts.story && (applied.newSessions > 0 || opts.story.sessionsHash !== sessionsHash(inPeriod));
 
+  // Timeline, waste reasons and where the money went, from timestamps only.
+  const efficiency = computeEfficiency({ sessions: inPeriod, allSessions: opts.sessions, judgements: opts.judgements, tasks, changes: opts.changes, items, now: opts.now });
+
   // Waste = what went to items that went in circles or produced nothing usable.
   const wasteUsd = totals.spend.Wasted;
   const overkillExcess = labelSpend.Overkill;
@@ -162,6 +167,7 @@ export function summarize(opts: {
       createdAt: opts.story?.createdAt,
       payer: opts.story?.payer,
     },
+    efficiency,
     buckets,
     tasks,
     tips: tipsFor(inPeriod, opts.judgements, spend, labelSpend, overkillExcess),

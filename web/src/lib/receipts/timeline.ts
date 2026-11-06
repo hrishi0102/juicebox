@@ -20,6 +20,7 @@ export class TimelineBuilder {
   private lastEdit = -Infinity;
   private planAt = Infinity;
   private firstPr = Infinity;
+  private firstCommit = Infinity;
   private lastAnswer = -Infinity;
   private lastAnswerText = "";
 
@@ -39,6 +40,10 @@ export class TimelineBuilder {
   pr(ts: number) {
     if (!Number.isNaN(ts)) this.firstPr = Math.min(this.firstPr, ts);
   }
+  /** A commit we only know the time of (for example `git commit -q` run through the shell). */
+  commit(ts: number) {
+    if (!Number.isNaN(ts)) this.firstCommit = Math.min(this.firstCommit, ts);
+  }
   answer(ts: number, text: string) {
     if (Number.isNaN(ts) || !text.trim() || ts < this.lastAnswer) return;
     this.lastAnswer = ts;
@@ -47,7 +52,7 @@ export class TimelineBuilder {
 
   finish(commits: { at: string }[]): SessionTimeline {
     const iso = (n: number) => (Number.isFinite(n) ? new Date(n).toISOString() : undefined);
-    const commitTimes = commits.map((c) => Date.parse(c.at)).filter((n) => !Number.isNaN(n));
+    const commitTimes = [...commits.map((c) => Date.parse(c.at)), this.firstCommit].filter((n) => Number.isFinite(n));
     return {
       firstPromptAt: iso(this.firstPrompt),
       lastPromptAt: iso(this.lastPrompt),

@@ -187,6 +187,8 @@ export async function parseSession(sf: SessionFile, seen?: Set<string>): Promise
   let readOnlyCalls = 0;
   const subagentIds = new Set<string>();
   const tl = new TimelineBuilder();
+  // Shell commands that commit or open a PR, waiting for their result (only successful ones count).
+  const gitCalls = new Map<string, { ts: number; kind: "commit" | "pr" }>();
 
   const files = [sf.main, ...sf.subagents];
   for (const file of files) {
@@ -236,6 +238,8 @@ export async function parseSession(sf: SessionFile, seen?: Set<string>): Promise
             }
             if (c.name === "Bash") {
               const cmd = String(c.input?.command ?? "").trim();
+              if (/\bgit\s+commit\b/.test(cmd)) gitCalls.set(c.id, { ts, kind: "commit" });
+              else if (/\bgh\s+pr\s+create\b/.test(cmd)) gitCalls.set(c.id, { ts, kind: "pr" });
               if (cmd) {
                 const norm = cmd.replace(/\s+/g, " ").slice(0, 300);
                 bashCounts.set(norm, (bashCounts.get(norm) ?? 0) + 1);
@@ -252,6 +256,16 @@ export async function parseSession(sf: SessionFile, seen?: Set<string>): Promise
           if (Array.isArray(content)) {
             for (const b of content) {
               if (b?.type !== "tool_result") continue;
+              const call = gitCalls.get(b.tool_use_id);
+              if (call && !b.is_error) {
+                if (call.kind === "commit") {
+                  tl.commit(call.ts);
+                  // `git commit` prints "[branch sha] message" unless run with -q; keep the sha for matching.
+                  const out = typeof o.toolUseResult?.stdout === "string" ? o.toolUseResult.stdout : "";
+                  const m = out.match(/^\[([^\s\]]+)(?: \(root-commit\))? ([0-9a-f]{7,40})\]/m);
+                  if (m && !commits.some((x) => x.sha === m[2])) commits.push({ sha: m[2], branch: m[1], at: new Date(call.ts).toISOString() });
+                } else tl.pr(call.ts);
+              }
               if (b.is_error) {
                 toolErrors++;
                 errorStreak++;
