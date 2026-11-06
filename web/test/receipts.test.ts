@@ -14,6 +14,7 @@ import { heuristicLabel, judgeAllHeuristic } from "../src/lib/receipts/heuristic
 import { summarize, buildTasks, weekOf } from "../src/lib/receipts/score";
 import { cleanTitle, parseSessionVerdict, parseWeekAnswer, toCategory } from "../src/lib/receipts/judge-core";
 import { countLine, itemsFromAnswer, ruleItems, sessionLines } from "../src/lib/receipts/story";
+import { decryptBlob, encryptBlob, openPointer, publicKeyOf, sealPointer } from "../src/lib/receipts/seal";
 import type { Change, Judgement, Session } from "../src/lib/receipts/types";
 
 test("pricing: Opus 5.5 with 1h cache writes matches Claude Code's own number", () => {
@@ -223,6 +224,23 @@ test("receipts: sign the week list, verify, catch tampering, reveal only some it
   const root = merkleRoot(leaves);
   assert.equal(root, r.message.evidenceRoot);
   assert.equal(verifyProof(root, leaves[0], merkleProof(leaves, leaves[0])), true);
+});
+
+test("sealing: only the company key opens a shared week", () => {
+  const company = generatePrivateKey();
+  const stranger = generatePrivateKey();
+  const week = new TextEncoder().encode(JSON.stringify({ items: ["Built the login page"] }));
+  const { key, blob } = encryptBlob(week);
+  assert.notDeepEqual(blob.slice(12, 20), week.slice(0, 8), "stored bytes are not the plain text");
+  assert.deepEqual(decryptBlob(key, blob), week);
+
+  const sealed = sealPointer(publicKeyOf(company), { ref: "ab".repeat(32), key: Buffer.from(key).toString("hex") });
+  const opened = openPointer(company, sealed);
+  assert.equal(opened.ref, "ab".repeat(32));
+  assert.deepEqual(decryptBlob(Buffer.from(opened.key, "hex"), blob), week);
+  assert.throws(() => openPointer(stranger, sealed), "a different key cannot open it");
+  const flipped = sealed.slice(0, -2) + (sealed.endsWith("00") ? "01" : "00");
+  assert.throws(() => openPointer(company, flipped), "tampering is detected");
 });
 
 test("codex: prices OpenAI usage with cached tokens inside input", async () => {

@@ -184,8 +184,9 @@ async function main() {
       const org = readJson<OrgData | null>("demo", "org.json", null);
       if (!org) throw new Error("No demo org. Run: demo");
       let n = 0;
+      const from = Number(opt("from") ?? 0);
       const limit = Number(opt("limit") ?? org.receipts.length);
-      for (const r of org.receipts.slice(0, limit)) {
+      for (const r of org.receipts.slice(from, from + limit)) {
         const level = r.share?.level === "full" ? "full" : "totals";
         const out = await publishReceipt(r, { team: r.share?.team ?? org.teams[0].id, org: org.id, level });
         n++;
@@ -199,7 +200,15 @@ async function main() {
       // Read back what is on Arkiv for a team: npm run receipts -- arkiv acme-payments
       const team = positional[0] ?? readJson<{ id: string }>("local", "team.json", { id: "acme-payments" }).id;
       const rs = await fetchTeamReceipts(team);
-      for (const r of rs) console.log(r.message.period, r.message.owner.slice(0, 10), r.share?.level, r.verified ? "verified" : "BAD SIGNATURE", r.headline, r.arkiv.key);
+      for (const r of rs)
+        console.log(
+          r.message.period,
+          `signed by ${r.message.owner.slice(0, 10)}`,
+          `entity owned by ${(r.arkiv.owner ?? "").slice(0, 10)}`,
+          r.verified ? "verified" : "BAD SIGNATURE",
+          r.headline,
+          r.arkiv.key,
+        );
       console.log(`${rs.length} receipts for team ${team}`);
       break;
     }
