@@ -8,6 +8,7 @@ const LINKS = [
   { href: "/sessions", label: "My sessions" },
   { href: "/team", label: "Team" },
   { href: "/org", label: "Company" },
+  { href: "/wall", label: "Wall" },
 ];
 
 export function NavLinks() {

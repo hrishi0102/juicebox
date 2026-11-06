@@ -68,6 +68,14 @@ export function arkivPublic() {
   return createPublicClient({ chain: chain(), transport: http(process.env.ARKIV_RPC_URL || undefined) });
 }
 
+/** The company wallet that pays for Arkiv writes. */
+export function arkivWriter() {
+  const key = envPrivateKey("ARKIV_PRIVATE_KEY");
+  if (!key) throw new Error("ARKIV_PRIVATE_KEY is not set. Add a funded Rabdi testnet key to web/.env.local.");
+  const account = privateKeyToAccount(key);
+  return { account, wallet: createWalletClient({ chain: chain(), transport: http(process.env.ARKIV_RPC_URL || undefined), account }) };
+}
+
 export function arkivWriterAddress(): string | undefined {
   const key = envPrivateKey("ARKIV_PRIVATE_KEY");
   return key ? privateKeyToAccount(key).address : undefined;

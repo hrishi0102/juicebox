@@ -38,6 +38,11 @@ export function signerAddress(source: Source): Address | undefined {
   return laptopAccount(false)?.address;
 }
 
+/** The signing address, making the laptop key if this is the first time. */
+export function ensureSignerAddress(source: Source): Address {
+  return signingAccount(source).address;
+}
+
 function signingAccount(source: Source) {
   if (source === "demo") return privateKeyToAccount(demoKey("You"));
   const key = envPrivateKey("RECEIPTS_SIGNER_KEY");
