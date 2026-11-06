@@ -1,5 +1,4 @@
-import { SpaceHeader } from "@/components/space-header";
-import { SiteFooter } from "@/components/site-footer";
+import { SpaceShell } from "@/components/space-header";
 import { CompanyIdentity } from "@/components/company-identity";
 import { currentSource, shareTarget } from "@/lib/server/data";
 import { companyKnown } from "@/lib/server/org";
@@ -12,21 +11,20 @@ export default async function CompanyLayout({ children }: { children: React.Reac
   const v = await viewer(source);
   const name = source === "demo" ? "Acme" : (await companyKnown(source)) ? (await shareTarget()).orgName : undefined;
   return (
-    <>
-      <SpaceHeader
-        space="company"
-        title={name}
-        tabs={[
-          { href: "/company", label: "Overview", exact: true },
-          { href: "/company/team", label: "Teams" },
-          { href: "/company/people", label: "People" },
-          { href: "/company/prs", label: "Pull requests" },
-          { href: "/company/setup", label: "Setup" },
-        ]}
-        right={<CompanyIdentity v={v} />}
-      />
-      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6">{children}</main>
-      <SiteFooter note="Every number is signed by the person it describes. Prompts are never shared." />
-    </>
+    <SpaceShell
+      space="company"
+      title={name}
+      nav={[
+        { href: "/company", label: "Overview", icon: "overview", exact: true },
+        { href: "/company/team", label: "Teams", icon: "teams" },
+        { href: "/company/people", label: "People", icon: "people" },
+        { href: "/company/prs", label: "Pull requests", icon: "prs" },
+        { href: "/company/setup", label: "Setup", icon: "setup" },
+      ]}
+      right={<CompanyIdentity v={v} />}
+      footerNote="Every number is signed by the person it describes. Prompts are never shared."
+    >
+      {children}
+    </SpaceShell>
   );
 }

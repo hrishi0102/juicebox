@@ -1,11 +1,13 @@
 import Link from "next/link";
-import { SpaceTabs, type SpaceTab } from "@/components/space-tabs";
+import { SidebarNav, type NavItem } from "@/components/sidebar-nav";
+import { SiteFooter } from "@/components/site-footer";
 
-// Each part of the app has its own header, tabs and identity, so you always know where you are:
+// Each part of the app has its own header and identity, so you always know where you are:
 //   Company   leads and managers: everyone's signed week (Sign in with GitHub)
-//   My week   an employee on their laptop: write, review, sign, send (Sign in with 0G pays the AI)
-//   For fun   AI Wrapped, week cards and the wall, for anyone
+//   My week   an employee on their laptop: write, sign, send (Sign in with 0G pays the AI)
+//   For fun   AI Wrapped, for anyone
 //   (none)    the front door, the demo picker and public pages
+// Company and My week have several pages, listed in a sidebar (SpaceShell).
 export type Space = "company" | "employee" | "personal" | "public";
 
 const SPACE: Record<Exclude<Space, "public">, { label: string; color: string }> = {
@@ -14,11 +16,11 @@ const SPACE: Record<Exclude<Space, "public">, { label: string; color: string }> 
   personal: { label: "For fun", color: "var(--c-wrote)" },
 };
 
-export function SpaceHeader({ space, title, tabs, right }: { space: Space; title?: React.ReactNode; tabs?: SpaceTab[]; right?: React.ReactNode }) {
+export function SpaceHeader({ space, title, right, wide }: { space: Space; title?: React.ReactNode; right?: React.ReactNode; wide?: boolean }) {
   const s = space === "public" ? undefined : SPACE[space];
   return (
     <header className="sticky top-0 z-30 border-b border-border/80 bg-background/90 backdrop-blur print:hidden">
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 sm:px-6">
+      <div className={`mx-auto flex h-14 items-center gap-x-3 px-4 sm:px-6 ${wide ? "max-w-7xl" : "max-w-6xl"}`}>
         <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight" title="Receipts home">
           <Logo />
           <span className="text-[17px]">Receipts</span>
@@ -29,11 +31,38 @@ export function SpaceHeader({ space, title, tabs, right }: { space: Space; title
             {s.label}
           </span>
         )}
-        {title && <span className="text-sm font-medium text-muted-foreground">{title}</span>}
-        {tabs && tabs.length > 0 && <SpaceTabs tabs={tabs} />}
-        <div className="ml-auto flex flex-wrap items-center gap-3">{right}</div>
+        {title && <span className="hidden truncate text-sm font-medium text-muted-foreground sm:inline">{title}</span>}
+        <div className="ml-auto flex min-w-0 items-center gap-3">{right}</div>
       </div>
     </header>
+  );
+}
+
+/** A part of the app with several pages: the header, a sidebar of its pages, and the page. */
+export function SpaceShell({
+  space,
+  title,
+  right,
+  nav,
+  footerNote,
+  children,
+}: {
+  space: Space;
+  title?: React.ReactNode;
+  right?: React.ReactNode;
+  nav: NavItem[];
+  footerNote?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <>
+      <SpaceHeader space={space} title={title} right={right} wide />
+      <div className="mx-auto w-full max-w-7xl flex-1 md:flex">
+        <SidebarNav items={nav} label="Pages" />
+        <main className="min-w-0 flex-1 px-4 py-8 sm:px-8">{children}</main>
+      </div>
+      <SiteFooter note={footerNote} wide />
+    </>
   );
 }
 
