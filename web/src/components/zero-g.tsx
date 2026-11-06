@@ -186,19 +186,19 @@ export function ZeroGAccount() {
   if (!zg.available || !zg.ready) return null;
   if (!zg.signedIn)
     return (
-      <button type="button" onClick={zg.signIn} disabled={zg.connecting} className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 py-1 text-sm hover:bg-accent">
+      <button type="button" onClick={zg.signIn} disabled={zg.connecting} className="t-chip">
         <ZeroGMark />
-        {zg.connecting ? "Connecting to 0G" : "Sign in with 0G"}
+        <span>{zg.connecting ? "Connecting to 0G" : "Sign in with 0G"}</span>
       </button>
     );
   return (
-    <span className="inline-flex items-center gap-2 text-sm" title={`0G account ${zg.wallet}`}>
-      <ZeroGMark />
-      <span>
-        {shortWallet(zg.wallet)}
-        {zg.balance ? <span className="text-muted-foreground">, {zg.balance.text}</span> : null}
+    <span className="inline-flex min-w-0 items-center gap-2.5 text-sm" title={`0G account ${zg.wallet}`}>
+      <span className="t-chip num" title="Your 0G credits pay for the private AI">
+        <ZeroGMark />
+        <span className="t-hide-s">{shortWallet(zg.wallet)}</span>
+        {zg.balance ? <span className="t-sub">{zg.balance.text}</span> : null}
       </span>
-      <button type="button" className="text-muted-foreground hover:text-foreground" onClick={zg.signOut}>
+      <button type="button" className="quiet t-hide-s" onClick={zg.signOut}>
         Sign out
       </button>
     </span>
@@ -207,8 +207,8 @@ export function ZeroGAccount() {
 
 export function ZeroGMark() {
   return (
-    <span aria-hidden="true" className="inline-flex size-4 items-center justify-center rounded-full bg-foreground text-[9px] font-semibold leading-none text-background">
+    <b aria-hidden="true" className="font-bold">
       0G
-    </span>
+    </b>
   );
 }

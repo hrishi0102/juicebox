@@ -7,7 +7,7 @@ export function SignOutButton() {
   return (
     <button
       type="button"
-      className="text-muted-foreground hover:text-foreground"
+      className="quiet text-sm"
       onClick={async () => {
         await fetch("/api/auth/logout", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
         router.refresh();

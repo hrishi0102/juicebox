@@ -42,7 +42,7 @@ export function EnterDemo({ href, className, children }: { href: string; classNa
   );
 }
 
-export function LeaveDemo({ className = "font-medium underline underline-offset-2" }: { className?: string }) {
+export function LeaveDemo({ className = "" }: { className?: string }) {
   const router = useRouter();
   const [pending, start] = useTransition();
   return (
@@ -67,21 +67,17 @@ export function DemoBanner() {
   const path = usePathname();
   const role = roleFor(path);
   return (
-    <div className="border-b border-amber-300/60 bg-amber-50 text-amber-950 dark:border-amber-500/30 dark:bg-amber-950/40 dark:text-amber-100 print:hidden">
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-1 px-4 py-1.5 text-sm sm:px-6">
-        <span>
-          <span className="font-medium">Demo:</span> Acme, 12 made-up people.{role ? ` You are ${role.short}.` : " Pick who you want to be."}
-        </span>
-        <span className="flex flex-wrap gap-x-3">
+    <div className="t-demo print:hidden">
+      <div className="t-demo-in">
+        <p>Acme demo.{role ? ` You are ${role.short}.` : " Pick who you want to be."} Made-up people, real signatures.</p>
+        <div className="t-demo-links">
           {DEMO_ROLES.filter((r) => r.id !== role?.id).map((r) => (
-            <Link key={r.id} href={r.href} className="underline-offset-2 hover:underline">
+            <Link key={r.id} href={r.href}>
               {r.id === "fun" ? "Just for fun" : `Be ${r.short}`}
             </Link>
           ))}
-        </span>
-        <span className="ml-auto">
           <LeaveDemo />
-        </span>
+        </div>
       </div>
     </div>
   );

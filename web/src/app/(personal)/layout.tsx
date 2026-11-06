@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { SpaceHeader } from "@/components/space-header";
 import { SiteFooter } from "@/components/site-footer";
 import { ZeroGAccount } from "@/components/zero-g";
@@ -7,9 +8,25 @@ import { ZeroGAccount } from "@/components/zero-g";
 export default function PersonalLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <SpaceHeader space="personal" title="AI Wrapped" right={<ZeroGAccount />} />
-      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6">{children}</main>
-      <SiteFooter note="Just for fun. Counted on this device; never sent to a company." />
+      <div className="fun flex flex-1 flex-col">
+        <SpaceHeader
+          space="personal"
+          dark
+          right={
+            <>
+              <Link href="/how" className="t-navlink t-hide-s">
+                How it works
+              </Link>
+              <Link href="/verify" className="t-navlink t-hide-s">
+                Check a receipt
+              </Link>
+              <ZeroGAccount />
+            </>
+          }
+        />
+        <main className="wrapw flex-1">{children}</main>
+        <SiteFooter dark note="Just for fun. Counted on this device and never sent to a company." />
+      </div>
     </>
   );
 }

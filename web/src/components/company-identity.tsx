@@ -5,32 +5,37 @@ import type { Viewer } from "@/lib/server/viewer";
 
 /** Who you are on the company side: your GitHub account, signed in here or on this laptop. */
 export function CompanyIdentity({ v }: { v: Viewer }) {
-  if (v.kind === "demo") return <span className="text-sm text-muted-foreground">Viewing as Acme&apos;s lead</span>;
+  if (v.kind === "demo") return <span className="t-who">Viewing as Acme&apos;s lead</span>;
   if (v.kind === "github")
     return (
-      <span className="inline-flex items-center gap-2 text-sm">
-        {v.avatar && (
-          // eslint-disable-next-line @next/next/no-img-element -- small GitHub avatar, no optimization needed
-          <img src={`${v.avatar}&s=48`} alt="" className="size-6 rounded-full" />
-        )}
-        <span title={v.orgs.length ? `Member of ${v.orgs.join(", ")}` : undefined}>@{v.login}</span>
+      <span className="inline-flex min-w-0 items-center gap-3 text-sm">
+        <span className="inline-flex items-center gap-1.5 text-[15px] font-semibold" title={v.orgs.length ? `Member of ${v.orgs.join(", ")}` : undefined}>
+          {v.avatar ? (
+            // eslint-disable-next-line @next/next/no-img-element -- small GitHub avatar, no optimization needed
+            <img src={`${v.avatar}&s=48`} alt="" className="size-6 rounded-full" />
+          ) : (
+            <GithubMark />
+          )}
+          @{v.login}
+        </span>
+        {v.orgs.length > 0 && <span className="t-who">Member of {v.orgs.join(", ")}</span>}
         <SignOutButton />
       </span>
     );
   if (v.kind === "laptop")
     return (
-      <span className="text-sm text-muted-foreground" title="The GitHub login this laptop already uses (GitHub CLI or GITHUB_TOKEN)">
+      <span className="t-who" title="The GitHub login this laptop already uses (GitHub CLI or GITHUB_TOKEN)">
         @{v.login}, from this laptop
       </span>
     );
   if (!githubOAuthReady())
     return (
-      <Link href="/company/setup" className="text-sm text-muted-foreground hover:text-foreground">
+      <Link href="/company/setup" className="t-navlink text-sm">
         GitHub sign-in is not set up
       </Link>
     );
   return (
-    <a href="/api/auth/login?next=/company" className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 py-1 text-sm hover:bg-accent">
+    <a href="/api/auth/login?next=/company" className="btn btn-secondary btn-sm">
       <GithubMark />
       Sign in with GitHub
     </a>

@@ -12,14 +12,14 @@ export default async function EmployeeLayout({ children }: { children: React.Rea
     <SpaceShell
       space="employee"
       nav={[
-        { href: "/me", label: "This week", icon: "week", exact: true, also: ["/me/send"] },
-        { href: "/me/sessions", label: "Sessions", icon: "sessions" },
-        { href: "/me/setup", label: "Setup", icon: "setup" },
+        { href: "/me", label: "This week", exact: true, also: ["/me/send"] },
+        { href: "/me/sessions", label: "Sessions" },
+        { href: "/me/setup", label: "Setup" },
       ]}
       right={
         <>
           {login && (
-            <span className="hidden text-sm text-muted-foreground sm:inline" title={source === "demo" ? "The demo engineer" : "Your GitHub login on this laptop"}>
+            <span className="t-who" title={source === "demo" ? "The demo engineer" : "Your GitHub login on this laptop"}>
               @{login}
             </span>
           )}

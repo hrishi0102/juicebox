@@ -15,11 +15,11 @@ export default async function CompanyLayout({ children }: { children: React.Reac
       space="company"
       title={name}
       nav={[
-        { href: "/company", label: "Overview", icon: "overview", exact: true },
-        { href: "/company/team", label: "Teams", icon: "teams" },
-        { href: "/company/people", label: "People", icon: "people" },
-        { href: "/company/prs", label: "Pull requests", icon: "prs" },
-        { href: "/company/setup", label: "Setup", icon: "setup" },
+        { href: "/company", label: "Overview", exact: true },
+        { href: "/company/team", label: "Teams" },
+        { href: "/company/people", label: "People" },
+        { href: "/company/prs", label: "Pull requests" },
+        { href: "/company/setup", label: "Setup" },
       ]}
       right={<CompanyIdentity v={v} />}
       footerNote="Every number is signed by the person it describes. Prompts are never shared."
