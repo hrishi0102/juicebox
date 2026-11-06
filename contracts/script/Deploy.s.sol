@@ -9,10 +9,10 @@ import {TeamScoreboard} from "../src/TeamScoreboard.sol";
 ///   Arc testnet production KeystoneForwarder:                 0x76c9cf548b4179F8901cda1f8623568b58215E62
 ///   Sepolia simulation forwarder:                             0x15fC6ae953E024d975e77382eEeC56A9101f9F88
 ///
-/// FORWARDER=0x6E9E... forge script script/Deploy.s.sol --rpc-url https://rpc.testnet.arc.io --private-key $PK --broadcast
+/// FORWARDER=0x15fC6ae953E024d975e77382eEeC56A9101f9F88 forge script script/Deploy.s.sol --rpc-url https://ethereum-sepolia-rpc.publicnode.com --private-key $PK --broadcast
 contract Deploy is Script {
     function run() external {
-        address forwarder = vm.envOr("FORWARDER", address(0x6E9EE680ef59ef64Aa8C7371279c27E496b5eDc1));
+        address forwarder = vm.envOr("FORWARDER", address(0x15fC6ae953E024d975e77382eEeC56A9101f9F88));
         vm.startBroadcast();
         TeamScoreboard board = new TeamScoreboard(forwarder);
         vm.stopBroadcast();

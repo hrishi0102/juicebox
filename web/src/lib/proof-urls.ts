@@ -28,3 +28,13 @@ export const DEMO_SEALED = {
   entity: "0xea50b76a7c871350d819fac561481bfb8070e3da040b3828e9369d0d99cb9ca6",
   swarm: "6483e19496c5b16f1f7b35da826f42ff140caedb31732c4e7a7fa90d597eeb75",
 };
+
+/** The Chainlink CRE monthly check writes each team's score to this contract on Ethereum Sepolia. */
+export const CRE_SCOREBOARD = {
+  address: "0x563F8f8A06a9bCb394Bd463CEC352e6EB902FDD5",
+  deployTx: "0x2afdeaf9e488bff2b55b01108b4e5a8218c4f9c7a76c6b9cf3b3b36d66073acf",
+  fromBlock: BigInt(12079434),
+};
+export const SEPOLIA_ETHERSCAN = "https://sepolia.etherscan.io";
+export const sepoliaAddressUrl = (address: string) => `${SEPOLIA_ETHERSCAN}/address/${address}`;
+export const sepoliaTxUrl = (hash: string) => `${SEPOLIA_ETHERSCAN}/tx/${hash}`;

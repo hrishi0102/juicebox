@@ -2,11 +2,13 @@
   "schedule": "0 0 0 1 * *",
   "teamId": "acme-payments",
   "arkivRpcUrl": "https://rpc.rabdi.db-chain.testnet.arkiv.network",
-  "schemaName": "receipts-ethglobal-mumbai.receipt.v1",
-  "trustedWriters": [],
+  "schemaName": "receipts-ethglobal-mumbai.receipt.v2",
+  "trustedWriters": [
+    "0x09351DC0A6AFa87da28D00914fE87373C5C82747"
+  ],
   "windowDays": 45,
-  "maxPrChecks": 10,
-  "chainSelectorName": "arc-testnet",
-  "consumerAddress": "0x0000000000000000000000000000000000000000",
-  "gasLimit": "500000"
+  "maxPrChecks": 13,
+  "chainSelectorName": "ethereum-testnet-sepolia",
+  "consumerAddress": "0x563F8f8A06a9bCb394Bd463CEC352e6EB902FDD5",
+  "gasLimit": "1500000"
 }

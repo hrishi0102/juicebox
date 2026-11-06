@@ -14,7 +14,8 @@ contract TeamScoreboardTest is Test {
     }
 
     function report(uint32 day, uint64 spend) internal view returns (bytes memory) {
-        return abi.encode(team, day, uint32(4), spend, uint32(9), uint32(7500), uint16(8300), uint16(3500), uint16(10), uint16(9));
+        // teamId, periodDay, receipts, people, rejected, spendCents, done, wastedCents, mergedPrs, prsChecked, prsStillMerged
+        return abi.encode(team, day, uint32(25), uint32(5), uint32(1), spend, uint32(116), uint64(22208), uint32(89), uint16(10), uint16(9));
     }
 
     function test_forwarderCanPost() public {
@@ -22,9 +23,13 @@ contract TeamScoreboardTest is Test {
         board.onReport("", report(20398, 39500));
         (uint32 day, TeamScoreboard.Score memory s) = board.latest(team);
         assertEq(day, 20398);
-        assertEq(s.receipts, 4);
+        assertEq(s.receipts, 25);
+        assertEq(s.people, 5);
+        assertEq(s.rejected, 1);
         assertEq(s.spendCents, 39500);
-        assertEq(s.survivalBps, 8300);
+        assertEq(s.done, 116);
+        assertEq(s.wastedCents, 22208);
+        assertEq(s.mergedPrs, 89);
         assertEq(s.prsStillMerged, 9);
     }
 

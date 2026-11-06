@@ -1,25 +1,54 @@
-# Receipts monthly scoring job (Chainlink CRE)
+# Receipts monthly check (Chainlink CRE)
 
-Optional module. Not one of the three partner tracks we submit to (0G, Arkiv, EF), because a project can enter at most three; swap it in if you prefer the Chainlink track.
+Submitted to **Chainlink: Best Workflow with CRE**.
 
-> **Out of date:** this job was written for receipt v1 (schema `receipt.v1`: shipped tasks, kept work, survival, waste). Receipt v2 signs the week list instead (things done, categories, merged PRs; see `architecture/receipts-and-signing.md`), so the job needs its schema name and summed fields updated before it can run against new receipts.
+## Why it exists
 
-## What it does
+Receipts are written by employees and read by their company, and both sides have a reason to bend the numbers. Inside the app, the company's own computer checks each receipt. Once a month, this workflow checks the team on its own, with no Receipts server and no company computer involved. Each Chainlink node:
 
-Once a month (the simulator runs it immediately):
+1. **reads the team's receipts straight from Arkiv** (one `arkiv_query` JSON-RPC call),
+2. **checks every receipt's EIP-712 signature** against the person it is about, and drops any that fail,
+3. **adds up the signed numbers**, one receipt per person per week (the one written last): spend, things done, spend that went in circles, merged PRs,
+4. **asks GitHub** whether each PR a receipt claims as merged is still merged.
 
-1. Reads the team's shared receipts **straight from Arkiv** with a raw `arkiv_query` JSON-RPC call. No Receipts server is involved.
-2. Keeps receipts written by trusted writers (config `trustedWriters`, empty = any) whose week ended inside the window.
-3. Adds up the team totals from the **signed** fields of each receipt (spend, shipped tasks, kept work, survival, waste).
-4. Re-checks the evidence on GitHub: every PR a receipt claims as merged must still be merged (up to 13 PRs per run, CRE allows 15 HTTP calls in total).
-5. Every DON node does this on its own; consensus takes the median of each number.
-6. Writes the verified monthly team score on-chain to [`TeamScoreboard`](../contracts/src/TeamScoreboard.sol) through the CRE forwarder. Nobody, not the manager, not the engineers, not us, can write a score directly.
+The nodes agree on every number (median), and the result goes on chain to [`TeamScoreboard`](../contracts/src/TeamScoreboard.sol) on **Ethereum Sepolia** through Chainlink's forwarder. Only the forwarder can post, and a month can never be rewritten, so nobody (not the manager, not the employees, not us) can post or change a team's score. The company's Team page in the app reads the latest score from the contract and links to it on Etherscan.
 
-Code: [`receipts-monthly/main.ts`](receipts-monthly/main.ts). It type-checks against `@chainlink/cre-sdk` 1.23, and the scoring function was run in Node against fake Arkiv and GitHub responses (20 demo receipts, 11 HTTP calls). It has **not** been compiled to WASM or simulated yet, because the CRE CLI needs a login.
+One blockchain (Sepolia), two outside systems (Arkiv and the GitHub API), and the workflow is what makes the score trustworthy.
 
-## Run the simulation
+## Deployed
 
-1. Install the CRE CLI and log in (free account at app.chain.link, needs your browser):
+- `TeamScoreboard` on Ethereum Sepolia: [`0x563F8f8A06a9bCb394Bd463CEC352e6EB902FDD5`](https://sepolia.etherscan.io/address/0x563F8f8A06a9bCb394Bd463CEC352e6EB902FDD5), deploy transaction [`0x2afdeaf9…3acf`](https://sepolia.etherscan.io/tx/0x2afdeaf9e488bff2b55b01108b4e5a8218c4f9c7a76c6b9cf3b3b36d66073acf). Its forwarder is CRE's Sepolia simulation forwarder `0x15fC6ae953E024d975e77382eEeC56A9101f9F88`, so `cre workflow simulate --broadcast` can post to it. For the live network, the owner switches it to the production forwarder with `setForwarder`.
+- Team checked: `acme-payments`, the demo company's Payments team. Only entities written by the company wallet `0x09351DC0A6AFa87da28D00914fE87373C5C82747` count (`trustedWriters`).
+
+## Files
+
+| What | File |
+|---|---|
+| The check (no CRE SDK in it, so it runs the same everywhere) | [`receipts-monthly/score.ts`](receipts-monthly/score.ts) |
+| The workflow: cron trigger, node mode, consensus, report, write | [`receipts-monthly/main.ts`](receipts-monthly/main.ts) |
+| The same check in Node against live Arkiv and GitHub | [`receipts-monthly/check-live.ts`](receipts-monthly/check-live.ts) |
+| Config (team, window, chain, contract) | [`receipts-monthly/config.staging.json`](receipts-monthly/config.staging.json) |
+| Secrets (the Arkiv access key) | [`secrets.yaml`](secrets.yaml), values in `cre/.env` (see [`.env.example`](.env.example)) |
+| The contract and its tests | [`../contracts/src/TeamScoreboard.sol`](../contracts/src/TeamScoreboard.sol), [`../contracts/test/TeamScoreboard.t.sol`](../contracts/test/TeamScoreboard.t.sol) |
+| The app reading the score | [`../web/src/lib/server/scoreboard.ts`](../web/src/lib/server/scoreboard.ts), [`../web/src/components/chainlink-check.tsx`](../web/src/components/chainlink-check.tsx) |
+
+## Run it
+
+**1. The check, against live data, no account needed** (from `cre/receipts-monthly`, after `npm install`):
+
+```bash
+node check-live.ts
+```
+
+Output on Nov 7: 11 HTTP calls in about 3 seconds; 25 signed weeks from 5 people, 0 failed signatures, $2,834.77 of spend, 116 things done, $222.08 that went in circles, 89 merged PRs as signed, and 10 PRs asked on GitHub (0 still merged, because the demo company's PRs are made up). Changing one number inside a payload makes that receipt fail its signature check, and it is left out.
+
+**2. Compile to WASM** (what CRE runs; this works without an account):
+
+```bash
+bun node_modules/.bin/cre-compile main.ts /tmp/receipts-monthly.wasm
+```
+
+**3. Simulate with the CRE CLI** (needs a free Chainlink account; the login opens your browser):
 
 ```bash
 curl -sSL https://app.chain.link/cre/install.sh | bash
@@ -29,26 +58,18 @@ curl -sSL https://app.chain.link/cre/install.sh | bash
 cre login
 ```
 
-2. Deploy the consumer contract (Arc testnet; gas is USDC from https://faucet.circle.com):
+`cre/.env` needs `CRE_ETH_PRIVATE_KEY` (a Sepolia key with a little ETH; it pays the gas of the write) and `ARKIV_ACCESS_KEY_ALL` (free from https://hub.arkiv.network/access-keys). Then, from `cre/`:
 
 ```bash
-cd contracts && forge install foundry-rs/forge-std && FORWARDER=0x6E9EE680ef59ef64Aa8C7371279c27E496b5eDc1 forge script script/Deploy.s.sol --rpc-url https://rpc.testnet.arc.io --private-key $PK --broadcast
+cre workflow simulate receipts-monthly --target staging-settings --broadcast
 ```
 
-3. Put the printed address in `receipts-monthly/config.staging.json` as `consumerAddress`, copy `.env.example` to `.env` (a funded `CRE_ETH_PRIVATE_KEY` and a read-only `GITHUB_TOKEN_ALL`), then:
+The simulator runs the workflow as one node, signs the report, and sends it through the simulation forwarder to `TeamScoreboard`. Look for the `TeamScorePosted` event on Etherscan, then open the app as Acme's lead (`/demo`), Teams, Payments: the "Checked by Chainlink" card shows the score and links to the transaction. Without `--broadcast` the write is a dry run.
 
-```bash
-cd cre/receipts-monthly && bun install
-```
+## Limits and notes
 
-```bash
-cd cre && cre workflow simulate receipts-monthly --target staging-settings --broadcast
-```
-
-Without `--broadcast` the write is a dry run. With it, the mock forwarder calls `TeamScoreboard.onReport` for real; check the `TeamScorePosted` event on https://explorer.testnet.arc.io.
-
-## Notes
-
-- Chain: `arc-testnet` (CRE supports it; simulation forwarder `0x6E9EE680ef59ef64Aa8C7371279c27E496b5eDc1`). Switch `chainSelectorName` to `ethereum-testnet-sepolia` and redeploy with the Sepolia forwarder if you prefer.
-- The demo team's PR links point to a fictional GitHub org, so they will not be confirmed. Point `teamId` at a real team that shared receipts with evidence to see real confirmations.
-- Next step: verify each receipt's EIP-712 signature inside the DON too (the web app already does on read). It needs a synchronous secp256k1 recover in the WASM runtime.
+- **HTTP calls:** CRE allows 15 per run; Arkiv uses 1 and GitHub up to 13 (`maxPrChecks`).
+- **GitHub token:** optional. Public PRs are checked without one. For private repositories, add `GITHUB_TOKEN` to `secrets.yaml` (mapped to `GITHUB_TOKEN_ALL`).
+- **Sealed weeks:** their PRs are encrypted on Swarm for the company, so the DON checks the PRs of full receipts only. The signed totals of sealed weeks still count.
+- **Gas on Sepolia:** storing contract code now costs far more than older rules: the deploy used 5.1M gas (Foundry's own estimate of 1M failed twice), and one report write about 364k. The workflow's gas limit is 1.5M.
+- **One team per run:** the cron job checks the team in its config. A company with several teams runs one workflow per team, or loops over teams within the 15-call limit.

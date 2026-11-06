@@ -10,6 +10,8 @@ import { aggregate, aggregateEfficiency, countsLine } from "@/lib/receipts/aggre
 import { EfficiencyPanel } from "@/components/efficiency-panel";
 import { signedNumbers } from "@/lib/receipts/receipt";
 import { pct, plural, usd } from "@/lib/format";
+import { ChainlinkCheck } from "@/components/chainlink-check";
+import { teamCheck } from "@/lib/server/scoreboard";
 
 export const metadata = { title: "Teams · Company · Receipts" };
 
@@ -22,6 +24,7 @@ export default async function Team({ searchParams }: { searchParams: Promise<{ w
   const you = source === "demo" ? org.members.find((m) => m.you)?.team : (await shareTarget()).team;
   const teamId = sp.team && org.teams.some((t) => t.id === sp.team) ? sp.team : (you ?? org.teams[0]?.id ?? "");
   const cfg = org.teams.find((t) => t.id === teamId) ?? { id: teamId, name: teamId };
+  const check = teamId ? await teamCheck(teamId) : undefined;
   const all = org.rows.filter((r) => r.team === teamId);
   const arkivForTeam = all.filter((r) => r.from === "arkiv").length;
   const demoForTeam = all.filter((r) => r.from === "demo file").length;
@@ -86,6 +89,8 @@ export default async function Team({ searchParams }: { searchParams: Promise<{ w
               <CategoryBar spend={total.categorySpend} total={total.spend} />
             </div>
           </section>
+
+          {check && <ChainlinkCheck check={check} team={cfg.name} company={org.name.replace(/ \(demo company\)$/, "")} demo={source === "demo"} />}
 
           {eff && <EfficiencyPanel e={eff} title="How the team worked this week" note="Typical times are the median of each person's median. People are never ranked." />}
 

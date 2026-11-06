@@ -3,12 +3,17 @@
     "target": "esnext",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "lib": ["ESNext"],
+    "lib": [
+      "ESNext"
+    ],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "types": []
   },
-  "include": ["main.ts"]
+  "include": [
+    "main.ts",
+    "score.ts"
+  ]
 }

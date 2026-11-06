@@ -12,21 +12,38 @@ interface IERC165 {
 }
 
 /// @title TeamScoreboard
-/// @notice Verified monthly AI-spend scores per team, written by the Receipts CRE workflow.
-///         The workflow reads the team's shared receipts from Arkiv, re-checks the evidence PRs on
-///         GitHub, reaches consensus across DON nodes, and reports the result here. No person
-///         (not the manager, not the engineers, not us) can write a score directly.
+/// @notice Monthly team checks of Receipts, written by the Chainlink CRE workflow. Every DON node
+///         reads the team's receipts from Arkiv, checks each EIP-712 signature, adds up the signed
+///         numbers and re-checks the merged PRs on GitHub; consensus takes the median and reports it
+///         here. Only the CRE forwarder can post, so no person (not the manager, not the engineers,
+///         not us) can write or change a team's score.
 contract TeamScoreboard is IReceiver, IERC165 {
+    /// @dev The report, in the order the workflow encodes it (cre/receipts-monthly/score.ts, REPORT_ABI).
+    struct Report {
+        bytes32 teamId; // keccak256 of the Arkiv team id, e.g. keccak256("acme-payments")
+        uint32 periodDay; // days since 1970 when the check ran
+        uint32 receipts; // signed weeks counted (one per person per week)
+        uint32 people; // different people among them
+        uint32 rejected; // receipts dropped because their signature did not check out
+        uint64 spendCents; // AI spend in those weeks, US cents
+        uint32 done; // things done
+        uint64 wastedCents; // spend on Wasted items, US cents
+        uint32 mergedPrs; // merged PRs, as signed by each person
+        uint16 prsChecked; // PRs the DON asked GitHub about
+        uint16 prsStillMerged; // of those, still merged
+    }
+
     struct Score {
         uint64 postedAt;
-        uint32 receipts; // shared receipts counted
-        uint64 spendCents; // total spend in those receipts, US cents
-        uint32 shippedTasks;
-        uint32 keptWorkMilli; // kept work x 1000
-        uint16 survivalBps; // share of shipped code still alive (65535 = unknown)
-        uint16 wasteBps; // share of spend that was waste
-        uint16 prsChecked; // evidence PRs the DON re-checked on GitHub
-        uint16 prsStillMerged; // of those, still merged
+        uint32 receipts;
+        uint32 people;
+        uint32 rejected;
+        uint64 spendCents;
+        uint32 done;
+        uint64 wastedCents;
+        uint32 mergedPrs;
+        uint16 prsChecked;
+        uint16 prsStillMerged;
     }
 
     address public owner;
@@ -39,11 +56,12 @@ contract TeamScoreboard is IReceiver, IERC165 {
         bytes32 indexed teamId,
         uint32 indexed periodDay,
         uint32 receipts,
+        uint32 people,
+        uint32 rejected,
         uint64 spendCents,
-        uint32 shippedTasks,
-        uint32 keptWorkMilli,
-        uint16 survivalBps,
-        uint16 wasteBps,
+        uint32 done,
+        uint64 wastedCents,
+        uint32 mergedPrs,
         uint16 prsChecked,
         uint16 prsStillMerged
     );
@@ -68,36 +86,26 @@ contract TeamScoreboard is IReceiver, IERC165 {
 
     function onReport(bytes calldata, bytes calldata report) external override {
         if (msg.sender != forwarder) revert NotForwarder(msg.sender);
-        (
-            bytes32 teamId,
-            uint32 periodDay,
-            uint32 receipts,
-            uint64 spendCents,
-            uint32 shippedTasks,
-            uint32 keptWorkMilli,
-            uint16 survivalBps,
-            uint16 wasteBps,
-            uint16 prsChecked,
-            uint16 prsStillMerged
-        ) = abi.decode(report, (bytes32, uint32, uint32, uint64, uint32, uint32, uint16, uint16, uint16, uint16));
+        Report memory r = abi.decode(report, (Report));
 
-        uint32 prev = latestPeriodDay[teamId];
-        if (periodDay < prev) revert StaleReport(periodDay, prev); // no rewriting history
-        latestPeriodDay[teamId] = periodDay;
+        uint32 prev = latestPeriodDay[r.teamId];
+        if (r.periodDay < prev) revert StaleReport(r.periodDay, prev); // no rewriting history
+        latestPeriodDay[r.teamId] = r.periodDay;
 
-        scores[teamId][periodDay] = Score({
+        scores[r.teamId][r.periodDay] = Score({
             postedAt: uint64(block.timestamp),
-            receipts: receipts,
-            spendCents: spendCents,
-            shippedTasks: shippedTasks,
-            keptWorkMilli: keptWorkMilli,
-            survivalBps: survivalBps,
-            wasteBps: wasteBps,
-            prsChecked: prsChecked,
-            prsStillMerged: prsStillMerged
+            receipts: r.receipts,
+            people: r.people,
+            rejected: r.rejected,
+            spendCents: r.spendCents,
+            done: r.done,
+            wastedCents: r.wastedCents,
+            mergedPrs: r.mergedPrs,
+            prsChecked: r.prsChecked,
+            prsStillMerged: r.prsStillMerged
         });
         emit TeamScorePosted(
-            teamId, periodDay, receipts, spendCents, shippedTasks, keptWorkMilli, survivalBps, wasteBps, prsChecked, prsStillMerged
+            r.teamId, r.periodDay, r.receipts, r.people, r.rejected, r.spendCents, r.done, r.wastedCents, r.mergedPrs, r.prsChecked, r.prsStillMerged
         );
     }
 
