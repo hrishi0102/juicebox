@@ -118,8 +118,8 @@
   "receipts": [
     {
       "kind": "receipts.v2",
-      "headline": "$98 of AI got 5 things done",
-      "oneLiner": "Built 3 things, figured out 1 problem and researched 1 topic.",
+      "headline": "$98 of AI got 4 things done",
+      "oneLiner": "Built checkout tests and ledger exports while debugging webhook performance",
       "message": {
         "owner": "0xfFC57B874f841B7B849Ff3F194907A2e903F7a74",
         "author": "you",
@@ -128,9 +128,9 @@
         "periodEnd": "1791763200",
         "sessions": 5,
         "spendCents": "9757",
-        "done": 5,
+        "done": 4,
         "categories": [
-          3,
+          2,
           0,
           1,
           1,
@@ -156,33 +156,13 @@
           "8589",
           "1168"
         ],
-        "itemsRoot": "0x3805990e8fb7780e4ce06023ff80d320484eb0fcf1226d605ebc617d6aa2e543",
+        "itemsRoot": "0xc10e982cc1d607f71d3e785206235b5468f989ec89b58996a4b8c3fd3fabc569",
         "evidenceRoot": "0x9d3bed955664b08ad87d526694cdccfff8394f51e1b60764c63144ed1319f057",
         "judgeRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "judge": "rules"
+        "judge": "0g-private-computer:0gm-1.0-35b-a3b-sia:0/5"
       },
-      "digest": "0xa3d8dd0f954e0703a2e49b3d02bbe93edb3c0c7a80e9f65cf24f683d47ff1de5",
+      "digest": "0x4a36f832580d956945e9230ae536439f5123b1edcb491e4cad80c075104a5e26",
       "items": [
-        {
-          "category": "Built",
-          "title": "E2e for checkout",
-          "costCents": 5831,
-          "prs": [
-            "acme-demo/payments-api#102"
-          ],
-          "inProgress": false,
-          "leaf": "0xe3fd0a1c7d08b778afed35dfdd595a72db21f71e30c88c13c03d99201f0f2f4f"
-        },
-        {
-          "category": "Built",
-          "title": "E2e for checkout",
-          "costCents": 1947,
-          "prs": [
-            "acme-demo/web-app#101"
-          ],
-          "inProgress": false,
-          "leaf": "0xcbdb954e378a2879fc9a6256df43f1dad7a03ae08220db240b0eeccd02409d71"
-        },
         {
           "category": "Built",
           "title": "CSV export for ledgers",
@@ -194,20 +174,31 @@
           "leaf": "0x3902d2c13f09c6378e1049183a6d39e13294ed9215e9398b437438b23099c3e2"
         },
         {
+          "category": "Built",
+          "title": "E2e tests for checkout",
+          "costCents": 7778,
+          "prs": [
+            "acme-demo/payments-api#102",
+            "acme-demo/web-app#101"
+          ],
+          "inProgress": false,
+          "leaf": "0xa483f1f4745a1e6830229f1f180b19f1f15fb4c0e3fb03f2f5b7e35a174f30af"
+        },
+        {
           "category": "Figured out",
-          "title": "Why the webhook test is slow",
+          "title": "Reason for slow webhook test",
           "costCents": 397,
           "prs": [],
           "inProgress": false,
-          "leaf": "0x8ef23f41b27e831fe3bd160a70f71c20e0658145e244b01c14cedbb07088777d"
+          "leaf": "0x907b4f51e803f28d7b91eb8f43aaa4fb17d95bfcc203e15c9e075195ea90d5fb"
         },
         {
           "category": "Researched",
-          "title": "Queue options for payouts compared",
+          "title": "Options for payouts compared",
           "costCents": 414,
           "prs": [],
           "inProgress": false,
-          "leaf": "0x58da7fe99f0e912f11eaaba1821ad353cc947aff16eb1dccdd80d570b540c5c5"
+          "leaf": "0x2d4051035ddeeb32a2af7dcdc0c7b8f242d287299a67bd68d499cef51243fe7c"
         }
       ],
       "evidence": [
@@ -284,9 +275,10 @@
             "costPerKept": null
           }
         ],
-        "writtenBy": "simple rules"
+        "writtenBy": "0G private AI, TEE verified",
+        "model": "0gm-1.0-35b-a3b-sia"
       },
-      "signature": "0x67249724966dde7c8eee5248c98191dd06db0632f7b0287f120e6384c4d80a767855d0b7a04f1dd86808f83aadf52d9ebfc8701cf9f3fc29b1a49179e23f5d531c",
+      "signature": "0x354ba9ff56c381dd13114bef1ef5285446880b60b01ece96006b37674af1219178492e4dc65831488443c9cc1edffa2874ed40c1249e524a0268ee1afd050f0b1c",
       "signedAt": "2026-10-12T00:00:00.000Z",
       "share": {
         "level": "full",

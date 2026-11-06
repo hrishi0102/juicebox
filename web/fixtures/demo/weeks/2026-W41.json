@@ -1,0 +1,96 @@
+{
+  "week": "2026-W41",
+  "source": "demo",
+  "items": [
+    {
+      "id": "a-1",
+      "category": "Built",
+      "title": "CSV export for ledgers",
+      "inProgress": false,
+      "sessions": [
+        "5d9070d6-e277-48be-a2ed-d5016147afda"
+      ],
+      "costUsd": 11.68,
+      "prs": [
+        {
+          "key": "acme-demo/infra#100",
+          "url": "https://github.com/acme-demo/infra/pull/100",
+          "title": "feat: CSV export for ledgers",
+          "state": "merged",
+          "reverted": false
+        }
+      ],
+      "tools": [
+        "codex"
+      ]
+    },
+    {
+      "id": "a-2",
+      "category": "Built",
+      "title": "E2e tests for checkout",
+      "inProgress": false,
+      "sessions": [
+        "830e1cd1-2147-4795-a2cd-e23d29946612",
+        "d391efd0-02d3-4a49-a3a5-398f9efa6e73"
+      ],
+      "costUsd": 77.78,
+      "prs": [
+        {
+          "key": "acme-demo/payments-api#102",
+          "url": "https://github.com/acme-demo/payments-api/pull/102",
+          "title": "test: e2e for checkout",
+          "state": "merged",
+          "reverted": false
+        },
+        {
+          "key": "acme-demo/web-app#101",
+          "url": "https://github.com/acme-demo/web-app/pull/101",
+          "title": "test: e2e for checkout",
+          "state": "merged",
+          "reverted": false
+        }
+      ],
+      "tools": [
+        "claude-code"
+      ]
+    },
+    {
+      "id": "a-3",
+      "category": "Figured out",
+      "title": "Reason for slow webhook test",
+      "inProgress": false,
+      "sessions": [
+        "d9b9a5bc-40f6-4f30-add1-1609e3403ce4"
+      ],
+      "costUsd": 3.97,
+      "prs": [],
+      "tools": [
+        "claude-code"
+      ]
+    },
+    {
+      "id": "a-4",
+      "category": "Researched",
+      "title": "Options for payouts compared",
+      "inProgress": false,
+      "sessions": [
+        "1283cf86-527a-4af5-ae05-157c99e0d63e"
+      ],
+      "costUsd": 4.14,
+      "prs": [],
+      "tools": [
+        "claude-code"
+      ]
+    }
+  ],
+  "oneLiner": "Built checkout tests and ledger exports while debugging webhook performance",
+  "engine": "0g-tee",
+  "model": "0gm-1.0-35b-a3b-sia",
+  "requestIds": [
+    "97616eeb-4a78-44dc-947c-f93faf7f2ff6"
+  ],
+  "verified": true,
+  "payer": "app key",
+  "sessionsHash": "8d7645fd",
+  "createdAt": "2026-11-06T12:52:41.788Z"
+}
