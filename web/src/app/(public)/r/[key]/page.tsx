@@ -2,8 +2,9 @@ import Link from "next/link";
 import { ReceiptPaper } from "@/components/receipt-paper";
 import { PrTable } from "@/components/pr-table";
 import { WeekList } from "@/components/week-list";
-import { swarmConfig } from "@/lib/receipts/swarm";
-import { ARKIV_EXPLORER, blockDate, fetchReceiptByKey } from "@/lib/receipts/arkiv";
+import { ExternalLink } from "lucide-react";
+import { blockDate, fetchReceiptByKey } from "@/lib/receipts/arkiv";
+import { arkivAddressUrl, arkivEntityUrl, swarmProofPath } from "@/lib/proof-urls";
 import { summaryFromReceipt, verifyReceipt } from "@/lib/receipts/receipt";
 import { shortAddr } from "@/lib/format";
 
@@ -36,7 +37,6 @@ export default async function SharedReceipt({ params }: { params: Promise<{ key:
   const summary = summaryFromReceipt(r);
   const expires = r.arkiv.expiresAt ? await blockDate(r.arkiv.expiresAt) : undefined;
   const ownerIsSigner = !!r.arkiv.owner && r.arkiv.owner.toLowerCase() === r.message.owner.toLowerCase();
-  const swarmGateway = swarmConfig().gateway;
 
   return (
     <div className="grid gap-10 lg:grid-cols-[380px_1fr]">
@@ -70,12 +70,11 @@ export default async function SharedReceipt({ params }: { params: Promise<{ key:
               {r.share?.org ? `the ${r.share.org} company key` : "the company key"} can open them, for members of {r.share?.org ?? "the company"} on its
               company page. Everyone can check the signed totals above.
             </p>
-            <p className="mt-2 break-all text-xs text-muted-foreground">
-              Swarm reference{" "}
-              <a className="hover:underline" href={`${swarmGateway}/bytes/${r.swarm.ref}`} target="_blank" rel="noreferrer">
-                {r.swarm.ref}
-              </a>{" "}
-              (encrypted bytes)
+            <p className="mt-2 text-sm">
+              <Link className="text-primary hover:underline" href={swarmProofPath(r.swarm.ref, key)}>
+                Fetch the encrypted copy from Swarm now
+              </Link>
+              <span className="ml-2 break-all text-xs text-muted-foreground">reference {r.swarm.ref}</span>
             </p>
           </section>
         )}
@@ -105,10 +104,10 @@ export default async function SharedReceipt({ params }: { params: Promise<{ key:
           <h2 className="text-lg font-semibold">On Arkiv</h2>
           <ul className="mt-2 space-y-1 text-sm">
             <li className="break-all">
-              Entity{" "}
-              <a className="text-primary hover:underline" href={`${ARKIV_EXPLORER}/entity/${key}`} target="_blank" rel="noreferrer">
-                {key}
-              </a>
+              <a className="inline-flex items-center gap-1 text-primary hover:underline" href={arkivEntityUrl(key)} target="_blank" rel="noreferrer">
+                The record on the Arkiv explorer <ExternalLink className="size-3" aria-hidden="true" />
+              </a>{" "}
+              <span className="text-xs text-muted-foreground">{key}</span>
             </li>
             {r.arkiv.readonly !== undefined && <li>{r.arkiv.readonly ? "Read-only: nobody can change it, not even its owner." : "Not read-only: its owner could change it."}</li>}
             {r.arkiv.owner && (
@@ -118,7 +117,13 @@ export default async function SharedReceipt({ params }: { params: Promise<{ key:
               </li>
             )}
             {r.arkiv.creator && r.arkiv.creator.toLowerCase() !== r.arkiv.owner?.toLowerCase() && (
-              <li className="break-all">Written by {r.arkiv.creator}, the company wallet, which only paid the fee.</li>
+              <li className="break-all">
+                Written by{" "}
+                <a className="text-primary hover:underline" href={arkivAddressUrl(r.arkiv.creator)} target="_blank" rel="noreferrer">
+                  {r.arkiv.creator}
+                </a>
+                , the company wallet, which only paid the fee.
+              </li>
             )}
             {r.arkiv.expiresAt !== undefined && (
               <li>

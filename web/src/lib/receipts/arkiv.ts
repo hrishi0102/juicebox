@@ -27,7 +27,7 @@ import { downloadBytes, swarmReady, uploadBytes } from "./swarm";
 
 export const ARKIV_SCHEMA_NAME = "receipts-ethglobal-mumbai.receipt.v2";
 export const ARKIV_CHAIN_ID = 7794095;
-export const ARKIV_EXPLORER = "https://rabdi.explorer.arkiv.network";
+export { ARKIV_EXPLORER } from "../proof-urls";
 
 export const ReceiptSchema = defineSchema(ARKIV_SCHEMA_NAME, {
   type: str().indexed(), // always "receipt"
@@ -263,6 +263,33 @@ export async function fetchReceiptByKey(entityKey: string, open = false): Promis
   const e: any = await client.getEntity(entityKey as Hex, ReceiptSchema);
   if (!e) return undefined;
   return decodeRow({ ...e, $key: entityKey }, open);
+}
+
+/**
+ * What an Arkiv receipt says about its encrypted copy on Swarm: the reference (public), and, when
+ * this copy holds the company key, the SHA-256 and size sealed inside the pointer. Used to check a
+ * file fetched from Swarm is the one the record points to.
+ */
+export async function swarmPointer(entityKey: string): Promise<{ ref?: string; org?: string; sha256?: string; size?: number; opened: boolean }> {
+  const e: any = await arkivPublic().getEntity(entityKey as Hex, ReceiptSchema);
+  const ref = val(e?.swarm) ? String(val(e.swarm)) : undefined;
+  let org: string | undefined;
+  try {
+    const raw = val(e?.payload);
+    org = (JSON.parse(typeof raw === "string" && raw.startsWith("0x") ? hexToString(raw as Hex) : String(raw)) as SignedReceipt).share?.org;
+  } catch {
+    org = undefined;
+  }
+  const sealedRaw = val(e?.sealed);
+  const sealed = sealedRaw instanceof Uint8Array ? bytesToHex(sealedRaw) : sealedRaw ? String(sealedRaw).replace(/^0x/, "") : undefined;
+  const key = companyPrivateKey();
+  if (!sealed || !key) return { ref, org, opened: false };
+  try {
+    const p = openPointer(key, sealed);
+    return { ref: p.ref, org, sha256: p.sha256, size: p.size, opened: true };
+  } catch {
+    return { ref, org, opened: false };
+  }
 }
 
 /** About when a block is (or was) reached, from the current block and Arkiv's 2 second block time. */

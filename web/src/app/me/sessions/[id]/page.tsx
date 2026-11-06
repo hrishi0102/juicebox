@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { ProofLinks } from "@/components/proof-links";
+import { ZG_ACTIVITY, zgAddressUrl, zgProofPath } from "@/lib/proof-urls";
 import { notFound } from "next/navigation";
 import { Difficulty } from "@/components/label-badge";
 import { CategoryBadge } from "@/components/category-badge";
@@ -128,7 +130,7 @@ export default async function SessionDetail({ params }: { params: Promise<{ id: 
             {j.judge.sealed !== undefined && <Item k="Sealed end to end" v={j.judge.sealed ? "yes" : "no"} />}
             {j.judge.teeVerified !== undefined && <Item k="Router checked TEE signature" v={j.judge.teeVerified ? "yes" : "no"} />}
             {j.judge.selfVerified !== undefined && <Item k="We checked TEE signature" v={j.judge.selfVerified ? "yes" : "no"} />}
-            {j.judge.payer && <Item k="Paid by" v={j.judge.payer === "app key" ? "the app's own 0G key (command line)" : `your 0G account ${j.judge.payer}`} />}
+            {j.judge.payer && <Item k="Paid by" v={j.judge.payer === "app key" ? "the app's own 0G key" : `your 0G account ${j.judge.payer}`} />}
             {j.judge.costUsd !== undefined && <Item k="Cost of this call" v={`$${j.judge.costUsd.toFixed(4)}`} />}
             {j.judge.requestHash && <Item k="Hash of what was sent" v={shortHash(j.judge.requestHash, 10)} />}
             {j.judge.responseHash && <Item k="Hash of the answer" v={shortHash(j.judge.responseHash, 10)} />}
@@ -137,6 +139,21 @@ export default async function SessionDetail({ params }: { params: Promise<{ id: 
             The private AI sees trimmed prompts, the AI&apos;s last answers, a tool-use summary, the GitHub outcome and the cost. Only the category,
             title, difficulty, a generic reason and these hashes are kept. The prompts are never written anywhere.
           </p>
+          {j.judge.engine === "0g-tee" && (
+            <ProofLinks
+              className="mt-4 max-w-2xl"
+              groups={[
+                {
+                  service: "0G",
+                  what: `This call ran on 0G in a hardware enclave${j.judge.requestId ? `; look for request ${j.judge.requestId.slice(0, 8)}… in your activity` : ""}`,
+                  links: [
+                    ...(j.judge.provider ? [{ label: "0G's TEE check of the provider", href: zgProofPath(j.judge.provider) }, { label: "The provider on 0G ChainScan", href: zgAddressUrl(j.judge.provider) }] : []),
+                    ...(j.judge.payer && j.judge.payer !== "app key" ? [{ label: "Your calls on pc.0g.ai", href: ZG_ACTIVITY }] : []),
+                  ],
+                },
+              ]}
+            />
+          )}
         </section>
       )}
     </div>

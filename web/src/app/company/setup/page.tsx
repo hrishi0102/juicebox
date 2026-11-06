@@ -7,6 +7,7 @@ import { currentSource, getDemoOrg, shareTarget } from "@/lib/server/data";
 import { companyKnown } from "@/lib/server/org";
 import { githubOAuthReady } from "@/lib/server/session";
 import { shortAddr } from "@/lib/format";
+import { arkivAddressUrl } from "@/lib/proof-urls";
 
 export const metadata = { title: "Setup · Company · Receipts" };
 
@@ -95,7 +96,10 @@ export default async function CompanySetup() {
                   </a>
                 </>
               )}
-              .
+              .{" "}
+              <a href={arkivAddressUrl(writer)} className="text-primary hover:underline" target="_blank" rel="noreferrer">
+                Every record it wrote, on the Arkiv explorer
+              </a>
             </p>
           ) : (
             <p>
