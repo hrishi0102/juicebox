@@ -18,3 +18,6 @@ next-env.d.ts
 contracts/out/
 contracts/cache/
 contracts/broadcast/*/31337/
+
+# A separate project that lives in the same folder; not part of Receipts.
+anycheckout/
