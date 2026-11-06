@@ -193,7 +193,7 @@ export default async function MyWeek({ searchParams }: { searchParams: Promise<{
                   <tr>
                     <th className="py-1.5 font-normal">Difficulty</th>
                     <th className="py-1.5 font-normal">PRs</th>
-                    <th className="py-1.5 font-normal">You, per merged PR</th>
+                    <th className="py-1.5 font-normal">You, per shipped change</th>
                     {teamBuckets && <th className="py-1.5 font-normal">Team median</th>}
                   </tr>
                 </thead>

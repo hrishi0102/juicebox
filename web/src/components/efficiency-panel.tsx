@@ -60,7 +60,7 @@ export function EfficiencyPanel({ e, title = "How the week went", note }: { e: E
             {e.prs.closed ? `, ${e.prs.closed} closed` : ""}
             {e.prs.reverted ? `, ${e.prs.reverted} reverted` : ""}.
           </p>
-          {e.costPerMergedPr !== null && <p className="text-sm text-muted-foreground">AI cost per merged PR: {usd(e.costPerMergedPr)}</p>}
+          {e.costPerMergedPr !== null && <p className="text-sm text-muted-foreground">AI cost per shipped change (merged PR or push to main): {usd(e.costPerMergedPr)}</p>}
 
           {total > 0 && (
             <div className="mt-4 space-y-2">

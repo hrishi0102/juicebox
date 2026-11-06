@@ -6,7 +6,8 @@
 //   3. Check every receipt's EIP-712 signature against the person it is about. Only signed receipts
 //      count, one per person per week (the one written last).
 //   4. Add up the signed numbers: spend, things done, spend on Wasted items, merged PRs.
-//   5. Re-check on GitHub that every pull request a receipt claims as merged is still merged.
+//   5. Re-check on GitHub that everything a receipt claims as shipped still is: each merged pull
+//      request is still merged, and each commit pushed straight to main is still in main's history.
 
 import { hashTypedData, hexToString, keccak256, type Hex } from "viem";
 import { secp256k1 } from "@noble/curves/secp256k1";
@@ -32,8 +33,8 @@ export type TeamScore = {
   done: number; // things done (items that were not Wasted)
   wastedCents: number; // spend on Wasted items
   mergedPrs: number; // merged PRs, as signed by each person
-  prsChecked: number; // PRs this run asked GitHub about
-  prsStillMerged: number; // of those, still merged
+  prsChecked: number; // shipped changes this run asked GitHub about: merged PRs and pushes to main
+  prsStillMerged: number; // of those, still merged (PRs) or still in main's history (pushes)
 };
 
 // ---------- the signed receipt (same EIP-712 types as web/src/lib/receipts/receipt.ts) ----------
@@ -200,27 +201,35 @@ export function checkTeam(fetch: Fetch, cfg: CheckConfig, secrets: { arkivAccess
     mergedPrs += Number(r.message.mergedPrs);
   }
 
-  // 5. Is every PR a receipt claims as merged still merged? (Full receipts only: a sealed week's
-  // PRs are encrypted on Swarm for the company.)
-  const prs: string[] = [];
+  // 5. Is everything a receipt claims as shipped still shipped? Work ships two ways: a merged PR, or
+  // a commit pushed straight to main with no PR. (Full receipts only: a sealed week's PRs and
+  // commits are encrypted on Swarm for the company.)
+  const shipped: string[] = []; // "pr owner/repo 12" or "commit owner/repo sha"
   for (const r of receipts) {
     for (const e of r.evidence ?? []) {
-      if (e.state !== "merged" || e.reverted) continue;
-      const m = e.url.match(/github\.com\/([^/]+\/[^/]+)\/pull\/(\d+)/);
-      if (m && !prs.includes(`${m[1]}#${m[2]}`)) prs.push(`${m[1]}#${m[2]}`);
+      if (e.reverted) continue;
+      const pr = e.state === "merged" && e.url.match(/github\.com\/([^/]+\/[^/]+)\/pull\/(\d+)/);
+      const commit = e.state === "direct" && e.url.match(/github\.com\/([^/]+\/[^/]+)\/commit\/([0-9a-f]{7,40})/);
+      const key = pr ? `pr ${pr[1]} ${pr[2]}` : commit ? `commit ${commit[1]} ${commit[2]}` : undefined;
+      if (key && !shipped.includes(key)) shipped.push(key);
     }
   }
-  prs.sort();
+  shipped.sort();
   let prsChecked = 0;
   let prsStillMerged = 0;
   const headers: Record<string, string> = { Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", "User-Agent": "receipts-cre-monthly" };
   if (secrets.githubToken) headers.Authorization = `Bearer ${secrets.githubToken}`;
-  for (const pr of prs.slice(0, Math.max(0, Math.min(cfg.maxPrChecks, HTTP_BUDGET - calls)))) {
-    const [repo, number] = pr.split("#");
-    const gh = fetch({ url: `https://api.github.com/repos/${repo}/pulls/${number}`, method: "GET", headers });
+  for (const item of shipped.slice(0, Math.max(0, Math.min(cfg.maxPrChecks, HTTP_BUDGET - calls)))) {
+    const [type, repo, id] = item.split(" ");
+    // A PR: is it still merged? A push to main: is the commit still in the default branch's history?
+    // (Compare HEAD...sha: "behind" or "identical" means the default branch contains it. One commit
+    // per page keeps the answer small.)
+    const url = type === "pr" ? `https://api.github.com/repos/${repo}/pulls/${id}` : `https://api.github.com/repos/${repo}/compare/HEAD...${id}?per_page=1`;
+    const gh = fetch({ url, method: "GET", headers });
     prsChecked++;
     if (gh.status < 200 || gh.status > 299) continue; // gone, private or made up: not confirmed
-    if ((JSON.parse(gh.body) as { merged_at?: string | null }).merged_at) prsStillMerged++;
+    const body = JSON.parse(gh.body) as { merged_at?: string | null; status?: string };
+    if (type === "pr" ? !!body.merged_at : body.status === "behind" || body.status === "identical") prsStillMerged++;
   }
 
   return { receipts: receipts.length, people: Object.keys(people).length, rejected, spendCents, done, wastedCents, mergedPrs, prsChecked, prsStillMerged };

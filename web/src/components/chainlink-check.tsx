@@ -13,8 +13,8 @@ export function ChainlinkCheck({ check, team, company, demo, canRun }: { check: 
     ["AI spend", usd(check.spendCents / 100)],
     ["Things done", String(check.done)],
     ["Went in circles", usd(check.wastedCents / 100)],
-    ["Merged PRs, as signed", String(check.mergedPrs)],
-    ["Re-checked on GitHub", check.prsChecked ? `${check.prsStillMerged} of ${check.prsChecked} still merged` : "no public PRs to check"],
+    ["Shipped, as signed", `${check.mergedPrs} (merged PRs and pushes to main)`],
+    ["Re-checked on GitHub", check.prsChecked ? `${check.prsStillMerged} of ${check.prsChecked} still merged or on main` : "nothing public to check"],
   ];
   return (
     <section aria-labelledby="chainlink-check" className="max-w-4xl rounded-xl border border-border bg-card p-5">
@@ -26,7 +26,8 @@ export function ChainlinkCheck({ check, team, company, demo, canRun }: { check: 
       </h2>
       <p className="mt-1 max-w-[70ch] text-[15px] text-muted-foreground">
         On {when}, a Chainlink CRE workflow read {team}&apos;s receipts straight from Arkiv, checked every signature, added up the signed numbers
-        and asked GitHub whether the merged PRs are still merged, then wrote the result on Ethereum Sepolia. Only Chainlink&apos;s forwarder can
+        and asked GitHub whether what shipped is still there (each merged PR still merged, each push to main still in main&apos;s history),
+        then wrote the result on Ethereum Sepolia. Only Chainlink&apos;s forwarder can
         post to that contract, so nobody, not even {company}, can post or change a score.
       </p>
       {check.simulated && (

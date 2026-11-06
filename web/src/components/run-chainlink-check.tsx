@@ -14,7 +14,7 @@ const STEPS = [
   "Compiling the workflow to WASM",
   "Reading the team's receipts from Arkiv",
   "Checking every signature",
-  "Asking GitHub about the merged PRs",
+  "Asking GitHub about merged PRs and pushes to main",
   "Writing the score to Sepolia",
   "Waiting for Sepolia to confirm",
 ];

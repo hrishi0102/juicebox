@@ -84,7 +84,7 @@ export default async function Team({ searchParams }: { searchParams: Promise<{ w
             </h2>
             <p className="mt-2 text-[17px]">{countsLine(total.categoryCounts)}</p>
             <p className="mt-1 text-muted-foreground">
-              {total.people} {total.people === 1 ? "person" : "people"}, {plural(total.merged, "merged PR")}.{" "}
+              {total.people} {total.people === 1 ? "person" : "people"}, {plural(total.merged, "shipped change")}.{" "}
               {total.waste > 0 ? `${usd(total.waste)} (${pct(total.spend ? (total.waste / total.spend) * 100 : 0)}) went in circles.` : ""}
             </p>
             <div className="mt-4">

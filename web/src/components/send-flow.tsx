@@ -192,7 +192,7 @@ export function SendFlow(p: SendFlowProps) {
           {p.sealed ? ` The list is encrypted on this laptop and stored on Swarm, and only ${org}'s key opens it.` : ""}
         </li>
         <li>
-          <span className="font-medium text-foreground">Anyone can check</span> the signed totals on Arkiv: {p.totals.done} things done, {p.totals.spend} of AI, {p.totals.merged} merged PRs.
+          <span className="font-medium text-foreground">Anyone can check</span> the signed totals on Arkiv: {p.totals.done} things done, {p.totals.spend} of AI, {p.totals.merged} shipped changes (merged PRs and pushes to main).
         </li>
         <li className="inline-flex items-start gap-1.5">
           <Lock className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />

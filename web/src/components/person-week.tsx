@@ -38,7 +38,7 @@ export function PersonWeek({
         <>
           {team ? `${team}. ` : ""}
           {plural(n.done, "thing")} done, {usd(n.spendUsd)}
-          {n.mergedPrs ? `, ${plural(n.mergedPrs, "merged PR")}` : ""}
+          {n.mergedPrs ? `, ${plural(n.mergedPrs, "shipped change")}` : ""}
           {n.efficiency?.stages.ideaToMerge.n ? `, idea to merged ${formatMinutes(n.efficiency.stages.ideaToMerge.medianMin)}` : ""}
           {r.oneLiner && r.oneLiner !== items[0]?.title ? `. ${r.oneLiner}` : ""}
         </>

@@ -52,7 +52,7 @@ export default async function CompanyOverview({ searchParams }: { searchParams: 
             </h2>
             <p className="mt-2 text-[17px]">{countsLine(total.categoryCounts)}</p>
             <p className="mt-1 text-muted-foreground">
-              {total.people} {total.people === 1 ? "person" : "people"} in {plural(org.teams.length, "team")}, {plural(total.sessions, "AI session")}, {plural(total.merged, "merged PR")}.{" "}
+              {total.people} {total.people === 1 ? "person" : "people"} in {plural(org.teams.length, "team")}, {plural(total.sessions, "AI session")}, {plural(total.merged, "shipped change")}.{" "}
               {total.waste > 0 ? `${usd(total.waste)} (${pct(total.spend ? (total.waste / total.spend) * 100 : 0)}) went in circles.` : "Nothing went in circles."}
             </p>
             <div className="mt-4 space-y-2">
