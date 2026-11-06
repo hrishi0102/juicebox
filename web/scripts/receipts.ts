@@ -27,7 +27,7 @@ import { githubLogin, githubTeams, laptopAccount } from "../src/lib/receipts/ide
 import { demoKey } from "../src/lib/receipts/demo";
 import { loadWeekStory, writeWeekStory } from "../src/lib/receipts/week";
 import { publishCard } from "../src/lib/receipts/cards";
-import { uploadFile } from "../src/lib/receipts/swarm";
+import { swarmConfig, uploadFile } from "../src/lib/receipts/swarm";
 import { sha256 } from "@noble/hashes/sha2";
 import { bytesToHex } from "@noble/hashes/utils";
 
@@ -134,6 +134,39 @@ async function main() {
       console.log("Signing key:", process.env.RECEIPTS_SIGNER_KEY ? "RECEIPTS_SIGNER_KEY" : laptopAccount(false) ? `made on this laptop (${laptopAccount(false)!.address})` : "made on this laptop at the first signature");
       console.log("Arkiv company wallet:", arkivWriterAddress() ?? "missing (needed to share with your company)");
       console.log("Arkiv access key:", process.env.ARKIV_ACCESS_KEY ? "set" : "missing (the public endpoint is heavily rate limited)");
+      // Swarm: where uploads go, and for your own Bee node, its wallet and batch.
+      const sw = swarmConfig();
+      console.log("Swarm:", sw.batch ? `uploads go to ${sw.api}` : "off (add the SWARM_* lines from .env.example to .env.local)");
+      if (sw.batch) {
+        const get = async (path: string) => {
+          const r = await fetch(`${sw.api}${path}`, { signal: AbortSignal.timeout(8000) });
+          if (!r.ok) throw new Error(`${path} answered ${r.status}`);
+          return r.json();
+        };
+        try {
+          const h = await fetch(`${sw.api}/health`, { signal: AbortSignal.timeout(8000) });
+          if (!h.ok) throw new Error(`/health answered ${h.status}`);
+          console.log("  reachable: yes");
+        } catch (e) {
+          console.log("  reachable: no,", String(e).slice(0, 100));
+        }
+        if (/^0+$/.test(sw.batch)) console.log("  batch: the gateway's own (we send the all-zero batch id)");
+        else {
+          try {
+            const a = await get("/addresses");
+            const w = await get("/wallet");
+            console.log(`  node wallet: ${a.ethereum} (${(Number(w.nativeTokenBalance) / 1e18).toFixed(4)} ETH, ${(Number(w.bzzBalance) / 1e16).toFixed(4)} BZZ)`);
+          } catch (e) {
+            console.log("  node wallet: unknown,", String(e).slice(0, 100));
+          }
+          try {
+            const b = await get(`/stamps/${sw.batch}`);
+            console.log(`  batch ${sw.batch.slice(0, 10)}...: usable ${b.usable}, depth ${b.depth}, about ${Math.round(Number(b.batchTTL) / 3600)} hours left, utilization ${b.utilization}`);
+          } catch (e) {
+            console.log("  batch: not found on this node,", String(e).slice(0, 100));
+          }
+        }
+      }
       const writer = arkivWriterAddress();
       if (writer) {
         try {
