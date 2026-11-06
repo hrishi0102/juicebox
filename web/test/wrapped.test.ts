@@ -132,3 +132,16 @@ test("wrapped exports: reads made-up ChatGPT and Claude.ai exports", () => {
   assert.equal(wrappedFromExport(y, "30d", Date.UTC(2027, 5, 1)), undefined);
   assert.throws(() => readExport([{ foo: 1 }]));
 });
+
+test("wrapped exports: the whole export zip works too, and a zip without conversations.json is refused", async () => {
+  const { zipSync, strToU8 } = await import("fflate");
+  const { readExportFile } = await import("../src/lib/receipts/chat-import");
+  const convs = [{ uuid: "1", created_at: "2026-11-01T20:00:00Z", chat_messages: [{ sender: "human", text: "hello", created_at: "2026-11-01T20:00:00Z" }] }];
+  const zip = zipSync({ "users.json": strToU8("[]"), "conversations.json": strToU8(JSON.stringify(convs)) });
+  const x = await readExportFile(new File([zip], "data-export.zip"));
+  assert.equal(x.tool, "claude-ai");
+  assert.equal(x.conversations[0].msgs[0].text, "hello");
+  const empty = zipSync({ "users.json": strToU8("[]") });
+  await assert.rejects(() => readExportFile(new File([empty], "other.zip")), /No conversations.json/);
+  await assert.rejects(() => readExportFile(new File(["not json"], "conversations.json")), /JSON/);
+});

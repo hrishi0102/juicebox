@@ -223,7 +223,7 @@ function WrappedBody({ w, aiReady }: { w: Wrapped; aiReady: boolean }) {
                   <Sparkles className="size-4" aria-hidden="true" />
                   {roastBusy ? "Asking the private AI…" : "Roast me (private AI)"}
                 </button>
-                <p className="mt-2 max-w-md text-xs text-white/75">Sends only these numbers to a model in a hardware enclave on 0G. Never your messages. About $0.001.</p>
+                <p className="mt-2 max-w-md text-xs text-white/75">Sends only these numbers to a model in a hardware enclave on 0G. Never your messages. Under $0.001.</p>
                 {roastError && <p className="mt-2 text-sm font-medium text-white">{roastError}</p>}
               </div>
             )}
@@ -255,10 +255,8 @@ function WrappedBody({ w, aiReady }: { w: Wrapped; aiReady: boolean }) {
               <p className="text-sm font-medium text-white/85">{s.label}</p>
               <p className={`mt-2 font-bold tracking-tight ${i === 0 && s.n > 0 ? "text-5xl" : "text-4xl"}`}>{minutesLabel(s.min)}</p>
               <p className="mt-1 text-[15px] text-white/95">{s.n ? s.line : SEGMENT_COPY[s.key].zero}</p>
-              <p className="mt-3 text-xs text-white/80">
-                {s.blurb}
-                {s.n ? `. ${pct(s.share)} of your messages.` : "."}
-              </p>
+              <p className="mt-3 text-xs text-white/80">{s.blurb}</p>
+              {s.n > 0 && <p className="mt-1 text-xs font-semibold text-white/90">{pct(s.share)} of your messages</p>}
             </div>
           ))}
         </div>
