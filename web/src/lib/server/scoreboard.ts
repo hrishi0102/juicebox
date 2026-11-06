@@ -53,7 +53,7 @@ export async function teamCheck(teamId: string): Promise<TeamCheck | undefined> 
     let txHash: string | undefined;
     try {
       const fromBlock = process.env.TEAM_SCOREBOARD_ADDRESS ? undefined : CRE_SCOREBOARD.fromBlock;
-      const logs = await timeout(client.getLogs({ address, event: POSTED, args: { teamId: id, periodDay: day }, fromBlock, toBlock: "latest" }), 5000);
+      const logs = await timeout(client.getLogs({ address, event: POSTED, args: { teamId: id, periodDay: day }, fromBlock, toBlock: "latest" }), 8000);
       txHash = logs[logs.length - 1]?.transactionHash ?? undefined;
     } catch {
       txHash = undefined; // the score still shows; only the transaction link is missing

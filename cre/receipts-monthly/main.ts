@@ -49,14 +49,12 @@ type Config = z.infer<typeof configSchema>;
 // ---------- node mode: runs on every DON node ----------
 const onNode = (send: HTTPSendRequester, cfg: Config, secrets: { arkivAccessKey?: string; githubToken?: string }, nowSec: number): TeamScore => {
   const fetch: Fetch = (req) => {
-    const res = send
-      .sendRequest({
-        url: req.url,
-        method: req.method,
-        body: req.body ? hexToBase64(stringToHex(req.body)) : undefined,
-        multiHeaders: Object.fromEntries(Object.entries(req.headers).map(([k, v]) => [k, { values: [v] }])),
-      })
-      .result();
+    const multiHeaders = Object.fromEntries(Object.entries(req.headers).map(([k, v]) => [k, { values: [v] }]));
+    // A GET has no body field at all: CRE refuses one that is present but empty.
+    const request = req.body
+      ? { url: req.url, method: req.method, body: hexToBase64(stringToHex(req.body)), multiHeaders }
+      : { url: req.url, method: req.method, multiHeaders };
+    const res = send.sendRequest(request).result();
     return { status: res.statusCode, body: text(res) };
   };
   return checkTeam(fetch, cfg, secrets, nowSec);
@@ -74,7 +72,10 @@ const secret = (runtime: Runtime<Config>, id: string) => {
 const onCron = (runtime: Runtime<Config>, payload: CronPayload): string => {
   const cfg = runtime.config;
   const secrets = { arkivAccessKey: secret(runtime, "ARKIV_ACCESS_KEY"), githubToken: secret(runtime, "GITHUB_TOKEN") };
-  const nowSec = Number(payload.scheduledExecutionTime?.seconds ?? BigInt(Math.floor(runtime.now().getTime() / 1000)));
+  // The DON's own clock, which every node agrees on. (The cron fires on the 1st, so on the network this
+  // is the scheduled time; the simulator would otherwise report the next scheduled run, not today.)
+  void payload;
+  const nowSec = Math.floor(runtime.now().getTime() / 1000);
 
   const s = new HTTPClient()
     .sendRequest(
@@ -94,7 +95,7 @@ const onCron = (runtime: Runtime<Config>, payload: CronPayload): string => {
     )(cfg, secrets, nowSec)
     .result();
 
-  runtime.log(`team=${cfg.teamId} score=${JSON.stringify(s)}`);
+  runtime.log(`team=${cfg.teamId} asOf=${new Date(nowSec * 1000).toISOString()} score=${JSON.stringify(s)}`);
 
   // Report layout must match TeamScoreboard.onReport.
   const encoded = encodeAbiParameters(parseAbiParameters(REPORT_ABI), [

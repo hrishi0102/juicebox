@@ -3,6 +3,7 @@
 //
 //   node check-live.ts                 (reads ARKIV_ACCESS_KEY and GITHUB_TOKEN from web/.env.local or the shell)
 //   node check-live.ts acme-platform   (another team)
+//   node check-live.ts --as-of=2026-11-01   (as of another day; default now)
 
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
@@ -32,13 +33,16 @@ const fetchSync: Fetch = (req) => {
   return { status: Number(out.slice(cut + 1)), body: out.slice(0, cut) };
 };
 
-const teamId = process.argv[2] ?? config.teamId;
+const teamId = process.argv.slice(2).find((a) => !a.startsWith("--")) ?? config.teamId;
+// As of now, like the workflow (it uses the DON's clock). --as-of=2026-11-01 checks as of another day.
+const flag = process.argv.find((a) => a.startsWith("--as-of="));
+const asOf = flag ? Date.parse(flag.slice(8)) / 1000 : Math.floor(Date.now() / 1000);
 const started = Date.now();
 const score = checkTeam(
   fetchSync,
   { ...config, teamId },
   { arkivAccessKey: process.env.ARKIV_ACCESS_KEY ?? env.ARKIV_ACCESS_KEY, githubToken: process.env.GITHUB_TOKEN ?? env.GITHUB_TOKEN },
-  Math.floor(Date.now() / 1000),
+  asOf,
 );
-console.log(`team ${teamId}: ${calls} HTTP calls in ${((Date.now() - started) / 1000).toFixed(1)} s`);
+console.log(`team ${teamId}, as of ${new Date(asOf * 1000).toISOString().slice(0, 10)}: ${calls} HTTP calls in ${((Date.now() - started) / 1000).toFixed(1)} s`);
 console.log(JSON.stringify(score, null, 2));

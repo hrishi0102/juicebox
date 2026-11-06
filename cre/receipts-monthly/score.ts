@@ -1,7 +1,7 @@
 // The monthly check itself, kept free of the CRE SDK so the same code runs on every DON node (through
 // main.ts) and in Node against live data (check-live.ts).
 //
-//   1. Read the team's receipts straight from Arkiv (one `arkiv_query` JSON-RPC call).
+//   1. Read the team's receipts straight from Arkiv (`arkiv_query` JSON-RPC, in pages of 30).
 //   2. Keep the weeks that ended inside the window, written by a trusted writer.
 //   3. Check every receipt's EIP-712 signature against the person it is about. Only signed receipts
 //      count, one per person per week (the one written last).
@@ -17,7 +17,7 @@ export type CheckConfig = {
   schemaName: string; // receipts-ethglobal-mumbai.receipt.v2
   trustedWriters: string[]; // Arkiv creators whose entities count ([] = any)
   windowDays: number; // weeks that ended in the last N days
-  maxPrChecks: number; // GitHub calls per run (CRE allows 15 HTTP calls; Arkiv uses one)
+  maxPrChecks: number; // GitHub calls per run, at most what is left of CRE's 15 HTTP calls after Arkiv
 };
 
 /** One HTTP call, answered synchronously (CRE's node mode, or curl in the local check). */
@@ -119,27 +119,43 @@ export function receiptSigner(r: Receipt): string | undefined {
 
 // ---------- the check ----------
 
+const PAGE = 30; // receipts per Arkiv call
+const MAX_PAGES = 4;
+const HTTP_BUDGET = 14; // CRE allows 15 HTTP calls per run; one is kept spare
+
 type RpcEntity = { key: string; owner?: string; creator?: string; createdAt?: string; attributes?: { name: string; type: string; value: string }[] };
 
 export function checkTeam(fetch: Fetch, cfg: CheckConfig, secrets: { arkivAccessKey?: string; githubToken?: string }, nowSec: number): TeamScore {
   // 1. The team's receipts, from Arkiv. The access key is the last part of the RPC address.
-  const query = `arkiv.schema = str('${cfg.schemaName}') AND type = str('receipt') AND team = str('${cfg.teamId}')`;
+  // Sorted by key, so the pages line up (without an order, the node's own order can repeat or skip rows).
+  const query = `arkiv.schema = str('${cfg.schemaName}') AND type = str('receipt') AND team = str('${cfg.teamId}') ORDER BY $key:key ASC`;
   const url = secrets.arkivAccessKey ? `${cfg.arkivRpcUrl.replace(/\/$/, "")}/${encodeURIComponent(secrets.arkivAccessKey)}` : cfg.arkivRpcUrl;
-  const res = fetch({
-    url,
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      jsonrpc: "2.0",
-      id: 1,
-      method: "arkiv_query",
-      params: [query, { select: { key: true, owner: true, creator: true, createdAt: true, attributes: { payload: true } }, limit: "0x64" }],
-    }),
-  });
-  if (res.status < 200 || res.status > 299) throw new Error(`Arkiv answered ${res.status}`);
-  const answer = JSON.parse(res.body) as { result?: { data?: RpcEntity[] }; error?: { message?: string } };
-  if (answer.error) throw new Error(`Arkiv refused the query: ${answer.error.message ?? "unknown error"}`);
-  const rows = answer.result?.data ?? [];
+  // In pages: CRE caps one HTTP response at 250 KB, and a receipt's payload is about 6 KB.
+  const rows: RpcEntity[] = [];
+  let calls = 0;
+  for (let page = 0; page < MAX_PAGES; page++) {
+    const res = fetch({
+      url,
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        id: 1,
+        method: "arkiv_query",
+        params: [
+          query,
+          { select: { key: true, owner: true, creator: true, createdAt: true, attributes: { payload: true } }, limit: `0x${PAGE.toString(16)}`, offset: `0x${(page * PAGE).toString(16)}` },
+        ],
+      }),
+    });
+    calls++;
+    if (res.status < 200 || res.status > 299) throw new Error(`Arkiv answered ${res.status}`);
+    const answer = JSON.parse(res.body) as { result?: { data?: RpcEntity[] }; error?: { message?: string } };
+    if (answer.error) throw new Error(`Arkiv refused the query: ${answer.error.message ?? "unknown error"}`);
+    const data = answer.result?.data ?? [];
+    rows.push(...data);
+    if (data.length < PAGE) break;
+  }
 
   // 2 and 3. Window, writer, signature; one receipt per person per week, the one written last.
   const trusted = cfg.trustedWriters.map((a) => a.toLowerCase());
@@ -199,7 +215,7 @@ export function checkTeam(fetch: Fetch, cfg: CheckConfig, secrets: { arkivAccess
   let prsStillMerged = 0;
   const headers: Record<string, string> = { Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", "User-Agent": "receipts-cre-monthly" };
   if (secrets.githubToken) headers.Authorization = `Bearer ${secrets.githubToken}`;
-  for (const pr of prs.slice(0, Math.min(cfg.maxPrChecks, 14))) {
+  for (const pr of prs.slice(0, Math.max(0, Math.min(cfg.maxPrChecks, HTTP_BUDGET - calls)))) {
     const [repo, number] = pr.split("#");
     const gh = fetch({ url: `https://api.github.com/repos/${repo}/pulls/${number}`, method: "GET", headers });
     prsChecked++;
