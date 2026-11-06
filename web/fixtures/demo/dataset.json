@@ -76,6 +76,121 @@
         "lastPromptAt": "2026-10-09T16:44:50.171Z",
         "lastAnswerAt": "2026-10-09T16:49:46.903Z",
         "endsOnQuestion": false
+      },
+      "chat": {
+        "prompts": 4,
+        "words": 243,
+        "longestWords": 269,
+        "questions": 1,
+        "whys": 0,
+        "manners": 2,
+        "images": 0,
+        "pasted": 0,
+        "avalanches": 0,
+        "hours": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1
+        ],
+        "days": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          4,
+          0
+        ],
+        "minutes": 15,
+        "dayKeys": [
+          "2026-10-09"
+        ],
+        "nightMinutes": 0,
+        "seg": {
+          "overthinking": {
+            "n": 1,
+            "min": 4.5
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 0,
+            "min": 0
+          },
+          "hi": {
+            "n": 0,
+            "min": 0
+          },
+          "goAhead": {
+            "n": 0,
+            "min": 0
+          },
+          "rage": {
+            "n": 0,
+            "min": 0
+          },
+          "brainDump": {
+            "n": 0,
+            "min": 0
+          }
+        },
+        "topWords": [
+          [
+            "ledger",
+            2
+          ],
+          [
+            "queue",
+            2
+          ],
+          [
+            "timeout",
+            2
+          ],
+          [
+            "currency",
+            2
+          ],
+          [
+            "webhook",
+            1
+          ],
+          [
+            "settlement",
+            1
+          ],
+          [
+            "invoice",
+            1
+          ],
+          [
+            "reconcile",
+            1
+          ]
+        ]
       }
     },
     {
@@ -169,6 +284,102 @@
         "lastAnswerAt": "2026-10-10T03:50:57.216Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-10-10T03:50:57.216Z"
+      },
+      "chat": {
+        "prompts": 6,
+        "words": 322,
+        "longestWords": 520,
+        "questions": 2,
+        "whys": 0,
+        "manners": 2,
+        "images": 3,
+        "pasted": 0,
+        "avalanches": 0,
+        "hours": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          2,
+          0,
+          1
+        ],
+        "days": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          6
+        ],
+        "minutes": 25,
+        "dayKeys": [
+          "2026-10-10"
+        ],
+        "nightMinutes": 4,
+        "seg": {
+          "overthinking": {
+            "n": 1,
+            "min": 4.3
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 1,
+            "min": 2.7
+          },
+          "hi": {
+            "n": 0,
+            "min": 0
+          },
+          "goAhead": {
+            "n": 0,
+            "min": 0
+          },
+          "rage": {
+            "n": 0,
+            "min": 0
+          },
+          "brainDump": {
+            "n": 0,
+            "min": 0
+          }
+        },
+        "topWords": [
+          [
+            "payout",
+            3
+          ],
+          [
+            "invoice",
+            3
+          ],
+          [
+            "merchant",
+            2
+          ]
+        ],
+        "latestMinuteOfNight": 165
       }
     },
     {
@@ -260,6 +471,114 @@
         "lastAnswerAt": "2026-10-10T20:35:52.707Z",
         "endsOnQuestion": true,
         "firstPrAt": "2026-10-10T20:35:52.707Z"
+      },
+      "chat": {
+        "prompts": 14,
+        "words": 734,
+        "longestWords": 284,
+        "questions": 5,
+        "whys": 0,
+        "manners": 6,
+        "images": 2,
+        "pasted": 0,
+        "avalanches": 1,
+        "hours": [
+          0,
+          2,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          3,
+          3,
+          3,
+          1,
+          0
+        ],
+        "days": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          14
+        ],
+        "minutes": 68,
+        "dayKeys": [
+          "2026-10-10"
+        ],
+        "nightMinutes": 15,
+        "seg": {
+          "overthinking": {
+            "n": 3,
+            "min": 10.2
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 2,
+            "min": 4
+          },
+          "hi": {
+            "n": 1,
+            "min": 1.5
+          },
+          "goAhead": {
+            "n": 1,
+            "min": 2
+          },
+          "rage": {
+            "n": 0,
+            "min": 0
+          },
+          "brainDump": {
+            "n": 1,
+            "min": 3.7
+          }
+        },
+        "topWords": [
+          [
+            "webhook",
+            7
+          ],
+          [
+            "settlement",
+            7
+          ],
+          [
+            "reconcile",
+            7
+          ],
+          [
+            "merchant",
+            5
+          ],
+          [
+            "timeout",
+            5
+          ],
+          [
+            "ledger",
+            2
+          ]
+        ],
+        "latestMinuteOfNight": 207
       }
     },
     {
@@ -362,6 +681,114 @@
         "lastAnswerAt": "2026-10-11T14:48:41.909Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-10-11T14:48:41.909Z"
+      },
+      "chat": {
+        "prompts": 29,
+        "words": 1757,
+        "longestWords": 188,
+        "questions": 10,
+        "whys": 2,
+        "manners": 7,
+        "images": 0,
+        "pasted": 1,
+        "avalanches": 0,
+        "hours": [
+          1,
+          1,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          2,
+          4,
+          3,
+          6,
+          4,
+          4
+        ],
+        "days": [
+          29,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "minutes": 137,
+        "dayKeys": [
+          "2026-10-11"
+        ],
+        "nightMinutes": 19,
+        "seg": {
+          "overthinking": {
+            "n": 7,
+            "min": 21.2
+          },
+          "therapy": {
+            "n": 1,
+            "min": 2.2
+          },
+          "student": {
+            "n": 2,
+            "min": 8.5
+          },
+          "hi": {
+            "n": 1,
+            "min": 1.7
+          },
+          "goAhead": {
+            "n": 3,
+            "min": 2.4
+          },
+          "rage": {
+            "n": 1,
+            "min": 1.6
+          },
+          "brainDump": {
+            "n": 1,
+            "min": 4.8
+          }
+        },
+        "topWords": [
+          [
+            "queue",
+            17
+          ],
+          [
+            "settlement",
+            15
+          ],
+          [
+            "timeout",
+            12
+          ],
+          [
+            "retry",
+            11
+          ],
+          [
+            "idempotency",
+            11
+          ],
+          [
+            "reconcile",
+            9
+          ]
+        ],
+        "latestMinuteOfNight": 167
       }
     },
     {
@@ -436,6 +863,102 @@
         "lastPromptAt": "2026-10-11T22:54:19.035Z",
         "lastAnswerAt": "2026-10-11T22:57:53.628Z",
         "endsOnQuestion": true
+      },
+      "chat": {
+        "prompts": 8,
+        "words": 484,
+        "longestWords": 716,
+        "questions": 3,
+        "whys": 1,
+        "manners": 2,
+        "images": 3,
+        "pasted": 0,
+        "avalanches": 0,
+        "hours": [
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          1,
+          1,
+          1,
+          0
+        ],
+        "days": [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "minutes": 39,
+        "dayKeys": [
+          "2026-10-11"
+        ],
+        "nightMinutes": 15,
+        "seg": {
+          "overthinking": {
+            "n": 1,
+            "min": 3.3
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 1,
+            "min": 1.8
+          },
+          "hi": {
+            "n": 0,
+            "min": 0
+          },
+          "goAhead": {
+            "n": 1,
+            "min": 0.9
+          },
+          "rage": {
+            "n": 0,
+            "min": 0
+          },
+          "brainDump": {
+            "n": 0,
+            "min": 0
+          }
+        },
+        "topWords": [
+          [
+            "idempotency",
+            2
+          ],
+          [
+            "reconcile",
+            2
+          ],
+          [
+            "invoice",
+            1
+          ]
+        ],
+        "latestMinuteOfNight": 219
       }
     },
     {
@@ -532,6 +1055,130 @@
         "lastAnswerAt": "2026-10-12T18:34:13.900Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-10-12T18:34:13.900Z"
+      },
+      "chat": {
+        "prompts": 26,
+        "words": 604,
+        "longestWords": 491,
+        "questions": 10,
+        "whys": 2,
+        "manners": 8,
+        "images": 0,
+        "pasted": 1,
+        "avalanches": 0,
+        "hours": [
+          5,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          3,
+          3,
+          1,
+          1,
+          3,
+          2,
+          3,
+          3
+        ],
+        "days": [
+          0,
+          26,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "minutes": 87,
+        "dayKeys": [
+          "2026-10-12"
+        ],
+        "nightMinutes": 23,
+        "seg": {
+          "overthinking": {
+            "n": 6,
+            "min": 30
+          },
+          "therapy": {
+            "n": 1,
+            "min": 3.3
+          },
+          "student": {
+            "n": 4,
+            "min": 14.2
+          },
+          "hi": {
+            "n": 1,
+            "min": 1.7
+          },
+          "goAhead": {
+            "n": 1,
+            "min": 1.1
+          },
+          "rage": {
+            "n": 1,
+            "min": 3.3
+          },
+          "brainDump": {
+            "n": 1,
+            "min": 3.4
+          }
+        },
+        "topWords": [
+          [
+            "payout",
+            14
+          ],
+          [
+            "refund",
+            14
+          ],
+          [
+            "timeout",
+            14
+          ],
+          [
+            "ledger",
+            11
+          ],
+          [
+            "retry",
+            9
+          ],
+          [
+            "webhook",
+            8
+          ],
+          [
+            "settlement",
+            8
+          ],
+          [
+            "currency",
+            8
+          ],
+          [
+            "merchant",
+            5
+          ],
+          [
+            "reconcile",
+            5
+          ]
+        ],
+        "latestMinuteOfNight": 149
       }
     },
     {
@@ -624,6 +1271,122 @@
         "lastAnswerAt": "2026-10-13T04:22:56.778Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-10-13T04:22:56.778Z"
+      },
+      "chat": {
+        "prompts": 12,
+        "words": 322,
+        "longestWords": 580,
+        "questions": 4,
+        "whys": 1,
+        "manners": 3,
+        "images": 0,
+        "pasted": 0,
+        "avalanches": 1,
+        "hours": [
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          3,
+          2,
+          3,
+          0,
+          0
+        ],
+        "days": [
+          0,
+          0,
+          12,
+          0,
+          0,
+          0,
+          0
+        ],
+        "minutes": 47,
+        "dayKeys": [
+          "2026-10-13"
+        ],
+        "nightMinutes": 12,
+        "seg": {
+          "overthinking": {
+            "n": 1,
+            "min": 3.7
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 2,
+            "min": 6
+          },
+          "hi": {
+            "n": 0,
+            "min": 0
+          },
+          "goAhead": {
+            "n": 1,
+            "min": 1.1
+          },
+          "rage": {
+            "n": 1,
+            "min": 5
+          },
+          "brainDump": {
+            "n": 0,
+            "min": 0
+          }
+        },
+        "topWords": [
+          [
+            "idempotency",
+            7
+          ],
+          [
+            "queue",
+            5
+          ],
+          [
+            "currency",
+            5
+          ],
+          [
+            "reconcile",
+            5
+          ],
+          [
+            "payout",
+            4
+          ],
+          [
+            "ledger",
+            4
+          ],
+          [
+            "batch",
+            3
+          ],
+          [
+            "webhook",
+            2
+          ]
+        ],
+        "latestMinuteOfNight": 289
       }
     },
     {
@@ -719,6 +1482,114 @@
         "lastAnswerAt": "2026-10-13T23:27:03.768Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-10-13T23:27:03.768Z"
+      },
+      "chat": {
+        "prompts": 22,
+        "words": 800,
+        "longestWords": 745,
+        "questions": 8,
+        "whys": 1,
+        "manners": 8,
+        "images": 1,
+        "pasted": 1,
+        "avalanches": 1,
+        "hours": [
+          1,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          2,
+          2,
+          4,
+          2,
+          1,
+          3,
+          4
+        ],
+        "days": [
+          0,
+          0,
+          22,
+          0,
+          0,
+          0,
+          0
+        ],
+        "minutes": 104,
+        "dayKeys": [
+          "2026-10-13"
+        ],
+        "nightMinutes": 14,
+        "seg": {
+          "overthinking": {
+            "n": 4,
+            "min": 8.8
+          },
+          "therapy": {
+            "n": 1,
+            "min": 3.3
+          },
+          "student": {
+            "n": 2,
+            "min": 10.3
+          },
+          "hi": {
+            "n": 0,
+            "min": 0
+          },
+          "goAhead": {
+            "n": 2,
+            "min": 2.2
+          },
+          "rage": {
+            "n": 0,
+            "min": 0
+          },
+          "brainDump": {
+            "n": 1,
+            "min": 5.3
+          }
+        },
+        "topWords": [
+          [
+            "settlement",
+            12
+          ],
+          [
+            "queue",
+            12
+          ],
+          [
+            "merchant",
+            10
+          ],
+          [
+            "currency",
+            10
+          ],
+          [
+            "webhook",
+            5
+          ],
+          [
+            "invoice",
+            2
+          ]
+        ],
+        "latestMinuteOfNight": 84
       }
     },
     {
@@ -811,6 +1682,114 @@
         "lastAnswerAt": "2026-10-14T10:48:57.579Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-10-14T10:48:57.579Z"
+      },
+      "chat": {
+        "prompts": 14,
+        "words": 381,
+        "longestWords": 498,
+        "questions": 4,
+        "whys": 1,
+        "manners": 5,
+        "images": 2,
+        "pasted": 0,
+        "avalanches": 0,
+        "hours": [
+          2,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          3,
+          1,
+          3
+        ],
+        "days": [
+          0,
+          0,
+          0,
+          14,
+          0,
+          0,
+          0
+        ],
+        "minutes": 66,
+        "dayKeys": [
+          "2026-10-14"
+        ],
+        "nightMinutes": 19,
+        "seg": {
+          "overthinking": {
+            "n": 1,
+            "min": 2.8
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 2,
+            "min": 8.9
+          },
+          "hi": {
+            "n": 1,
+            "min": 0.8
+          },
+          "goAhead": {
+            "n": 1,
+            "min": 0.6
+          },
+          "rage": {
+            "n": 0,
+            "min": 0
+          },
+          "brainDump": {
+            "n": 1,
+            "min": 4
+          }
+        },
+        "topWords": [
+          [
+            "webhook",
+            6
+          ],
+          [
+            "refund",
+            6
+          ],
+          [
+            "idempotency",
+            5
+          ],
+          [
+            "ledger",
+            3
+          ],
+          [
+            "merchant",
+            2
+          ],
+          [
+            "batch",
+            2
+          ]
+        ],
+        "latestMinuteOfNight": 235
       }
     },
     {
@@ -908,6 +1887,117 @@
         "lastAnswerAt": "2026-10-15T03:29:44.546Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-10-15T03:29:44.546Z"
+      },
+      "chat": {
+        "prompts": 22,
+        "words": 932,
+        "longestWords": 348,
+        "questions": 9,
+        "whys": 2,
+        "manners": 6,
+        "images": 1,
+        "pasted": 1,
+        "avalanches": 1,
+        "hours": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          3,
+          2,
+          2,
+          4,
+          4,
+          3,
+          3
+        ],
+        "days": [
+          0,
+          0,
+          0,
+          0,
+          22,
+          0,
+          0
+        ],
+        "minutes": 93,
+        "dayKeys": [
+          "2026-10-15"
+        ],
+        "nightMinutes": 0,
+        "seg": {
+          "overthinking": {
+            "n": 4,
+            "min": 7.9
+          },
+          "therapy": {
+            "n": 1,
+            "min": 5
+          },
+          "student": {
+            "n": 2,
+            "min": 5.5
+          },
+          "hi": {
+            "n": 1,
+            "min": 0.5
+          },
+          "goAhead": {
+            "n": 2,
+            "min": 3.7
+          },
+          "rage": {
+            "n": 1,
+            "min": 5.3
+          },
+          "brainDump": {
+            "n": 2,
+            "min": 5.3
+          }
+        },
+        "topWords": [
+          [
+            "idempotency",
+            11
+          ],
+          [
+            "retry",
+            10
+          ],
+          [
+            "timeout",
+            10
+          ],
+          [
+            "ledger",
+            5
+          ],
+          [
+            "currency",
+            5
+          ],
+          [
+            "settlement",
+            4
+          ],
+          [
+            "merchant",
+            3
+          ]
+        ]
       }
     },
     {
@@ -1010,6 +2100,102 @@
         "lastAnswerAt": "2026-10-15T18:01:19.227Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-10-15T18:01:19.227Z"
+      },
+      "chat": {
+        "prompts": 20,
+        "words": 720,
+        "longestWords": 335,
+        "questions": 7,
+        "whys": 1,
+        "manners": 5,
+        "images": 0,
+        "pasted": 1,
+        "avalanches": 0,
+        "hours": [
+          3,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          3,
+          3,
+          1,
+          2,
+          2,
+          3
+        ],
+        "days": [
+          0,
+          0,
+          0,
+          0,
+          20,
+          0,
+          0
+        ],
+        "minutes": 87,
+        "dayKeys": [
+          "2026-10-15"
+        ],
+        "nightMinutes": 22,
+        "seg": {
+          "overthinking": {
+            "n": 4,
+            "min": 12.8
+          },
+          "therapy": {
+            "n": 1,
+            "min": 3.3
+          },
+          "student": {
+            "n": 2,
+            "min": 10
+          },
+          "hi": {
+            "n": 0,
+            "min": 0
+          },
+          "goAhead": {
+            "n": 2,
+            "min": 2.9
+          },
+          "rage": {
+            "n": 0,
+            "min": 0
+          },
+          "brainDump": {
+            "n": 1,
+            "min": 5.5
+          }
+        },
+        "topWords": [
+          [
+            "settlement",
+            6
+          ],
+          [
+            "ledger",
+            4
+          ],
+          [
+            "refund",
+            4
+          ]
+        ],
+        "latestMinuteOfNight": 202
       }
     },
     {
@@ -1084,6 +2270,109 @@
         "lastPromptAt": "2026-10-16T08:25:07.320Z",
         "lastAnswerAt": "2026-10-16T08:30:28.989Z",
         "endsOnQuestion": false
+      },
+      "chat": {
+        "prompts": 9,
+        "words": 333,
+        "longestWords": 641,
+        "questions": 3,
+        "whys": 1,
+        "manners": 2,
+        "images": 0,
+        "pasted": 0,
+        "avalanches": 0,
+        "hours": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          3,
+          2,
+          2,
+          2
+        ],
+        "days": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          9,
+          0
+        ],
+        "minutes": 37,
+        "dayKeys": [
+          "2026-10-16"
+        ],
+        "nightMinutes": 0,
+        "seg": {
+          "overthinking": {
+            "n": 1,
+            "min": 4.8
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 1,
+            "min": 2.6
+          },
+          "hi": {
+            "n": 0,
+            "min": 0
+          },
+          "goAhead": {
+            "n": 1,
+            "min": 1.7
+          },
+          "rage": {
+            "n": 0,
+            "min": 0
+          },
+          "brainDump": {
+            "n": 0,
+            "min": 0
+          }
+        },
+        "topWords": [
+          [
+            "merchant",
+            5
+          ],
+          [
+            "payout",
+            4
+          ],
+          [
+            "settlement",
+            3
+          ],
+          [
+            "refund",
+            2
+          ],
+          [
+            "invoice",
+            2
+          ]
+        ]
       }
     },
     {
@@ -1158,6 +2447,114 @@
         "lastPromptAt": "2026-10-16T23:02:20.608Z",
         "lastAnswerAt": "2026-10-16T23:08:50.283Z",
         "endsOnQuestion": true
+      },
+      "chat": {
+        "prompts": 6,
+        "words": 151,
+        "longestWords": 570,
+        "questions": 2,
+        "whys": 0,
+        "manners": 1,
+        "images": 2,
+        "pasted": 0,
+        "avalanches": 0,
+        "hours": [
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          2,
+          0
+        ],
+        "days": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          6,
+          0
+        ],
+        "minutes": 24,
+        "dayKeys": [
+          "2026-10-16"
+        ],
+        "nightMinutes": 8,
+        "seg": {
+          "overthinking": {
+            "n": 1,
+            "min": 4
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 0,
+            "min": 0
+          },
+          "hi": {
+            "n": 0,
+            "min": 0
+          },
+          "goAhead": {
+            "n": 0,
+            "min": 0
+          },
+          "rage": {
+            "n": 0,
+            "min": 0
+          },
+          "brainDump": {
+            "n": 0,
+            "min": 0
+          }
+        },
+        "topWords": [
+          [
+            "settlement",
+            4
+          ],
+          [
+            "currency",
+            3
+          ],
+          [
+            "retry",
+            2
+          ],
+          [
+            "merchant",
+            2
+          ],
+          [
+            "invoice",
+            2
+          ],
+          [
+            "timeout",
+            1
+          ]
+        ],
+        "latestMinuteOfNight": 99
       }
     },
     {
@@ -1264,6 +2661,118 @@
         "lastAnswerAt": "2026-10-17T09:57:24.343Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-10-17T09:57:24.343Z"
+      },
+      "chat": {
+        "prompts": 19,
+        "words": 709,
+        "longestWords": 300,
+        "questions": 5,
+        "whys": 0,
+        "manners": 5,
+        "images": 0,
+        "pasted": 0,
+        "avalanches": 1,
+        "hours": [
+          3,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          3,
+          1,
+          2,
+          4,
+          0,
+          3
+        ],
+        "days": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          19
+        ],
+        "minutes": 78,
+        "dayKeys": [
+          "2026-10-17"
+        ],
+        "nightMinutes": 21,
+        "seg": {
+          "overthinking": {
+            "n": 3,
+            "min": 11.7
+          },
+          "therapy": {
+            "n": 1,
+            "min": 2.7
+          },
+          "student": {
+            "n": 3,
+            "min": 6.3
+          },
+          "hi": {
+            "n": 1,
+            "min": 0.8
+          },
+          "goAhead": {
+            "n": 2,
+            "min": 2
+          },
+          "rage": {
+            "n": 1,
+            "min": 3.1
+          },
+          "brainDump": {
+            "n": 1,
+            "min": 4.8
+          }
+        },
+        "topWords": [
+          [
+            "retry",
+            11
+          ],
+          [
+            "idempotency",
+            11
+          ],
+          [
+            "reconcile",
+            9
+          ],
+          [
+            "refund",
+            8
+          ],
+          [
+            "merchant",
+            6
+          ],
+          [
+            "invoice",
+            4
+          ],
+          [
+            "ledger",
+            3
+          ]
+        ],
+        "latestMinuteOfNight": 112
       }
     },
     {
@@ -1360,6 +2869,118 @@
         "lastAnswerAt": "2026-10-18T01:42:04.201Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-10-18T01:42:04.201Z"
+      },
+      "chat": {
+        "prompts": 12,
+        "words": 548,
+        "longestWords": 582,
+        "questions": 3,
+        "whys": 0,
+        "manners": 2,
+        "images": 3,
+        "pasted": 0,
+        "avalanches": 0,
+        "hours": [
+          3,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          2,
+          0
+        ],
+        "days": [
+          12,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "minutes": 32,
+        "dayKeys": [
+          "2026-10-18"
+        ],
+        "nightMinutes": 13,
+        "seg": {
+          "overthinking": {
+            "n": 2,
+            "min": 8.5
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 1,
+            "min": 3.7
+          },
+          "hi": {
+            "n": 0,
+            "min": 0
+          },
+          "goAhead": {
+            "n": 1,
+            "min": 0.9
+          },
+          "rage": {
+            "n": 0,
+            "min": 0
+          },
+          "brainDump": {
+            "n": 1,
+            "min": 3
+          }
+        },
+        "topWords": [
+          [
+            "settlement",
+            6
+          ],
+          [
+            "reconcile",
+            5
+          ],
+          [
+            "payout",
+            4
+          ],
+          [
+            "refund",
+            4
+          ],
+          [
+            "idempotency",
+            4
+          ],
+          [
+            "webhook",
+            2
+          ],
+          [
+            "ledger",
+            2
+          ]
+        ],
+        "latestMinuteOfNight": 63
       }
     },
     {
@@ -1459,6 +3080,118 @@
         "firstCommitAt": "2026-10-18T17:47:06.612Z",
         "lastAnswerAt": "2026-10-18T18:00:15.350Z",
         "endsOnQuestion": false
+      },
+      "chat": {
+        "prompts": 13,
+        "words": 528,
+        "longestWords": 726,
+        "questions": 3,
+        "whys": 0,
+        "manners": 5,
+        "images": 3,
+        "pasted": 0,
+        "avalanches": 1,
+        "hours": [
+          2,
+          1,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          4,
+          0,
+          1,
+          1
+        ],
+        "days": [
+          13,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "minutes": 66,
+        "dayKeys": [
+          "2026-10-18"
+        ],
+        "nightMinutes": 25,
+        "seg": {
+          "overthinking": {
+            "n": 1,
+            "min": 2.1
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 1,
+            "min": 4.1
+          },
+          "hi": {
+            "n": 0,
+            "min": 0
+          },
+          "goAhead": {
+            "n": 1,
+            "min": 1
+          },
+          "rage": {
+            "n": 0,
+            "min": 0
+          },
+          "brainDump": {
+            "n": 1,
+            "min": 4.3
+          }
+        },
+        "topWords": [
+          [
+            "queue",
+            5
+          ],
+          [
+            "currency",
+            5
+          ],
+          [
+            "timeout",
+            4
+          ],
+          [
+            "reconcile",
+            4
+          ],
+          [
+            "ledger",
+            2
+          ],
+          [
+            "merchant",
+            2
+          ],
+          [
+            "payout",
+            1
+          ]
+        ],
+        "latestMinuteOfNight": 186
       }
     },
     {
@@ -1554,6 +3287,118 @@
         "lastAnswerAt": "2026-10-19T04:18:50.748Z",
         "endsOnQuestion": true,
         "firstPrAt": "2026-10-19T04:18:50.748Z"
+      },
+      "chat": {
+        "prompts": 32,
+        "words": 1285,
+        "longestWords": 497,
+        "questions": 12,
+        "whys": 1,
+        "manners": 10,
+        "images": 0,
+        "pasted": 1,
+        "avalanches": 1,
+        "hours": [
+          2,
+          3,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          2,
+          4,
+          3,
+          7,
+          2,
+          2,
+          4
+        ],
+        "days": [
+          0,
+          32,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "minutes": 110,
+        "dayKeys": [
+          "2026-10-19"
+        ],
+        "nightMinutes": 24,
+        "seg": {
+          "overthinking": {
+            "n": 3,
+            "min": 9.3
+          },
+          "therapy": {
+            "n": 1,
+            "min": 3.7
+          },
+          "student": {
+            "n": 5,
+            "min": 18.4
+          },
+          "hi": {
+            "n": 1,
+            "min": 1.2
+          },
+          "goAhead": {
+            "n": 3,
+            "min": 2.7
+          },
+          "rage": {
+            "n": 1,
+            "min": 1.9
+          },
+          "brainDump": {
+            "n": 2,
+            "min": 7.9
+          }
+        },
+        "topWords": [
+          [
+            "retry",
+            16
+          ],
+          [
+            "webhook",
+            15
+          ],
+          [
+            "idempotency",
+            15
+          ],
+          [
+            "merchant",
+            11
+          ],
+          [
+            "batch",
+            9
+          ],
+          [
+            "timeout",
+            5
+          ],
+          [
+            "currency",
+            5
+          ]
+        ],
+        "latestMinuteOfNight": 255
       }
     },
     {
@@ -1654,6 +3499,122 @@
         "lastAnswerAt": "2026-10-19T21:52:21.930Z",
         "endsOnQuestion": true,
         "firstPrAt": "2026-10-19T21:52:21.930Z"
+      },
+      "chat": {
+        "prompts": 29,
+        "words": 1102,
+        "longestWords": 254,
+        "questions": 12,
+        "whys": 0,
+        "manners": 7,
+        "images": 0,
+        "pasted": 1,
+        "avalanches": 1,
+        "hours": [
+          3,
+          1,
+          1,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          4,
+          3,
+          1,
+          3,
+          3,
+          5,
+          2
+        ],
+        "days": [
+          0,
+          29,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "minutes": 96,
+        "dayKeys": [
+          "2026-10-19"
+        ],
+        "nightMinutes": 26,
+        "seg": {
+          "overthinking": {
+            "n": 6,
+            "min": 27.4
+          },
+          "therapy": {
+            "n": 1,
+            "min": 4.6
+          },
+          "student": {
+            "n": 5,
+            "min": 22.4
+          },
+          "hi": {
+            "n": 1,
+            "min": 1
+          },
+          "goAhead": {
+            "n": 3,
+            "min": 5.9
+          },
+          "rage": {
+            "n": 1,
+            "min": 4.4
+          },
+          "brainDump": {
+            "n": 2,
+            "min": 8
+          }
+        },
+        "topWords": [
+          [
+            "ledger",
+            16
+          ],
+          [
+            "currency",
+            13
+          ],
+          [
+            "payout",
+            11
+          ],
+          [
+            "settlement",
+            11
+          ],
+          [
+            "reconcile",
+            9
+          ],
+          [
+            "refund",
+            7
+          ],
+          [
+            "idempotency",
+            5
+          ],
+          [
+            "queue",
+            4
+          ]
+        ],
+        "latestMinuteOfNight": 213
       }
     },
     {
@@ -1754,6 +3715,118 @@
         "lastAnswerAt": "2026-10-20T11:54:01.150Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-10-20T11:54:01.150Z"
+      },
+      "chat": {
+        "prompts": 62,
+        "words": 2456,
+        "longestWords": 486,
+        "questions": 23,
+        "whys": 4,
+        "manners": 23,
+        "images": 0,
+        "pasted": 2,
+        "avalanches": 2,
+        "hours": [
+          5,
+          2,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          4,
+          3,
+          3,
+          8,
+          12,
+          4,
+          6,
+          10
+        ],
+        "days": [
+          0,
+          0,
+          62,
+          0,
+          0,
+          0,
+          0
+        ],
+        "minutes": 157,
+        "dayKeys": [
+          "2026-10-20"
+        ],
+        "nightMinutes": 30,
+        "seg": {
+          "overthinking": {
+            "n": 12,
+            "min": 49
+          },
+          "therapy": {
+            "n": 3,
+            "min": 11.4
+          },
+          "student": {
+            "n": 9,
+            "min": 41.2
+          },
+          "hi": {
+            "n": 2,
+            "min": 2.5
+          },
+          "goAhead": {
+            "n": 6,
+            "min": 10.5
+          },
+          "rage": {
+            "n": 2,
+            "min": 5.7
+          },
+          "brainDump": {
+            "n": 3,
+            "min": 14.8
+          }
+        },
+        "topWords": [
+          [
+            "refund",
+            28
+          ],
+          [
+            "retry",
+            23
+          ],
+          [
+            "timeout",
+            19
+          ],
+          [
+            "ledger",
+            15
+          ],
+          [
+            "webhook",
+            12
+          ],
+          [
+            "settlement",
+            12
+          ],
+          [
+            "invoice",
+            8
+          ]
+        ],
+        "latestMinuteOfNight": 239
       }
     },
     {
@@ -1828,6 +3901,125 @@
         "lastPromptAt": "2026-10-21T02:30:34.813Z",
         "lastAnswerAt": "2026-10-21T02:33:51.983Z",
         "endsOnQuestion": false
+      },
+      "chat": {
+        "prompts": 3,
+        "words": 111,
+        "longestWords": 338,
+        "questions": 1,
+        "whys": 0,
+        "manners": 1,
+        "images": 3,
+        "pasted": 0,
+        "avalanches": 0,
+        "hours": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1
+        ],
+        "days": [
+          0,
+          0,
+          0,
+          3,
+          0,
+          0,
+          0
+        ],
+        "minutes": 15,
+        "dayKeys": [
+          "2026-10-21"
+        ],
+        "nightMinutes": 0,
+        "seg": {
+          "overthinking": {
+            "n": 1,
+            "min": 3.8
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 0,
+            "min": 0
+          },
+          "hi": {
+            "n": 0,
+            "min": 0
+          },
+          "goAhead": {
+            "n": 0,
+            "min": 0
+          },
+          "rage": {
+            "n": 0,
+            "min": 0
+          },
+          "brainDump": {
+            "n": 0,
+            "min": 0
+          }
+        },
+        "topWords": [
+          [
+            "ledger",
+            2
+          ],
+          [
+            "invoice",
+            2
+          ],
+          [
+            "payout",
+            1
+          ],
+          [
+            "retry",
+            1
+          ],
+          [
+            "refund",
+            1
+          ],
+          [
+            "merchant",
+            1
+          ],
+          [
+            "batch",
+            1
+          ],
+          [
+            "currency",
+            1
+          ],
+          [
+            "reconcile",
+            1
+          ]
+        ]
       }
     },
     {
@@ -1926,6 +4118,122 @@
         "lastAnswerAt": "2026-10-21T16:04:02.682Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-10-21T16:04:02.682Z"
+      },
+      "chat": {
+        "prompts": 16,
+        "words": 1068,
+        "longestWords": 250,
+        "questions": 4,
+        "whys": 1,
+        "manners": 5,
+        "images": 2,
+        "pasted": 0,
+        "avalanches": 0,
+        "hours": [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          2,
+          2,
+          4,
+          4
+        ],
+        "days": [
+          0,
+          0,
+          0,
+          16,
+          0,
+          0,
+          0
+        ],
+        "minutes": 70,
+        "dayKeys": [
+          "2026-10-21"
+        ],
+        "nightMinutes": 9,
+        "seg": {
+          "overthinking": {
+            "n": 4,
+            "min": 8.9
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 3,
+            "min": 15.8
+          },
+          "hi": {
+            "n": 0,
+            "min": 0
+          },
+          "goAhead": {
+            "n": 1,
+            "min": 1.6
+          },
+          "rage": {
+            "n": 1,
+            "min": 4.4
+          },
+          "brainDump": {
+            "n": 0,
+            "min": 0
+          }
+        },
+        "topWords": [
+          [
+            "reconcile",
+            9
+          ],
+          [
+            "invoice",
+            7
+          ],
+          [
+            "webhook",
+            5
+          ],
+          [
+            "timeout",
+            4
+          ],
+          [
+            "retry",
+            3
+          ],
+          [
+            "ledger",
+            3
+          ],
+          [
+            "merchant",
+            3
+          ],
+          [
+            "idempotency",
+            2
+          ]
+        ],
+        "latestMinuteOfNight": 150
       }
     },
     {
@@ -2000,6 +4308,118 @@
         "lastPromptAt": "2026-10-22T03:19:50.657Z",
         "lastAnswerAt": "2026-10-22T03:22:56.490Z",
         "endsOnQuestion": true
+      },
+      "chat": {
+        "prompts": 7,
+        "words": 219,
+        "longestWords": 491,
+        "questions": 2,
+        "whys": 0,
+        "manners": 2,
+        "images": 2,
+        "pasted": 0,
+        "avalanches": 0,
+        "hours": [
+          0,
+          2,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1
+        ],
+        "days": [
+          0,
+          0,
+          0,
+          0,
+          7,
+          0,
+          0
+        ],
+        "minutes": 28,
+        "dayKeys": [
+          "2026-10-22"
+        ],
+        "nightMinutes": 16,
+        "seg": {
+          "overthinking": {
+            "n": 1,
+            "min": 2.4
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 1,
+            "min": 2.9
+          },
+          "hi": {
+            "n": 0,
+            "min": 0
+          },
+          "goAhead": {
+            "n": 0,
+            "min": 0
+          },
+          "rage": {
+            "n": 0,
+            "min": 0
+          },
+          "brainDump": {
+            "n": 0,
+            "min": 0
+          }
+        },
+        "topWords": [
+          [
+            "webhook",
+            4
+          ],
+          [
+            "refund",
+            4
+          ],
+          [
+            "currency",
+            4
+          ],
+          [
+            "payout",
+            2
+          ],
+          [
+            "timeout",
+            1
+          ],
+          [
+            "invoice",
+            1
+          ],
+          [
+            "idempotency",
+            1
+          ]
+        ],
+        "latestMinuteOfNight": 152
       }
     },
     {
@@ -2075,6 +4495,118 @@
         "lastPromptAt": "2026-10-22T21:34:26.247Z",
         "lastAnswerAt": "2026-10-22T21:40:11.326Z",
         "endsOnQuestion": false
+      },
+      "chat": {
+        "prompts": 12,
+        "words": 520,
+        "longestWords": 258,
+        "questions": 5,
+        "whys": 1,
+        "manners": 2,
+        "images": 1,
+        "pasted": 0,
+        "avalanches": 1,
+        "hours": [
+          2,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          1,
+          3,
+          0,
+          3,
+          0,
+          0
+        ],
+        "days": [
+          0,
+          0,
+          0,
+          0,
+          12,
+          0,
+          0
+        ],
+        "minutes": 39,
+        "dayKeys": [
+          "2026-10-22"
+        ],
+        "nightMinutes": 10,
+        "seg": {
+          "overthinking": {
+            "n": 1,
+            "min": 4.3
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 1,
+            "min": 1.9
+          },
+          "hi": {
+            "n": 0,
+            "min": 0
+          },
+          "goAhead": {
+            "n": 1,
+            "min": 1.2
+          },
+          "rage": {
+            "n": 0,
+            "min": 0
+          },
+          "brainDump": {
+            "n": 1,
+            "min": 1.7
+          }
+        },
+        "topWords": [
+          [
+            "invoice",
+            7
+          ],
+          [
+            "batch",
+            6
+          ],
+          [
+            "reconcile",
+            6
+          ],
+          [
+            "idempotency",
+            5
+          ],
+          [
+            "retry",
+            4
+          ],
+          [
+            "merchant",
+            4
+          ],
+          [
+            "timeout",
+            1
+          ]
+        ],
+        "latestMinuteOfNight": 99
       }
     },
     {
@@ -2165,6 +4697,118 @@
         "lastAnswerAt": "2026-10-23T08:59:30.425Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-10-23T08:59:30.425Z"
+      },
+      "chat": {
+        "prompts": 17,
+        "words": 710,
+        "longestWords": 690,
+        "questions": 5,
+        "whys": 0,
+        "manners": 6,
+        "images": 3,
+        "pasted": 0,
+        "avalanches": 0,
+        "hours": [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          1,
+          1,
+          3,
+          2,
+          4,
+          0,
+          2
+        ],
+        "days": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          17,
+          0
+        ],
+        "minutes": 50,
+        "dayKeys": [
+          "2026-10-23"
+        ],
+        "nightMinutes": 6,
+        "seg": {
+          "overthinking": {
+            "n": 3,
+            "min": 9
+          },
+          "therapy": {
+            "n": 1,
+            "min": 2.3
+          },
+          "student": {
+            "n": 2,
+            "min": 4.1
+          },
+          "hi": {
+            "n": 0,
+            "min": 0
+          },
+          "goAhead": {
+            "n": 1,
+            "min": 1.5
+          },
+          "rage": {
+            "n": 1,
+            "min": 5.1
+          },
+          "brainDump": {
+            "n": 1,
+            "min": 4.9
+          }
+        },
+        "topWords": [
+          [
+            "batch",
+            10
+          ],
+          [
+            "reconcile",
+            9
+          ],
+          [
+            "timeout",
+            8
+          ],
+          [
+            "refund",
+            7
+          ],
+          [
+            "webhook",
+            6
+          ],
+          [
+            "ledger",
+            6
+          ],
+          [
+            "merchant",
+            4
+          ]
+        ],
+        "latestMinuteOfNight": 168
       }
     },
     {
@@ -2263,6 +4907,118 @@
         "lastAnswerAt": "2026-10-24T00:00:56.331Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-10-24T00:00:56.331Z"
+      },
+      "chat": {
+        "prompts": 13,
+        "words": 717,
+        "longestWords": 304,
+        "questions": 3,
+        "whys": 0,
+        "manners": 3,
+        "images": 0,
+        "pasted": 0,
+        "avalanches": 0,
+        "hours": [
+          2,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          2,
+          0,
+          0,
+          5,
+          1,
+          0,
+          1
+        ],
+        "days": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          13,
+          0
+        ],
+        "minutes": 66,
+        "dayKeys": [
+          "2026-10-23"
+        ],
+        "nightMinutes": 15,
+        "seg": {
+          "overthinking": {
+            "n": 1,
+            "min": 3.9
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 2,
+            "min": 6
+          },
+          "hi": {
+            "n": 0,
+            "min": 0
+          },
+          "goAhead": {
+            "n": 1,
+            "min": 1.3
+          },
+          "rage": {
+            "n": 1,
+            "min": 3.7
+          },
+          "brainDump": {
+            "n": 1,
+            "min": 5
+          }
+        },
+        "topWords": [
+          [
+            "retry",
+            7
+          ],
+          [
+            "reconcile",
+            7
+          ],
+          [
+            "settlement",
+            6
+          ],
+          [
+            "batch",
+            6
+          ],
+          [
+            "webhook",
+            5
+          ],
+          [
+            "timeout",
+            5
+          ],
+          [
+            "currency",
+            5
+          ]
+        ],
+        "latestMinuteOfNight": 223
       }
     },
     {
@@ -2354,6 +5110,114 @@
         "lastAnswerAt": "2026-10-24T16:49:07.389Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-10-24T16:49:07.389Z"
+      },
+      "chat": {
+        "prompts": 11,
+        "words": 683,
+        "longestWords": 585,
+        "questions": 4,
+        "whys": 1,
+        "manners": 3,
+        "images": 3,
+        "pasted": 0,
+        "avalanches": 0,
+        "hours": [
+          2,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          3,
+          3
+        ],
+        "days": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          11
+        ],
+        "minutes": 54,
+        "dayKeys": [
+          "2026-10-24"
+        ],
+        "nightMinutes": 25,
+        "seg": {
+          "overthinking": {
+            "n": 2,
+            "min": 5.4
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 1,
+            "min": 4.7
+          },
+          "hi": {
+            "n": 0,
+            "min": 0
+          },
+          "goAhead": {
+            "n": 1,
+            "min": 1
+          },
+          "rage": {
+            "n": 0,
+            "min": 0
+          },
+          "brainDump": {
+            "n": 0,
+            "min": 0
+          }
+        },
+        "topWords": [
+          [
+            "settlement",
+            7
+          ],
+          [
+            "merchant",
+            6
+          ],
+          [
+            "batch",
+            4
+          ],
+          [
+            "currency",
+            4
+          ],
+          [
+            "queue",
+            3
+          ],
+          [
+            "reconcile",
+            3
+          ]
+        ],
+        "latestMinuteOfNight": 192
       }
     },
     {
@@ -2444,6 +5308,122 @@
         "lastAnswerAt": "2026-10-25T09:33:52.316Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-10-25T09:33:52.316Z"
+      },
+      "chat": {
+        "prompts": 33,
+        "words": 1639,
+        "longestWords": 159,
+        "questions": 8,
+        "whys": 1,
+        "manners": 14,
+        "images": 0,
+        "pasted": 1,
+        "avalanches": 2,
+        "hours": [
+          2,
+          2,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          3,
+          2,
+          5,
+          6,
+          6,
+          5
+        ],
+        "days": [
+          33,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "minutes": 151,
+        "dayKeys": [
+          "2026-10-25"
+        ],
+        "nightMinutes": 23,
+        "seg": {
+          "overthinking": {
+            "n": 8,
+            "min": 26.7
+          },
+          "therapy": {
+            "n": 1,
+            "min": 1.9
+          },
+          "student": {
+            "n": 3,
+            "min": 10.3
+          },
+          "hi": {
+            "n": 1,
+            "min": 1.2
+          },
+          "goAhead": {
+            "n": 3,
+            "min": 3.4
+          },
+          "rage": {
+            "n": 1,
+            "min": 1.6
+          },
+          "brainDump": {
+            "n": 2,
+            "min": 4.7
+          }
+        },
+        "topWords": [
+          [
+            "webhook",
+            18
+          ],
+          [
+            "queue",
+            15
+          ],
+          [
+            "timeout",
+            14
+          ],
+          [
+            "currency",
+            10
+          ],
+          [
+            "batch",
+            7
+          ],
+          [
+            "merchant",
+            6
+          ],
+          [
+            "retry",
+            5
+          ],
+          [
+            "idempotency",
+            4
+          ]
+        ],
+        "latestMinuteOfNight": 148
       }
     },
     {
@@ -2541,6 +5521,130 @@
         "lastAnswerAt": "2026-10-25T23:02:01.056Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-10-25T23:02:01.056Z"
+      },
+      "chat": {
+        "prompts": 22,
+        "words": 1377,
+        "longestWords": 430,
+        "questions": 5,
+        "whys": 0,
+        "manners": 8,
+        "images": 0,
+        "pasted": 1,
+        "avalanches": 0,
+        "hours": [
+          2,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          2,
+          3,
+          3,
+          3,
+          2,
+          2
+        ],
+        "days": [
+          22,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "minutes": 72,
+        "dayKeys": [
+          "2026-10-25"
+        ],
+        "nightMinutes": 16,
+        "seg": {
+          "overthinking": {
+            "n": 3,
+            "min": 5.4
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 4,
+            "min": 10.1
+          },
+          "hi": {
+            "n": 1,
+            "min": 1.3
+          },
+          "goAhead": {
+            "n": 2,
+            "min": 3.3
+          },
+          "rage": {
+            "n": 0,
+            "min": 0
+          },
+          "brainDump": {
+            "n": 1,
+            "min": 3.7
+          }
+        },
+        "topWords": [
+          [
+            "timeout",
+            13
+          ],
+          [
+            "webhook",
+            9
+          ],
+          [
+            "settlement",
+            9
+          ],
+          [
+            "ledger",
+            9
+          ],
+          [
+            "refund",
+            8
+          ],
+          [
+            "batch",
+            6
+          ],
+          [
+            "queue",
+            6
+          ],
+          [
+            "invoice",
+            5
+          ],
+          [
+            "currency",
+            3
+          ],
+          [
+            "reconcile",
+            3
+          ]
+        ],
+        "latestMinuteOfNight": 237
       }
     },
     {
@@ -2649,6 +5753,110 @@
         "lastAnswerAt": "2026-10-26T11:11:17.064Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-10-26T11:11:17.064Z"
+      },
+      "chat": {
+        "prompts": 17,
+        "words": 960,
+        "longestWords": 650,
+        "questions": 6,
+        "whys": 0,
+        "manners": 4,
+        "images": 0,
+        "pasted": 0,
+        "avalanches": 1,
+        "hours": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          3,
+          2,
+          3,
+          1,
+          5,
+          2
+        ],
+        "days": [
+          0,
+          17,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "minutes": 65,
+        "dayKeys": [
+          "2026-10-26"
+        ],
+        "nightMinutes": 4,
+        "seg": {
+          "overthinking": {
+            "n": 4,
+            "min": 15.4
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 3,
+            "min": 4.9
+          },
+          "hi": {
+            "n": 1,
+            "min": 1.2
+          },
+          "goAhead": {
+            "n": 1,
+            "min": 0.9
+          },
+          "rage": {
+            "n": 0,
+            "min": 0
+          },
+          "brainDump": {
+            "n": 1,
+            "min": 4.7
+          }
+        },
+        "topWords": [
+          [
+            "queue",
+            9
+          ],
+          [
+            "webhook",
+            8
+          ],
+          [
+            "idempotency",
+            8
+          ],
+          [
+            "timeout",
+            5
+          ],
+          [
+            "reconcile",
+            5
+          ]
+        ],
+        "latestMinuteOfNight": 46
       }
     },
     {
@@ -2735,6 +5943,114 @@
         "firstCommitAt": "2026-10-27T01:06:06.256Z",
         "lastAnswerAt": "2026-10-27T01:16:46.484Z",
         "endsOnQuestion": false
+      },
+      "chat": {
+        "prompts": 12,
+        "words": 630,
+        "longestWords": 702,
+        "questions": 4,
+        "whys": 1,
+        "manners": 4,
+        "images": 0,
+        "pasted": 0,
+        "avalanches": 1,
+        "hours": [
+          3,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          2,
+          1,
+          3,
+          1
+        ],
+        "days": [
+          0,
+          0,
+          12,
+          0,
+          0,
+          0,
+          0
+        ],
+        "minutes": 38,
+        "dayKeys": [
+          "2026-10-27"
+        ],
+        "nightMinutes": 13,
+        "seg": {
+          "overthinking": {
+            "n": 3,
+            "min": 12.7
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 2,
+            "min": 6.6
+          },
+          "hi": {
+            "n": 0,
+            "min": 0
+          },
+          "goAhead": {
+            "n": 1,
+            "min": 2
+          },
+          "rage": {
+            "n": 0,
+            "min": 0
+          },
+          "brainDump": {
+            "n": 1,
+            "min": 2.2
+          }
+        },
+        "topWords": [
+          [
+            "idempotency",
+            7
+          ],
+          [
+            "batch",
+            6
+          ],
+          [
+            "queue",
+            6
+          ],
+          [
+            "settlement",
+            5
+          ],
+          [
+            "webhook",
+            4
+          ],
+          [
+            "refund",
+            3
+          ]
+        ],
+        "latestMinuteOfNight": 146
       }
     },
     {
@@ -2845,6 +6161,122 @@
         "lastAnswerAt": "2026-10-27T14:12:54.263Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-10-27T14:12:54.263Z"
+      },
+      "chat": {
+        "prompts": 21,
+        "words": 605,
+        "longestWords": 612,
+        "questions": 8,
+        "whys": 1,
+        "manners": 5,
+        "images": 0,
+        "pasted": 1,
+        "avalanches": 0,
+        "hours": [
+          3,
+          4,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          2,
+          1,
+          0,
+          1,
+          3,
+          4
+        ],
+        "days": [
+          0,
+          0,
+          21,
+          0,
+          0,
+          0,
+          0
+        ],
+        "minutes": 87,
+        "dayKeys": [
+          "2026-10-27"
+        ],
+        "nightMinutes": 37,
+        "seg": {
+          "overthinking": {
+            "n": 5,
+            "min": 17.8
+          },
+          "therapy": {
+            "n": 1,
+            "min": 4
+          },
+          "student": {
+            "n": 4,
+            "min": 6.9
+          },
+          "hi": {
+            "n": 1,
+            "min": 0.8
+          },
+          "goAhead": {
+            "n": 2,
+            "min": 1
+          },
+          "rage": {
+            "n": 1,
+            "min": 1.8
+          },
+          "brainDump": {
+            "n": 1,
+            "min": 4.5
+          }
+        },
+        "topWords": [
+          [
+            "ledger",
+            11
+          ],
+          [
+            "invoice",
+            10
+          ],
+          [
+            "reconcile",
+            9
+          ],
+          [
+            "payout",
+            8
+          ],
+          [
+            "queue",
+            8
+          ],
+          [
+            "refund",
+            5
+          ],
+          [
+            "merchant",
+            5
+          ],
+          [
+            "settlement",
+            3
+          ]
+        ],
+        "latestMinuteOfNight": 137
       }
     },
     {
@@ -2948,6 +6380,113 @@
         "lastAnswerAt": "2026-10-28T05:14:28.460Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-10-28T05:14:28.460Z"
+      },
+      "chat": {
+        "prompts": 6,
+        "words": 267,
+        "longestWords": 176,
+        "questions": 2,
+        "whys": 0,
+        "manners": 2,
+        "images": 0,
+        "pasted": 0,
+        "avalanches": 0,
+        "hours": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          2,
+          0,
+          0
+        ],
+        "days": [
+          0,
+          0,
+          0,
+          6,
+          0,
+          0,
+          0
+        ],
+        "minutes": 30,
+        "dayKeys": [
+          "2026-10-28"
+        ],
+        "nightMinutes": 0,
+        "seg": {
+          "overthinking": {
+            "n": 1,
+            "min": 1.9
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 1,
+            "min": 2.8
+          },
+          "hi": {
+            "n": 0,
+            "min": 0
+          },
+          "goAhead": {
+            "n": 1,
+            "min": 0.9
+          },
+          "rage": {
+            "n": 0,
+            "min": 0
+          },
+          "brainDump": {
+            "n": 0,
+            "min": 0
+          }
+        },
+        "topWords": [
+          [
+            "batch",
+            3
+          ],
+          [
+            "refund",
+            2
+          ],
+          [
+            "idempotency",
+            2
+          ],
+          [
+            "retry",
+            1
+          ],
+          [
+            "merchant",
+            1
+          ],
+          [
+            "invoice",
+            1
+          ]
+        ]
       }
     },
     {
@@ -3022,6 +6561,122 @@
         "lastPromptAt": "2026-10-28T22:28:30.810Z",
         "lastAnswerAt": "2026-10-28T22:35:55.918Z",
         "endsOnQuestion": false
+      },
+      "chat": {
+        "prompts": 13,
+        "words": 512,
+        "longestWords": 209,
+        "questions": 4,
+        "whys": 1,
+        "manners": 3,
+        "images": 0,
+        "pasted": 0,
+        "avalanches": 0,
+        "hours": [
+          3,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          1,
+          2,
+          2,
+          0,
+          1,
+          1
+        ],
+        "days": [
+          0,
+          0,
+          0,
+          13,
+          0,
+          0,
+          0
+        ],
+        "minutes": 43,
+        "dayKeys": [
+          "2026-10-28"
+        ],
+        "nightMinutes": 13,
+        "seg": {
+          "overthinking": {
+            "n": 1,
+            "min": 2.5
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 2,
+            "min": 10
+          },
+          "hi": {
+            "n": 0,
+            "min": 0
+          },
+          "goAhead": {
+            "n": 1,
+            "min": 0.7
+          },
+          "rage": {
+            "n": 0,
+            "min": 0
+          },
+          "brainDump": {
+            "n": 0,
+            "min": 0
+          }
+        },
+        "topWords": [
+          [
+            "ledger",
+            6
+          ],
+          [
+            "merchant",
+            6
+          ],
+          [
+            "reconcile",
+            5
+          ],
+          [
+            "timeout",
+            3
+          ],
+          [
+            "invoice",
+            3
+          ],
+          [
+            "payout",
+            2
+          ],
+          [
+            "idempotency",
+            2
+          ],
+          [
+            "settlement",
+            1
+          ]
+        ],
+        "latestMinuteOfNight": 65
       }
     },
     {
@@ -3118,6 +6773,118 @@
         "lastAnswerAt": "2026-10-29T13:24:49.991Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-10-29T13:24:49.991Z"
+      },
+      "chat": {
+        "prompts": 21,
+        "words": 786,
+        "longestWords": 534,
+        "questions": 4,
+        "whys": 1,
+        "manners": 7,
+        "images": 0,
+        "pasted": 1,
+        "avalanches": 1,
+        "hours": [
+          5,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          4,
+          2,
+          2,
+          4,
+          2
+        ],
+        "days": [
+          0,
+          0,
+          0,
+          0,
+          21,
+          0,
+          0
+        ],
+        "minutes": 102,
+        "dayKeys": [
+          "2026-10-29"
+        ],
+        "nightMinutes": 29,
+        "seg": {
+          "overthinking": {
+            "n": 4,
+            "min": 7.6
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 4,
+            "min": 10.1
+          },
+          "hi": {
+            "n": 1,
+            "min": 1.2
+          },
+          "goAhead": {
+            "n": 2,
+            "min": 3.8
+          },
+          "rage": {
+            "n": 0,
+            "min": 0
+          },
+          "brainDump": {
+            "n": 1,
+            "min": 2.9
+          }
+        },
+        "topWords": [
+          [
+            "settlement",
+            12
+          ],
+          [
+            "invoice",
+            12
+          ],
+          [
+            "retry",
+            11
+          ],
+          [
+            "batch",
+            9
+          ],
+          [
+            "payout",
+            7
+          ],
+          [
+            "reconcile",
+            7
+          ],
+          [
+            "ledger",
+            2
+          ]
+        ],
+        "latestMinuteOfNight": 111
       }
     },
     {
@@ -3211,6 +6978,118 @@
         "lastAnswerAt": "2026-10-30T03:52:29.324Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-10-30T03:52:29.324Z"
+      },
+      "chat": {
+        "prompts": 16,
+        "words": 470,
+        "longestWords": 681,
+        "questions": 4,
+        "whys": 1,
+        "manners": 5,
+        "images": 0,
+        "pasted": 0,
+        "avalanches": 0,
+        "hours": [
+          1,
+          2,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          2,
+          5,
+          1,
+          0,
+          1
+        ],
+        "days": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          16,
+          0
+        ],
+        "minutes": 54,
+        "dayKeys": [
+          "2026-10-30"
+        ],
+        "nightMinutes": 17,
+        "seg": {
+          "overthinking": {
+            "n": 1,
+            "min": 4.5
+          },
+          "therapy": {
+            "n": 1,
+            "min": 5.1
+          },
+          "student": {
+            "n": 1,
+            "min": 1.6
+          },
+          "hi": {
+            "n": 1,
+            "min": 1.5
+          },
+          "goAhead": {
+            "n": 2,
+            "min": 2.8
+          },
+          "rage": {
+            "n": 1,
+            "min": 2.4
+          },
+          "brainDump": {
+            "n": 1,
+            "min": 5.5
+          }
+        },
+        "topWords": [
+          [
+            "ledger",
+            9
+          ],
+          [
+            "reconcile",
+            9
+          ],
+          [
+            "retry",
+            8
+          ],
+          [
+            "idempotency",
+            8
+          ],
+          [
+            "currency",
+            4
+          ],
+          [
+            "batch",
+            3
+          ],
+          [
+            "settlement",
+            2
+          ]
+        ],
+        "latestMinuteOfNight": 209
       }
     },
     {
@@ -3309,6 +7188,126 @@
         "lastAnswerAt": "2026-10-30T17:51:25.531Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-10-30T17:51:25.531Z"
+      },
+      "chat": {
+        "prompts": 20,
+        "words": 900,
+        "longestWords": 214,
+        "questions": 6,
+        "whys": 1,
+        "manners": 6,
+        "images": 0,
+        "pasted": 1,
+        "avalanches": 0,
+        "hours": [
+          4,
+          2,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          4,
+          3,
+          4,
+          0
+        ],
+        "days": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          20,
+          0
+        ],
+        "minutes": 106,
+        "dayKeys": [
+          "2026-10-30"
+        ],
+        "nightMinutes": 37,
+        "seg": {
+          "overthinking": {
+            "n": 3,
+            "min": 12
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 4,
+            "min": 10
+          },
+          "hi": {
+            "n": 1,
+            "min": 1.6
+          },
+          "goAhead": {
+            "n": 1,
+            "min": 0.8
+          },
+          "rage": {
+            "n": 1,
+            "min": 3.9
+          },
+          "brainDump": {
+            "n": 1,
+            "min": 4.3
+          }
+        },
+        "topWords": [
+          [
+            "batch",
+            11
+          ],
+          [
+            "invoice",
+            11
+          ],
+          [
+            "webhook",
+            10
+          ],
+          [
+            "currency",
+            10
+          ],
+          [
+            "payout",
+            8
+          ],
+          [
+            "reconcile",
+            8
+          ],
+          [
+            "queue",
+            6
+          ],
+          [
+            "timeout",
+            6
+          ],
+          [
+            "idempotency",
+            6
+          ]
+        ],
+        "latestMinuteOfNight": 194
       }
     },
     {
@@ -3406,6 +7405,126 @@
         "lastAnswerAt": "2026-10-31T07:40:38.777Z",
         "endsOnQuestion": true,
         "firstPrAt": "2026-10-31T07:40:38.777Z"
+      },
+      "chat": {
+        "prompts": 9,
+        "words": 318,
+        "longestWords": 320,
+        "questions": 3,
+        "whys": 1,
+        "manners": 4,
+        "images": 3,
+        "pasted": 0,
+        "avalanches": 0,
+        "hours": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          4,
+          0,
+          0,
+          1
+        ],
+        "days": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          9
+        ],
+        "minutes": 35,
+        "dayKeys": [
+          "2026-10-31"
+        ],
+        "nightMinutes": 4,
+        "seg": {
+          "overthinking": {
+            "n": 2,
+            "min": 7.3
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 1,
+            "min": 1.6
+          },
+          "hi": {
+            "n": 0,
+            "min": 0
+          },
+          "goAhead": {
+            "n": 0,
+            "min": 0
+          },
+          "rage": {
+            "n": 0,
+            "min": 0
+          },
+          "brainDump": {
+            "n": 1,
+            "min": 5.3
+          }
+        },
+        "topWords": [
+          [
+            "refund",
+            5
+          ],
+          [
+            "batch",
+            5
+          ],
+          [
+            "webhook",
+            4
+          ],
+          [
+            "ledger",
+            4
+          ],
+          [
+            "merchant",
+            3
+          ],
+          [
+            "timeout",
+            3
+          ],
+          [
+            "reconcile",
+            3
+          ],
+          [
+            "retry",
+            2
+          ],
+          [
+            "settlement",
+            1
+          ]
+        ],
+        "latestMinuteOfNight": 23
       }
     },
     {
@@ -3499,6 +7618,130 @@
         "lastAnswerAt": "2026-10-31T19:57:55.821Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-10-31T19:57:55.821Z"
+      },
+      "chat": {
+        "prompts": 62,
+        "words": 1588,
+        "longestWords": 401,
+        "questions": 20,
+        "whys": 4,
+        "manners": 13,
+        "images": 0,
+        "pasted": 2,
+        "avalanches": 5,
+        "hours": [
+          2,
+          1,
+          4,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          5,
+          7,
+          7,
+          10,
+          5,
+          10,
+          9
+        ],
+        "days": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          62
+        ],
+        "minutes": 166,
+        "dayKeys": [
+          "2026-10-31"
+        ],
+        "nightMinutes": 21,
+        "seg": {
+          "overthinking": {
+            "n": 14,
+            "min": 73.4
+          },
+          "therapy": {
+            "n": 2,
+            "min": 6.7
+          },
+          "student": {
+            "n": 8,
+            "min": 35.4
+          },
+          "hi": {
+            "n": 2,
+            "min": 2.7
+          },
+          "goAhead": {
+            "n": 6,
+            "min": 8.8
+          },
+          "rage": {
+            "n": 1,
+            "min": 3.1
+          },
+          "brainDump": {
+            "n": 3,
+            "min": 12.6
+          }
+        },
+        "topWords": [
+          [
+            "webhook",
+            36
+          ],
+          [
+            "currency",
+            36
+          ],
+          [
+            "idempotency",
+            33
+          ],
+          [
+            "merchant",
+            29
+          ],
+          [
+            "batch",
+            28
+          ],
+          [
+            "refund",
+            26
+          ],
+          [
+            "invoice",
+            26
+          ],
+          [
+            "reconcile",
+            18
+          ],
+          [
+            "queue",
+            15
+          ],
+          [
+            "payout",
+            14
+          ]
+        ],
+        "latestMinuteOfNight": 202
       }
     },
     {
@@ -3589,6 +7832,118 @@
         "lastAnswerAt": "2026-11-01T08:27:09.012Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-11-01T08:27:09.012Z"
+      },
+      "chat": {
+        "prompts": 18,
+        "words": 1044,
+        "longestWords": 398,
+        "questions": 6,
+        "whys": 0,
+        "manners": 4,
+        "images": 0,
+        "pasted": 0,
+        "avalanches": 1,
+        "hours": [
+          0,
+          2,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          2,
+          0,
+          3,
+          3,
+          2,
+          2
+        ],
+        "days": [
+          18,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "minutes": 61,
+        "dayKeys": [
+          "2026-11-01"
+        ],
+        "nightMinutes": 14,
+        "seg": {
+          "overthinking": {
+            "n": 2,
+            "min": 4.5
+          },
+          "therapy": {
+            "n": 1,
+            "min": 4.7
+          },
+          "student": {
+            "n": 3,
+            "min": 4.9
+          },
+          "hi": {
+            "n": 0,
+            "min": 0
+          },
+          "goAhead": {
+            "n": 1,
+            "min": 1.5
+          },
+          "rage": {
+            "n": 0,
+            "min": 0
+          },
+          "brainDump": {
+            "n": 1,
+            "min": 5.4
+          }
+        },
+        "topWords": [
+          [
+            "settlement",
+            10
+          ],
+          [
+            "refund",
+            10
+          ],
+          [
+            "ledger",
+            8
+          ],
+          [
+            "idempotency",
+            8
+          ],
+          [
+            "currency",
+            7
+          ],
+          [
+            "batch",
+            4
+          ],
+          [
+            "webhook",
+            3
+          ]
+        ],
+        "latestMinuteOfNight": 135
       }
     },
     {
@@ -3679,6 +8034,122 @@
         "lastEditAt": "2026-11-01T23:56:15.435Z",
         "lastAnswerAt": "2026-11-02T00:00:01.471Z",
         "endsOnQuestion": true
+      },
+      "chat": {
+        "prompts": 17,
+        "words": 632,
+        "longestWords": 657,
+        "questions": 5,
+        "whys": 1,
+        "manners": 7,
+        "images": 0,
+        "pasted": 0,
+        "avalanches": 1,
+        "hours": [
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          4,
+          5,
+          1,
+          3
+        ],
+        "days": [
+          17,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "minutes": 83,
+        "dayKeys": [
+          "2026-11-01"
+        ],
+        "nightMinutes": 10,
+        "seg": {
+          "overthinking": {
+            "n": 2,
+            "min": 5.8
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 3,
+            "min": 9.7
+          },
+          "hi": {
+            "n": 0,
+            "min": 0
+          },
+          "goAhead": {
+            "n": 2,
+            "min": 1.4
+          },
+          "rage": {
+            "n": 1,
+            "min": 2.7
+          },
+          "brainDump": {
+            "n": 1,
+            "min": 5
+          }
+        },
+        "topWords": [
+          [
+            "retry",
+            10
+          ],
+          [
+            "currency",
+            9
+          ],
+          [
+            "webhook",
+            7
+          ],
+          [
+            "settlement",
+            7
+          ],
+          [
+            "batch",
+            6
+          ],
+          [
+            "invoice",
+            6
+          ],
+          [
+            "reconcile",
+            4
+          ],
+          [
+            "payout",
+            3
+          ]
+        ],
+        "latestMinuteOfNight": 68
       }
     },
     {
@@ -3769,6 +8240,114 @@
         "lastAnswerAt": "2026-11-02T16:24:45.551Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-11-02T16:24:45.551Z"
+      },
+      "chat": {
+        "prompts": 31,
+        "words": 1231,
+        "longestWords": 649,
+        "questions": 6,
+        "whys": 2,
+        "manners": 6,
+        "images": 0,
+        "pasted": 1,
+        "avalanches": 0,
+        "hours": [
+          1,
+          2,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          5,
+          2,
+          5,
+          3,
+          9,
+          2
+        ],
+        "days": [
+          0,
+          31,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "minutes": 155,
+        "dayKeys": [
+          "2026-11-02"
+        ],
+        "nightMinutes": 25,
+        "seg": {
+          "overthinking": {
+            "n": 7,
+            "min": 18.1
+          },
+          "therapy": {
+            "n": 1,
+            "min": 5
+          },
+          "student": {
+            "n": 5,
+            "min": 24.7
+          },
+          "hi": {
+            "n": 1,
+            "min": 0.7
+          },
+          "goAhead": {
+            "n": 3,
+            "min": 2.8
+          },
+          "rage": {
+            "n": 1,
+            "min": 4.7
+          },
+          "brainDump": {
+            "n": 1,
+            "min": 4.2
+          }
+        },
+        "topWords": [
+          [
+            "payout",
+            14
+          ],
+          [
+            "timeout",
+            13
+          ],
+          [
+            "batch",
+            10
+          ],
+          [
+            "reconcile",
+            6
+          ],
+          [
+            "invoice",
+            5
+          ],
+          [
+            "settlement",
+            3
+          ]
+        ],
+        "latestMinuteOfNight": 222
       }
     },
     {
@@ -3864,6 +8443,110 @@
         "lastAnswerAt": "2026-11-03T08:49:30.490Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-11-03T08:49:30.490Z"
+      },
+      "chat": {
+        "prompts": 37,
+        "words": 2256,
+        "longestWords": 362,
+        "questions": 8,
+        "whys": 1,
+        "manners": 14,
+        "images": 0,
+        "pasted": 1,
+        "avalanches": 1,
+        "hours": [
+          3,
+          1,
+          5,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          6,
+          2,
+          4,
+          4,
+          3,
+          7
+        ],
+        "days": [
+          0,
+          0,
+          37,
+          0,
+          0,
+          0,
+          0
+        ],
+        "minutes": 109,
+        "dayKeys": [
+          "2026-11-03"
+        ],
+        "nightMinutes": 29,
+        "seg": {
+          "overthinking": {
+            "n": 8,
+            "min": 15.3
+          },
+          "therapy": {
+            "n": 1,
+            "min": 2.6
+          },
+          "student": {
+            "n": 4,
+            "min": 20.1
+          },
+          "hi": {
+            "n": 2,
+            "min": 1.4
+          },
+          "goAhead": {
+            "n": 3,
+            "min": 5.4
+          },
+          "rage": {
+            "n": 1,
+            "min": 4.6
+          },
+          "brainDump": {
+            "n": 1,
+            "min": 2.6
+          }
+        },
+        "topWords": [
+          [
+            "currency",
+            15
+          ],
+          [
+            "queue",
+            14
+          ],
+          [
+            "settlement",
+            13
+          ],
+          [
+            "reconcile",
+            13
+          ],
+          [
+            "refund",
+            12
+          ]
+        ],
+        "latestMinuteOfNight": 200
       }
     },
     {
@@ -3953,6 +8636,126 @@
         "lastAnswerAt": "2026-11-03T20:41:45.820Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-11-03T20:41:45.820Z"
+      },
+      "chat": {
+        "prompts": 23,
+        "words": 1294,
+        "longestWords": 355,
+        "questions": 9,
+        "whys": 2,
+        "manners": 6,
+        "images": 2,
+        "pasted": 1,
+        "avalanches": 0,
+        "hours": [
+          3,
+          2,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          2,
+          2,
+          6,
+          3,
+          2
+        ],
+        "days": [
+          0,
+          0,
+          23,
+          0,
+          0,
+          0,
+          0
+        ],
+        "minutes": 99,
+        "dayKeys": [
+          "2026-11-03"
+        ],
+        "nightMinutes": 26,
+        "seg": {
+          "overthinking": {
+            "n": 2,
+            "min": 6.7
+          },
+          "therapy": {
+            "n": 1,
+            "min": 2.9
+          },
+          "student": {
+            "n": 2,
+            "min": 3.7
+          },
+          "hi": {
+            "n": 1,
+            "min": 1.5
+          },
+          "goAhead": {
+            "n": 2,
+            "min": 3.6
+          },
+          "rage": {
+            "n": 1,
+            "min": 2.9
+          },
+          "brainDump": {
+            "n": 1,
+            "min": 3.9
+          }
+        },
+        "topWords": [
+          [
+            "retry",
+            12
+          ],
+          [
+            "timeout",
+            10
+          ],
+          [
+            "currency",
+            10
+          ],
+          [
+            "merchant",
+            9
+          ],
+          [
+            "reconcile",
+            8
+          ],
+          [
+            "payout",
+            7
+          ],
+          [
+            "batch",
+            6
+          ],
+          [
+            "webhook",
+            5
+          ],
+          [
+            "settlement",
+            5
+          ]
+        ],
+        "latestMinuteOfNight": 223
       }
     },
     {
@@ -4027,6 +8830,130 @@
         "lastPromptAt": "2026-11-04T12:12:13.793Z",
         "lastAnswerAt": "2026-11-04T12:15:48.739Z",
         "endsOnQuestion": false
+      },
+      "chat": {
+        "prompts": 10,
+        "words": 485,
+        "longestWords": 281,
+        "questions": 2,
+        "whys": 0,
+        "manners": 3,
+        "images": 3,
+        "pasted": 0,
+        "avalanches": 1,
+        "hours": [
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          3,
+          2,
+          1
+        ],
+        "days": [
+          0,
+          0,
+          0,
+          10,
+          0,
+          0,
+          0
+        ],
+        "minutes": 48,
+        "dayKeys": [
+          "2026-11-04"
+        ],
+        "nightMinutes": 10,
+        "seg": {
+          "overthinking": {
+            "n": 2,
+            "min": 8.6
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 1,
+            "min": 2.5
+          },
+          "hi": {
+            "n": 0,
+            "min": 0
+          },
+          "goAhead": {
+            "n": 0,
+            "min": 0
+          },
+          "rage": {
+            "n": 0,
+            "min": 0
+          },
+          "brainDump": {
+            "n": 0,
+            "min": 0
+          }
+        },
+        "topWords": [
+          [
+            "retry",
+            6
+          ],
+          [
+            "refund",
+            6
+          ],
+          [
+            "idempotency",
+            6
+          ],
+          [
+            "webhook",
+            5
+          ],
+          [
+            "payout",
+            4
+          ],
+          [
+            "reconcile",
+            4
+          ],
+          [
+            "timeout",
+            3
+          ],
+          [
+            "merchant",
+            1
+          ],
+          [
+            "batch",
+            1
+          ],
+          [
+            "invoice",
+            1
+          ]
+        ],
+        "latestMinuteOfNight": 79
       }
     },
     {
@@ -4124,6 +9051,122 @@
         "lastAnswerAt": "2026-11-05T01:09:23.184Z",
         "endsOnQuestion": false,
         "firstPrAt": "2026-11-05T01:09:23.184Z"
+      },
+      "chat": {
+        "prompts": 16,
+        "words": 1002,
+        "longestWords": 511,
+        "questions": 6,
+        "whys": 1,
+        "manners": 4,
+        "images": 3,
+        "pasted": 0,
+        "avalanches": 0,
+        "hours": [
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          2,
+          0,
+          3,
+          4,
+          1,
+          2
+        ],
+        "days": [
+          0,
+          0,
+          0,
+          16,
+          0,
+          0,
+          0
+        ],
+        "minutes": 85,
+        "dayKeys": [
+          "2026-11-04"
+        ],
+        "nightMinutes": 11,
+        "seg": {
+          "overthinking": {
+            "n": 2,
+            "min": 6.7
+          },
+          "therapy": {
+            "n": 0,
+            "min": 0
+          },
+          "student": {
+            "n": 3,
+            "min": 13.4
+          },
+          "hi": {
+            "n": 0,
+            "min": 0
+          },
+          "goAhead": {
+            "n": 1,
+            "min": 1.1
+          },
+          "rage": {
+            "n": 0,
+            "min": 0
+          },
+          "brainDump": {
+            "n": 1,
+            "min": 2.1
+          }
+        },
+        "topWords": [
+          [
+            "idempotency",
+            8
+          ],
+          [
+            "payout",
+            7
+          ],
+          [
+            "retry",
+            7
+          ],
+          [
+            "settlement",
+            6
+          ],
+          [
+            "queue",
+            6
+          ],
+          [
+            "ledger",
+            4
+          ],
+          [
+            "invoice",
+            3
+          ],
+          [
+            "refund",
+            2
+          ]
+        ],
+        "latestMinuteOfNight": 129
       }
     }
   ],

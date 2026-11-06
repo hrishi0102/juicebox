@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { keccak256, stringToHex } from "viem";
 import { rejectCrossSite } from "@/lib/server/guard";
-import { WrappedCardInput } from "@/lib/server/wrapped-card";
+import { WrappedCardInput } from "@/lib/receipts/wrapped-schema";
 import { chat, judgeConfigFromEnv } from "@/lib/receipts/judge";
 import { extractJson } from "@/lib/receipts/judge-core";
 import { readJson, writeJson } from "@/lib/receipts/store";
@@ -45,8 +45,8 @@ export async function POST(req: Request) {
     `Persona: ${p.name} (${p.line})`,
     c.t.length ? `Runner-up traits: ${c.t.map((t) => PERSONAS[t].name).join(", ")}` : "",
     `Period: ${c.l}`,
-    `Time with AI: ${minutesLabel(c.m)} over ${x.conversations} conversations, ${c.n} messages, ${x.words} words, on ${x.activeDays} days (longest streak ${c.st} days)`,
-    `Top segments (messages, minutes): ${c.s.map(([k, n, m]) => `${SEGMENT_COPY[k].label} ${n}, ${m}`).join("; ")}`,
+    `Total time with AI, all messages together: ${minutesLabel(c.m)} over ${x.conversations} conversations, ${c.n} messages, ${x.words} words, on ${x.activeDays} days (longest streak ${c.st} days)`,
+    `Biggest parts of that time: ${c.s.map(([k, n, m]) => `${SEGMENT_COPY[k].label}: ${n} messages, ${minutesLabel(m)}`).join("; ")}`,
     `After midnight: ${c.ns}% of messages. Busiest hour: ${hourLabel(c.ph)}. Busiest day: ${DAY_NAMES[x.peakDay]}.`,
     `Please, thanks or sorry: ${x.manners}. Asked "why": ${x.whys}. Messages with three or more questions: ${x.avalanches}. Questions: ${x.questions}.`,
   ]

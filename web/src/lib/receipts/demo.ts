@@ -12,6 +12,7 @@ import { buildReceipt, totalsOnly, typedDataFor, type SignedReceipt } from "./re
 import { readJson } from "./store";
 import type { Dataset } from "./pipeline";
 import type { Change, ChangeKind, Session, SessionMatch, WeekStory } from "./types";
+import { FUN, emptyChatStats, type ChatStats, type FunSegment } from "./chat-stats";
 
 export const DEMO_END = Date.parse("2026-11-06T12:00:00Z");
 const DAY = 86400_000;
@@ -166,6 +167,7 @@ export function memberSessions(name: string, seed: number, plan: Record<Archetyp
       lastAnswerAt: iso(endMs),
       endsOnQuestion: tr() < (a === "learn" ? 0.35 : 0.15),
     };
+    s.chat = demoChat(name, id, start, minutes);
     sessions.push(s);
 
     if (a === "learn" || (a === "abandon" && r() > 0.5)) return;
@@ -205,6 +207,64 @@ export function memberSessions(name: string, seed: number, plan: Record<Archetyp
     matches.push({ sessionId: id, changeKey: c.key, reason: "pr-link", confidence: 0.97 });
   });
   return { sessions, changes, matches };
+}
+
+// AI Wrapped numbers for the demo people. Each person has a habit (when they work, what kind of
+// messages they send) so the demo shows different personas. A separate random stream again, so
+// nothing else in the demo changes.
+type Flavor = { rates?: Partial<Record<FunSegment, number>>; manners: number; peak: number; night: number };
+const BASE_RATES: Record<FunSegment, number> = { overthinking: 0.05, therapy: 0.008, student: 0.09, hi: 0.02, goAhead: 0.07, rage: 0.03, brainDump: 0.05 };
+const FLAVORS: Record<string, Flavor> = {
+  You: { rates: { overthinking: 0.17, student: 0.12, therapy: 0.03, hi: 0.03 }, manners: 0.3, peak: 21, night: 0.06 },
+  Asha: { rates: { goAhead: 0.3 }, manners: 0.1, peak: 11, night: 0.02 },
+  Ravi: { rates: { rage: 0.16 }, manners: 0.04, peak: 17, night: 0.06 },
+  Meera: { rates: { student: 0.12 }, manners: 0.75, peak: 10, night: 0.01 },
+  Kabir: { rates: { brainDump: 0.24 }, manners: 0.15, peak: 15, night: 0.04 },
+  Neel: { rates: { hi: 0.14 }, manners: 0.25, peak: 9, night: 0.02 },
+  Tara: { rates: { rage: 0.05 }, manners: 0.1, peak: 1, night: 0.38 },
+  Imran: { rates: { overthinking: 0.2 }, manners: 0.15, peak: 21, night: 0.08 },
+  Divya: { rates: { student: 0.36 }, manners: 0.3, peak: 14, night: 0.03 },
+  Arjun: { rates: { therapy: 0.07 }, manners: 0.2, peak: 20, night: 0.07 },
+  Sara: { rates: { rage: 0.11, goAhead: 0.16 }, manners: 0.05, peak: 18, night: 0.05 },
+  Dev: { rates: { overthinking: 0.03, rage: 0.01 }, manners: 0.12, peak: 12, night: 0.01 },
+};
+const DEMO_WORDS = ["payout", "webhook", "settlement", "retry", "ledger", "refund", "merchant", "batch", "queue", "timeout", "invoice", "currency", "idempotency", "reconcile"];
+
+export function demoChat(name: string, id: string, startMs: number, minutes: number): ChatStats {
+  const r = mulberry32(seedOf(`${id}:chat`));
+  const f = FLAVORS[name] ?? { manners: 0.2, peak: 14, night: 0.04 };
+  const rates = { ...BASE_RATES, ...f.rates };
+  const st = emptyChatStats();
+  const prompts = Math.max(2, Math.round(minutes / (2.5 + r() * 3)));
+  st.prompts = prompts;
+  st.words = Math.round(prompts * (22 + r() * 45));
+  st.longestWords = Math.round(80 + r() * 700);
+  st.questions = Math.round(prompts * (0.2 + r() * 0.2));
+  st.whys = Math.round(prompts * r() * 0.08);
+  st.manners = Math.round(prompts * f.manners * (0.6 + r() * 0.8));
+  st.images = r() < 0.3 ? 1 + Math.floor(r() * 3) : 0;
+  st.pasted = Math.round(prompts * rates.brainDump * 0.5);
+  st.avalanches = Math.round(prompts * r() * 0.08);
+  for (let i = 0; i < prompts; i++) {
+    const h = r() < f.night ? Math.floor(r() * 4) : (f.peak + Math.round((r() + r() + r() - 1.5) * 5) + 24) % 24;
+    st.hours[h]++;
+  }
+  const day = new Date(startMs);
+  st.days[day.getUTCDay()] += prompts;
+  st.dayKeys = [day.toISOString().slice(0, 10)];
+  st.minutes = minutes;
+  const nightMsgs = st.hours.slice(0, 5).reduce((x, y) => x + y, 0);
+  st.nightMinutes = Math.round((minutes * nightMsgs) / prompts);
+  if (nightMsgs) st.latestMinuteOfNight = Math.max(...st.hours.slice(0, 5).map((v, h) => (v ? h : 0))) * 60 + Math.floor(r() * 60);
+  for (const k of FUN) {
+    const n = Math.round(prompts * rates[k] * (0.5 + r()));
+    const per = k === "hi" || k === "goAhead" ? 0.5 + r() * 1.5 : 1.5 + r() * 4;
+    st.seg[k] = { n, min: Math.round(n * per * 10) / 10 };
+  }
+  st.topWords = DEMO_WORDS.filter(() => r() < 0.5)
+    .map((w) => [w, Math.max(1, Math.round(prompts * (0.1 + r() * 0.5)))] as [string, number])
+    .sort((x, y) => y[1] - x[1]);
+  return st;
 }
 
 function seedOf(id: string) {

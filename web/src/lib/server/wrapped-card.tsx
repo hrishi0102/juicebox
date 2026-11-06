@@ -1,9 +1,8 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
-import { z } from "zod";
-import { FUN } from "@/lib/receipts/chat-stats";
-import { PERSONAS, PERSONA_IDS, SEGMENT_COPY, hourLabel, minutesLabel, type PersonaId } from "@/lib/receipts/wrapped";
+import { PERSONAS, SEGMENT_COPY, hourLabel, minutesLabel } from "@/lib/receipts/wrapped";
+import { WrappedCardInput } from "@/lib/receipts/wrapped-schema";
 
 // The AI Wrapped card, 1080x1350 like the weekly card. Numbers and the persona only: no messages,
 // no words, no spend.
@@ -15,21 +14,7 @@ const fonts = Promise.all([
   readFile(join(fontDir, "SchibstedGrotesk-Bold.ttf")),
 ]);
 
-const ids = PERSONA_IDS as [PersonaId, ...PersonaId[]];
-export const WrappedCardInput = z.object({
-  l: z.string().max(40),
-  p: z.enum(ids),
-  m: z.number().min(0).max(1e7),
-  n: z.number().int().min(0).max(1e8),
-  s: z.array(z.tuple([z.enum(FUN), z.number().int().min(0).max(1e7), z.number().min(0).max(1e7)])).max(7),
-  ns: z.number().min(0).max(100),
-  ph: z.number().int().min(0).max(23),
-  st: z.number().int().min(0).max(100000),
-  t: z.array(z.enum(ids)).max(3),
-  h: z.array(z.number().int().min(0).max(100)).length(24).optional(),
-  r: z.string().max(220).optional(),
-});
-export type WrappedCardInput = z.infer<typeof WrappedCardInput>;
+export { WrappedCardInput };
 
 const W = 1080;
 const H = 1350;
