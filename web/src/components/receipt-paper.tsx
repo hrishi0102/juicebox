@@ -1,5 +1,5 @@
 import { LABEL_COPY, LABEL_ORDER, pct, shortAddr, shortHash, usd, weekRange } from "@/lib/format";
-import type { PeriodSummary } from "@/lib/receipts/types";
+import { TOOL_NAMES, type AiTool, type PeriodSummary } from "@/lib/receipts/types";
 
 export type ReceiptPaperProps = {
   weekId: string;
@@ -45,6 +45,24 @@ export function ReceiptPaper(p: ReceiptPaperProps) {
             </li>
           ))}
         </ul>
+
+        {Object.keys(s.toolSpend ?? {}).length > 0 && (
+          <>
+            <div className="mb-1 mt-3 text-paper-faint">By AI tool</div>
+            <ul className="space-y-0.5" aria-label="Spend by AI tool">
+              {Object.entries(s.toolSpend)
+                .sort((a, b) => b[1] - a[1])
+                .map(([t, v]) => (
+                  <li key={t} className="flex items-baseline">
+                    <span>{TOOL_NAMES[t as AiTool] ?? t}</span>
+                    {s.toolSessions?.[t] !== undefined && <span className="ml-2 text-paper-faint">x{s.toolSessions[t]}</span>}
+                    <span className="leader" />
+                    <span>{usd(v, 2)}</span>
+                  </li>
+                ))}
+            </ul>
+          </>
+        )}
 
         <hr className="receipt-rule" />
 

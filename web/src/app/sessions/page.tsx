@@ -4,7 +4,7 @@ import { currentSource, getDataset, periodView } from "@/lib/server/data";
 import { headline } from "@/lib/receipts/score";
 import { sessionUsd } from "@/lib/receipts/pricing";
 import { LABEL_COPY, LABEL_ORDER, dayTime, usd } from "@/lib/format";
-import type { SessionLabel } from "@/lib/receipts/types";
+import { TOOL_NAMES, toolOf, type SessionLabel } from "@/lib/receipts/types";
 
 export default async function Sessions({ searchParams }: { searchParams: Promise<{ label?: string }> }) {
   const sp = await searchParams;
@@ -74,7 +74,7 @@ export default async function Sessions({ searchParams }: { searchParams: Promise
                     {s.title || "Untitled session"}
                   </Link>
                   <div className="truncate text-muted-foreground">
-                    {s.repos[0] ?? s.cwd.split("/").slice(-2).join("/")}, {s.activeMinutes} min
+                    {TOOL_NAMES[toolOf(s)]}, {s.repos[0] ?? s.cwd.split("/").slice(-2).join("/")}, {s.activeMinutes} min
                   </div>
                 </td>
                 <td className="px-4 py-3">{j ? <LabelBadge label={j.label} /> : null}</td>
