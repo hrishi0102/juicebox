@@ -5,6 +5,7 @@
   "sessions": [
     {
       "id": "b1c73359-9b6c-4578-a363-ed13b87c9859",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-web-app",
       "cwd": "/Users/you/code/web-app",
       "repos": [
@@ -85,6 +86,7 @@
     },
     {
       "id": "b1780c58-e840-4c2b-ad9a-05a71283cf86",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-payments-api",
       "cwd": "/Users/you/code/payments-api",
       "repos": [
@@ -172,6 +174,7 @@
     },
     {
       "id": "d63e40d3-9038-40b2-a61c-45035d9070d6",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-payments-api",
       "cwd": "/Users/you/code/payments-api",
       "repos": [
@@ -251,6 +254,7 @@
     },
     {
       "id": "da54bcfb-3128-4786-aa10-1c6985830e1c",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-payments-api",
       "cwd": "/Users/you/code/payments-api",
       "repos": [
@@ -335,6 +339,7 @@
     },
     {
       "id": "66121899-ae5c-4b4c-a83b-d970cf88bd39",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-infra",
       "cwd": "/Users/you/code/infra",
       "repos": [
@@ -418,6 +423,7 @@
     },
     {
       "id": "f9efa6e7-3fc3-484c-a893-61b07499ad69",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-infra",
       "cwd": "/Users/you/code/infra",
       "repos": [
@@ -486,6 +492,7 @@
     },
     {
       "id": "1609e340-3ce4-42f9-a45d-ddb460cbe5fd",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-web-app",
       "cwd": "/Users/you/code/web-app",
       "repos": [
@@ -566,6 +573,7 @@
     },
     {
       "id": "56d3d011-804a-4fd6-a1c5-ba2c34a5d20b",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-web-app",
       "cwd": "/Users/you/code/web-app",
       "repos": [
@@ -634,6 +642,7 @@
     },
     {
       "id": "4550b1bb-f045-46f2-afca-86cef0f6de16",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-web-app",
       "cwd": "/Users/you/code/web-app",
       "repos": [
@@ -718,6 +727,7 @@
     },
     {
       "id": "b85148c2-724e-47e5-a2b4-9c84ca67685d",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-payments-api",
       "cwd": "/Users/you/code/payments-api",
       "repos": [
@@ -806,6 +816,7 @@
     },
     {
       "id": "635cd3b1-b8d8-47cf-aac9-8d441e4524bd",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-payments-api",
       "cwd": "/Users/you/code/payments-api",
       "repos": [
@@ -889,6 +900,7 @@
     },
     {
       "id": "46af98dc-4e18-4cd5-a931-e02543d0247c",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-infra",
       "cwd": "/Users/you/code/infra",
       "repos": [
@@ -974,6 +986,7 @@
     },
     {
       "id": "a6e712fe-5174-4695-a0b5-0d548d5ec95b",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-infra",
       "cwd": "/Users/you/code/infra",
       "repos": [
@@ -1042,6 +1055,7 @@
     },
     {
       "id": "b4177adf-95d6-43e4-aa1e-17c18255c110",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-web-app",
       "cwd": "/Users/you/code/web-app",
       "repos": [
@@ -1128,6 +1142,7 @@
     },
     {
       "id": "2a262bf3-9288-469e-a9f0-e7ffa743a9b4",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-web-app",
       "cwd": "/Users/you/code/web-app",
       "repos": [
@@ -1213,6 +1228,7 @@
     },
     {
       "id": "bb418c9b-0def-44c5-a774-607f97aecef9",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-web-app",
       "cwd": "/Users/you/code/web-app",
       "repos": [
@@ -1304,6 +1320,7 @@
     },
     {
       "id": "de404fe5-8b13-40a5-ad0e-93064a03f0f1",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-infra",
       "cwd": "/Users/you/code/infra",
       "repos": [
@@ -1372,6 +1389,7 @@
     },
     {
       "id": "2d617c03-061d-43e1-ac78-0aaa1ba5f58d",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-web-app",
       "cwd": "/Users/you/code/web-app",
       "repos": [
@@ -1458,6 +1476,7 @@
     },
     {
       "id": "d5f29bfe-7c9a-472d-ad2c-6af1a4a9e85d",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-infra",
       "cwd": "/Users/you/code/infra",
       "repos": [
@@ -1546,6 +1565,7 @@
     },
     {
       "id": "c94e83de-c601-4668-a091-d9cec2607bfd",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-infra",
       "cwd": "/Users/you/code/infra",
       "repos": [
@@ -1636,6 +1656,7 @@
     },
     {
       "id": "f95a406f-cb53-41ec-a859-d53793723395",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-web-app",
       "cwd": "/Users/you/code/web-app",
       "repos": [
@@ -1729,6 +1750,7 @@
     },
     {
       "id": "3c196431-12ec-4530-ab49-29fac6d348c3",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-infra",
       "cwd": "/Users/you/code/infra",
       "repos": [
@@ -1797,6 +1819,7 @@
     },
     {
       "id": "7341d728-71cd-4dd0-af4a-7f7ad96230c7",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-payments-api",
       "cwd": "/Users/you/code/payments-api",
       "repos": [
@@ -1877,6 +1900,7 @@
     },
     {
       "id": "039c7100-014c-4ee9-ab8b-63e4e40dbdc8",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-infra",
       "cwd": "/Users/you/code/infra",
       "repos": [
@@ -1968,6 +1992,7 @@
     },
     {
       "id": "89871198-8b22-41ab-a99c-6eb31deef8aa",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-infra",
       "cwd": "/Users/you/code/infra",
       "repos": [
@@ -2047,6 +2072,7 @@
     },
     {
       "id": "d3835486-3bc7-4afc-a7e5-025cb77f459a",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-payments-api",
       "cwd": "/Users/you/code/payments-api",
       "repos": [
@@ -2126,6 +2152,7 @@
     },
     {
       "id": "45ad1a3b-f543-4b56-aa9f-e44ea7b9a226",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-web-app",
       "cwd": "/Users/you/code/web-app",
       "repos": [
@@ -2219,6 +2246,7 @@
     },
     {
       "id": "350d783b-33dd-4a5d-ae33-58d1add6afc2",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-payments-api",
       "cwd": "/Users/you/code/payments-api",
       "repos": [
@@ -2304,6 +2332,7 @@
     },
     {
       "id": "01963bf0-2b7e-45a5-a83f-c0a34cd09fc1",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-payments-api",
       "cwd": "/Users/you/code/payments-api",
       "repos": [
@@ -2383,6 +2412,7 @@
     },
     {
       "id": "5dc90c28-2028-403d-a112-47c0b53b8d5f",
+      "tool": "claude-code",
       "projectDir": "-Users-you-code-infra",
       "cwd": "/Users/you/code/infra",
       "repos": [

@@ -18,7 +18,7 @@ import { judgeConfigFromEnv } from "../src/lib/receipts/judge";
 import { headline, summarize, weekOf } from "../src/lib/receipts/score";
 import { buildReceipt, typedDataFor, verifyReceipt, type SignedReceipt } from "../src/lib/receipts/receipt";
 import { readJson, writeJson } from "../src/lib/receipts/store";
-import { makeDemoDataset, type TeamData } from "../src/lib/receipts/demo";
+import { makeDemoDataset, type OrgData } from "../src/lib/receipts/demo";
 import { ARKIV_EXPLORER, arkivWriterAddress, exampleQuery, fetchTeamReceipts, publishReceipt } from "../src/lib/receipts/arkiv";
 import { resolveGithubToken } from "../src/lib/receipts/github";
 import { loadEnvLocal } from "../src/lib/receipts/env";
@@ -96,9 +96,9 @@ async function main() {
     case "demo": {
       const d = await makeDemoDataset();
       writeJson("demo", "dataset.json", d.dataset);
-      writeJson("demo", "team.json", d.team);
+      writeJson("demo", "org.json", d.org);
       writeJson("demo", "sessions.json", { count: d.dataset.sessions.length, generatedAt: d.dataset.generatedAt });
-      console.log(`Demo data: ${d.dataset.sessions.length} sessions, ${d.dataset.changes.length} changes, ${d.team.members.length} team members`);
+      console.log(`Demo data: ${d.dataset.sessions.length} sessions for "You", ${d.org.teams.length} teams, ${d.org.members.length} people, ${d.org.receipts.length} shared receipts`);
       break;
     }
     case "doctor": {
@@ -135,19 +135,28 @@ async function main() {
       console.log("writer", out.writer);
       break;
     }
+    case "org": {
+      // npm run receipts -- org acme "Acme" payments:Payments platform:Platform
+      const [id, name, ...teams] = positional;
+      if (!id) throw new Error('Usage: org <org-id> "Org name" [team-id:Team name ...]');
+      const list = teams.map((t) => ({ id: t.split(":")[0], name: t.split(":").slice(1).join(":") || t.split(":")[0] }));
+      writeJson("local", "org.json", { id, name: name ?? id, teams: list.length ? list : [readJson<{ id: string; name: string }>("local", "team.json", { id: "my-team", name: "My team" })] });
+      console.log(`Org set to ${id}. Shared receipts are tagged with it, and the Org page reads every team.`);
+      break;
+    }
     case "publish-demo": {
-      // Writes the signed demo team receipts to Arkiv, so the team page reads them live.
-      const team = readJson<TeamData | null>("demo", "team.json", null);
-      if (!team) throw new Error("No demo team. Run: demo");
+      // Writes the signed demo company receipts to Arkiv, so the org and team pages read them live.
+      const org = readJson<OrgData | null>("demo", "org.json", null);
+      if (!org) throw new Error("No demo org. Run: demo");
       let n = 0;
-      for (const r of team.receipts) {
+      for (const r of org.receipts) {
         const level = r.share?.level === "full" ? "full" : "totals";
-        const out = await publishReceipt(r, { team: team.id, level });
+        const out = await publishReceipt(r, { team: r.share?.team ?? org.teams[0].id, org: org.id, level });
         n++;
-        console.log(`${r.message.period} ${r.message.owner.slice(0, 8)} ${level} -> ${out.entityKey} tx ${out.txHash}`);
+        console.log(`${r.message.period} ${r.share?.team} ${r.message.owner.slice(0, 8)} ${level} -> ${out.entityKey}`);
       }
-      console.log(`Published ${n} demo receipts to Arkiv for team ${team.id}. Writer: ${arkivWriterAddress()}`);
-      console.log("Query:", exampleQuery(team.id));
+      console.log(`Published ${n} demo receipts to Arkiv for org ${org.id}. Writer: ${arkivWriterAddress()}`);
+      console.log("Query:", exampleQuery(org.teams[0].id));
       break;
     }
     case "arkiv": {

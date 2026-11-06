@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { loadDataset, type Dataset } from "@/lib/receipts/pipeline";
 import { hasData, readJson, type Source } from "@/lib/receipts/store";
 import { summarize, weekOf } from "@/lib/receipts/score";
-import type { TeamData } from "@/lib/receipts/demo";
+import type { OrgData, OrgTeam } from "@/lib/receipts/demo";
 import type { Judgement, PeriodSummary, Session } from "@/lib/receipts/types";
 
 export const SOURCE_COOKIE = "receipts-source";
@@ -19,13 +19,20 @@ export function getDataset(source: Source): Dataset | undefined {
   return loadDataset(source);
 }
 
-export function getDemoTeam(): TeamData | undefined {
-  return readJson<TeamData | null>("demo", "team.json", null) ?? undefined;
+export function getDemoOrg(): OrgData | undefined {
+  return readJson<OrgData | null>("demo", "org.json", null) ?? undefined;
 }
 
 export type TeamConfig = { id: string; name: string };
 export function getLocalTeamConfig(): TeamConfig {
   return readJson<TeamConfig>("local", "team.json", { id: process.env.RECEIPTS_TEAM || "my-team", name: process.env.RECEIPTS_TEAM_NAME || "My team" });
+}
+
+export type OrgConfig = { id: string; name: string; teams: OrgTeam[] };
+/** The org this person belongs to (set with `npm run receipts -- org <id> "Name"`). */
+export function getLocalOrgConfig(): OrgConfig {
+  const team = getLocalTeamConfig();
+  return readJson<OrgConfig>("local", "org.json", { id: process.env.RECEIPTS_ORG || "my-org", name: process.env.RECEIPTS_ORG_NAME || "My org", teams: [team] });
 }
 
 /** "Now" for a dataset: the demo is frozen in time so it always looks the same. */

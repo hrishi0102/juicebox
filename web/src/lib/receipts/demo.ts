@@ -1,4 +1,6 @@
-// Synthetic demo data: a fictional team ("Acme Payments", five people) over four weeks.
+// Synthetic demo data: a fictional company ("Acme", three teams, twelve people) over four weeks,
+// using Claude Code and Codex. Company policy in the demo: everyone shares weekly totals, and
+// sharing the PR list (evidence) is each person's choice.
 // No real transcript, repo or person is in here. Labels come from the real heuristic judge,
 // run over synthetic signals, so the demo exercises the same code paths as real data.
 
@@ -15,12 +17,15 @@ const DAY = 86400_000;
 
 type Archetype = "ship" | "loop" | "learn" | "abandon" | "overkill" | "pending" | "revert";
 
-export type TeamMember = { name: string; role: string; address: string; share: "full" | "totals" | "none"; you?: boolean };
-export type TeamData = {
+export type TeamMember = { name: string; role: string; address: string; share: "full" | "totals" | "none"; team: string; you?: boolean };
+export type OrgTeam = { id: string; name: string };
+export type OrgData = {
   id: string;
   name: string;
+  policy: string; // shown on the org page
+  teams: OrgTeam[];
   members: TeamMember[];
-  receipts: SignedReceipt[]; // what members chose to share (full or totals only)
+  receipts: SignedReceipt[]; // what members shared (totals, or totals plus evidence)
   weeks: string[];
 };
 
@@ -46,7 +51,7 @@ const TITLES: Record<ChangeKind, string[]> = {
 
 const REPOS = ["acme-demo/payments-api", "acme-demo/web-app", "acme-demo/infra"];
 
-export function memberSessions(name: string, seed: number, plan: Record<Archetype, number>) {
+export function memberSessions(name: string, seed: number, plan: Record<Archetype, number>, codexShare = 0) {
   const r = mulberry32(seed);
   const pick = <T,>(xs: T[]) => xs[Math.floor(r() * xs.length)];
   const between = (a: number, b: number) => a + r() * (b - a);
@@ -71,21 +76,31 @@ export function memberSessions(name: string, seed: number, plan: Record<Archetyp
     const usd =
       a === "learn" ? between(0.8, 6) : a === "loop" ? between(18, 70) : a === "overkill" ? between(45, 95) : a === "abandon" ? between(6, 28) : between(2, 22) * (1 + additions / 500);
     const premium = a === "overkill" || r() > 0.4;
-    const model = premium ? "claude-opus-5-5" : "claude-sonnet-5-5";
-    const p = model === "claude-opus-5-5" ? { cr: 0.2, cw: 8, out: 20 } : { cr: 0.2, cw: 4, out: 10 };
-    const tokens = {
-      input: Math.round(between(500, 20000)),
-      output: Math.round((0.3 * usd) / (p.out / 1e6)),
-      cacheRead: Math.round((0.45 * usd) / (p.cr / 1e6)),
-      cacheWrite5m: 0,
-      cacheWrite1h: Math.round((0.25 * usd) / (p.cw / 1e6)),
-    };
+    // Only draw from the generator for people who use Codex, so Claude-only personas stay stable.
+    const codex = codexShare > 0 && r() < codexShare;
+    const model = codex ? (premium ? "gpt-5.5" : "gpt-5.4") : premium ? "claude-opus-5-5" : "claude-sonnet-5-5";
+    const tokens = codex
+      ? (() => {
+          const p = model === "gpt-5.5" ? { in: 5, cached: 0.5, out: 30 } : { in: 2.5, cached: 0.25, out: 15 };
+          return { input: Math.round((0.3 * usd) / (p.in / 1e6)), output: Math.round((0.4 * usd) / (p.out / 1e6)), cacheRead: Math.round((0.3 * usd) / (p.cached / 1e6)), cacheWrite5m: 0, cacheWrite1h: 0 };
+        })()
+      : (() => {
+          const p = model === "claude-opus-5-5" ? { cr: 0.2, cw: 8, out: 20 } : { cr: 0.2, cw: 4, out: 10 };
+          return {
+            input: Math.round(between(500, 20000)),
+            output: Math.round((0.3 * usd) / (p.out / 1e6)),
+            cacheRead: Math.round((0.45 * usd) / (p.cr / 1e6)),
+            cacheWrite5m: 0,
+            cacheWrite1h: Math.round((0.25 * usd) / (p.cw / 1e6)),
+          };
+        })();
     const id = uuid(r);
     const branch = `${name.toLowerCase()}/${title.split(":")[1]?.trim().replace(/\W+/g, "-").slice(0, 30) ?? "work"}`;
     const loopy = a === "loop";
     const toolCalls = Math.round(minutes * between(0.8, 2));
     const s: Session = {
       id,
+      tool: codex ? "codex" : "claude-code",
       projectDir: `-Users-${name.toLowerCase()}-code-${repo.split("/")[1]}`,
       cwd: `/Users/${name.toLowerCase()}/code/${repo.split("/")[1]}`,
       repos: [repo],
@@ -121,7 +136,11 @@ export function memberSessions(name: string, seed: number, plan: Record<Archetyp
         readOnlyRatio: a === "learn" ? 0.85 : between(0.2, 0.5),
         subagents: r() > 0.7 ? Math.round(between(1, 4)) : 0,
       },
-      tools: a === "learn" ? { Read: 20, Grep: 9, WebSearch: 3 } : { Bash: Math.round(toolCalls * 0.5), Edit: Math.round(toolCalls * 0.25), Read: Math.round(toolCalls * 0.25) },
+      tools: codex
+        ? { exec_command: Math.round(toolCalls * 0.7), apply_patch: Math.round(toolCalls * 0.3) }
+        : a === "learn"
+          ? { Read: 20, Grep: 9, WebSearch: 3 }
+          : { Bash: Math.round(toolCalls * 0.5), Edit: Math.round(toolCalls * 0.25), Read: Math.round(toolCalls * 0.25) },
     };
     sessions.push(s);
 
@@ -172,15 +191,33 @@ export function demoKey(name: string): Hex {
   return keccak256(stringToHex(`receipts-demo-key:${name}`));
 }
 
-const MEMBERS: (TeamMember & { seed: number; plan: Record<Archetype, number> })[] = [
-  { name: "You", role: "Engineer", address: "", share: "full", you: true, seed: 35, plan: { ship: 13, loop: 4, learn: 5, abandon: 3, overkill: 2, pending: 2, revert: 1 } },
-  { name: "Asha", role: "Senior engineer", address: "", share: "full", seed: 11, plan: { ship: 16, loop: 1, learn: 4, abandon: 1, overkill: 1, pending: 2, revert: 0 } },
-  { name: "Ravi", role: "Engineer", address: "", share: "totals", seed: 23, plan: { ship: 9, loop: 7, learn: 2, abandon: 4, overkill: 1, pending: 1, revert: 1 } },
-  { name: "Meera", role: "Staff engineer", address: "", share: "full", seed: 31, plan: { ship: 8, loop: 1, learn: 9, abandon: 1, overkill: 0, pending: 2, revert: 0 } },
-  { name: "Kabir", role: "Engineer", address: "", share: "none", seed: 47, plan: { ship: 10, loop: 2, learn: 2, abandon: 2, overkill: 5, pending: 1, revert: 0 } },
+export const DEMO_ORG = { id: "acme", name: "Acme (demo company)" };
+const TEAMS: OrgTeam[] = [
+  { id: "acme-payments", name: "Payments" },
+  { id: "acme-platform", name: "Platform" },
+  { id: "acme-mobile", name: "Mobile" },
 ];
 
-export async function makeDemoDataset(): Promise<{ dataset: Dataset; team: TeamData }> {
+type Persona = Omit<TeamMember, "address"> & { seed: number; plan: Record<Archetype, number>; codex: number };
+const P = (ship: number, loop: number, learn: number, abandon: number, overkill: number, pending: number, revert: number) => ({ ship, loop, learn, abandon, overkill, pending, revert });
+
+// codex = share of a person's sessions run in Codex instead of Claude Code.
+const MEMBERS: Persona[] = [
+  { name: "You", role: "Engineer", share: "full", team: "acme-payments", you: true, seed: 35, codex: 0, plan: P(13, 4, 5, 3, 2, 2, 1) },
+  { name: "Asha", role: "Senior engineer", share: "full", team: "acme-payments", seed: 11, codex: 0.2, plan: P(16, 1, 4, 1, 1, 2, 0) },
+  { name: "Ravi", role: "Engineer", share: "totals", team: "acme-payments", seed: 23, codex: 0.5, plan: P(9, 7, 2, 4, 1, 1, 1) },
+  { name: "Meera", role: "Staff engineer", share: "full", team: "acme-payments", seed: 31, codex: 0, plan: P(8, 1, 9, 1, 0, 2, 0) },
+  { name: "Kabir", role: "Engineer", share: "totals", team: "acme-payments", seed: 47, codex: 0.3, plan: P(10, 2, 2, 2, 5, 1, 0) },
+  { name: "Neel", role: "Platform lead", share: "full", team: "acme-platform", seed: 53, codex: 0.6, plan: P(12, 2, 6, 1, 1, 2, 0) },
+  { name: "Tara", role: "SRE", share: "totals", team: "acme-platform", seed: 59, codex: 0.8, plan: P(7, 3, 8, 2, 0, 1, 1) },
+  { name: "Imran", role: "Engineer", share: "full", team: "acme-platform", seed: 61, codex: 0.4, plan: P(11, 5, 3, 3, 2, 1, 0) },
+  { name: "Divya", role: "Engineer", share: "totals", team: "acme-platform", seed: 67, codex: 0.1, plan: P(14, 1, 3, 1, 3, 2, 0) },
+  { name: "Arjun", role: "Mobile lead", share: "full", team: "acme-mobile", seed: 71, codex: 0.5, plan: P(10, 2, 4, 2, 1, 2, 1) },
+  { name: "Sara", role: "Engineer", share: "totals", team: "acme-mobile", seed: 73, codex: 0.9, plan: P(6, 6, 2, 4, 1, 1, 0) },
+  { name: "Dev", role: "Engineer", share: "full", team: "acme-mobile", seed: 79, codex: 0.2, plan: P(13, 1, 5, 1, 4, 1, 0) },
+];
+
+export async function makeDemoDataset(): Promise<{ dataset: Dataset; org: OrgData }> {
   const weeks = weeksBetween(new Date(DEMO_END - 27 * DAY), new Date(DEMO_END));
   const receipts: SignedReceipt[] = [];
   let mine: Dataset | undefined;
@@ -188,10 +225,10 @@ export async function makeDemoDataset(): Promise<{ dataset: Dataset; team: TeamD
 
   for (const m of MEMBERS) {
     const account = privateKeyToAccount(demoKey(m.name));
-    const { sessions, changes, matches } = memberSessions(m.name, m.seed, m.plan);
+    const { sessions, changes, matches } = memberSessions(m.name, m.seed, m.plan, m.codex);
     const judgements = judgeAllHeuristic(sessions, matches, changes, DEMO_END);
     const tasks = buildTasks(sessions, matches, changes, judgements);
-    members.push({ name: m.name, role: m.role, address: account.address, share: m.share, you: m.you });
+    members.push({ name: m.name, role: m.role, address: account.address, share: m.share, team: m.team, you: m.you });
     if (m.you) {
       mine = {
         generatedAt: new Date(DEMO_END).toISOString(),
@@ -214,12 +251,19 @@ export async function makeDemoDataset(): Promise<{ dataset: Dataset; team: TeamD
       r.signature = await account.signTypedData(typedDataFor(r));
       r.signedAt = new Date(Math.min(DEMO_END, Date.parse(w.end))).toISOString();
       if (m.share === "totals") r = totalsOnly(r);
-      r.share = { level: m.share, team: "acme-payments", publishedAt: r.signedAt };
+      r.share = { level: m.share, team: m.team, org: DEMO_ORG.id, publishedAt: r.signedAt };
       receipts.push(r);
     }
   }
   return {
     dataset: mine!,
-    team: { id: "acme-payments", name: "Acme Payments (demo team)", members, receipts, weeks: weeks.map((w) => w.id) },
+    org: {
+      ...DEMO_ORG,
+      policy: "Everyone shares weekly totals. Sharing the PR list is each person's choice. Prompts are never collected.",
+      teams: TEAMS,
+      members,
+      receipts,
+      weeks: weeks.map((w) => w.id),
+    },
   };
 }

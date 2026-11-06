@@ -6,7 +6,7 @@ import { JudgeButton, ReviewButton, ScanButton } from "@/components/pipeline-con
 import { readJson } from "@/lib/receipts/store";
 import type { WeeklyReview } from "@/lib/receipts/review";
 import { Difficulty, LabelBadge, SpendBar } from "@/components/label-badge";
-import { currentSource, getDataset, getDemoTeam, weekView, weeksWithData } from "@/lib/server/data";
+import { currentSource, getDataset, getDemoOrg, weekView, weeksWithData } from "@/lib/server/data";
 import { loadSavedReceipt, localSigner } from "@/lib/server/receipts-store";
 import { headline } from "@/lib/receipts/score";
 import { median } from "@/lib/receipts/heuristics";
@@ -292,10 +292,11 @@ function judgeLine(js: Judgement[]) {
 }
 
 function teamMedians() {
-  const team = getDemoTeam();
-  if (!team) return undefined;
+  const org = getDemoOrg();
+  if (!org) return undefined;
+  const team = org.members.find((m) => m.you)?.team;
   const by: Record<number, number[]> = {};
-  for (const r of team.receipts) for (const b of r.summary.buckets) if (b.costPerKept !== null) (by[b.difficulty] ??= []).push(b.costPerKept);
+  for (const r of org.receipts.filter((x) => x.share?.team === team)) for (const b of r.summary.buckets) if (b.costPerKept !== null) (by[b.difficulty] ??= []).push(b.costPerKept);
   return Object.fromEntries(Object.entries(by).map(([k, v]) => [Number(k), median(v)])) as Record<number, number>;
 }
 

@@ -107,7 +107,7 @@ export type SignedReceipt = {
     wastePct: number;
     buckets: PeriodSummary["buckets"];
   };
-  share?: { level: "totals" | "full"; team: string; arkivKey?: string; arkivTx?: string; publishedAt?: string };
+  share?: { level: "totals" | "full"; team: string; org?: string; arkivKey?: string; arkivTx?: string; publishedAt?: string };
 };
 
 const ZERO = ("0x" + "0".repeat(64)) as Hex;

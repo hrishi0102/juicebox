@@ -44,6 +44,8 @@ export default async function SharedReceipt({ params }: { params: Promise<{ key:
     labelSpend: n.labelSpend,
     wasteUsd: n.wasteUsd,
     wastePct: n.wastePct,
+    toolSpend: n.toolSpend,
+    toolSessions: {},
     buckets: r.summary.buckets,
     tasks: [],
     tips: [],

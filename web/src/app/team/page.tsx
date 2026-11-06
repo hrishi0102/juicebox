@@ -1,38 +1,29 @@
 import Link from "next/link";
 import { ReceiptPaper } from "@/components/receipt-paper";
-import { currentSource, getDemoTeam, getLocalTeamConfig } from "@/lib/server/data";
-import { ARKIV_SCHEMA_NAME, exampleQuery, fetchTeamReceipts, type TeamReceipt } from "@/lib/receipts/arkiv";
-import { signedNumbers, verifyReceipt, type SignedReceipt } from "@/lib/receipts/receipt";
-import { pct, shortAddr, usd, weekRange } from "@/lib/format";
+import { currentSource } from "@/lib/server/data";
+import { loadOrg, personName } from "@/lib/server/org";
+import { ARKIV_SCHEMA_NAME, exampleQuery } from "@/lib/receipts/arkiv";
+import { signedNumbers, type SignedReceipt } from "@/lib/receipts/receipt";
+import { pct, usd, weekRange } from "@/lib/format";
 import type { PeriodSummary } from "@/lib/receipts/types";
 
-type Row = SignedReceipt & { from: "arkiv" | "demo file"; arkivKey?: string; verified: boolean };
-
-export default async function Team({ searchParams }: { searchParams: Promise<{ week?: string }> }) {
+export default async function Team({ searchParams }: { searchParams: Promise<{ week?: string; team?: string }> }) {
   const sp = await searchParams;
   const source = await currentSource();
-  const demo = source === "demo" ? getDemoTeam() : undefined;
-  const cfg = demo ? { id: demo.id, name: demo.name } : getLocalTeamConfig();
-
-  let arkiv: TeamReceipt[] = [];
-  let arkivError: string | undefined;
-  try {
-    arkiv = await fetchTeamReceipts(cfg.id);
-  } catch (e) {
-    arkivError = e instanceof Error ? e.message : String(e);
-  }
-
-  // Merge receipts read live from Arkiv with the demo file (same receipt = same digest).
-  const rows = new Map<string, Row>();
-  for (const r of demo?.receipts ?? []) rows.set(r.digest, { ...r, from: "demo file", verified: (await verifyReceipt(r)).ok });
-  for (const r of arkiv) rows.set(r.digest, { ...r, from: "arkiv", arkivKey: r.arkiv.key, verified: r.verified });
-  const all = [...rows.values()];
+  const org = await loadOrg(source);
+  const you = org.members.find((m) => m.you)?.team;
+  const teamId = sp.team && org.teams.some((t) => t.id === sp.team) ? sp.team : (you ?? org.teams[0]?.id ?? "");
+  const cfg = org.teams.find((t) => t.id === teamId) ?? { id: teamId, name: teamId };
+  const all = org.rows.filter((r) => r.team === teamId);
+  const arkivForTeam = all.filter((r) => r.from === "arkiv").length;
+  const demoForTeam = all.filter((r) => r.from === "demo file").length;
 
   const weeks = [...new Set(all.map((r) => r.message.period))].sort().reverse();
   const week = sp.week && weeks.includes(sp.week) ? sp.week : weeks[0];
   const inWeek = all.filter((r) => r.message.period === week && r.verified);
-  const members = demo?.members ?? [];
-  const nameOf = (addr: string) => members.find((m) => m.address.toLowerCase() === addr.toLowerCase())?.name ?? shortAddr(addr);
+  const members = org.members.filter((m) => m.team === teamId);
+  const nameOf = (addr: string) => personName(org, addr);
+  const q = (w: string) => `/team?team=${teamId}&week=${w}`;
 
   // Totals use only signed fields, so a shared receipt cannot be edited without breaking its signature.
   const nums = inWeek.map((r) => signedNumbers(r));
@@ -49,17 +40,33 @@ export default async function Team({ searchParams }: { searchParams: Promise<{ w
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-3xl font-semibold tracking-tight">{cfg.name}</h1>
+        <Link href="/org" className="text-sm text-muted-foreground hover:text-foreground">
+          {org.name}
+        </Link>
+        <h1 className="mt-1 text-3xl font-semibold tracking-tight">{cfg.name} team</h1>
         <p className="mt-2 max-w-[72ch] text-muted-foreground">
-          What a manager sees: team totals and the receipts people chose to share. No prompts, no session titles, no per-person ranking. Every receipt
-          below is checked against its owner&apos;s signature before it counts.
+          What a team lead sees: team totals and each person&apos;s shared receipt. No prompts, no session titles, no ranking. Every receipt below is
+          checked against its owner&apos;s signature before it counts.
         </p>
+        {org.teams.length > 1 && (
+          <div className="mt-4 flex flex-wrap gap-2 text-sm" role="group" aria-label="Team">
+            {org.teams.map((t) => (
+              <Link
+                key={t.id}
+                href={`/team?team=${t.id}`}
+                className={`rounded-lg border px-3 py-1 ${t.id === teamId ? "border-primary bg-primary text-primary-foreground" : "border-border hover:bg-card"}`}
+              >
+                {t.name}
+              </Link>
+            ))}
+          </div>
+        )}
         {weeks.length > 1 && (
           <div className="mt-4 flex flex-wrap gap-2 text-sm">
             {weeks.map((w) => (
               <Link
                 key={w}
-                href={`/team?week=${w}`}
+                href={q(w)}
                 className={`rounded-full border px-3 py-1 ${w === week ? "border-primary bg-accent text-accent-foreground" : "border-border hover:bg-card"}`}
               >
                 Week {w.split("-W")[1]}
@@ -112,7 +119,7 @@ export default async function Team({ searchParams }: { searchParams: Promise<{ w
               {notSharing.map((m) => (
                 <li key={m.address} className="flex flex-wrap items-center gap-x-6 px-4 py-3 text-muted-foreground">
                   <div className="w-40 font-medium">{m.name}</div>
-                  <div className="flex-1">Chose not to share this week. Their spend is not in the totals.</div>
+                  <div className="flex-1">No receipt shared this week. Their spend is not in the totals.</div>
                 </li>
               ))}
             </ul>
@@ -163,9 +170,9 @@ export default async function Team({ searchParams }: { searchParams: Promise<{ w
         <h2 className="font-semibold">Where this comes from</h2>
         <p className="mt-2 text-muted-foreground">
           Shared receipts live on Arkiv (testnet Rabdi, chain 7794095) as entities of schema <code>{ARKIV_SCHEMA_NAME}</code>, readable by anyone, so
-          this page does not depend on our server. {arkiv.length} receipt{arkiv.length === 1 ? "" : "s"} for team &quot;{cfg.id}&quot; found on Arkiv
-          right now{demo ? `, plus ${demo.receipts.length} signed demo receipts from the repo` : ""}.
-          {arkivError && ` Arkiv could not be reached: ${arkivError.slice(0, 120)}.`}
+          this page does not depend on our server. {arkivForTeam} receipt{arkivForTeam === 1 ? "" : "s"} for team &quot;{cfg.id}&quot; found on
+          Arkiv right now{demoForTeam ? `, plus ${demoForTeam} signed demo receipts from the repo` : ""}.
+          {org.arkivError && ` Arkiv could not be reached: ${org.arkivError.slice(0, 120)}.`}
         </p>
         <pre className="mt-3 overflow-x-auto rounded-md bg-background p-3 text-xs">{exampleQuery(cfg.id)}</pre>
       </section>
@@ -198,6 +205,8 @@ function toSummary(r: SignedReceipt): PeriodSummary {
     labelSpend: n.labelSpend,
     wasteUsd: n.wasteUsd,
     wastePct: n.wastePct,
+    toolSpend: n.toolSpend,
+    toolSessions: {},
     buckets: r.summary.buckets,
     tasks: [],
     tips: [],

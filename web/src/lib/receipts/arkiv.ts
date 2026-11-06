@@ -24,6 +24,7 @@ export const ARKIV_EXPLORER = "https://rabdi.explorer.arkiv.network";
 
 export const ReceiptSchema = defineSchema(ARKIV_SCHEMA_NAME, {
   type: str().indexed(), // always "receipt"
+  org: str().indexed(), // company id, so one query reads every team
   team: str().indexed(),
   period: str().indexed(), // ISO week, e.g. 2026-W45
   signer: str().indexed(), // lowercased address that signed the receipt (EIP-712)
@@ -50,7 +51,7 @@ export function arkivWriterAddress(): string | undefined {
 }
 
 /** Publish (share) a signed receipt. Returns the entity key and tx hash. */
-export async function publishReceipt(r: SignedReceipt, opts: { team: string; level: "totals" | "full"; days?: number }) {
+export async function publishReceipt(r: SignedReceipt, opts: { team: string; org?: string; level: "totals" | "full"; days?: number }) {
   const key = process.env.ARKIV_PRIVATE_KEY as Hex | undefined;
   if (!key) throw new Error("ARKIV_PRIVATE_KEY is not set. Add a funded Rabdi testnet key to web/.env.local.");
   if (!r.signature) throw new Error("Sign the receipt before sharing it.");
@@ -58,7 +59,8 @@ export async function publishReceipt(r: SignedReceipt, opts: { team: string; lev
   if (!check.ok) throw new Error("Receipt failed verification; not publishing.");
   const account = privateKeyToAccount(key);
   const wallet = createWalletClient({ chain: chain(), transport: http(process.env.ARKIV_RPC_URL || undefined), account });
-  const shared: SignedReceipt = { ...r, share: { level: opts.level, team: opts.team, publishedAt: new Date().toISOString() } };
+  const org = opts.org ?? r.share?.org ?? "";
+  const shared: SignedReceipt = { ...r, share: { level: opts.level, team: opts.team, org, publishedAt: new Date().toISOString() } };
   if (opts.level === "totals") {
     shared.evidence = [];
     shared.judges = [];
@@ -69,6 +71,7 @@ export async function publishReceipt(r: SignedReceipt, opts: { team: string; lev
     ReceiptSchema,
     {
       type: "receipt",
+      org,
       team: opts.team,
       period: m.period,
       signer: m.owner.toLowerCase(),
@@ -122,6 +125,35 @@ export async function fetchTeamReceipts(team: string, period?: string): Promise<
     } catch {
       // not a valid receipt payload; ignore
     }
+  }
+  return out;
+}
+
+/** Every shared receipt of a company, across all its teams, re-verified. */
+export async function fetchOrgReceipts(org: string, period?: string): Promise<TeamReceipt[]> {
+  const client = arkivPublic();
+  const where = period ? and(eq("type", "receipt"), eq("org", org), eq("period", period)) : and(eq("type", "receipt"), eq("org", org));
+  const out: TeamReceipt[] = [];
+  for (let offset = 0; offset < 1000; offset += 100) {
+    const { entities } = await client
+      .select({ $key: true, $owner: true, $expiresAt: true, payload: true })
+      .from(ReceiptSchema)
+      .where(where)
+      .orderBy(desc("spendCents"))
+      .limit(100)
+      .offset(offset)
+      .fetch();
+    for (const e of entities as any[]) {
+      try {
+        const raw = e.payload?.value ?? e.payload;
+        const r = JSON.parse(typeof raw === "string" && raw.startsWith("0x") ? hexToString(raw as Hex) : String(raw)) as SignedReceipt;
+        const v = await verifyReceipt(r);
+        out.push({ ...r, arkiv: { key: String(e.$key?.value ?? e.$key), owner: String(e.$owner?.value ?? e.$owner ?? "") }, verified: v.ok });
+      } catch {
+        /* not a receipt */
+      }
+    }
+    if (entities.length < 100) break;
   }
   return out;
 }
