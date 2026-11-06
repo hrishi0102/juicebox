@@ -20,7 +20,8 @@ Sessions saved before multi-tool support have no `tool` field; `toolOf()` treats
 | `turn_context` | model for the following responses (`gpt-5.4`, `gpt-5.5`, `gpt-5.6-terra`...) |
 | `token_usage_record` | usage per API response, deduped by `response_id` (newer versions) |
 | `event_msg / token_count` | running `total_token_usage`; we use the increase between events (older versions, only when no usage records exist) |
-| `event_msg / user_message` | prompt count, title, prompts for the private judge (read on demand) |
+| `event_msg / user_message` | prompt count, title, prompts for the private AI (read on demand) |
+| `event_msg / agent_message` (or `response_item / message` from the assistant in older logs) | the AI's answers for the private AI (read on demand, `codexTranscript`) |
 | `response_item / custom_tool_call` `apply_patch` | edited files and lines from the patch text (`*** Update File:` headers, `+`/`-` lines) |
 | `response_item / function_call` `exec`, `exec_command` | shell commands: test runs, repeated commands, branches created |
 | `response_item / function_call_output` | `Process exited with code N` (errors and error streaks), GitHub PR URLs, `git commit` output `[branch sha]` |

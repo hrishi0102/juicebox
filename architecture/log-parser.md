@@ -31,4 +31,4 @@ The billed number for a session is `max(our price, Claude Code's tracker)` (`ses
 
 ## Output
 
-A `Session`: cost (total, per model, tokens), folder, repos, branches, times and active minutes, files edited, lines added and removed, git operations, and loop signals (error streaks, repeated commands, edits to the same file, test runs). Prompts are not stored. `buildPrivateDigest` re-reads the transcript on demand when the judge needs prompts.
+A `Session`: cost (total, per model, tokens), folder, repos, branches, times and active minutes, files edited, lines added and removed, git operations, and loop signals (error streaks, repeated commands, edits to the same file, test runs). Prompts are not stored. `buildPrivateDigest` re-reads the transcript on demand when the private AI needs it: the prompts, and the text of the AI's last three answers (joined per `message.id`, subagent lines skipped).

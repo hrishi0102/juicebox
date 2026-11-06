@@ -55,3 +55,36 @@ Replaces the opt-in part of decision 15. Every shared receipt includes its pull 
 
 ## 18. Clean first screen, details on demand
 Each page leads with one sentence, one headline and the PR list; secondary analysis sits in collapsible sections with a one-line hint. Reason: a first-time visitor should understand in seconds that this shows "what the AI money bought", without reading tables of metrics first.
+
+## 19. The product is "What did you get done this week?"
+The front door is a fun, general-purpose weekly list, not a cost dashboard. The work receipt for the company is the same list, signed. Reason: people want to say what they got done (and post it); a cost table with survival percentages did not land ("no one really cares about % still alive"). PRs are not the only measure: what you asked and what the AI explained count too.
+
+## 20. Seven categories in plain words
+Built, Fixed, Figured out, Researched, Wrote, Planned, Wasted. The older labels stay inside for scoring. Reason: anyone understands them in a second, they work for non-coding work, and "Wasted" keeps the list honest.
+
+## 21. Two AI calls: one per session, one per week
+The per-session call reads the private digest (prompts and the AI's last answers); the weekly call reads only the resulting titles. Reason: prompts go into exactly one kind of call, the weekly call can merge related sessions into one item, and a failed weekly call still leaves good per-session lines.
+
+## 22. The AI runs only on demand
+Reading logs never calls the AI. "Write my week" does, once, for the sessions that need it. Reason: nothing should run in the background or spend money without a click, and each call costs about $0.001.
+
+## 23. Default model 0gm-1.0-35b-a3b-sia, thinking off, with fallbacks
+`glm-5.3` and `0gm-1.0-35b-a3b` are tried when its provider is down; all in private (TEE-only) mode. Reason: the single provider behind `0gm-1.0-35b-a3b` was down on Nov 6; the sia build answers in about 2 seconds with the same TEE guarantees.
+
+## 24. The share card is a download, and cost is hidden by default
+No public links. Reason: posting is the person's choice, and a fun card with dollar amounts invites the leaderboard comparisons this product replaces.
+
+## 25. Receipt v2 signs the list
+Categories, spend per category, things done, merged PRs and a Merkle root over the items replace labels, survival and kept work. Single items can be hidden with proofs while counts stay signed. Reason: the company should see what the money got done, and the person should be able to keep one line private without breaking the totals.
+
+## 26. A key made on the laptop instead of a wallet
+Reason: most people do not have, or want, a crypto wallet to share a work summary. The key never leaves `~/.receipts`; a wallet is still possible.
+
+## 27. Arkiv records are read-only and owned by the signer
+One transaction creates the entity read-only and hands it to the signer's address; the company wallet only pays gas. Reason: the record is the employee's evidence; neither the company nor we should be able to edit or take it.
+
+## 28. One login: GitHub. Company = GitHub org, team = GitHub team
+On the laptop the existing GitHub token is enough; the hosted company view uses a GitHub OAuth App with read-only org access. Reason: every engineering team already lives in GitHub, so there is no second account system to build or trust.
+
+## 29. Sign in with 0G to pay from your own credits
+Optional, on localhost:3000. The browser makes the AI calls with the person's 0G session; the local server builds the messages and keeps the results. Reason: a shared app key does not scale to many people, and 0G's iAI credits belong to the person.
