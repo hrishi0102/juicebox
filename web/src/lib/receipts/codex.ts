@@ -20,6 +20,7 @@ import { createInterface } from "node:readline";
 import { addTokens, emptyModelCost, emptyTokens, priceOpenAiUsage } from "./pricing";
 import { cleanPrompt, parsePrUrl } from "./parse";
 import { TimelineBuilder } from "./timeline";
+import { ChatStatsBuilder } from "./chat-stats";
 import type { GitPrRef, Session } from "./types";
 
 export const DEFAULT_CODEX_ROOT = join(homedir(), ".codex", "sessions");
@@ -112,6 +113,7 @@ export async function parseCodexSession(file: string): Promise<Session | undefin
   let interruptions = 0;
   let title: string | undefined;
   const tl = new TimelineBuilder();
+  const chat = new ChatStatsBuilder();
 
   const addUsage = (m: string, u: any) => {
     const priced = priceOpenAiUsage(m, u);
@@ -140,6 +142,7 @@ export async function parseCodexSession(file: string): Promise<Session | undefin
       continue;
     }
     if (!Number.isNaN(ts)) timestamps.push(ts);
+    chat.seen(ts);
 
     if (o.type === "token_usage_record") {
       const key = p.response_id ?? `${p.turn_id}:${o.ordinal}`;
@@ -170,6 +173,7 @@ export async function parseCodexSession(file: string): Promise<Session | undefin
           userPrompts++;
           title ??= cleanPrompt(p.message, 80);
           tl.prompt(ts);
+          chat.message(ts, p.message, Array.isArray(p.images) ? p.images.length : 0);
         }
       } else if (p.type === "agent_message" && typeof p.message === "string") {
         tl.answer(ts, p.message);
@@ -277,6 +281,7 @@ export async function parseCodexSession(file: string): Promise<Session | undefin
     },
     tools,
     timeline: tl.finish(commits),
+    chat: chat.finish(),
   };
 }
 

@@ -17,6 +17,7 @@ import { execFileSync } from "node:child_process";
 import { addTokens, emptyModelCost, emptyTokens, priceUsage } from "./pricing";
 export { sessionUsd } from "./pricing";
 import { TimelineBuilder } from "./timeline";
+import { ChatStatsBuilder } from "./chat-stats";
 import type { GitPrRef, PrivateDigest, Session } from "./types";
 
 export const DEFAULT_LOG_ROOT = join(homedir(), ".claude", "projects");
@@ -187,6 +188,7 @@ export async function parseSession(sf: SessionFile, seen?: Set<string>): Promise
   let readOnlyCalls = 0;
   const subagentIds = new Set<string>();
   const tl = new TimelineBuilder();
+  const chat = new ChatStatsBuilder();
   // Shell commands that commit or open a PR, waiting for their result (only successful ones count).
   const gitCalls = new Map<string, { ts: number; kind: "commit" | "pr" }>();
 
@@ -199,6 +201,7 @@ export async function parseSession(sf: SessionFile, seen?: Set<string>): Promise
         seen.add(o.uuid);
       }
       const ts = o.timestamp ? Date.parse(o.timestamp) : NaN;
+      if (!isSub && (o.type === "assistant" || o.type === "user")) chat.seen(ts);
       switch (o.type) {
         case "assistant": {
           if (!Number.isNaN(ts)) timestamps.push(ts);
@@ -301,6 +304,8 @@ export async function parseSession(sf: SessionFile, seen?: Set<string>): Promise
             if (text && isRealPrompt(text)) {
               userPrompts++;
               tl.prompt(ts);
+              const images = Array.isArray(o.message?.content) ? o.message.content.filter((b: any) => b?.type === "image").length : 0;
+              chat.message(ts, text.replace(/<system-reminder>[\s\S]*?<\/system-reminder>/g, " "), images);
             }
           }
           break;
@@ -398,6 +403,7 @@ export async function parseSession(sf: SessionFile, seen?: Set<string>): Promise
     },
     tools,
     timeline: tl.finish(commits),
+    chat: chat.finish(),
   };
 }
 

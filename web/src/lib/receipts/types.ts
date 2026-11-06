@@ -1,5 +1,6 @@
 // Shared types for Receipts.
 import type { Efficiency } from "./efficiency";
+import type { ChatStats } from "./chat-stats";
 // Everything here is derived data. Raw prompts never get stored in these shapes,
 // except `PrivateDigest`, which only lives in memory or in the private local cache.
 
@@ -90,6 +91,7 @@ export type Session = {
   signals: SessionSignals;
   tools: Record<string, number>;
   timeline?: SessionTimeline; // missing in datasets read before step times were kept
+  chat?: ChatStats; // fun numbers about how the person talks to the AI (counts and minutes only)
 };
 
 // What the private judge gets to see. Built on demand, never written to the repo.
