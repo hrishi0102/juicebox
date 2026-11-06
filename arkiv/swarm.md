@@ -22,12 +22,13 @@ Both entity types are created **read-only** and handed to the person who signed 
 
 ## Live examples (Arkiv testnet Rabdi, Swarm testnet)
 
-A sealed week (demo company Acme, @you, week 45):
+A sealed week (demo company Acme, @you, week 45, receipt v3 with the efficiency numbers):
 
-- Arkiv entity: [`0xb68e90172784a003d42f4ebee3262bb00d4db637685c10de96f3bbae6391735c`](https://rabdi.explorer.arkiv.network/entity/0xb68e90172784a003d42f4ebee3262bb00d4db637685c10de96f3bbae6391735c)
-- Swarm reference (`swarm` attribute): `46901a99064bd9d4e5f37efa17d2b4a8254f6813420a09c4ebb489ac204f083e`
-- The encrypted bytes on Swarm: https://api.gateway.testnet.ethswarm.org/bytes/46901a99064bd9d4e5f37efa17d2b4a8254f6813420a09c4ebb489ac204f083e (3,844 bytes of ciphertext: this is the point)
-- The same week as the public sees it, in the app: `/r/0xb68e90172784a003d42f4ebee3262bb00d4db637685c10de96f3bbae6391735c`
+- Arkiv entity: [`0xea50b76a7c871350d819fac561481bfb8070e3da040b3828e9369d0d99cb9ca6`](https://rabdi.explorer.arkiv.network/entity/0xea50b76a7c871350d819fac561481bfb8070e3da040b3828e9369d0d99cb9ca6)
+- Swarm reference (`swarm` attribute): `6483e19496c5b16f1f7b35da826f42ff140caedb31732c4e7a7fa90d597eeb75`
+- The encrypted bytes on Swarm: https://api.gateway.testnet.ethswarm.org/bytes/6483e19496c5b16f1f7b35da826f42ff140caedb31732c4e7a7fa90d597eeb75 (only ciphertext: this is the point)
+- The same week as the public sees it, in the app: `/r/0xea50b76a7c871350d819fac561481bfb8070e3da040b3828e9369d0d99cb9ca6`
+- An earlier v2 share of the same week, still verifiable: [`0xb68e…735c`](https://rabdi.explorer.arkiv.network/entity/0xb68e90172784a003d42f4ebee3262bb00d4db637685c10de96f3bbae6391735c), Swarm `46901a99…083e`
 
 Another sealed week (@asha-acme, week 45): entity [`0x2cf1448bb9216afa63c6c64b8ebe5cf772ec85ddf7e35cc78280d1ebb65ba969`](https://rabdi.explorer.arkiv.network/entity/0x2cf1448bb9216afa63c6c64b8ebe5cf772ec85ddf7e35cc78280d1ebb65ba969), Swarm `77255ee633acb56ce7b613c9dcc00717273318b705a4eb954abbedb4eab8717c`.
 
