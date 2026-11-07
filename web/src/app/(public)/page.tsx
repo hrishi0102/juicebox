@@ -28,8 +28,8 @@ export default async function FrontDoor() {
                 What did your AI get done this week?
               </h1>
               <p className="fd-lede">
-                A weekly receipt for your AI work. Juicebox turns your Claude Code and Codex sessions into a short list of what you built, fixed and figured
-                out, and what each thing cost, so your team sees the work, not the token count.
+                Everyone is token maxing. Nobody can say what it bought. Juicebox turns your Claude Code and Codex sessions into a weekly receipt: what you
+                built, fixed and figured out, and what each one cost. Your team sees the work behind the tokens, not just the bill.
               </p>
               <div className="fd-ctas">
                 <a className="btn btn-primary btn-lg" href="#demo">
