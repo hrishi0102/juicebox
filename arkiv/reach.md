@@ -26,11 +26,12 @@ What we have, honestly:
 
 ## Can they try it today?
 
-Yes, in three ways:
+Yes, in four ways:
 
-1. **The demo, nothing to set up.** `cd web && npm install && npm run dev`, then open http://localhost:3000/demo and pick a role at Acme: its lead, an engineer, or someone with a link. With a free `ARKIV_ACCESS_KEY` (https://hub.arkiv.network/access-keys) in `web/.env.local`, the company pages read Acme's receipts live from Arkiv. Without one, Arkiv refuses anonymous queries, so the page shows the bundled demo files and says Arkiv did not answer.
-2. **Their own week.** `npm run receipts -- scan` reads their Claude Code and Codex logs (nothing leaves the laptop). Then in the app, My week, Setup: Sign in with 0G, join the company from their GitHub teams, and Write my week.
-3. **Check a receipt without running anything.** Open one on the Arkiv explorer, for example [this sealed week](https://rabdi.explorer.arkiv.network/entity/0xea50b76a7c871350d819fac561481bfb8070e3da040b3828e9369d0d99cb9ca6), or run the `curl` query in the [README](../README.md#arkiv-build-on-arkiv-from-scratch-with-the-arkiv--swarm-bonus).
+1. **The live demo, nothing to install:** [https://juiceboxx.vercel.app/demo](https://juiceboxx.vercel.app/demo). Pick a role at Acme. It reads Acme's receipts live from Arkiv, opens the sealed lists from Swarm, and shows the Chainlink score from Sepolia. It is read only: sending and the private AI on 0G run on the laptop.
+2. **The same demo on your laptop.** `cd web && npm install && npm run dev`, then open http://localhost:3000/demo and pick a role at Acme: its lead, an engineer, or someone with a link. With a free `ARKIV_ACCESS_KEY` (https://hub.arkiv.network/access-keys) in `web/.env.local`, the company pages read Acme's receipts live from Arkiv. Without one, Arkiv refuses anonymous queries, so the page shows the bundled demo files and says Arkiv did not answer.
+3. **Their own week.** `npm run receipts -- scan` reads their Claude Code and Codex logs (nothing leaves the laptop). Then in the app, My week, Setup: Sign in with 0G, join the company from their GitHub teams, and Write my week.
+4. **Check a receipt without running anything.** Open one on the Arkiv explorer, for example [this sealed week](https://rabdi.explorer.arkiv.network/entity/0xea50b76a7c871350d819fac561481bfb8070e3da040b3828e9369d0d99cb9ca6), or run the `curl` query in the [README](../README.md#arkiv-build-on-arkiv-from-scratch-with-the-arkiv--swarm-bonus).
 
 ## How it grows Arkiv usage
 

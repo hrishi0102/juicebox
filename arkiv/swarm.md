@@ -37,8 +37,8 @@ A sealed week (demo company Acme, @you, week 45, receipt v3 with the efficiency 
 - Arkiv entity: [`0xea50b76a7c871350d819fac561481bfb8070e3da040b3828e9369d0d99cb9ca6`](https://rabdi.explorer.arkiv.network/entity/0xea50b76a7c871350d819fac561481bfb8070e3da040b3828e9369d0d99cb9ca6). The explorer page lists its attributes: `swarm` holds the reference below, and `sealed` (296 bytes) holds the key, sealed to the company
 - Swarm reference (`swarm` attribute): `6483e19496c5b16f1f7b35da826f42ff140caedb31732c4e7a7fa90d597eeb75`
 - The encrypted bytes on Swarm: https://api.gateway.testnet.ethswarm.org/bytes/6483e19496c5b16f1f7b35da826f42ff140caedb31732c4e7a7fa90d597eeb75 (only ciphertext: this is the point; the gateway serves it as a file, so the browser downloads it)
-- The same bytes fetched live and shown in the app: `/proof/swarm/6483e19496c5b16f1f7b35da826f42ff140caedb31732c4e7a7fa90d597eeb75?entity=0xea50b76a7c871350d819fac561481bfb8070e3da040b3828e9369d0d99cb9ca6`
-- The same week as the public sees it, in the app: `/r/0xea50b76a7c871350d819fac561481bfb8070e3da040b3828e9369d0d99cb9ca6`
+- The same bytes fetched live and checked in the app: [https://juiceboxx.vercel.app/proof/swarm/6483e194…eb75](https://juiceboxx.vercel.app/proof/swarm/6483e19496c5b16f1f7b35da826f42ff140caedb31732c4e7a7fa90d597eeb75?entity=0xea50b76a7c871350d819fac561481bfb8070e3da040b3828e9369d0d99cb9ca6) (size, SHA-256 and first bytes of the ciphertext, fetched from Swarm when you open it)
+- The same week as the public sees it: [https://juiceboxx.vercel.app/r/0xea50…9ca6](https://juiceboxx.vercel.app/r/0xea50b76a7c871350d819fac561481bfb8070e3da040b3828e9369d0d99cb9ca6)
 - An earlier v2 share of the same week, still verifiable: [`0xb68e…735c`](https://rabdi.explorer.arkiv.network/entity/0xb68e90172784a003d42f4ebee3262bb00d4db637685c10de96f3bbae6391735c), Swarm `46901a99…083e`
 
 Another sealed week (@asha-acme, week 45): entity [`0x2cf1448bb9216afa63c6c64b8ebe5cf772ec85ddf7e35cc78280d1ebb65ba969`](https://rabdi.explorer.arkiv.network/entity/0x2cf1448bb9216afa63c6c64b8ebe5cf772ec85ddf7e35cc78280d1ebb65ba969), Swarm `77255ee633acb56ce7b613c9dcc00717273318b705a4eb954abbedb4eab8717c`.
@@ -107,7 +107,9 @@ npm run receipts -- publish-demo --week 2026-W45 --who you
 
 It takes the demo engineer's signed week, encrypts it on your machine, uploads the ciphertext to Swarm (waiting until it is on the network), seals the pointer to the company key, and writes one read-only Arkiv entity handed to the signer. It prints the entity key and the Swarm reference; read it back with the `entity` command above.
 
-**In the app:** be an engineer in the demo (`/demo`), then on This week press **Sign and send**: sign it, then **Send to Acme**. The list goes to Swarm and the Arkiv record keeps the totals. Under **Check it yourself**, **Fetch it from Swarm now** opens `/proof/swarm/<ref>`, which downloads the ciphertext from the gateway right then and, for a company member, checks it against the SHA-256 sealed in the Arkiv record. Be Acme's lead: People shows each list "Opened from Swarm with the company key", with a Swarm link next to each person. Be someone with a public link: the list is private.
+**In the [live demo](https://juiceboxx.vercel.app/demo)** (read only): be Acme's lead, then People or Teams, Payments: each list says "Opened from Swarm with the company key", with a Swarm link next to each person. Be someone with a link: the list is private. Every **Fetch it from Swarm now** link opens the proof page above.
+
+**On your laptop** (`npm run dev`, which can also send): be an engineer in the demo (`/demo`), then on This week press **Sign and send**: sign it, then **Send to Acme**. The list goes to Swarm and the Arkiv record keeps the totals. Under **Check it yourself**, **Fetch it from Swarm now** opens `/proof/swarm/<ref>`, which downloads the ciphertext from the gateway right then and, for a company member, checks it against the SHA-256 sealed in the Arkiv record. Be Acme's lead: People shows each list "Opened from Swarm with the company key", with a Swarm link next to each person. Be someone with a public link: the list is private.
 
 ## Demo video
 

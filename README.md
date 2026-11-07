@@ -2,6 +2,8 @@
 
 **What did your AI get done this week?**
 
+**Live demo:** [juiceboxx.vercel.app](https://juiceboxx.vercel.app). Pick a role at the demo company Acme: its lead, an engineer, or someone with a link. It reads Arkiv, Swarm and the Chainlink score live. The private AI on 0G runs on your laptop (see [Run it](#run-it)).
+
 AI tools make it easy to spend a lot and hard to say what came out of it, and token leaderboards reward burning tokens, not getting things done. Juicebox gives a company the answer, one signed weekly receipt per person. Each employee runs it on their laptop, where it reads their Claude Code and Codex sessions and writes down what they got done:
 
 > **Built** the team spend dashboard and the API quickstart. **Fixed** the double charge on retry. **Figured out** how settlement batching works. 7 AI sessions, Claude Code + Codex. **5 things done.**
@@ -16,7 +18,7 @@ A private AI on **0G** writes the list from the sessions, paid from the employee
 | **Company** | leads and managers | anywhere, `/company` | Sign in with GitHub, see everyone's week by team and person, every PR, where the money went. Whoever runs it sets up the wallet, the company key and Swarm once (Company, Setup) |
 | **For fun** (side product) | anyone | `/wrapped` | AI Wrapped: how you talk to AI, shared as a card. Nothing to do with receipts, never sent to a company |
 
-Anyone with a link can check a shared receipt (`/r/<key>`, `/verify`). To look around, open `/demo` and pick who you want to be at the demo company.
+Anyone with a link can check a shared receipt (`/r/<key>`, `/verify`). To look around, open [the live demo](https://juiceboxx.vercel.app/demo) (or `/demo` on your laptop) and pick who you want to be at the demo company.
 
 Built at ETHGlobal Mumbai (Nov 5 to 7, 2026). Juicebox was first called Receipts, so the folder `~/.receipts`, the `npm run receipts` command, the Arkiv schema and the EIP-712 signing domain keep that name: renaming them would break every receipt already signed.
 
@@ -138,7 +140,7 @@ Arkiv's public endpoint refuses anonymous queries (`ANON_COST_LIMITED`), so use 
 curl -s https://rpc.rabdi.db-chain.testnet.arkiv.network/<ACCESS_KEY> -H 'Content-Type: application/json' -d "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"arkiv_query\",\"params\":[\"arkiv.schema = str('receipts-ethglobal-mumbai.receipt.v2') AND type = str('receipt') AND org = str('acme') AND period = str('2026-W45')\",{\"select\":{\"key\":true,\"owner\":true},\"limit\":\"0x64\"}]}"
 ```
 
-More queries (sealed weeks, one team, big weeks that went in circles) are in [arkiv/schema.md](arkiv/schema.md). The same data, read by the app: open `/demo` and be Acme's lead.
+More queries (sealed weeks, one team, big weeks that went in circles) are in [arkiv/schema.md](arkiv/schema.md). The same data, read by the app: open [the live demo](https://juiceboxx.vercel.app/demo) and be Acme's lead.
 
 **Judging files:** [schema.md](arkiv/schema.md), [friction.md](arkiv/friction.md) (Arkiv feedback), [reach.md](arkiv/reach.md), [why-arkiv.md](arkiv/why-arkiv.md), [how-you-use-arkiv.md](arkiv/how-you-use-arkiv.md) (who can edit each entity, and when it expires), [swarm.md](arkiv/swarm.md) (the bonus).
 
@@ -176,7 +178,7 @@ Code: [`cre/receipts-monthly/score.ts`](cre/receipts-monthly/score.ts) (the chec
 - Cost is the API list price of the tokens in your logs. On a subscription plan your real bill is different.
 - The GitHub login inside a receipt is claimed by the signer; the company page shows the signing address next to it. Joining a company is checked against your GitHub teams, but nothing yet proves to the company that a signing key belongs to that login.
 - 0G requests are not end-to-end sealed today (0G reports `X-0G-E2EE: none` for our model), so 0G's router could read them in transit. The model itself runs in a TEE and its signature is checked on every answer.
-- "Sign in with 0G" uses 0G's own Privy app, which only allows `http://localhost:3000`, so the private AI only runs on the laptop; a hosted copy shows the demo's weeks, already written by 0G. It needs a real login, so it was built and wired but not tested end to end by us. If it fails, `npm run receipts -- write` writes the week with the app's own key.
+- "Sign in with 0G" uses 0G's own Privy app, which only allows `http://localhost:3000`, so the private AI only runs on the laptop; the hosted copy (https://juiceboxx.vercel.app) shows the demo's weeks, already written by 0G. It needs a real login, so it was built and wired but not tested end to end by us. If it fails, `npm run receipts -- write` writes the week with the app's own key.
 
 ## AI usage
 
