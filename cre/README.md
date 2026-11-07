@@ -1,10 +1,10 @@
-# Receipts monthly check (Chainlink CRE)
+# Juicebox monthly check (Chainlink CRE)
 
 Submitted to **Chainlink: Best Workflow with CRE**.
 
 ## Why it exists
 
-Receipts are written by employees and read by their company, and both sides have a reason to bend the numbers. Inside the app, the company's own computer checks each receipt. Once a month, this workflow checks the team on its own, with no Receipts server and no company computer involved. Each Chainlink node:
+Receipts are written by employees and read by their company, and both sides have a reason to bend the numbers. Inside the app, the company's own computer checks each receipt. Once a month, this workflow checks the team on its own, with no Juicebox server and no company computer involved. Each Chainlink node:
 
 1. **reads the team's receipts straight from Arkiv** (one `arkiv_query` JSON-RPC call),
 2. **checks every receipt's EIP-712 signature** against the person it is about, and drops any that fail,
@@ -18,7 +18,7 @@ One blockchain (Sepolia), two outside systems (Arkiv and the GitHub API), and th
 ## Deployed
 
 - `TeamScoreboard` on Ethereum Sepolia: [`0x563F8f8A06a9bCb394Bd463CEC352e6EB902FDD5`](https://sepolia.etherscan.io/address/0x563F8f8A06a9bCb394Bd463CEC352e6EB902FDD5), deploy transaction [`0x2afdeaf9…3acf`](https://sepolia.etherscan.io/tx/0x2afdeaf9e488bff2b55b01108b4e5a8218c4f9c7a76c6b9cf3b3b36d66073acf). Its forwarder is CRE's Sepolia simulation forwarder `0x15fC6ae953E024d975e77382eEeC56A9101f9F88`, so `cre workflow simulate --broadcast` can post to it. For the live network, the owner switches it to the production forwarder with `setForwarder`.
-- **First score, posted by the CRE simulator on Nov 7:** transaction [`0xa7f4dfd4…e7ff`](https://sepolia.etherscan.io/tx/0xa7f4dfd481fbde18edc11bed280f86d159f76d87d4b4f3973b72679f0cf1e7ff) (sent to the simulation forwarder, which called `onReport`; 489k gas). `latest(keccak256("acme-payments"))` returns 25 signed weeks from 5 people, 0 failed signatures, $2,834.77 of spend, 116 things done, $222.08 that went in circles, 89 merged PRs as signed, and 12 PRs asked on GitHub with 0 still merged (the demo company's PRs are made up).
+- **First score, posted by the CRE simulator on Nov 7:** transaction [`0xa7f4dfd4…e7ff`](https://sepolia.etherscan.io/tx/0xa7f4dfd481fbde18edc11bed280f86d159f76d87d4b4f3973b72679f0cf1e7ff) (sent to the simulation forwarder, which called `onReport`; 489k gas). `latest(keccak256("acme-payments"))` returns 25 signed weeks from 5 people, 0 failed signatures, $2,834.77 of spend, 116 things done, $222.08 that went in circles, 89 merged PRs as signed, and 12 PRs asked on GitHub with 0 still merged. That zero is expected: the demo company's PRs are made up, so GitHub cannot find them. On a team with real PRs the same check counts the ones still merged.
 - Team checked: `acme-payments`, the demo company's Payments team. Only entities written by the company wallet `0x09351DC0A6AFa87da28D00914fE87373C5C82747` count (`trustedWriters`).
 
 ## Files

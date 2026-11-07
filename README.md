@@ -110,6 +110,8 @@ The private AI is the product's core: to say what you got done, it has to read w
 
 **What breaks if 0G is removed:** the AI that writes the list. Without a private computer we would have to send prompts to an ordinary API, which we refuse to do, so the list falls back to rules that name things after PR titles and cannot tell research from a dead end.
 
+**Why people come back tomorrow:** My week fills in as you work. At the end of each day, **Update with new sessions** adds what that day's sessions got done, paid from your daily iAI credits, which otherwise expire unused at 00:00 UTC. At the end of the week you sign it and send it.
+
 Code: `web/src/lib/receipts/judge-core.ts`, `judge.ts`, `week.ts`, `web/src/components/zero-g.tsx`, `web/src/lib/zerog-tasks.ts`.
 
 ### Arkiv: Build on Arkiv (from scratch), with the Arkiv + Swarm bonus

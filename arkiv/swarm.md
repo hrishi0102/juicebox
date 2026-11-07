@@ -1,6 +1,6 @@
 # Arkiv + Swarm
 
-Receipts uses Swarm for the one file that must not be public, and Arkiv to index it and point to it.
+Juicebox (first called Receipts) uses Swarm for the one file that must not be public, and Arkiv to index it and point to it.
 
 **Private weeks, encrypted on Swarm.** When an employee sends their week, the full receipt (the list of what they got done, the pull requests, the private AI records) is encrypted on their laptop and stored on Swarm. The public Arkiv record keeps only the signed totals plus the Swarm reference, and a pointer (reference, key, SHA-256, size) sealed to the company's public key. Anyone can check the totals; only the company can open the list.
 

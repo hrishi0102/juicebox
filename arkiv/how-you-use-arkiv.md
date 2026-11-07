@@ -1,6 +1,6 @@
-# How Receipts uses Arkiv
+# How Juicebox uses Arkiv
 
-Receipts tells a company what its AI spend got done: each employee sends a signed weekly receipt from their laptop, and the company reads everyone's. Arkiv is where those receipts live. It is the only shared storage in the product: there is no Receipts server, so the employee's app writes to Arkiv and the company's pages read from it.
+Juicebox (first called Receipts, which is why the schema keeps that name) tells a company what its AI spend got done: each employee sends a signed weekly receipt from their laptop, and the company reads everyone's. Arkiv is where those receipts live. It is the only shared storage in the product: there is no Juicebox server, so the employee's app writes to Arkiv and the company's pages read from it.
 
 ## Who can do what, and when it expires
 
@@ -16,6 +16,35 @@ Why this fits:
 - **The employee owns it, not the company that paid for it.** One transaction (`executeBatch`) creates the entity and hands its ownership to the address that signed the receipt. The company wallet pays the small fee, so employees never need tGLM or a faucet, but it cannot delete or extend what it wrote.
 - **It expires on its own.** Performance evidence should not live forever. 120 days covers a quarterly review with some slack. If the employee wants a week kept for a yearly review, they extend it themselves (`extendEntity`). We deliberately did not set `permissionlessExtension`: only the person a receipt describes decides how long it stays public.
 - **A corrected week is a new entity.** Because receipts are read-only, sending a week again (after new sessions) writes a new entity. Readers keep one receipt per person per week: verified first, then the newest receipt format, Arkiv over local copies, opened lists over closed ones, and among equals the one sent last. The employee owns both and can delete the old one.
+
+## What we filter on, and why it fits
+
+A company reads by company, team and week, so those are the filters. The code is in [`web/src/lib/receipts/arkiv.ts`](../web/src/lib/receipts/arkiv.ts) (`fetchOrgReceipts`, `fetchTeamReceipts`) and [`cre/receipts-monthly/score.ts`](../cre/receipts-monthly/score.ts).
+
+| Attribute | Who filters on it | Why it fits |
+|---|---|---|
+| `arkiv.schema`, `type` | Every read | Only our receipts, never someone else's entities |
+| `org` | Every company page (`/company`, Teams, People, Pull requests), one query per page load | The company is the GitHub org: "everyone at my company" |
+| `team` | `/api/team`, the CLI (`arkiv <team>`) and the Chainlink check (`team = str('acme-payments')`) | A team is a GitHub team, and the monthly check scores one team |
+| `period` | `/api/team?period=` and the week query in the README | One ISO week is one receipt |
+| `spendCents` | The sort order of every company read (`orderBy desc`) | Biggest spend first, which is what a lead looks at first |
+| `signer`, `author`, `level`, `done`, `merged`, `wasteCents` | No screen filters on them yet; the documented queries do (`level = str('sealed')`, big weeks that went in circles) | So another tool (a budget tool, a review tool) can ask "every sealed week" or "weeks with high waste" without downloading payloads. To be honest: the app itself does not filter on them today |
+
+Indexed attributes only find candidates. Every number shown comes from the signed payload, never from an attribute (see the last section).
+
+## Each Arkiv feature, and what users see
+
+| Arkiv feature | What a user sees |
+|---|---|
+| Created with the `readonly` flag | The shared receipt page (`/r/<key>`) says "Read-only: nobody can change it, not even its owner." The front page promises the same: not the company and not us |
+| Ownership handed to the signer in the same transaction (`executeBatch`) | `/r/<key>` names the owner as the person who signed it: "Only they can delete it or keep it longer." After sending, My week lists "The receipt you sent: read-only, owned by you" |
+| `$creator` | `/r/<key>` shows the company wallet that wrote it, "which only paid the fee" |
+| Expiry (120 days) | `/r/<key>` shows the block and date it expires, unless its owner keeps it longer |
+| `$createdAt` | When a week was sent twice, the company pages show the one sent last |
+| Query by `org` | The whole company side: everyone's week, teams, people, PRs and totals |
+| `bytes` attributes (`sealed`, `payload`) and the `swarm` reference | People shows "Opened from Swarm with the company key"; a public link says "Only the company key opens this list" |
+| `getEntity` by key | `/r/<key>` and Check a receipt (`/verify`): paste a key, see who owns it, who paid for it, and whether it is read-only |
+| Raw `arkiv_query` over JSON-RPC | The Chainlink CRE check reads the same entities with no Juicebox server; the Team page shows "Checked by Chainlink, once a month" |
 
 ## Write path (the employee, on their laptop)
 
