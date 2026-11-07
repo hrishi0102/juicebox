@@ -3,8 +3,6 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { Check, Copy, Download, Lock, Moon, Share2, Sparkles, Upload } from "lucide-react";
-import { Button, buttonVariants } from "@/components/ui/button";
-import type { FunSegment } from "@/lib/receipts/chat-stats";
 import { DAY_NAMES, SEGMENT_COPY, SOURCE_NAMES, hourLabel, minutesLabel, shareText, toCard, type Wrapped } from "@/lib/receipts/wrapped";
 import { IMPORT_RANGES, readExportFile, wrappedFromExport, type ImportedExport, type ImportRange } from "@/lib/receipts/chat-import";
 import { spentLine, useZeroG } from "@/components/zero-g";
@@ -12,16 +10,6 @@ import { roast as askZeroG } from "@/lib/zerog-tasks";
 
 type Period = { id: string; label: string; href: string; active: boolean };
 type Roast = { line: string; model?: string; verified?: boolean };
-
-const SEG_STYLE: Record<FunSegment, string> = {
-  overthinking: "from-violet-600 to-indigo-700",
-  therapy: "from-pink-600 to-rose-700",
-  student: "from-sky-600 to-blue-700",
-  hi: "from-orange-600 to-amber-700",
-  goAhead: "from-emerald-600 to-teal-700",
-  rage: "from-red-600 to-rose-800",
-  brainDump: "from-fuchsia-600 to-purple-800",
-};
 
 const n0 = (x: number) => Math.round(x).toLocaleString("en-US");
 const pct = (x: number) => `${Math.round(x * 100)}%`;
@@ -51,66 +39,56 @@ export function WrappedView({ initial, periods, source }: { initial?: Wrapped; p
   }
 
   return (
-    <div className="space-y-10">
-      <header className="flex flex-wrap items-end justify-between gap-4">
-        <div className="max-w-2xl">
-          <h1 className="text-balance text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl">My AI Wrapped</h1>
-          <p className="mt-3 text-pretty text-[15px] text-muted-foreground">
+    <div className="fstack">
+      <section className="fintro" aria-labelledby="page-h">
+        <div className="max-w-[680px]">
+          <h1 id="page-h" className="eng fh1">
+            My AI Wrapped
+          </h1>
+          <p className="flede">
             How you talk to AI: overthinking, therapy sessions, hellos and caps lock, and your AI personality. Counted with simple rules from your own
             messages, on this device, with no AI and nothing uploaded.
           </p>
+          <p className="fsrc">
+            {imp ? (
+              <>
+                From your {SOURCE_NAMES[imp.tool]} export, read in this browser tab.{" "}
+                <button type="button" className="quiet" onClick={() => setImp(undefined)}>
+                  Back to my logs
+                </button>
+              </>
+            ) : source === "demo" ? (
+              <>
+                This is the demo person. Leave the demo for your own logs, or{" "}
+                <a href="#import" className="quiet">
+                  bring a ChatGPT or Claude.ai export
+                </a>
+                .
+              </>
+            ) : w ? (
+              <>
+                From {w.sources.map((s) => `${s.name} (${n0(s.conversations)} ${s.conversations === 1 ? "session" : "sessions"})`).join(" and ")} on this laptop.{" "}
+                <a href="#import" className="quiet">
+                  Use a ChatGPT or Claude.ai export instead
+                </a>
+              </>
+            ) : null}
+          </p>
         </div>
-        <div className="flex flex-wrap items-center gap-1 rounded-lg border border-border bg-card p-0.5 text-sm" role="group" aria-label="Period">
+        <div className="fseg" role="group" aria-label="Period">
           {imp
             ? IMPORT_RANGES.map((r) => (
-                <button
-                  key={r.id}
-                  type="button"
-                  onClick={() => setRange(r.id)}
-                  aria-pressed={range === r.id}
-                  className={`rounded-md px-2.5 py-1 transition-colors ${range === r.id ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
-                >
+                <button key={r.id} type="button" onClick={() => setRange(r.id)} aria-pressed={range === r.id} className="fseg-b">
                   {r.label}
                 </button>
               ))
             : periods.map((p) => (
-                <Link
-                  key={p.id}
-                  href={p.href}
-                  aria-current={p.active ? "page" : undefined}
-                  className={`rounded-md px-2.5 py-1 transition-colors ${p.active ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
-                >
+                <Link key={p.id} href={p.href} aria-current={p.active ? "page" : undefined} className="fseg-b">
                   {p.label}
                 </Link>
               ))}
         </div>
-      </header>
-
-      <p className="-mt-6 text-sm text-muted-foreground">
-        {imp ? (
-          <>
-            From your {SOURCE_NAMES[imp.tool]} export, read in this browser tab.{" "}
-            <button type="button" className="underline underline-offset-2 hover:text-foreground" onClick={() => setImp(undefined)}>
-              Back to my logs
-            </button>
-          </>
-        ) : source === "demo" ? (
-          <>
-            This is the demo person. Leave the demo for your own logs, or{" "}
-            <a href="#import" className="underline underline-offset-2 hover:text-foreground">
-              bring a ChatGPT or Claude.ai export
-            </a>
-            .
-          </>
-        ) : w ? (
-          <>
-            From {w.sources.map((s) => `${s.name} (${n0(s.conversations)} ${s.conversations === 1 ? "session" : "sessions"})`).join(" and ")} on this laptop.{" "}
-            <a href="#import" className="underline underline-offset-2 hover:text-foreground">
-              Use a ChatGPT or Claude.ai export instead
-            </a>
-          </>
-        ) : null}
-      </p>
+      </section>
 
       {/* No logs and no export yet: the export is the way in, so it comes first. */}
       {w ? <WrappedBody key={`${imp?.tool ?? source}-${w.label}`} w={w} /> : imp ? <NoData imported /> : null}
@@ -122,9 +100,9 @@ export function WrappedView({ initial, periods, source }: { initial?: Wrapped; p
 
 function NoData({ imported }: { imported: boolean }) {
   return (
-    <div className="rounded-2xl border border-border bg-card p-8 text-center">
+    <div className="fempty">
       <p className="text-lg font-medium">{imported ? "No messages in this period." : "No messages to count yet."}</p>
-      <p className="mt-2 text-sm text-muted-foreground">
+      <p className="mt-2 text-sm text-[var(--fmute)]">
         {imported ? "Pick a longer period above." : "Bring a ChatGPT or Claude.ai export below, or read your Claude Code and Codex logs in My week, Setup."}
       </p>
     </div>
@@ -194,113 +172,159 @@ function WrappedBody({ w }: { w: Wrapped }) {
   const maxHour = Math.max(1, ...w.hours);
   const maxDay = Math.max(1, ...w.weekdays);
 
+  const kicker = `Your AI personality, ${w.label.charAt(0).toLowerCase()}${w.label.slice(1)}`;
+  const fp = fingerprint(w);
+  const arcs = clockArcs(w, maxHour);
+
   return (
-    <div className="space-y-10">
-      <section aria-labelledby="persona" className="overflow-hidden rounded-3xl bg-linear-to-br from-[#2c46c9] via-[#6d3fc6] to-[#be185d] p-6 text-white shadow-lg sm:p-10">
-        <p className="font-mono text-xs uppercase tracking-[0.2em] text-white/80">{w.label}</p>
-        <div className="mt-6 grid gap-8 lg:grid-cols-[1.25fr_1fr]">
-          <div>
-            <p className="text-lg text-white/80">Your AI personality</p>
-            <h2 id="persona" className="mt-2 text-balance text-5xl font-bold leading-[1.02] tracking-tight sm:text-6xl">
-              {w.persona.name}
-            </h2>
-            <p className="mt-4 max-w-xl text-pretty text-xl leading-snug text-white/90">{roast ? `"${roast.line}"` : w.persona.line}</p>
-            {roast && (
-              <p className="mt-2 text-sm text-white/75">
-                Written privately by {roast.model ?? "the private AI"} on 0G{roast.verified ? ", TEE verified" : ""}, paid from your 0G account. Only the numbers were sent.
-                {spent ? ` ${spent}` : ""}
-              </p>
-            )}
-            {w.traits.length > 0 && (
-              <div className="mt-5 flex flex-wrap items-center gap-2">
-                <span className="text-sm text-white/75">Also:</span>
-                {w.traits.map((t) => (
-                  <span key={t.id} className="rounded-full bg-white/15 px-3 py-1 text-sm font-medium">
-                    {t.name}
-                  </span>
-                ))}
-              </div>
-            )}
-            {!roast && zg.available && (
-              <div className="mt-6">
-                <button
-                  type="button"
-                  onClick={askRoast}
-                  disabled={roastBusy || !zg.ready || zg.connecting}
-                  className="inline-flex h-9 items-center gap-2 rounded-lg bg-white px-3.5 text-sm font-semibold text-[#2c46c9] shadow-sm transition-opacity hover:opacity-90 disabled:opacity-60"
-                >
-                  <Sparkles className="size-4" aria-hidden="true" />
-                  {roastBusy ? "Asking the private AI…" : zg.signedIn ? "Roast me (private AI)" : zg.connecting ? "Connecting to 0G" : "Sign in with 0G to roast me"}
-                </button>
-                <p className="mt-2 max-w-md text-xs text-white/75">
-                  Sends only these numbers to a model in a hardware enclave on 0G, paid from your own 0G credits. Never your messages. Under $0.001.
-                </p>
-                {roastError && <p className="mt-2 text-sm font-medium text-white">{roastError}</p>}
-              </div>
-            )}
-            {!roast && !zg.available && (
-              <p className="mt-6 max-w-md text-xs text-white/75">Roast me runs on your laptop, at http://localhost:3000, with Sign in with 0G.</p>
-            )}
-          </div>
-          <dl className="grid grid-cols-2 gap-3 self-end">
+    <>
+      <section aria-labelledby="persona" className="persona">
+        <div className="persona-txt">
+          <p className="persona-k">{kicker}</p>
+          <h2 id="persona" className="eng persona-n">
+            {w.persona.name}
+          </h2>
+          <p className={`persona-line ${roast ? "is-roast" : ""}`}>{roast ? `"${roast.line}"` : w.persona.line}</p>
+          {w.traits.length > 0 && (
+            <div className="traits">
+              <span className="text-sm text-[var(--fmute)]">Also</span>
+              {w.traits.map((t) => (
+                <span key={t.id} className="trait">
+                  {t.name}
+                </span>
+              ))}
+            </div>
+          )}
+          <dl className="fstats">
             <BigStat value={minutesLabel(w.minutes)} label="with AI" />
             <BigStat value={n0(w.prompts)} label={w.prompts === 1 ? "message" : "messages"} />
             <BigStat value={n0(w.conversations)} label={w.sources.some((s) => s.tool === "chatgpt" || s.tool === "claude-ai") ? "conversations" : "sessions"} />
             <BigStat value={n0(w.streak)} label={w.streak === 1 ? "day streak" : "days in a row"} />
           </dl>
-        </div>
-      </section>
-
-      <section aria-labelledby="time">
-        <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 id="time" className="text-xl font-semibold tracking-tight">
-            Where the time went
-          </h2>
-          <p className="text-sm text-muted-foreground">A message counts until your next one, up to 15 minutes.</p>
-        </div>
-        {top && (
-          <p className="mt-1 text-[15px]">
-            Your biggest one: <span className="font-semibold">{top.label}</span>, {minutesLabel(top.min)}.
-          </p>
-        )}
-        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {w.seg.map((s, i) => (
-            <div key={s.key} className={`rounded-2xl bg-linear-to-br p-5 text-white ${SEG_STYLE[s.key]} ${s.n === 0 ? "opacity-70" : ""} ${i === 0 && s.n > 0 ? "sm:col-span-2" : ""}`}>
-              <p className="text-sm font-medium text-white/85">{s.label}</p>
-              <p className={`mt-2 font-bold tracking-tight ${i === 0 && s.n > 0 ? "text-5xl" : "text-4xl"}`}>{minutesLabel(s.min)}</p>
-              <p className="mt-1 text-[15px] text-white/95">{s.n ? s.line : SEGMENT_COPY[s.key].zero}</p>
-              <p className="mt-3 text-xs text-white/80">{s.blurb}</p>
-              {s.n > 0 && <p className="mt-1 text-xs font-semibold text-white/90">{pct(s.share)} of your messages</p>}
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="grid gap-4 lg:grid-cols-2" aria-label="When you talk to AI">
-        <div className="rounded-2xl border border-border bg-card p-5">
-          <div className="flex items-baseline justify-between gap-2">
-            <h2 className="text-lg font-semibold tracking-tight">Your AI clock</h2>
-            <p className="text-sm text-muted-foreground">Busiest hour: {hourLabel(w.peakHour)}</p>
+          <div className="roast" role="status" aria-live="polite">
+            {roast && (
+              <p className="fine">
+                Written privately by {roast.model ?? "the private AI"} on 0G{roast.verified ? ", TEE verified" : ""}, paid from your 0G account. Only the numbers were sent.
+                {spent ? ` ${spent}` : ""}
+              </p>
+            )}
+            {!roast && zg.available && (
+              <>
+                <button type="button" onClick={askRoast} disabled={roastBusy || !zg.ready || zg.connecting} className={`fbtn ${zg.signedIn ? "fbtn-1" : "fbtn-2"}`}>
+                  <Sparkles className="size-[17px]" aria-hidden="true" />
+                  {roastBusy ? "Asking the private AI…" : zg.signedIn ? "Roast me (private AI)" : zg.connecting ? "Connecting to 0G" : "Sign in with 0G to roast me"}
+                </button>
+                <p className="fine">Sends only these numbers to a model in a hardware enclave on 0G, paid from your own 0G credits. Never your messages. Under $0.001.</p>
+                {roastError && <p className="ferr">{roastError}</p>}
+              </>
+            )}
+            {!roast && !zg.available && <p className="fine">Roast me runs on your laptop, at http://localhost:3000, with Sign in with 0G.</p>}
           </div>
-          <div className="mt-4 flex h-32 items-end gap-[3px]" role="img" aria-label={`Messages per hour. Busiest hour: ${hourLabel(w.peakHour)}.`}>
-            {w.hours.map((v, h) => (
-              <div
-                key={h}
-                title={`${hourLabel(h)}: ${n0(v)} ${v === 1 ? "message" : "messages"}`}
-                className={`flex-1 rounded-t-sm ${h === w.peakHour ? "bg-[#be185d]" : h < 5 ? "bg-[#6d3fc6]" : "bg-primary/70"}`}
-                style={{ height: `${v ? Math.max(4, (v / maxHour) * 100) : 0}%` }}
-              />
+        </div>
+        <figure className="fp">
+          <svg className="fp-svg" viewBox="-150 -150 300 300" role="img" aria-label="Your AI fingerprint: a pattern drawn from your numbers">
+            <g className="fp-rot">
+              {fp.c.map((d, i) => (
+                <path key={`c${i}`} className="fc" d={d} />
+              ))}
+              {fp.a.map((d, i) => (
+                <path key={`a${i}`} className="fa" d={d} />
+              ))}
+              {fp.b.map((d, i) => (
+                <path key={`b${i}`} className="fb" d={d} />
+              ))}
+            </g>
+          </svg>
+          <figcaption>Your AI fingerprint. Drawn from your numbers, so no two look the same.</figcaption>
+        </figure>
+      </section>
+
+      <div className="g12">
+        <section aria-labelledby="time" className="fpanel c7">
+          <div className="fsec-head">
+            <h2 id="time" className="eng fh2">
+              Where the time went
+            </h2>
+            <p className="text-sm text-[var(--fmute)]">A message counts until your next one, up to 15 minutes.</p>
+          </div>
+          {top && (
+            <p className="biggest">
+              Your biggest one: <strong>{top.label}</strong>, {minutesLabel(top.min)}.
+            </p>
+          )}
+          <ul className="segs">
+            {w.seg.map((s, i) => (
+              <li key={s.key} className={`sg ${s.n === 0 ? "is-zero" : ""}`}>
+                <div className="sg-top">
+                  <div className="sg-l">
+                    <span className="sg-name">{s.label}</span>
+                    <span className="sg-blurb">{s.blurb}</span>
+                  </div>
+                  <span className="eng sg-t num">{minutesLabel(s.min)}</span>
+                </div>
+                <div className="fbar" aria-hidden="true">
+                  <span className={i === 0 && s.n > 0 ? "is-top" : ""} style={{ width: `${w.seg[0]?.min ? Math.max(2, Math.round((s.min / w.seg[0].min) * 100)) : 0}%` }} />
+                </div>
+                <p className="sg-c">
+                  {s.n ? s.line : SEGMENT_COPY[s.key].zero}
+                  {s.n > 0 && `, ${pct(s.share)} of your messages`}
+                </p>
+              </li>
             ))}
+          </ul>
+        </section>
+
+        <section className="fpanel c5" aria-labelledby="clock-h">
+          <div className="fsec-head">
+            <h2 id="clock-h" className="eng fh2">
+              Your AI clock
+            </h2>
+            <p className="text-sm text-[var(--fmute)]">Busiest hour: {hourLabel(w.peakHour)}</p>
           </div>
-          <div className="mt-1.5 flex justify-between text-xs text-muted-foreground">
-            <span>midnight</span>
-            <span>6 a.m.</span>
-            <span>noon</span>
-            <span>6 p.m.</span>
-            <span>11 p.m.</span>
+          <div className="clock-box">
+            <div className="clock-wrap">
+              <svg className="clock" viewBox="-190 -170 380 340" role="img" aria-label={`Messages per hour. Busiest hour: ${hourLabel(w.peakHour)}.`}>
+                <circle className="clk-ring" cx="0" cy="0" r="56" />
+                {arcs.map((a, h) => (
+                  <path key={h} className={a.cls} d={a.d}>
+                    <title>{`${hourLabel(h)}: ${n0(w.hours[h])} ${w.hours[h] === 1 ? "message" : "messages"}`}</title>
+                  </path>
+                ))}
+                <text className="clk-l" x="0" y="-150" textAnchor="middle">
+                  midnight
+                </text>
+                <text className="clk-l" x="166" y="4" textAnchor="middle">
+                  6 a.m.
+                </text>
+                <text className="clk-l" x="0" y="160" textAnchor="middle">
+                  noon
+                </text>
+                <text className="clk-l" x="-166" y="4" textAnchor="middle">
+                  6 p.m.
+                </text>
+              </svg>
+              <div className="clk-center" aria-hidden="true">
+                <b>{hourLabel(w.peakHour)}</b>
+                <span>busiest hour</span>
+              </div>
+            </div>
+            <div className="flegend" aria-hidden="true">
+              <span>
+                <i style={{ background: "#F5C6A5" }} />
+                Busiest hour
+              </span>
+              <span>
+                <i style={{ background: "#B7A6F5" }} />
+                After midnight
+              </span>
+              <span>
+                <i style={{ background: "#5E78C2" }} />
+                Other hours
+              </span>
+            </div>
           </div>
-          <p className="mt-4 flex items-start gap-2 text-[15px]">
-            <Moon className="mt-0.5 size-4 shrink-0 text-[#6d3fc6]" aria-hidden="true" />
+          <p className="night">
+            <Moon className="mt-[3px] size-4 shrink-0 text-[#B7A6F5]" aria-hidden="true" />
             <span>
               {w.nightMinutes > 0 ? (
                 <>
@@ -312,74 +336,83 @@ function WrappedBody({ w }: { w: Wrapped }) {
               )}
             </span>
           </p>
-        </div>
+        </section>
 
-        <div className="rounded-2xl border border-border bg-card p-5">
-          <div className="flex items-baseline justify-between gap-2">
-            <h2 className="text-lg font-semibold tracking-tight">Your AI week</h2>
-            <p className="text-sm text-muted-foreground">Busiest day: {DAY_NAMES[w.peakDay]}</p>
+        <section className="fpanel c7" aria-labelledby="numbers">
+          <h2 id="numbers" className="eng fh2">
+            By the numbers
+          </h2>
+          <ul className="facts-l">
+            {w.facts.map((f) => (
+              <li key={f}>{f}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="fpanel c5" aria-labelledby="week-h">
+          <div className="fsec-head">
+            <h2 id="week-h" className="eng fh2">
+              Your AI week
+            </h2>
+            <p className="text-sm text-[var(--fmute)]">Busiest day: {DAY_NAMES[w.peakDay]}</p>
           </div>
-          <div className="mt-4 space-y-2">
+          <div className="wk-list" role="img" aria-label={`Messages per day of the week. Busiest day: ${DAY_NAMES[w.peakDay]}.`}>
             {WEEK_ORDER.map((d) => (
-              <div key={d} className="flex items-center gap-3 text-sm">
-                <span className="w-9 shrink-0 text-muted-foreground">{DAY_NAMES[d].slice(0, 3)}</span>
-                <div className="h-3 flex-1 rounded-full bg-muted">
-                  <div className={`h-3 rounded-full ${d === w.peakDay ? "bg-[#be185d]" : "bg-primary/70"}`} style={{ width: `${(w.weekdays[d] / maxDay) * 100}%` }} />
-                </div>
-                <span className="w-10 shrink-0 text-right tabular-nums text-muted-foreground">{n0(w.weekdays[d])}</span>
+              <div key={d} className="wk">
+                <span className="text-[var(--text-2)]">{DAY_NAMES[d].slice(0, 3)}</span>
+                <span className="fbar">
+                  <span className={d === w.peakDay ? "is-top" : ""} style={{ width: `${(w.weekdays[d] / maxDay) * 100}%` }} />
+                </span>
+                <span className="wk-n">{n0(w.weekdays[d])}</span>
               </div>
             ))}
           </div>
-          <p className="mt-4 text-[15px]">
+          <p className="wk-line">
             {n0(w.activeDays)} {w.activeDays === 1 ? "day" : "days"} with AI, longest streak {n0(w.streak)} {w.streak === 1 ? "day" : "days"}.
           </p>
-        </div>
-      </section>
-
-      <section aria-labelledby="numbers">
-        <h2 id="numbers" className="text-xl font-semibold tracking-tight">
-          By the numbers
-        </h2>
-        <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {w.facts.map((f) => (
-            <li key={f} className="rounded-xl border border-border bg-card p-4 text-[15px] leading-snug">
-              {f}
-            </li>
-          ))}
-        </ul>
-      </section>
+        </section>
+      </div>
 
       {w.topWords.length > 0 && (
-        <section aria-labelledby="words">
-          <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <h2 id="words" className="text-xl font-semibold tracking-tight">
+        <section aria-labelledby="words" className="py-2">
+          <div className="fsec-head">
+            <h2 id="words" className="eng fh2">
               Your words
             </h2>
-            <p className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
-              <Lock className="size-3.5" aria-hidden="true" />
+            <p className="lock">
+              <Lock className="size-[15px]" aria-hidden="true" />
               Only on this device. Never on the card.
             </p>
           </div>
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="words">
             {w.topWords.map(([word, n], i) => (
-              <span key={word} className={`rounded-full border border-border bg-card px-3 py-1.5 ${i < 3 ? "text-lg font-semibold" : "text-sm"}`}>
-                {word} <span className="tabular-nums text-muted-foreground">{n0(n)}</span>
+              <span key={word} className={`word ${i < 3 ? "word-big" : ""}`}>
+                {word} <span>{n0(n)}</span>
               </span>
             ))}
           </div>
         </section>
       )}
 
-      <section aria-labelledby="share" className="grid gap-6 rounded-2xl border border-border bg-card p-5 sm:p-6 lg:grid-cols-[1fr_340px]">
-        <div className="min-w-0">
-          <h2 id="share" className="text-xl font-semibold tracking-tight">
+      <div className="g12">
+        <div className="fpanel c7 card-frame">
+          {png ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={png} alt={`AI Wrapped card: ${w.persona.name}, ${minutesLabel(w.minutes)} with AI`} className="card-img" />
+          ) : (
+            <div className="card-skel" />
+          )}
+        </div>
+        <section aria-labelledby="share" className="fpanel c5">
+          <h2 id="share" className="eng fh2">
             Share it
           </h2>
-          <p className="mt-1 text-[15px] text-muted-foreground">The card shows your persona and the time numbers. No messages, no words, no spend.</p>
-          <div className="mt-4 flex flex-wrap gap-2">
+          <p className="mt-2 max-w-[60ch] text-[15px] text-[var(--text-2)]">The card shows your persona and the time numbers. No messages, no words, no spend.</p>
+          <div className="share-acts">
             {canShare && png && (
-              <Button
-                size="lg"
+              <button
+                type="button"
+                className="fbtn fbtn-1"
                 onClick={async () => {
                   try {
                     const file = new File([await (await fetch(png)).blob()], `ai-wrapped-${w.persona.id}.png`, { type: "image/png" });
@@ -389,13 +422,24 @@ function WrappedBody({ w }: { w: Wrapped }) {
                   }
                 }}
               >
-                <Share2 className="size-4" aria-hidden="true" />
+                <Share2 className="size-[17px]" aria-hidden="true" />
                 Share
-              </Button>
+              </button>
             )}
-            <Button
-              size="lg"
-              variant={canShare ? "outline" : "default"}
+            {png ? (
+              <a href={png} download={`ai-wrapped-${w.persona.id}.png`} className={`fbtn ${canShare ? "fbtn-2" : "fbtn-1"}`}>
+                <Download className="size-[17px]" aria-hidden="true" />
+                Download the card
+              </a>
+            ) : (
+              <button type="button" className="fbtn fbtn-2" disabled>
+                <Download className="size-[17px]" aria-hidden="true" />
+                Drawing the card…
+              </button>
+            )}
+            <button
+              type="button"
+              className="fbtn fbtn-2"
               disabled={!png}
               onClick={() => {
                 // X cannot take an image through a link: save the card, then open a post with the text to attach it to.
@@ -407,79 +451,128 @@ function WrappedBody({ w }: { w: Wrapped }) {
               }}
             >
               Post on X
-            </Button>
-            {png ? (
-              <a href={png} download={`ai-wrapped-${w.persona.id}.png`} className={buttonVariants({ size: "lg", variant: "outline" })}>
-                <Download className="size-4" aria-hidden="true" />
-                Download the card
-              </a>
-            ) : (
-              <Button size="lg" variant="outline" disabled>
-                <Download className="size-4" aria-hidden="true" />
-                Drawing the card…
-              </Button>
-            )}
-            <Button
-              size="lg"
-              variant="outline"
+            </button>
+            <button
+              type="button"
+              className="fbtn fbtn-2"
               onClick={async () => {
                 await navigator.clipboard.writeText(text);
                 setCopied(true);
                 setTimeout(() => setCopied(false), 1500);
               }}
             >
-              {copied ? <Check className="size-4" aria-hidden="true" /> : <Copy className="size-4" aria-hidden="true" />}
+              {copied ? <Check className="size-[17px]" aria-hidden="true" /> : <Copy className="size-[17px]" aria-hidden="true" />}
               {copied ? "Copied" : "Copy the text"}
-            </Button>
+            </button>
           </div>
-          {cardError && <p className="mt-3 text-sm text-destructive">{cardError}</p>}
-          <pre className="mt-4 whitespace-pre-wrap rounded-lg bg-muted p-3 font-mono text-[13px] leading-relaxed">{text}</pre>
-        </div>
-        <div>
-          {png ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={png} alt={`AI Wrapped card: ${w.persona.name}, ${minutesLabel(w.minutes)} with AI`} className="w-full rounded-xl shadow-md" />
-          ) : (
-            <div className="aspect-[4/5] w-full animate-pulse rounded-xl bg-muted" />
-          )}
-        </div>
-      </section>
-    </div>
+          {cardError && <p className="ferr mt-3">{cardError}</p>}
+          <div className="copybox">
+            <p className="copybox-l">The text it copies</p>
+            <pre className="copybox-t">{text}</pre>
+          </div>
+        </section>
+      </div>
+    </>
   );
 }
 
 function BigStat({ value, label }: { value: string; label: string }) {
   return (
-    <div className="flex flex-col-reverse rounded-2xl bg-white/12 p-4">
-      <dt className="mt-1 text-sm text-white/80">{label}</dt>
-      <dd className="text-3xl font-bold tracking-tight sm:text-4xl">{value}</dd>
+    <div>
+      <dt>{label}</dt>
+      <dd className="eng">{value}</dd>
     </div>
   );
 }
 
 function ImportPanel({ busy, error, imported, onFile }: { busy: boolean; error?: string; imported?: ImportedExport; onFile: (f: File | undefined) => void }) {
   return (
-    <section id="import" aria-labelledby="import-title" className="scroll-mt-20 rounded-2xl border border-dashed border-border bg-card p-5 sm:p-6">
-      <h2 id="import-title" className="text-xl font-semibold tracking-tight">
-        Use ChatGPT or Claude.ai
-      </h2>
-      <p className="mt-1 max-w-2xl text-[15px] text-muted-foreground">
-        Not a coder? Export your chats and drop the file here. ChatGPT: Settings, Data controls, Export data. Claude.ai: Settings, Privacy, Export data. Pick the zip you get by email, or the
-        conversations.json inside it.
-      </p>
-      <p className="mt-2 inline-flex items-center gap-1.5 text-sm text-muted-foreground">
-        <Lock className="size-3.5" aria-hidden="true" />
-        Read in this browser tab only. Nothing is uploaded.
-      </p>
-      <div className="mt-4">
-        <label className={`${buttonVariants({ variant: "outline", size: "lg" })} cursor-pointer`}>
-          <Upload className="size-4" aria-hidden="true" />
+    <div className="g12 scroll-mt-20" id="import">
+      <section aria-labelledby="import-title" className="fpanel c7">
+        <h2 id="import-title" className="eng fh2">
+          Use ChatGPT or Claude.ai
+        </h2>
+        <p className="mt-2 max-w-[60ch] text-[15px] text-[var(--text-2)]">
+          Not a coder? Export your chats and bring the file here. ChatGPT: Settings, Data controls, Export data. Claude.ai: Settings, Privacy, Export data. Pick the zip you get by email, or the
+          conversations.json inside it.
+        </p>
+        <p className="lock mt-4">
+          <Lock className="size-[15px]" aria-hidden="true" />
+          Read in this browser tab only. Nothing is uploaded.
+        </p>
+        {imported && <p className="mt-3 text-sm text-[var(--fok)]">Read {n0(imported.conversations.length)} conversations from {SOURCE_NAMES[imported.tool]}.</p>}
+        {error && <p className="ferr mt-3">{error}</p>}
+      </section>
+      <div className="fdrop c5">
+        <Upload className="size-[22px] text-[var(--text-2)]" aria-hidden="true" />
+        <p className="text-base font-[560]">{imported ? "Bring another export" : "Your export, zip or json"}</p>
+        <label className="fbtn fbtn-2 fbtn-sm cursor-pointer">
           {busy ? "Reading…" : imported ? "Pick another export" : "Pick the export file"}
           <input type="file" accept=".json,.zip,application/json,application/zip" className="sr-only" disabled={busy} onChange={(e) => onFile(e.target.files?.[0])} />
         </label>
       </div>
-      {imported && <p className="mt-3 text-sm">Read {n0(imported.conversations.length)} conversations from {SOURCE_NAMES[imported.tool]}.</p>}
-      {error && <p className="mt-3 text-sm text-destructive">{error}</p>}
-    </section>
+    </div>
   );
+}
+
+/* The fingerprint: hypotrochoid rosettes whose lobes, turns and depths come from the person's numbers. Decoration only. */
+function gcd(a: number, b: number) {
+  while (b) [a, b] = [b, a % b];
+  return a;
+}
+function rosette(L: number, q: number, A: number, d: number, phi: number, pts: number) {
+  const k = (L - q) / q;
+  const T = Math.PI * 2 * q;
+  const c = Math.cos(phi);
+  const s = Math.sin(phi);
+  const out: string[] = [];
+  for (let i = 0; i <= pts; i++) {
+    const t = (T * i) / pts;
+    const x = A * Math.cos(t) + d * Math.cos(k * t);
+    const y = A * Math.sin(t) - d * Math.sin(k * t);
+    out.push(`${i ? "L" : "M"}${(x * c - y * s).toFixed(1)} ${(x * s + y * c).toFixed(1)}`);
+  }
+  return out.join(" ");
+}
+function ring(R0: number, amp: number, n: number, phase: number, pts: number) {
+  const out: string[] = [];
+  for (let i = 0; i <= pts; i++) {
+    const a = (Math.PI * 2 * i) / pts;
+    const r = R0 + amp * Math.sin(n * a + phase);
+    out.push(`${i ? "L" : "M"}${(r * Math.cos(a)).toFixed(1)} ${(r * Math.sin(a)).toFixed(1)}`);
+  }
+  return out.join(" ");
+}
+function fingerprint(w: Wrapped) {
+  const mins = [...w.seg.map((x) => x.min), 0, 0, 0, 0, 0, 0, 0].slice(0, 7);
+  const max = Math.max(1, ...mins);
+  const sh = mins.map((v) => v / max);
+  const L = 5 + (w.peakHour % 7);
+  let q = 2 + (w.streak % 3);
+  while (gcd(L, q) !== 1) q++;
+  const a: string[] = [];
+  const b: string[] = [];
+  const c: string[] = [];
+  for (let i = 0; i < 6; i++) a.push(rosette(L, q, 50, 36 + 50 * sh[i], (i * Math.PI) / (L * 3), 360 * q));
+  const L2 = 9 + (w.peakHour % 5);
+  let q2 = 5;
+  while (gcd(L2, q2) !== 1) q2++;
+  [0, 2, 4, 6].forEach((j, n) => b.push(rosette(L2, q2, 22, 10 + 22 * sh[j], (n * Math.PI) / (L2 * 2), 300 * q2)));
+  const nRing = 36 + (w.prompts % 12);
+  for (let i = 0; i < 3; i++) c.push(ring(140, 4, nRing, (i * Math.PI * 2) / 3, 720));
+  return { a, b, c };
+}
+
+/** The 24 hours as a ring of bars: midnight at the top, the busiest hour in peach, after midnight in lavender. */
+function clockArcs(w: Wrapped, max: number) {
+  const ri = 58;
+  const span = 76;
+  const pt = (r: number, a: number) => `${(r * Math.cos(a)).toFixed(1)} ${(r * Math.sin(a)).toFixed(1)}`;
+  return w.hours.map((v, h) => {
+    const a0 = (h / 24) * Math.PI * 2 - Math.PI / 2 + 0.035;
+    const a1 = ((h + 1) / 24) * Math.PI * 2 - Math.PI / 2 - 0.035;
+    const ro = ri + (v ? Math.max(3, (span * v) / max) : 1);
+    const d = `M${pt(ri, a0)} L${pt(ro, a0)} A${ro.toFixed(1)} ${ro.toFixed(1)} 0 0 1 ${pt(ro, a1)} L${pt(ri, a1)} A${ri} ${ri} 0 0 0 ${pt(ri, a0)} Z`;
+    return { d, cls: h === w.peakHour ? "arc arc-peak" : h < 5 ? "arc arc-night" : "arc" };
+  });
 }
