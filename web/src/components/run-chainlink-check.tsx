@@ -7,6 +7,7 @@
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { sepoliaTxUrl } from "@/lib/proof-urls";
 
@@ -54,14 +55,32 @@ export function RunChainlinkCheck() {
     }
   }
 
+  const at = startedAt === null ? -1 : STEPS.indexOf(step);
   return (
-    <div className="flex flex-wrap items-center gap-3">
-      <Button onClick={run} disabled={startedAt !== null}>
-        {startedAt !== null ? "Running on Chainlink CRE" : "Run the check now"}
-      </Button>
-      <span className="text-sm text-muted-foreground" aria-live="polite">
-        {startedAt !== null ? `${step}… ${seconds} s` : "Runs the workflow with Chainlink's CLI on this laptop and posts a new score. Takes about 20 seconds."}
-      </span>
+    <div aria-live="polite">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
+        <Button size="lg" onClick={run} disabled={startedAt !== null}>
+          {startedAt !== null ? "Running on Chainlink CRE" : "Run the check now"}
+        </Button>
+        {startedAt !== null ? (
+          <span className="num ml-auto text-sm text-[var(--mute)]">{seconds} s</span>
+        ) : (
+          <p className="max-w-[44ch] text-sm text-[var(--mute)]">Runs the workflow with Chainlink&apos;s CLI on this laptop and posts a new score. Takes about 20 seconds.</p>
+        )}
+      </div>
+      {startedAt !== null && (
+        <ol className="cl-prog">
+          {STEPS.map((label, i) => (
+            <li key={label} className={i < at ? "done" : i === at ? "now" : ""}>
+              <span className="pi" aria-hidden="true">
+                <Check className="size-[11px]" strokeWidth={3} />
+              </span>
+              {label}
+              {i === at && <span className="sr-only">, running</span>}
+            </li>
+          ))}
+        </ol>
+      )}
     </div>
   );
 }

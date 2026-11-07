@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
 import { Collapsible } from "@/components/collapsible";
-import { PersonWeek } from "@/components/person-week";
+import { PeopleHead, PersonWeek } from "@/components/person-week";
 import { CategoryBar } from "@/components/category-badge";
 import { currentSource, onLaptop, shareTarget } from "@/lib/server/data";
 import { companyKnown, loadOrg, personName } from "@/lib/server/org";
@@ -42,85 +43,108 @@ export default async function Team({ searchParams }: { searchParams: Promise<{ w
   const q = (w: string) => `/company/team?team=${encodeURIComponent(teamId)}&week=${w}`;
 
   return (
-    <div className="space-y-8">
-      <div>
-        <Link href={`/company${week ? `?week=${week}` : ""}`} className="text-sm text-muted-foreground hover:text-foreground">
-          ‹ {org.name.replace(/ \(demo company\)$/, "")}
-        </Link>
-        <h1 className="mt-1 text-balance text-4xl font-semibold tracking-tight">What did {cfg.name} get done?</h1>
-        <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
-          {org.teams.length > 1 &&
-            org.teams.map((t) => (
-              <Link
-                key={t.id}
-                href={`/company/team?team=${encodeURIComponent(t.id)}${week ? `&week=${week}` : ""}`}
-                className={`rounded-lg border px-3 py-1 ${t.id === teamId ? "border-primary bg-primary text-primary-foreground" : "border-border hover:bg-card"}`}
-              >
-                {t.name}
-              </Link>
-            ))}
-          {weeks.length > 1 && <span className="mx-2 h-5 w-px bg-border" aria-hidden="true" />}
-          {weeks.length > 1 &&
-            weeks.map((w) => (
-              <Link key={w} href={q(w)} className={`rounded-full border px-3 py-1 ${w === week ? "border-primary bg-accent text-accent-foreground" : "border-border hover:bg-card"}`}>
-                Week {w.split("-W")[1]}
-              </Link>
-            ))}
+    <div className="co">
+      <div className="co-head">
+        <div className="co-head-l">
+          <Link href={`/company${week ? `?week=${week}` : ""}`} className="mw-back">
+            <ChevronLeft className="size-4" aria-hidden="true" />
+            {org.name.replace(/ \(demo company\)$/, "")}
+          </Link>
+          <h1 className="disp h-page">What did {cfg.name} get done?</h1>
+          {week && <p className="page-sub">Week {week.split("-W")[1]}, each week signed by the person it describes.</p>}
+        </div>
+        <div className="flex flex-col items-start gap-2 sm:items-end">
+          {org.teams.length > 1 && (
+            <nav className="seg" aria-label="Team">
+              {org.teams.map((t) => (
+                <Link key={t.id} href={`/company/team?team=${encodeURIComponent(t.id)}${week ? `&week=${week}` : ""}`} className="seg-b" aria-current={t.id === teamId ? "page" : undefined}>
+                  {t.name}
+                </Link>
+              ))}
+            </nav>
+          )}
+          {weeks.length > 1 && (
+            <nav className="seg" aria-label="Week">
+              {weeks.map((w) => (
+                <Link key={w} href={q(w)} className="seg-b" aria-current={w === week ? "page" : undefined}>
+                  Week {w.split("-W")[1]}
+                </Link>
+              ))}
+            </nav>
+          )}
         </div>
       </div>
 
       <MemberNote org={org} />
 
       {!week ? (
-        <div className="max-w-2xl rounded-lg border border-border bg-card p-6">
-          <h2 className="text-lg font-semibold">Nothing shared yet</h2>
-          <p className="mt-2 text-muted-foreground">When people on this team sign and send their week, their lists show up here with the pull requests behind them.</p>
+        <div className="card card-pad mt-9 max-w-2xl">
+          <h2 className="h-small">Nothing shared yet</h2>
+          <p className="mt-2 text-[var(--ink-2)]">When people on this team sign and send their week, their lists show up here with the pull requests behind them.</p>
         </div>
       ) : (
         <>
-          <section aria-labelledby="totals" className="max-w-4xl">
-            <h2 id="totals" className="text-balance text-2xl font-semibold tracking-tight">
+          <section aria-labelledby="totals" className="co-lead">
+            <h2 id="totals" className="big-line num">
               {usd(total.spend)} of AI got {plural(total.done, "thing")} done.
             </h2>
-            <p className="mt-2 text-[17px]">{countsLine(total.categoryCounts)}</p>
-            <p className="mt-1 text-muted-foreground">
+            <p className="co-counts">{countsLine(total.categoryCounts)}</p>
+            <p className="co-meta">
               {total.people} {total.people === 1 ? "person" : "people"}, {plural(total.merged, "shipped change")}.{" "}
               {total.waste > 0 ? `${usd(total.waste)} (${pct(total.spend ? (total.waste / total.spend) * 100 : 0)}) went in circles.` : ""}
             </p>
-            <div className="mt-4">
+            <div className="mt-6">
               <CategoryBar spend={total.categorySpend} total={total.spend} />
             </div>
           </section>
 
-          {check && <ChainlinkCheck check={check} team={cfg.name} company={org.name.replace(/ \(demo company\)$/, "")} demo={source === "demo"} canRun={canRun} />}
+          {check ? (
+            <div className="co-sec">
+              <ChainlinkCheck check={check} team={cfg.name} company={org.name.replace(/ \(demo company\)$/, "")} demo={source === "demo"} canRun={canRun} />
+            </div>
+          ) : null}
 
-          {eff && <EfficiencyPanel e={eff} title="How the team worked this week" note="Typical times are the median of each person's median. People are never ranked." />}
+          {eff && (
+            <div className="co-sec">
+              <EfficiencyPanel e={eff} title="How the team worked this week" note="Typical times are the median of each person's median. People are never ranked." />
+            </div>
+          )}
 
-          <section aria-labelledby="people" className="space-y-3">
-            <h2 id="people" className="text-xl font-semibold tracking-tight">
-              Everyone&apos;s week
-            </h2>
-            {inWeek.map((r, i) => (
-              <PersonWeek key={r.digest} r={r} name={personName(org, r.message.owner, r.message.author)} verified={r.verified} arkivKey={r.arkivKey} swarm={r.swarm} defaultOpen={i === 0} />
-            ))}
-            {notSharing.map((m) => (
-              <div key={m.address} className="rounded-lg border border-dashed border-border px-4 py-3 text-sm text-muted-foreground">
-                <span className="font-medium text-foreground">{m.name}</span> has not sent this week&apos;s receipt yet.
-              </div>
-            ))}
+          <section aria-labelledby="people" className="co-sec">
+            <div className="sec-head">
+              <h2 id="people" className="disp h-card">
+                Everyone&apos;s week
+              </h2>
+              <p className="text-sm text-[var(--mute)]">Ordered by things done. People are never ranked.</p>
+            </div>
+            <div className="plist">
+              <PeopleHead />
+              {inWeek.map((r, i) => (
+                <PersonWeek key={r.digest} r={r} name={personName(org, r.message.owner, r.message.author)} verified={r.verified} arkivKey={r.arkivKey} swarm={r.swarm} defaultOpen={i === 0} />
+              ))}
+              {notSharing.map((m) => (
+                <div key={m.address} className="quiet-row">
+                  <b>{m.name}</b> has not sent this week&apos;s receipt yet.
+                </div>
+              ))}
+            </div>
           </section>
         </>
       )}
 
-      <Collapsible title="Where this data comes from" hint="Signed receipts on Arkiv">
-        <p className="text-sm text-muted-foreground">
-          Shared receipts live on Arkiv (testnet Rabdi) as read-only entities of schema <code>{ARKIV_SCHEMA_NAME}</code>, each owned by the person who
-          signed it. Anyone can read them, so this page does not depend on our server, and every receipt is checked against its signature before it
-          counts. {arkivForTeam} receipt{arkivForTeam === 1 ? "" : "s"} for this team found on Arkiv right now
-          {demoForTeam ? `, plus ${demoForTeam} signed demo receipts from the repo` : ""}.{org.arkivError && ` Arkiv could not be reached: ${org.arkivError.slice(0, 120)}.`}
-        </p>
-        <pre className="mt-3 overflow-x-auto rounded-md bg-background p-3 text-xs">{exampleQuery(cfg.id)}</pre>
-      </Collapsible>
+      <div className="co-sec">
+        <Collapsible title="Where this data comes from" hint="Signed receipts on Arkiv">
+          <p className="text-[var(--ink-2)]">
+            Shared receipts live on Arkiv (testnet Rabdi) as read-only entities of schema <code>{ARKIV_SCHEMA_NAME}</code>, each owned by the person who
+            signed it. Anyone can read them, so this page does not depend on our server, and every receipt is checked against its signature before it
+            counts. {arkivForTeam} receipt{arkivForTeam === 1 ? "" : "s"} for this team found on Arkiv right now
+            {demoForTeam ? `, plus ${demoForTeam} signed demo receipts from the repo` : ""}.{org.arkivError && ` Arkiv could not be reached: ${org.arkivError.slice(0, 120)}.`}
+          </p>
+          <div className="envbox mt-3">
+            <pre>{exampleQuery(cfg.id)}</pre>
+          </div>
+        </Collapsible>
+      </div>
     </div>
   );
 }

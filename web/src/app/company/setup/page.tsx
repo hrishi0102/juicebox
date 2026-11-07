@@ -8,6 +8,7 @@ import { companyKnown } from "@/lib/server/org";
 import { githubOAuthReady } from "@/lib/server/session";
 import { shortAddr } from "@/lib/format";
 import { arkivAddressUrl } from "@/lib/proof-urls";
+import { ProofAnchor } from "@/components/proof-links";
 
 export const metadata = { title: "Setup · Company · Receipts" };
 
@@ -38,16 +39,33 @@ export default async function CompanySetup() {
   const host = (await headers()).get("host") ?? "localhost:3000";
   const origin = `${host.startsWith("localhost") || host.startsWith("127.") ? "http" : "https"}://${host}`;
 
+  // The same six checks as the rows below, for the progress line.
+  const done = [known, githubOAuthReady(), !!writer && (balance ?? 1) > 0, holdsKey && !!pub, swarmReady(), false];
+  const count = done.filter(Boolean).length;
+
   return (
-    <div className="max-w-3xl space-y-8">
+    <div className="co max-w-[920px]">
       <div>
-        <h1 className="text-balance text-4xl font-semibold tracking-tight">Set up your company</h1>
-        <p className="mt-2 text-[15px] text-muted-foreground">
+        <h1 className="disp h-page">Set up your company</h1>
+        <p className="page-sub">
           Once, by whoever runs Receipts for the company. Everything here is set in <code>web/.env.local</code>; this page only checks it.
         </p>
       </div>
+      <div className="mt-7 flex flex-wrap items-center gap-3.5 text-[15px]">
+        <span className="progress-dots" aria-hidden="true">
+          {done.map((d, i) => (
+            <span key={i} className={d ? "on" : ""} />
+          ))}
+        </span>
+        <span>
+          <strong>
+            {count} of {done.length} done.
+          </strong>{" "}
+          {count === done.length - 1 ? "The last step is yours: invite your people." : "Each step below says what is missing."}
+        </span>
+      </div>
 
-      <ol className="space-y-4">
+      <ol className="su-list mt-5">
         <SetupRow n={1} title="Your company on GitHub" done={known}>
           {demo ? (
             <p>
@@ -65,7 +83,7 @@ export default async function CompanySetup() {
         </SetupRow>
 
         <SetupRow n={2} title="Sign in with GitHub, for leads" done={githubOAuthReady()}>
-          <p className="text-muted-foreground">
+          <p className="text-[var(--mute)]">
             Leads and managers sign in with GitHub to open the lists. It only reads who they are and which orgs and teams they are in.
           </p>
           {githubOAuthReady() ? (
@@ -80,7 +98,7 @@ export default async function CompanySetup() {
         </SetupRow>
 
         <SetupRow n={3} title="A wallet that pays for the records" done={!!writer && (balance ?? 1) > 0}>
-          <p className="text-muted-foreground">
+          <p className="text-[var(--mute)]">
             Each receipt is one Arkiv record. This wallet pays the small fee, then hands the record to the person who signed it, so the company never
             owns or edits it.
           </p>
@@ -91,15 +109,15 @@ export default async function CompanySetup() {
               {balance === 0 && (
                 <>
                   . Empty: claim test tGLM at{" "}
-                  <a href="https://hub.arkiv.network/faucet" className="text-primary hover:underline" target="_blank" rel="noreferrer">
-                    the Arkiv faucet
-                  </a>
+                  <ProofAnchor href="https://hub.arkiv.network/faucet">the Arkiv faucet</ProofAnchor>
                 </>
               )}
-              .{" "}
-              <a href={arkivAddressUrl(writer)} className="text-primary hover:underline" target="_blank" rel="noreferrer">
-                Every record it wrote, on the Arkiv explorer
-              </a>
+              .
+            </p>
+          ) : null}
+          {writer ? (
+            <p className="proof-go mt-0">
+              <ProofAnchor href={arkivAddressUrl(writer)}>Every record it wrote, on the Arkiv explorer</ProofAnchor>
             </p>
           ) : (
             <p>
@@ -109,7 +127,7 @@ export default async function CompanySetup() {
         </SetupRow>
 
         <SetupRow n={4} title="The company key, which opens the lists" done={holdsKey && !!pub}>
-          <p className="text-muted-foreground">
+          <p className="text-[var(--mute)]">
             Employees encrypt their list to the company&apos;s public key on their laptop. Only the private key opens it, so only this copy (and members
             signed in to it) can read the lists.
           </p>
@@ -121,7 +139,7 @@ export default async function CompanySetup() {
             <p>Not set. It comes from <code>COMPANY_PRIVATE_KEY</code>, or from the wallet key above.</p>
           )}
           {holdsKey && !ownKey && (
-            <p className="rounded-lg border border-amber-300/60 bg-amber-50 p-3 text-sm text-amber-950 dark:border-amber-500/30 dark:bg-amber-950/40 dark:text-amber-100">
+            <p className="warnbox">
               Right now the company key is the same as the wallet key. That is fine for the demo. Before you give employees a wallet for the fees, set a
               separate <code>COMPANY_PRIVATE_KEY</code> here, and give them only <code>COMPANY_PUBLIC_KEY</code>.
             </p>
@@ -129,7 +147,7 @@ export default async function CompanySetup() {
         </SetupRow>
 
         <SetupRow n={5} title="Storage for the lists (Swarm)" done={swarmReady()}>
-          <p className="text-muted-foreground">The encrypted lists are stored on Swarm. Without it, a list would be public on Arkiv.</p>
+          <p className="text-[var(--mute)]">The encrypted lists are stored on Swarm. Without it, a list would be public on Arkiv.</p>
           {swarmReady() ? <p>Uploads go to <code>{sw.api}</code>.</p> : <p>Not set. Add the <code>SWARM_*</code> lines from <code>web/.env.example</code>.</p>}
         </SetupRow>
 
@@ -140,12 +158,14 @@ export default async function CompanySetup() {
             the private AI themselves, from their own 0G credits; the company hands out no AI key.
           </p>
           <p>Their <code>web/.env.local</code> needs only:</p>
-          <pre className="overflow-x-auto rounded-md bg-background p-3 text-xs">{`ARKIV_PRIVATE_KEY=<a wallet with a little tGLM, it only pays the fees>
+          <div className="envbox">
+            <pre>{`ARKIV_PRIVATE_KEY=<a wallet with a little tGLM, it only pays the fees>
 COMPANY_PUBLIC_KEY=${pub ?? "<the public key above>"}
 SWARM_API_URL=${sw.api}
 SWARM_GATEWAY_URL=${sw.gateway}
 SWARM_POSTAGE_BATCH_ID=${sw.batch ?? "<your batch id>"}`}</pre>
-          <p className="text-sm text-muted-foreground">Never give anyone the company&apos;s private key: it opens everyone&apos;s lists.</p>
+          </div>
+          <p className="text-sm text-[var(--mute)]">Never give anyone the company&apos;s private key: it opens everyone&apos;s lists.</p>
         </SetupRow>
       </ol>
     </div>

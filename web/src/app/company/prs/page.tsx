@@ -20,23 +20,26 @@ export default async function CompanyPrs({ searchParams }: { searchParams: Promi
   const cost = prs.reduce((a, p) => a + p.costCents, 0) / 100;
 
   return (
-    <div className="space-y-8">
-      <div className="space-y-4">
-        <div>
-          <h1 className="text-balance text-4xl font-semibold tracking-tight">Every pull request</h1>
-          <p className="mt-2 text-[15px] text-muted-foreground">
+    <div className="co">
+      <div className="co-head">
+        <div className="co-head-l">
+          <h1 className="disp h-page">Every pull request</h1>
+          <p className="page-sub">
             {prs.length ? `${plural(prs.length, "PR")} this week, ${usd(cost)} of AI behind them, most expensive first.` : "The pull requests behind everyone's signed week."}
           </p>
         </div>
         <WeekPills weeks={weeks} week={week} href={(w) => `/company/prs?week=${w}`} />
-        <MemberNote org={org} />
       </div>
+      <MemberNote org={org} />
       {inWeek.length === 0 ? (
         <NothingShared org={org} />
       ) : prs.length === 0 ? (
-        <p className="text-muted-foreground">No pull requests in the receipts that could be opened this week.</p>
+        <div className="sealed mt-9 max-w-[760px] p-7">
+          <p className="text-[var(--ink-2)]">No pull requests in the receipts that could be opened this week.</p>
+        </div>
       ) : (
-        <div className="rounded-lg border border-border bg-card px-4 py-2">
+        <div className="plist mt-9">
+          <p className="pr-cap">Each pull request opens on github.com. The AI cost is what the sessions behind it cost.</p>
           <PrTable evidence={prs} showPerson />
         </div>
       )}
