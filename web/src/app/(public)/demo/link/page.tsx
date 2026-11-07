@@ -17,15 +17,17 @@ export default async function DemoLink() {
   }
   if (key) redirect(`/r/${key}`);
   return (
-    <div className="max-w-2xl space-y-3">
-      <h1 className="text-3xl font-semibold tracking-tight">Arkiv did not answer</h1>
-      <p className="text-muted-foreground">
-        A public link opens a shared week straight from Arkiv, and Arkiv did not answer just now. Try again in a moment, or{" "}
-        <Link href="/verify" className="text-primary hover:underline">
-          check a receipt file
-        </Link>{" "}
-        instead.
-      </p>
+    <div className="wrapw pub">
+      <div className="errbox max-w-2xl">
+        <h1 className="disp h-page-sm">Arkiv did not answer</h1>
+        <p className="mt-3 text-[var(--ink-2)]">
+          A public link opens a shared week straight from Arkiv, and Arkiv did not answer just now. Try again in a moment, or{" "}
+          <Link href="/verify" className="quiet">
+            check a receipt file
+          </Link>{" "}
+          instead.
+        </p>
+      </div>
     </div>
   );
 }

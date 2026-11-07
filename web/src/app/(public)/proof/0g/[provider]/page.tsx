@@ -1,4 +1,5 @@
-import { BadgeCheck, CircleDashed, ExternalLink, TriangleAlert } from "lucide-react";
+import { Check, CircleDashed, TriangleAlert, X } from "lucide-react";
+import { ProofAnchor } from "@/components/proof-links";
 import { ZG_ACTIVITY, zgAddressUrl, zgIdentityUrl } from "@/lib/proof-urls";
 
 export const metadata = { title: "On 0G · Receipts" };
@@ -19,7 +20,7 @@ type Identity = { address?: string; endpoint?: string; verdicts?: Record<string,
 
 export default async function ZeroGProof({ params }: { params: Promise<{ provider: string }> }) {
   const { provider } = await params;
-  if (!/^0x[0-9a-fA-F]{40}$/.test(provider)) return <p className="text-muted-foreground">That is not a provider address.</p>;
+  if (!/^0x[0-9a-fA-F]{40}$/.test(provider)) return <p className="wrapw pub text-[var(--mute)]">That is not a provider address.</p>;
   let id: Identity | undefined;
   let error: string | undefined;
   try {
@@ -35,91 +36,114 @@ export default async function ZeroGProof({ params }: { params: Promise<{ provide
   const notRun = verdicts.length - passed - failed;
 
   return (
-    <div className="max-w-3xl space-y-8">
-      <div>
-        <p className="text-sm font-medium text-[var(--c-researched)]">On 0G</p>
-        <h1 className="mt-1 text-balance text-3xl font-semibold tracking-tight">The provider that ran the private AI, checked by 0G</h1>
-        <p className="mt-2 text-[15px] text-muted-foreground">
+    <div className="wrapw pt-11 max-[760px]:pt-7">
+      <div className="max-w-[880px]">
+        <span className="svc">0G</span>
+        <h1 className="disp h-page mt-3">The provider that ran the private AI, checked by 0G</h1>
+        <p className="lede mt-3.5">
           Receipts only accepts answers from 0G providers whose model runs inside a hardware enclave (TEE). 0G&apos;s router checks each provider&apos;s
           attestation before sending it private requests, and publishes its verdicts. These are read from 0G right now.
         </p>
-      </div>
 
-      {error || !id ? (
-        <div className="rounded-xl border border-destructive/40 bg-card p-5">
-          <p className="font-medium">0G did not answer just now</p>
-          <p className="mt-1 text-sm text-muted-foreground">{error}</p>
-        </div>
-      ) : (
-        <section className="space-y-4 rounded-xl border border-border bg-card p-5">
-          <p className={`text-lg font-semibold ${failed ? "text-destructive" : "text-[var(--c-built)]"}`}>
-            {failed ? `${failed} of ${passed + failed} checks failed` : `All ${passed} checks 0G ran passed`}
-            {notRun ? <span className="font-normal text-muted-foreground"> ({notRun} not run)</span> : null}
-          </p>
-          <ul className="space-y-2">
-            {verdicts.map(([k, v]) => (
-              <li key={k} className="flex items-start gap-2.5 text-[15px]">
-                {v === "pass" ? (
-                  <BadgeCheck className="mt-0.5 size-5 shrink-0 text-[var(--c-built)]" aria-hidden="true" />
-                ) : v === "fail" ? (
-                  <TriangleAlert className="mt-0.5 size-5 shrink-0 text-destructive" aria-hidden="true" />
-                ) : (
-                  <CircleDashed className="mt-0.5 size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
-                )}
-                <span>
-                  {VERDICTS[k] ?? k}
-                  <span className="ml-2 text-sm text-muted-foreground">{STATUS[v] ?? v.replace(/_/g, " ")}</span>
-                </span>
-              </li>
-            ))}
+        {error || !id ? (
+          <div className="errbox mt-7">
+            <p className="font-semibold">0G did not answer just now</p>
+            <p className="mt-1 text-sm text-[var(--mute)]">{error}</p>
+          </div>
+        ) : (
+          <section className="pnl ticks mt-7" aria-label="0G's verdicts">
+            <div className={`verdict ${failed ? "bad" : "ok"} border-t-0`}>
+              <span className={`ck ck-lg ${failed ? "ck-bad" : "ck-done"}`} aria-hidden="true">
+                {failed ? <X className="size-4" strokeWidth={3} /> : <Check className="size-4" strokeWidth={3} />}
+              </span>
+              <div className="vt">
+                {failed ? `${failed} of ${passed + failed} checks failed` : `All ${passed} checks 0G ran passed`}
+                {notRun ? <span className="font-normal text-[var(--ink-2)]"> ({notRun} not run)</span> : null}
+              </div>
+            </div>
+            <ol>
+              {verdicts.map(([k, v]) => (
+                <li key={k} className="check-row">
+                  {v === "pass" ? (
+                    <span className="ck ck-done" aria-hidden="true">
+                      <Check className="size-[13px]" strokeWidth={3} />
+                    </span>
+                  ) : v === "fail" ? (
+                    <span className="ck ck-bad" aria-hidden="true">
+                      <TriangleAlert className="size-[13px]" />
+                    </span>
+                  ) : (
+                    <span className="ck ck-pending" aria-hidden="true">
+                      <CircleDashed className="size-[13px] text-[var(--mute)]" />
+                    </span>
+                  )}
+                  <span>
+                    {VERDICTS[k] ?? k}
+                    <span className="d">{STATUS[v] ?? v.replace(/_/g, " ")}</span>
+                  </span>
+                </li>
+              ))}
+            </ol>
+            <dl className="pub-dl border-t border-[var(--line)]">
+              <dt>Provider</dt>
+              <dd className="mono">{id.address ?? provider}</dd>
+              {id.endpoint && (
+                <>
+                  <dt>Endpoint</dt>
+                  <dd>{id.endpoint}</dd>
+                </>
+              )}
+              {id.os_image && (
+                <>
+                  <dt>Enclave image</dt>
+                  <dd>{id.os_image}</dd>
+                </>
+              )}
+              {id.compose_hash && (
+                <>
+                  <dt>App hash</dt>
+                  <dd className="mono">{id.compose_hash}</dd>
+                </>
+              )}
+            </dl>
+          </section>
+        )}
+
+        <section className="mt-8" aria-labelledby="else-h">
+          <h2 id="else-h" className="h-sub mb-3.5">
+            Check it somewhere else
+          </h2>
+          <ul className="proofs">
+            <li className="proof">
+              <span className="svc">0G</span>
+              <div className="min-w-0">
+                <p className="proof-what">0G&apos;s raw verdicts for this provider, as JSON.</p>
+                <div className="proof-go">
+                  <ProofAnchor href={zgIdentityUrl(provider)}>0G&apos;s raw verdicts for this provider</ProofAnchor>
+                </div>
+              </div>
+            </li>
+            <li className="proof">
+              <span className="svc">0G</span>
+              <div className="min-w-0">
+                <p className="proof-what">Its registration on 0G&apos;s serving contract.</p>
+                <div className="proof-go">
+                  <ProofAnchor href={zgAddressUrl(provider)}>The provider on 0G ChainScan</ProofAnchor>
+                </div>
+              </div>
+            </li>
+            <li className="proof">
+              <span className="svc">0G</span>
+              <div className="min-w-0">
+                <p className="proof-what">Sign in with the 0G account that paid; each call&apos;s request id is listed.</p>
+                <div className="proof-go">
+                  <ProofAnchor href={ZG_ACTIVITY}>Your own calls on pc.0g.ai</ProofAnchor>
+                </div>
+              </div>
+            </li>
           </ul>
-          <dl className="grid gap-x-6 gap-y-2 border-t border-border pt-4 text-sm sm:grid-cols-[9rem_1fr]">
-            <dt className="text-muted-foreground">Provider</dt>
-            <dd className="break-all font-mono text-xs">{id.address ?? provider}</dd>
-            {id.endpoint && (
-              <>
-                <dt className="text-muted-foreground">Endpoint</dt>
-                <dd className="break-all">{id.endpoint}</dd>
-              </>
-            )}
-            {id.os_image && (
-              <>
-                <dt className="text-muted-foreground">Enclave image</dt>
-                <dd>{id.os_image}</dd>
-              </>
-            )}
-            {id.compose_hash && (
-              <>
-                <dt className="text-muted-foreground">App hash</dt>
-                <dd className="break-all font-mono text-xs">{id.compose_hash}</dd>
-              </>
-            )}
-          </dl>
         </section>
-      )}
-
-      <section className="space-y-2 text-sm">
-        <h2 className="font-semibold">Check it somewhere else</h2>
-        <ul className="space-y-1.5">
-          <li>
-            <a href={zgIdentityUrl(provider)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-primary hover:underline">
-              0G&apos;s raw verdicts for this provider <ExternalLink className="size-3" aria-hidden="true" />
-            </a>
-          </li>
-          <li>
-            <a href={zgAddressUrl(provider)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-primary hover:underline">
-              The provider on 0G ChainScan <ExternalLink className="size-3" aria-hidden="true" />
-            </a>{" "}
-            <span className="text-muted-foreground">(its registration on 0G&apos;s serving contract)</span>
-          </li>
-          <li>
-            <a href={ZG_ACTIVITY} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-primary hover:underline">
-              Your own calls on pc.0g.ai <ExternalLink className="size-3" aria-hidden="true" />
-            </a>{" "}
-            <span className="text-muted-foreground">(sign in with the 0G account that paid; each call&apos;s request id is listed)</span>
-          </li>
-        </ul>
-      </section>
+      </div>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 type Result = {
@@ -40,60 +41,77 @@ export function VerifyForm() {
   }
 
   return (
-    <div className="space-y-5">
-      <label className="block text-sm font-medium" htmlFor="receipt-input">
-        Receipt JSON or Arkiv entity key
-      </label>
-      <textarea
-        id="receipt-input"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        rows={8}
-        spellCheck={false}
-        placeholder='{"kind":"receipts.v1", ...}  or  0x3f9a...'
-        className="w-full rounded-lg border border-input bg-card p-3 font-mono text-xs"
-      />
-      <Button onClick={verify} disabled={busy || !input.trim()}>
-        {busy ? "Checking" : "Check receipt"}
-      </Button>
+    <div>
+      <div className="pnl mt-7 p-[22px]">
+        <label className="mb-2 block text-[15px] font-semibold" htmlFor="receipt-input">
+          Receipt JSON or Arkiv entity key
+        </label>
+        <textarea
+          id="receipt-input"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          rows={8}
+          spellCheck={false}
+          placeholder='{"kind":"receipts.v1", ...}  or  0x3f9a...'
+          className="ta"
+        />
+        <div className="mt-[18px] flex flex-wrap items-center gap-5">
+          <Button size="lg" onClick={verify} disabled={busy || !input.trim()}>
+            {busy ? "Checking" : "Check receipt"}
+          </Button>
+          {busy && <span className="spin" aria-hidden="true" />}
+        </div>
+      </div>
 
       {res && (
-        <div className={`rounded-lg border p-5 ${res.ok ? "border-[var(--l-shipped)]/50" : "border-destructive/50"} bg-card`} role="status">
-          <div className="text-lg font-semibold">{res.ok ? "This receipt checks out." : res.error ? "Could not check this receipt." : "This receipt does not check out."}</div>
-          {res.error && <p className="mt-1 text-muted-foreground">{res.error}</p>}
-          {res.headline && (
-            <p className="mt-2">
-              {res.period}: {res.headline}
-            </p>
-          )}
+        <div className="pnl ticks mt-5" role="status">
+          <div className="flex items-start gap-3.5 px-[22px] py-5">
+            <span className={`ck ck-lg ${res.ok ? "ck-done" : "ck-bad"}`} aria-hidden="true">
+              {res.ok ? <Check className="size-4" strokeWidth={3} /> : <X className="size-4" strokeWidth={3} />}
+            </span>
+            <div className="min-w-0">
+              <div className="text-[21px] font-[620] leading-tight [font-stretch:110%]">{res.ok ? "This receipt checks out." : res.error ? "Could not check this receipt." : "This receipt does not check out."}</div>
+              {res.error && <p className="mt-1 text-[var(--ink-2)]">{res.error}</p>}
+              {res.headline && (
+                <p className="mt-1 text-[var(--mute)]">
+                  {res.period}: {res.headline}
+                </p>
+              )}
+            </div>
+          </div>
           {res.checks && (
-            <ul className="mt-3 space-y-1 text-sm">
+            <ol>
               {res.checks.map((c) => (
-                <li key={c.name} className="flex gap-2">
-                  <span className={c.ok ? "text-[var(--l-shipped)]" : "text-destructive"} aria-hidden="true">
-                    {c.ok ? "✓" : "✗"}
+                <li key={c.name} className="check-row">
+                  <span className={`ck ${c.ok ? "ck-done" : "ck-bad"}`} aria-hidden="true">
+                    {c.ok ? <Check className="size-[13px]" strokeWidth={3} /> : <X className="size-[13px]" strokeWidth={3} />}
                   </span>
                   <span>
+                    <span className="sr-only">{c.ok ? "Passed" : "Failed"}: </span>
                     {c.name}
-                    {c.detail && <span className="text-muted-foreground"> ({c.detail})</span>}
+                    {c.detail && <span className="d">{c.detail}</span>}
                   </span>
                 </li>
               ))}
-            </ul>
+            </ol>
           )}
-          {res.judge && <p className="mt-3 text-sm text-muted-foreground">Judge: {res.judge}</p>}
-          {res.arkiv && (
-            <p className="mt-1 break-all text-sm text-muted-foreground">
-              Loaded from Arkiv entity {res.arkiv.key}. Owned by {res.arkiv.owner}
-              {res.arkiv.owner && res.signer && res.arkiv.owner.toLowerCase() === res.signer.toLowerCase() ? " (the person who signed it)" : ""}
-              {res.arkiv.creator && res.arkiv.creator.toLowerCase() !== res.arkiv.owner?.toLowerCase() ? `, written by ${res.arkiv.creator} (which only paid the fee)` : ""}
-              {res.arkiv.readonly ? ". Read-only: nobody can change it." : "."}
-            </p>
-          )}
-          {res.evidence !== undefined && (
-            <p className="mt-1 text-sm text-muted-foreground">
-              {res.evidence} evidence items and {res.judges} judge records included.
-            </p>
+          {(res.judge || res.arkiv || res.evidence !== undefined) && (
+            <div className="space-y-1 border-t border-[var(--line)] px-[22px] py-4 text-sm text-[var(--ink-2)]">
+              {res.judge && <p>Judge: {res.judge}</p>}
+              {res.arkiv && (
+                <p className="break-all">
+                  Loaded from Arkiv entity {res.arkiv.key}. Owned by {res.arkiv.owner}
+                  {res.arkiv.owner && res.signer && res.arkiv.owner.toLowerCase() === res.signer.toLowerCase() ? " (the person who signed it)" : ""}
+                  {res.arkiv.creator && res.arkiv.creator.toLowerCase() !== res.arkiv.owner?.toLowerCase() ? `, written by ${res.arkiv.creator} (which only paid the fee)` : ""}
+                  {res.arkiv.readonly ? ". Read-only: nobody can change it." : "."}
+                </p>
+              )}
+              {res.evidence !== undefined && (
+                <p>
+                  {res.evidence} evidence items and {res.judges} judge records included.
+                </p>
+              )}
+            </div>
           )}
         </div>
       )}
