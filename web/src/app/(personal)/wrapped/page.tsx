@@ -3,7 +3,7 @@ import { WrappedView } from "@/components/wrapped-view";
 import { currentSource, getDataset } from "@/lib/server/data";
 import { WRAPPED_PERIODS, wrappedFor, type WrappedPeriod } from "@/lib/server/wrapped-data";
 
-export const metadata: Metadata = { title: "AI Wrapped · Receipts" };
+export const metadata: Metadata = { title: "AI Wrapped · Juicebox" };
 
 export default async function WrappedPage({ searchParams }: { searchParams: Promise<{ period?: string }> }) {
   const sp = await searchParams;

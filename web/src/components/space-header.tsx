@@ -18,7 +18,7 @@ export type Space = "company" | "employee" | "personal" | "public";
 export type NavItem = { href: string; label: string; exact?: boolean; also?: string[] };
 
 const SPACES = [
-  { id: "public", href: "/", title: "Front door", what: "What Receipts is, and the demo" },
+  { id: "public", href: "/", title: "Front door", what: "What Juicebox is, and the demo" },
   { id: "employee", href: "/me", title: "My week", what: "Write, sign and send your weekly receipt" },
   { id: "company", href: "/company", title: "Company", what: "Everyone's signed week, for leads" },
   { id: "personal", href: "/wrapped", title: "AI Wrapped", what: "How you talk to AI, just for fun" },
@@ -46,9 +46,9 @@ export function SpaceHeader({ space, title, right, nav, dark }: { space: Space; 
   return (
     <header className={`t-bar print:hidden ${dark ? "t-dark" : ""}`}>
       <div className={`t-bar-in ${nav?.length ? "" : "t-no-tabs"}`}>
-        <Link href="/" className="t-logo" aria-label="Receipts, front door">
+        <Link href="/" className="t-logo" aria-label="Juicebox, front door">
           <Logo dark={dark} />
-          <span className="t-logo-word">Receipts</span>
+          <span className="t-logo-word">Juicebox</span>
         </Link>
         <span className="t-vdiv t-hide-s" aria-hidden="true" />
         <Switcher current={space} label={title ? <>{title}</> : label} sub={space === "company" && title ? "company" : undefined} />
@@ -126,12 +126,11 @@ export function SpaceShell({ space, title, right, nav, footerNote, children }: {
   );
 }
 
-/** The receipt mark: a slip with a torn bottom edge. */
-export function Logo({ dark, size = 1 }: { dark?: boolean; size?: number }) {
-  return (
-    <svg width={18 * size} height={22 * size} viewBox="0 0 18 22" aria-hidden="true">
-      <path d="M1 1H17V19L14.33 17L11.67 19L9 17L6.33 19L3.67 17L1 19Z" fill={dark ? "#EDF0F7" : "#1C2030"} />
-      <path d="M5 6H13M5 9.5H13M5 13H10" fill="none" stroke={dark ? "#0E1830" : "#FFFFFE"} strokeWidth="1.4" strokeLinecap="round" />
-    </svg>
-  );
+/**
+ * The Juicebox mark: a juice box drawn in 3D, with a receipt printed on its front (torn at the
+ * bottom) and a bendy straw. No text, no background, square. It is app/icon.svg, also the favicon.
+ */
+export function Logo({ size = 40 }: { dark?: boolean; size?: number }) {
+  // eslint-disable-next-line @next/next/no-img-element -- one small SVG, no optimization needed
+  return <img src="/icon.svg" width={size} height={size} alt="" className="shrink-0" />;
 }

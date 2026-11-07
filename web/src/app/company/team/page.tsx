@@ -15,7 +15,7 @@ import { ChainlinkCheck } from "@/components/chainlink-check";
 import { teamCheck } from "@/lib/server/scoreboard";
 import { creCli, creTeam } from "@/lib/server/cre-run";
 
-export const metadata = { title: "Teams · Company · Receipts" };
+export const metadata = { title: "Teams · Company · Juicebox" };
 
 // One team: its headline, then everyone's week (the first one open). Default: your own team.
 export default async function Team({ searchParams }: { searchParams: Promise<{ week?: string; team?: string }> }) {

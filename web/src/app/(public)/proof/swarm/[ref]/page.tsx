@@ -8,7 +8,7 @@ import { arkivEntityUrl } from "@/lib/proof-urls";
 import { currentSource } from "@/lib/server/data";
 import { isMember, viewer } from "@/lib/server/viewer";
 
-export const metadata = { title: "On Swarm · Receipts" };
+export const metadata = { title: "On Swarm · Juicebox" };
 
 /** Ask the Swarm gateway for the bytes, and time it. */
 async function fetchFromSwarm(url: string): Promise<{ bytes?: Buffer; error?: string; ms: number }> {
@@ -142,7 +142,7 @@ export default async function SwarmProof({ params, searchParams }: { params: Pro
             </li>
             {entity && (
               <li className="proof">
-                <span className="svc">Receipts</span>
+                <span className="svc">Juicebox</span>
                 <div className="min-w-0">
                   <p className="proof-what">The signed receipt this belongs to, with the checks.</p>
                   <div className="proof-go">

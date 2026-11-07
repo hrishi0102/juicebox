@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="jb-front" x1="0" y1="0" x2="1" y2="0.15">
+      <stop offset="0" stop-color="#FFB047"/>
+      <stop offset="0.55" stop-color="#FB9A2B"/>
+      <stop offset="1" stop-color="#EE861A"/>
+    </linearGradient>
+    <linearGradient id="jb-side" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#C8650E"/>
+      <stop offset="1" stop-color="#A9530B"/>
+    </linearGradient>
+    <linearGradient id="jb-top" x1="0" y1="1" x2="0.4" y2="0">
+      <stop offset="0" stop-color="#FFC774"/>
+      <stop offset="1" stop-color="#F7AE52"/>
+    </linearGradient>
+    <linearGradient id="jb-fin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFD597"/>
+      <stop offset="1" stop-color="#E3923A"/>
+    </linearGradient>
+    <linearGradient id="jb-shine" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#FFF" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#FFF" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#FFF" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="jb-straw" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#5FD898"/>
+      <stop offset="1" stop-color="#22A361"/>
+    </linearGradient>
+    <linearGradient id="jb-paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFE"/>
+      <stop offset="1" stop-color="#F1F2EE"/>
+    </linearGradient>
+    <radialGradient id="jb-shadow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#1C2030" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#1C2030" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- shadow on the table -->
+  <ellipse cx="66" cy="117" rx="40" ry="6" fill="url(#jb-shadow)"/>
+
+  <!-- the sealed seam along the back of the top -->
+  <path d="M47 31L97 31L97 26.5Q72 25 47 26.5Z" fill="url(#jb-fin)"/>
+  <path d="M51 27.4V30.4M56 27.2V30.4M61 27V30.4M66 27V30.4M71 27V30.4M76 27V30.4M81 27V30.4M86 27.2V30.4M91 27.4V30.4" stroke="#C97A26" stroke-width=".8" stroke-opacity=".7"/>
+
+  <!-- top -->
+  <path d="M29 41L47 31H97L79 41Z" fill="url(#jb-top)"/>
+  <!-- side, with the folded ear flap -->
+  <path d="M79 41L97 31V103L79 113Z" fill="url(#jb-side)"/>
+  <path d="M80.5 42L95.5 33.5L95.5 46.5Z" fill="#B65C10" stroke="#E08A35" stroke-width=".7" stroke-linejoin="round"/>
+  <path d="M88 37.2V107.5" stroke="#9A4908" stroke-width=".6" stroke-opacity=".5"/>
+  <!-- front -->
+  <path d="M29 41H79V113H29Z" fill="url(#jb-front)"/>
+  <rect x="34" y="41" width="12" height="72" fill="url(#jb-shine)"/>
+  <!-- edges: light on the folds, dark at the bottom -->
+  <path d="M29 41H79L97 31" fill="none" stroke="#FFE0B0" stroke-width="1.2" stroke-linejoin="round"/>
+  <path d="M79 41V113" stroke="#FFCF8C" stroke-width="1.1"/>
+  <path d="M29 113H79L97 103" fill="none" stroke="#8C4306" stroke-width="1.2" stroke-opacity=".6"/>
+
+  <!-- foil-sealed straw hole -->
+  <ellipse cx="85" cy="35" rx="5.6" ry="2.3" fill="#E7E8E4"/>
+  <ellipse cx="85" cy="35" rx="3.2" ry="1.3" fill="#7A4A1C"/>
+
+  <!-- bendy straw: outline, body, accordion neck, highlight -->
+  <path d="M85 35V16L101 5" fill="none" stroke="#17804A" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M85 35V16L101 5" fill="none" stroke="url(#jb-straw)" stroke-width="5.4" stroke-linejoin="round"/>
+  <path d="M82.4 22H87.6M82.4 19.6H87.6M82.6 17.3H87.6" stroke="#17804A" stroke-width=".9" stroke-linecap="round"/>
+  <path d="M83.4 34V18" stroke="#B8F2D2" stroke-width="1.1" stroke-linecap="round" stroke-opacity=".9"/>
+
+  <!-- the receipt printed on the front, torn at the bottom -->
+  <path d="M36 51H72V90L68.4 93.4L64.8 90L61.2 93.4L57.6 90L54 93.4L50.4 90L46.8 93.4L43.2 90L39.6 93.4L36 90Z" fill="url(#jb-paper)"/>
+  <path d="M41 58H67M41 64H67M41 70H59" stroke="#3A4050" stroke-width="2.6" stroke-linecap="round"/>
+  <path d="M41 77H67" stroke="#9EA3AE" stroke-width="1" stroke-dasharray="2 2"/>
+  <path d="M41 83H52M60 83H67" stroke="#1C2030" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- an orange slice printed under the receipt -->
+  <circle cx="68" cy="103" r="7.5" fill="#FFD27A" stroke="#F07F12" stroke-width="1.6"/>
+  <path d="M68 96.4V109.6M61.4 103H74.6M63.3 98.3L72.7 107.7M72.7 98.3L63.3 107.7" stroke="#F4A23C" stroke-width=".9"/>
+</svg>

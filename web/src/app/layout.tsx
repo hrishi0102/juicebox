@@ -14,7 +14,7 @@ const receipt = Martian_Mono({ variable: "--font-receipt", subsets: ["latin"], a
 const fun = Commissioner({ variable: "--font-fun", subsets: ["latin"], axes: ["FLAR", "VOLM"] });
 
 export const metadata: Metadata = {
-  title: "Receipts",
+  title: "Juicebox",
   description: "What did your AI spend get done? Each person's laptop writes a signed weekly receipt; the company sees everyone's.",
 };
 

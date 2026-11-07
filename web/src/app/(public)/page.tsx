@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight, Check, Lock } from "lucide-react";
+import { ArrowUpRight, Lock } from "lucide-react";
 import { arkivWriterAddress } from "@/lib/receipts/arkiv";
 import { arkivAddressUrl, CRE_SCOREBOARD, DEMO_SEALED, sepoliaAddressUrl, swarmProofPath, zgProofPath } from "@/lib/proof-urls";
 import { providersFor } from "@/lib/server/zerog-providers";
@@ -25,11 +25,11 @@ export default async function FrontDoor() {
           <div className="fd-wrap fd-hero-grid">
             <div>
               <h1 id="hero-h" className="disp h-hero">
-                What did your AI spend get done?
+                What did your AI get done this week?
               </h1>
               <p className="fd-lede">
-                Every week, your laptop turns your Claude Code and Codex sessions into a short list of what got done. A private AI on 0G writes it, you sign
-                it with your own key, and your company sees everyone&apos;s week with the pull requests behind it.
+                A weekly receipt for your AI work. Juicebox turns your Claude Code and Codex sessions into a short list of what you built, fixed and figured
+                out, and what each thing cost, so your team sees the work, not the token count.
               </p>
               <div className="fd-ctas">
                 <a className="btn btn-primary btn-lg" href="#demo">
@@ -45,13 +45,6 @@ export default async function FrontDoor() {
                   <Lock className="size-4" aria-hidden="true" />
                   Your prompts never leave the laptop.
                 </li>
-                {writer && (
-                  <li>
-                    <Check className="size-4" aria-hidden="true" />
-                    Every signed receipt is a record on Arkiv.
-                    <ProofAnchor href={arkivAddressUrl(writer)}>See them on the explorer</ProofAnchor>
-                  </li>
-                )}
               </ul>
             </div>
             <HeroReceipt barcodeHex={DEMO_SEALED.entity} />
@@ -125,7 +118,7 @@ export default async function FrontDoor() {
                 How a week works
               </h2>
               <p>
-                Set up once on your laptop: connect GitHub, join your company, sign in with 0G and let Receipts read your Claude Code and Codex logs. Then
+                Set up once on your laptop: connect GitHub, join your company, sign in with 0G and let Juicebox read your Claude Code and Codex logs. Then
                 every week takes three steps.
               </p>
             </div>
@@ -217,9 +210,9 @@ export default async function FrontDoor() {
 
       <footer className="fd-foot">
         <div className="fd-wrap fd-foot-in">
-          <Link className="t-logo" href="/" aria-label="Receipts, front door">
+          <Link className="t-logo" href="/" aria-label="Juicebox, front door">
             <Logo />
-            <span className="t-logo-word">Receipts</span>
+            <span className="t-logo-word">Juicebox</span>
           </Link>
           <p>Built at ETHGlobal Mumbai, November 2026. Testnets only.</p>
           <nav aria-label="Footer">

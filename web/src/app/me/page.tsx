@@ -26,7 +26,7 @@ import { formatMinutes } from "@/lib/receipts/efficiency";
 import { CATEGORIES, TOOL_NAMES, type AiTool, type PeriodSummary, type Task } from "@/lib/receipts/types";
 import { providersFor } from "@/lib/server/zerog-providers";
 
-export const metadata = { title: "My week · Receipts" };
+export const metadata = { title: "My week · Juicebox" };
 
 // The employee's week. One question, one answer, and one next step: write it, sign it, send it.
 // The receipt itself, and the Sign and Send buttons, are on the next page.
@@ -438,7 +438,7 @@ function FirstRun({ laptop }: { laptop: boolean }) {
       <p className="text-sm font-semibold text-[var(--mute)]">For employees</p>
       <h1 className="disp h-page mt-2">Your weekly receipt</h1>
       <p className="lede mt-5">
-        Receipts reads your Claude Code and Codex sessions on this laptop and writes down what they got done: what you built, fixed, figured out and
+        Juicebox reads your Claude Code and Codex sessions on this laptop and writes down what they got done: what you built, fixed, figured out and
         researched, and what it cost. You check it, sign it with a key that stays here, and send it to your company. Your prompts never leave the
         laptop.
       </p>

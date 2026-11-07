@@ -4,7 +4,7 @@ import { PeopleHead, PersonWeek } from "@/components/person-week";
 import { CompanyDoor, MemberNote, NothingShared, WeekPills } from "@/components/company-door";
 import { signedNumbers } from "@/lib/receipts/receipt";
 
-export const metadata = { title: "People · Company · Receipts" };
+export const metadata = { title: "People · Company · Juicebox" };
 
 // Everyone's signed week: one row per person, open to their list, their PRs and the checks.
 // `who` (a signing address) opens that person's row, for "See it as your company sees it".

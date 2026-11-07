@@ -10,7 +10,7 @@ import { shortAddr } from "@/lib/format";
 import { arkivAddressUrl } from "@/lib/proof-urls";
 import { ProofAnchor } from "@/components/proof-links";
 
-export const metadata = { title: "Setup · Company · Receipts" };
+export const metadata = { title: "Setup · Company · Juicebox" };
 
 async function walletBalance(address?: string) {
   if (!address) return undefined;
@@ -22,7 +22,7 @@ async function walletBalance(address?: string) {
   }
 }
 
-// For whoever runs Receipts for the company: what this copy has, what to give employees, and
+// For whoever runs Juicebox for the company: what this copy has, what to give employees, and
 // what must stay here. Read-only: everything is set in web/.env.local.
 export default async function CompanySetup() {
   const source = await currentSource();
@@ -48,7 +48,7 @@ export default async function CompanySetup() {
       <div>
         <h1 className="disp h-page">Set up your company</h1>
         <p className="page-sub">
-          Once, by whoever runs Receipts for the company. Everything here is set in <code>web/.env.local</code>; this page only checks it.
+          Once, by whoever runs Juicebox for the company. Everything here is set in <code>web/.env.local</code>; this page only checks it.
         </p>
       </div>
       <div className="mt-7 flex flex-wrap items-center gap-3.5 text-[15px]">
@@ -153,7 +153,7 @@ export default async function CompanySetup() {
 
         <SetupRow n={6} title="Invite your people" done={false}>
           <p>
-            Each person runs Receipts on their own laptop: clone the repo, then <code>npm install</code> and <code>npm run dev</code> in <code>web</code>, and
+            Each person runs Juicebox on their own laptop: clone the repo, then <code>npm install</code> and <code>npm run dev</code> in <code>web</code>, and
             open http://localhost:3000. In My week, Setup they connect GitHub, join {target?.orgName ?? "your company"}, and sign in with 0G. They pay for
             the private AI themselves, from their own 0G credits; the company hands out no AI key.
           </p>

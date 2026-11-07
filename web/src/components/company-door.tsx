@@ -97,7 +97,7 @@ export function NothingShared({ org }: { org: LoadedOrg }) {
     <div className="card card-pad mt-9 max-w-2xl">
       <h2 className="h-small">No receipts sent yet</h2>
       <p className="mt-2 text-[var(--ink-2)]">
-        When people in {org.name} sign and send their week, it shows up here. Each person runs Receipts on their own laptop and joins{" "}
+        When people in {org.name} sign and send their week, it shows up here. Each person runs Juicebox on their own laptop and joins{" "}
         <code>{org.id}</code> in My week, Setup.{" "}
         <Link href="/company/setup" className="quiet">
           How to invite them

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { fetchOrgReceipts } from "@/lib/receipts/arkiv";
 
-export const metadata = { title: "A public link · Demo · Receipts" };
+export const metadata = { title: "A public link · Demo · Juicebox" };
 
 // "Be someone with a public link": open one of the demo engineer's shared weeks the way anyone
 // would, straight from Arkiv, without the company key. Picks a sealed week, so the list is private.

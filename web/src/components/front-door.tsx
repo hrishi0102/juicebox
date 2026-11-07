@@ -14,9 +14,9 @@ export function FrontNav() {
   return (
     <header className="fd-nav">
       <div className="fd-wrap fd-nav-in">
-        <Link className="t-logo" href="/" aria-label="Receipts, front door">
+        <Link className="t-logo" href="/" aria-label="Juicebox, front door">
           <Logo />
-          <span className="t-logo-word">Receipts</span>
+          <span className="t-logo-word">Juicebox</span>
         </Link>
         <nav className="fd-links" aria-label="Main">
           <a href="#how">How it works</a>
@@ -80,14 +80,14 @@ export function HeroReceipt({ barcodeHex }: { barcodeHex: string }) {
     >
       <div className="fd-tilt" style={{ transform: `rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) rotateZ(1.2deg)` }}>
         <div className="fd-printer" aria-hidden="true">
-          <span className="fd-printer-name">Receipts</span>
+          <span className="fd-printer-name">Juicebox</span>
           <span className="fd-led" />
         </div>
         <div className="fd-feed">
           <div className="fd-paper-wrap" key={run}>
             <article className="paper" aria-label="An example receipt: a week of AI sessions, what they got done and what it cost, signed by the person who did the work">
               <div className="r-head">
-                <div className="r-name">Receipts</div>
+                <div className="r-name">Juicebox</div>
                 <div className="r-faint">What did you get done this week?</div>
                 <div style={{ marginTop: 8 }}>Your week, on your laptop</div>
                 <div className="r-faint">You, your team, your company</div>

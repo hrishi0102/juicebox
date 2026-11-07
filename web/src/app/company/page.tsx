@@ -11,7 +11,7 @@ import { Barcode } from "@/components/front-door";
 import { CATEGORY_COPY, pct, plural, usd } from "@/lib/format";
 import { CATEGORIES, TOOL_NAMES, type AiTool } from "@/lib/receipts/types";
 
-export const metadata = { title: "Company · Receipts" };
+export const metadata = { title: "Company · Juicebox" };
 
 const TOOL_COLOR: Record<string, string> = { "claude-code": "var(--ink)", codex: "#8C93A0" };
 const toolName = (t: string) => TOOL_NAMES[t as AiTool] ?? t;

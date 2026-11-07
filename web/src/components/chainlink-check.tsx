@@ -121,7 +121,7 @@ export function ChainlinkCheck({ check, team, company, demo, canRun }: { check: 
               <article className="paper st-paper" aria-label={`Monthly check for ${team}`}>
                 <div className="r-head">
                   <div className="r-name" style={{ fontSize: 15 }}>
-                    Receipts
+                    Juicebox
                   </div>
                   <div className="r-faint">
                     Monthly check, {team} at {company}

@@ -10,7 +10,7 @@ import { currentSource, getDataset, weekView } from "@/lib/server/data";
 import { employeeTarget, weekReceipt } from "@/lib/server/employee";
 import { dayTime, usd } from "@/lib/format";
 
-export const metadata = { title: "Sign and send · Receipts" };
+export const metadata = { title: "Sign and send · Juicebox" };
 
 // The receipt, then two steps: sign it, send it. The whole week goes, exactly as written.
 export default async function SendPage({ searchParams }: { searchParams: Promise<{ week?: string }> }) {

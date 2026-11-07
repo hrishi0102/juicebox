@@ -159,7 +159,7 @@ export function SendFlow(p: SendFlowProps) {
                 </Button>
                 <p className="help">
                   {!p.arkivReady
-                    ? `${p.company.orgName} has not turned on receipts in this copy yet (it needs the company wallet in .env.local). Ask whoever set up Receipts there.`
+                    ? `${p.company.orgName} has not turned on receipts in this copy yet (it needs the company wallet in .env.local). Ask whoever set up Juicebox there.`
                     : !p.signed
                       ? "Sign it first."
                       : `Goes to ${p.company.teamName} at ${p.company.orgName}: one read-only record on Arkiv, owned by you. The company wallet only pays the fee.`}

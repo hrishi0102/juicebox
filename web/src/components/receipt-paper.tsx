@@ -40,7 +40,7 @@ export function ReceiptPaper(p: ReceiptPaperProps) {
           </span>
         )}
         <header className="r-head">
-          <div className="r-name">Receipts</div>
+          <div className="r-name">Juicebox</div>
           <div className="r-faint">What did you get done this week?</div>
           <div style={{ marginTop: 8 }}>
             Week {week}, {weekRange(p.start, p.end)}

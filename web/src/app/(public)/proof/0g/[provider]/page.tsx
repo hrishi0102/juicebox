@@ -2,7 +2,7 @@ import { Check, CircleDashed, TriangleAlert, X } from "lucide-react";
 import { ProofAnchor } from "@/components/proof-links";
 import { ZG_ACTIVITY, zgAddressUrl, zgIdentityUrl } from "@/lib/proof-urls";
 
-export const metadata = { title: "On 0G · Receipts" };
+export const metadata = { title: "On 0G · Juicebox" };
 
 // Proof that the private AI ran inside a TEE: 0G's router checks every provider's hardware
 // attestation before it sends it private requests, and publishes its verdicts. This page reads them
@@ -41,7 +41,7 @@ export default async function ZeroGProof({ params }: { params: Promise<{ provide
         <span className="svc">0G</span>
         <h1 className="disp h-page mt-3">The provider that ran the private AI, checked by 0G</h1>
         <p className="lede mt-3.5">
-          Receipts only accepts answers from 0G providers whose model runs inside a hardware enclave (TEE). 0G&apos;s router checks each provider&apos;s
+          Juicebox only accepts answers from 0G providers whose model runs inside a hardware enclave (TEE). 0G&apos;s router checks each provider&apos;s
           attestation before sending it private requests, and publishes its verdicts. These are read from 0G right now.
         </p>
 

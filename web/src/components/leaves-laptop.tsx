@@ -58,7 +58,7 @@ export function LeavesLaptop({ tableOpen }: { tableOpen?: boolean }) {
           icon={<Eye className="size-5" aria-hidden="true" />}
           title="Public, so anyone can check"
           what="Signed totals on Arkiv. That is the point: the numbers can be checked."
-          items={["Things done, by category", "AI spend, by tool", "Shipped changes: merged PRs and pushes to main"]}
+          items={["Things done, by category", "AI spend, by tool", "Merged PRs and pushes to main"]}
         />
       </div>
       <p className="fd-footnote">

@@ -3,12 +3,12 @@ import { CategoryLegend } from "@/components/category-badge";
 import { LeavesLaptop } from "@/components/leaves-laptop";
 import { StepIllo } from "@/components/week-steps";
 
-export const metadata = { title: "How it works · Receipts" };
+export const metadata = { title: "How it works · Juicebox" };
 
 const EMPLOYEE: [string, string][] = [
   [
     "Set up once",
-    "Run Receipts on your laptop. Connect GitHub (the GitHub CLI you already use), join your company (your GitHub org and team), sign in with 0G, and let it read your Claude Code and Codex logs. Reading logs never leaves the laptop.",
+    "Run Juicebox on your laptop. Connect GitHub (the GitHub CLI you already use), join your company (your GitHub org and team), sign in with 0G, and let it read your Claude Code and Codex logs. Reading logs never leaves the laptop.",
   ],
   [
     "Write",
@@ -22,7 +22,7 @@ const EMPLOYEE: [string, string][] = [
 ];
 
 const COMPANY: [string, string][] = [
-  ["Set up once", "A wallet that pays the small Arkiv fee for each receipt, a company key that opens the lists, Swarm for storage, and GitHub sign-in for leads. Then invite people to run Receipts on their laptops."],
+  ["Set up once", "A wallet that pays the small Arkiv fee for each receipt, a company key that opens the lists, Swarm for storage, and GitHub sign-in for leads. Then invite people to run Juicebox on their laptops."],
   ["Sign in with GitHub", "Leads and managers sign in with GitHub. Only members of the org can open the lists; anyone can check the signed totals."],
   ["See everyone's week", "What the company got done, team by team; each person's signed list with the pull requests behind it; every pull request and where the AI money went. People are never ranked."],
 ];
@@ -38,7 +38,7 @@ export default function How() {
         </h1>
         <p className="fd-lede">
           AI tools make it easy to spend a lot and hard to say what came out of it, and token leaderboards reward burning tokens, not getting things done.
-          Receipts has two sides. Each employee runs it on their laptop and sends a signed weekly receipt of what their AI sessions got done. The company
+          Juicebox has two sides. Each employee runs it on their laptop and sends a signed weekly receipt of what their AI sessions got done. The company
           sees everyone&apos;s receipts, with the pull requests behind them. Prompts never leave the laptop.
         </p>
       </section>

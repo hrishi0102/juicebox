@@ -8,7 +8,7 @@ import { currentSource, getDataset, onLaptop } from "@/lib/server/data";
 import { employeeTarget, targetHow } from "@/lib/server/employee";
 import { dayTime, plural } from "@/lib/format";
 
-export const metadata = { title: "Setup · My week · Receipts" };
+export const metadata = { title: "Setup · My week · Juicebox" };
 
 // Set up once, on your laptop. After this, every week is: write, review, sign, send.
 export default async function EmployeeSetup() {
@@ -51,7 +51,7 @@ export default async function EmployeeSetup() {
           ) : login ? (
             <p>
               Connected as <span className="font-medium">@{login}</span>, through the GitHub login this laptop already has (the GitHub CLI or{" "}
-              <code>GITHUB_TOKEN</code>). Receipts uses it to find your pull requests and to know your org and teams. There is no separate sign-in.
+              <code>GITHUB_TOKEN</code>). Juicebox uses it to find your pull requests and to know your org and teams. There is no separate sign-in.
             </p>
           ) : (
             <p>
@@ -93,7 +93,7 @@ export default async function EmployeeSetup() {
 
         <SetupRow n={4} title="Read your logs" done={!!d}>
           <p className="text-[var(--mute)]">
-            Claude Code and Codex already keep a log of every session on this laptop. Receipts reads them here, prices every call and links sessions
+            Claude Code and Codex already keep a log of every session on this laptop. Juicebox reads them here, prices every call and links sessions
             to your pull requests. Nothing leaves the laptop for this step.
           </p>
           {d ? (

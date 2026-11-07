@@ -4,7 +4,7 @@ import { PrTable, type PrRow } from "@/components/pr-table";
 import { CompanyDoor, MemberNote, NothingShared, WeekPills } from "@/components/company-door";
 import { plural, usd } from "@/lib/format";
 
-export const metadata = { title: "Pull requests · Company · Receipts" };
+export const metadata = { title: "Pull requests · Company · Juicebox" };
 
 // Every pull request the week's AI spend went into, from everyone's signed receipts.
 export default async function CompanyPrs({ searchParams }: { searchParams: Promise<{ week?: string }> }) {
