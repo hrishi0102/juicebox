@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { SetupRow } from "@/components/setup-row";
 import { formatAmount, shortWallet, useZeroG } from "@/components/zero-g";
 import { ZeroGElsewhere } from "@/components/zero-g-button";
-import { ZG_ACTIVITY, ZG_BILLING, zgAddressUrl } from "@/lib/proof-urls";
+import { ZG_ACTIVITY, ZG_BILLING } from "@/lib/proof-urls";
 import { ProofAnchor } from "@/components/proof-links";
 
 export function ZeroGSetup({ n }: { n: number }) {
@@ -43,7 +43,6 @@ export function ZeroGSetup({ n }: { n: number }) {
           <div className="proof-go text-sm">
             <ProofAnchor href={ZG_BILLING}>Your balance on pc.0g.ai</ProofAnchor>
             <ProofAnchor href={ZG_ACTIVITY}>Your calls on pc.0g.ai</ProofAnchor>
-            {zg.wallet && <ProofAnchor href={zgAddressUrl(zg.wallet)}>This account on 0G ChainScan</ProofAnchor>}
           </div>
         </div>
       ) : (

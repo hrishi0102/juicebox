@@ -11,7 +11,7 @@ import { Collapsible } from "@/components/collapsible";
 import { FlowSteps } from "@/components/flow-steps";
 import { ProofLinks, type ProofGroup } from "@/components/proof-links";
 import { EnterDemo } from "@/components/demo";
-import { arkivEntityUrl, arkivTxUrl, swarmProofPath, ZG_ACTIVITY, zgAddressUrl, zgProofPath } from "@/lib/proof-urls";
+import { arkivEntityUrl, arkivTxUrl, swarmProofPath, ZG_ACTIVITY, zgProofPath } from "@/lib/proof-urls";
 import { readJson } from "@/lib/receipts/store";
 import type { WeeklyReview } from "@/lib/receipts/review";
 import { currentSource, getDataset, getDemoOrg, onLaptop, weekView, weeksWithData } from "@/lib/server/data";
@@ -308,7 +308,7 @@ function weekProofs(providers: string[], payer: string | undefined, sent: { arki
       what: `The private AI that wrote this week ran in a hardware enclave${wallet ? ", paid from your 0G account" : ""}`,
       links: [
         ...providers.slice(0, 2).map((p, i) => ({ label: providers.length > 1 ? `0G's TEE check of provider ${i + 1}` : "0G's TEE check of the provider", href: zgProofPath(p) })),
-        ...(wallet ? [{ label: "Your calls on pc.0g.ai", href: ZG_ACTIVITY }, { label: "Your 0G account on ChainScan", href: zgAddressUrl(wallet) }] : []),
+        ...(wallet ? [{ label: "Your calls on pc.0g.ai", href: ZG_ACTIVITY }] : []),
       ],
     });
   if (sent?.arkivKey) {

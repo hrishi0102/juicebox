@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight, ChevronDown, ChevronLeft } from "lucide-react";
 import { ProofLinks } from "@/components/proof-links";
-import { ZG_ACTIVITY, zgAddressUrl, zgProofPath } from "@/lib/proof-urls";
+import { ZG_ACTIVITY, zgProofPath } from "@/lib/proof-urls";
 import { notFound } from "next/navigation";
 import { Difficulty } from "@/components/label-badge";
 import { CategoryBadge } from "@/components/category-badge";
@@ -156,7 +156,7 @@ export default async function SessionDetail({ params }: { params: Promise<{ id: 
                   service: "0G",
                   what: `This call ran on 0G in a hardware enclave${j.judge.requestId ? `; look for request ${j.judge.requestId.slice(0, 8)}… in your activity` : ""}`,
                   links: [
-                    ...(j.judge.provider ? [{ label: "0G's TEE check of the provider", href: zgProofPath(j.judge.provider) }, { label: "The provider on 0G ChainScan", href: zgAddressUrl(j.judge.provider) }] : []),
+                    ...(j.judge.provider ? [{ label: "0G's TEE check of the provider", href: zgProofPath(j.judge.provider) }] : []),
                     ...(j.judge.payer && j.judge.payer !== "app key" ? [{ label: "Your calls on pc.0g.ai", href: ZG_ACTIVITY }] : []),
                   ],
                 },

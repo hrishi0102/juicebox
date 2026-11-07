@@ -1,6 +1,6 @@
 import { Check, CircleDashed, TriangleAlert, X } from "lucide-react";
 import { ProofAnchor } from "@/components/proof-links";
-import { ZG_ACTIVITY, zgAddressUrl, zgIdentityUrl } from "@/lib/proof-urls";
+import { ZG_ACTIVITY, zgIdentityUrl } from "@/lib/proof-urls";
 
 export const metadata = { title: "On 0G · Juicebox" };
 
@@ -120,15 +120,6 @@ export default async function ZeroGProof({ params }: { params: Promise<{ provide
                 <p className="proof-what">0G&apos;s raw verdicts for this provider, as JSON.</p>
                 <div className="proof-go">
                   <ProofAnchor href={zgIdentityUrl(provider)}>0G&apos;s raw verdicts for this provider</ProofAnchor>
-                </div>
-              </div>
-            </li>
-            <li className="proof">
-              <span className="svc">0G</span>
-              <div className="min-w-0">
-                <p className="proof-what">Its registration on 0G&apos;s serving contract.</p>
-                <div className="proof-go">
-                  <ProofAnchor href={zgAddressUrl(provider)}>The provider on 0G ChainScan</ProofAnchor>
                 </div>
               </div>
             </li>
