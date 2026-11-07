@@ -6,6 +6,19 @@ Juicebox (first called Receipts) uses Swarm for the one file that must not be pu
 
 Why this matters: Arkiv is public, and work titles can name customers or unreleased features. Without Swarm we had to choose between hiding the list from the company or publishing it to everyone. Now the signed numbers stay public and verifiable, and the details go only to the company, with no server of ours holding them.
 
+## Where each thing the bonus asks for is
+
+| The bonus asks for | Where |
+|---|---|
+| What is on Swarm, what is on Arkiv, and which entity field holds the Swarm reference | [What is where](#what-is-where): the `swarm` attribute, plus the key in `sealed` |
+| One Arkiv entity key and the Swarm reference it points to, with a link | [Live examples](#live-examples-arkiv-testnet-rabdi-swarm-testnet-every-link-below-checked-on-nov-7) |
+| The postage batch, who gave it, and the Bee node or service | [Batch and node](#batch-and-node) |
+| The files that upload to Swarm and read from it | [Code](#code) |
+| Steps to run one upload and one read, what they need, what you should see | [Run one upload and one read](#run-one-upload-and-one-read) |
+| The moment in the demo video where Swarm is used | [Demo video](#demo-video) |
+| What got in our way | [What got in our way](#what-got-in-our-way) |
+| No encrypted Swarm reference stored on Arkiv as it is | We never use Swarm's own encryption. The week is encrypted on the laptop and uploaded as plain bytes, so `swarm` is a normal 64 hex reference that only finds ciphertext. The AES key travels only inside `sealed`, encrypted to the company's key |
+
 ## What is where
 
 | Data | Where | Who can read it |
@@ -21,7 +34,7 @@ The entity is created **read-only** and handed to the person who signed it in th
 
 A sealed week (demo company Acme, @you, week 45, receipt v3 with the efficiency numbers):
 
-- Arkiv entity: [`0xea50b76a7c871350d819fac561481bfb8070e3da040b3828e9369d0d99cb9ca6`](https://rabdi.explorer.arkiv.network/entity/0xea50b76a7c871350d819fac561481bfb8070e3da040b3828e9369d0d99cb9ca6)
+- Arkiv entity: [`0xea50b76a7c871350d819fac561481bfb8070e3da040b3828e9369d0d99cb9ca6`](https://rabdi.explorer.arkiv.network/entity/0xea50b76a7c871350d819fac561481bfb8070e3da040b3828e9369d0d99cb9ca6). The explorer page lists its attributes: `swarm` holds the reference below, and `sealed` (296 bytes) holds the key, sealed to the company
 - Swarm reference (`swarm` attribute): `6483e19496c5b16f1f7b35da826f42ff140caedb31732c4e7a7fa90d597eeb75`
 - The encrypted bytes on Swarm: https://api.gateway.testnet.ethswarm.org/bytes/6483e19496c5b16f1f7b35da826f42ff140caedb31732c4e7a7fa90d597eeb75 (only ciphertext: this is the point; the gateway serves it as a file, so the browser downloads it)
 - The same bytes fetched live and shown in the app: `/proof/swarm/6483e19496c5b16f1f7b35da826f42ff140caedb31732c4e7a7fa90d597eeb75?entity=0xea50b76a7c871350d819fac561481bfb8070e3da040b3828e9369d0d99cb9ca6`
@@ -41,7 +54,7 @@ Company wallet that writes (pays gas): `0x09351DC0A6AFa87da28D00914fE87373C5C827
 ## Batch and node
 
 - **Service:** the public Swarm testnet gateway, `https://api.gateway.testnet.ethswarm.org` (Bee HTTP API).
-- **Batch:** we send the all-zero batch id (`0000000000000000000000000000000000000000000000000000000000000000`); the gateway stamps uploads with its own postage batch, the way Swarm's own upload pages do. No wallet of ours bought it, and no stamps were given to us: the batch belongs to the gateway, run by the Swarm team. We tried to read its id, but the gateway does not publish it (`/stamps` and `/addresses` answer 404). The gateway is meant for testing and does not promise how long data stays.
+- **Batch:** we send the all-zero batch id (`0000000000000000000000000000000000000000000000000000000000000000`); the gateway stamps uploads with its own postage batch, the way Swarm's own upload pages do. No wallet of ours bought it, and no stamps were given to us: the batch belongs to the gateway, run by the Swarm team. We tried to read its id, but the gateway does not publish it: `/stamps` and `/addresses` answer 404, and `/batches` lists 100 testnet batches from 63 owners without saying which one is the gateway's. The gateway is meant for testing and does not promise how long data stays.
 - **Checked with the Swarm team:** at ETHGlobal Mumbai (Nov 6), the Swarm team confirmed that using the Swarm testnet is fine for this bonus.
 - **Own batch instead:** run a Bee light node on the testnet (`bee start --mainnet=false ...`), fund it with Sepolia ETH and sBZZ, buy a batch, then set `SWARM_API_URL=http://localhost:1633` and `SWARM_POSTAGE_BATCH_ID=<batch id>`. Nothing else changes.
 
