@@ -65,7 +65,7 @@ export function ZeroGButton({ label, busyLabel, run, size = "default", variant =
         </Button>
       )}
       {accountLine && (
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-[var(--mute)]">
           {zg.signedIn
             ? `Paid from your 0G account ${shortWallet(zg.wallet)}${zg.balance ? ` (balance ${zg.balance.text})` : ""}.`
             : "The private AI is paid from your own 0G credits, about a cent a week."}
@@ -89,7 +89,7 @@ export function ZeroGElsewhere() {
   return (
     <p className="text-sm text-muted-foreground">
       The private AI is paid with Sign in with 0G, which only works at{" "}
-      <button type="button" className="text-primary hover:underline" onClick={() => (window.location.href = ZERO_G_ORIGIN + window.location.pathname + window.location.search)}>
+      <button type="button" className="quiet" onClick={() => (window.location.href = ZERO_G_ORIGIN + window.location.pathname + window.location.search)}>
         {ZERO_G_ORIGIN}
       </button>
       . Open this page there.

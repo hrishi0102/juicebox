@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowUpRight, ChevronDown, ChevronLeft } from "lucide-react";
 import { ProofLinks } from "@/components/proof-links";
 import { ZG_ACTIVITY, zgAddressUrl, zgProofPath } from "@/lib/proof-urls";
 import { notFound } from "next/navigation";
@@ -33,37 +34,37 @@ export default async function SessionDetail({ params }: { params: Promise<{ id: 
   }
 
   return (
-    <div className="max-w-4xl space-y-8">
-      <div>
-        <Link href="/me/sessions" className="text-sm text-muted-foreground hover:text-foreground">
-          All sessions
-        </Link>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight">{j?.title || s.title || "Untitled session"}</h1>
-        <p className="mt-2 text-muted-foreground">
-          {dayTime(s.startedAt)}, {s.activeMinutes} active minutes in {s.repos[0] ?? s.cwd}
-          {s.title && j?.title && s.title !== j.title ? `. Session title: ${s.title}` : ""}
-        </p>
-        <div className="mt-4 flex flex-wrap items-center gap-3">
-          {j?.category && <CategoryBadge category={j.category} />}
-          {j && <Difficulty value={j.difficulty} />}
-          <span className="text-2xl font-semibold">{usd(sessionUsd(s))}</span>
-          {source === "local" && <JudgeSessionButton sessionId={s.id} />}
-        </div>
-        {j && <p className="mt-3 max-w-[70ch]">{j.reason}</p>}
+    <div className="mw max-w-4xl">
+      <Link href="/me/sessions" className="mw-back">
+        <ChevronLeft className="size-4" aria-hidden="true" />
+        All sessions
+      </Link>
+      <h1 className="disp h-page-sm">{j?.title || s.title || "Untitled session"}</h1>
+      <p className="page-sub">
+        {dayTime(s.startedAt)}, {s.activeMinutes} active minutes in {s.repos[0] ?? s.cwd}
+        {s.title && j?.title && s.title !== j.title ? `. Session title: ${s.title}` : ""}
+      </p>
+      <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
+        {j?.category && <CategoryBadge category={j.category} />}
+        {j && <Difficulty value={j.difficulty} />}
+        <span className="num text-2xl font-semibold">{usd(sessionUsd(s))}</span>
+        {source === "local" && <JudgeSessionButton sessionId={s.id} />}
       </div>
+      {j && <p className="mt-4 max-w-[70ch] text-[var(--ink-2)]">{j.reason}</p>}
 
-      <section>
-        <h2 className="text-lg font-semibold">What it turned into</h2>
+      <section className="mw-sec">
+        <h2 className="h-sub mb-3.5">What it turned into</h2>
         {links.length === 0 ? (
-          <p className="mt-2 text-muted-foreground">No pull request or commit linked to this session.</p>
+          <p className="text-[var(--mute)]">No pull request or commit linked to this session.</p>
         ) : (
-          <ul className="mt-2 divide-y divide-border rounded-lg border border-border bg-card">
+          <ul className="items">
             {links.map(({ m, c }) => (
-              <li key={m.changeKey} className="px-4 py-3">
-                <a href={c?.url} target="_blank" rel="noreferrer" className="font-medium hover:underline">
+              <li key={m.changeKey} className="border-t border-[var(--line)] px-5 py-4 first:border-t-0">
+                <a href={c?.url} target="_blank" rel="noreferrer" className="plink">
                   {c?.title ?? m.changeKey}
+                  <ArrowUpRight className="size-3.5" aria-hidden="true" />
                 </a>
-                <div className="text-sm text-muted-foreground">
+                <div className="mt-1 text-sm text-[var(--mute)]">
                   {m.changeKey}: {c?.reverted ? "merged, then reverted" : c?.state}, +{c?.additions}/-{c?.deletions} lines in {c?.files.length} files.
                   Linked by {m.reason} ({Math.round(m.confidence * 100)}% confidence).
                   {c?.survival && ` ${Math.round(c.survival.ratio * 100)}% of sampled lines still alive${c.survival.matured ? " after 30 days" : " so far"}.`}
@@ -74,10 +75,10 @@ export default async function SessionDetail({ params }: { params: Promise<{ id: 
         )}
       </section>
 
-      <section className="grid gap-8 sm:grid-cols-2">
-        <div>
-          <h2 className="text-lg font-semibold">Cost</h2>
-          <dl className="mt-2 space-y-1 text-sm">
+      <section className="mw-sec grid gap-6 sm:grid-cols-2">
+        <div className="card card-pad">
+          <h2 className="h-small mb-3">Cost</h2>
+          <dl className="kv text-sm">
             <Item k="Priced from tokens" v={usd(s.cost.usd, 2)} />
             {s.cost.claudeReportedUsd !== undefined && <Item k="Claude Code's own tracker" v={usd(s.cost.claudeReportedUsd, 2)} />}
             <Item k="Total tokens" v={tokens(totalTokens(t))} />
@@ -89,9 +90,9 @@ export default async function SessionDetail({ params }: { params: Promise<{ id: 
             ))}
           </dl>
         </div>
-        <div>
-          <h2 className="text-lg font-semibold">How it went</h2>
-          <dl className="mt-2 space-y-1 text-sm">
+        <div className="card card-pad">
+          <h2 className="h-small mb-3">How it went</h2>
+          <dl className="kv text-sm">
             <Item k="Your prompts" v={String(g.userPrompts)} />
             <Item k="Tool calls" v={`${g.toolCalls} (${Math.round(g.readOnlyRatio * 100)}% read-only)`} />
             <Item k="Tool errors" v={`${g.toolErrors}, longest streak ${g.maxErrorStreak}`} />
@@ -106,42 +107,50 @@ export default async function SessionDetail({ params }: { params: Promise<{ id: 
       </section>
 
       {preview && (
-        <section>
-          <details>
-            <summary className="cursor-pointer text-lg font-semibold">What the private AI is sent</summary>
-            <p className="mt-2 max-w-[70ch] text-sm text-muted-foreground">
-              This is the whole message sent to 0G for this session, plus a fixed instruction. Nothing else from the transcript leaves your laptop.
-              The model runs inside a TEE; the message gets there over HTTPS through 0G&apos;s router, which is not end-to-end sealed today.
-            </p>
-            <pre className="mt-3 max-h-96 overflow-auto whitespace-pre-wrap rounded-lg border border-border bg-card p-4 text-xs">{preview}</pre>
+        <section className="mw-sec">
+          <details className="disc-solo">
+            <summary className="disc-sum">
+              <span className="disc-t">What the private AI is sent</span>
+              <span className="disc-h">Only this leaves the laptop</span>
+              <ChevronDown className="disc-chev size-[18px]" aria-hidden="true" />
+            </summary>
+            <div className="disc-body">
+              <p className="help mb-3 mt-0">
+                This is the whole message sent to 0G for this session, plus a fixed instruction. Nothing else from the transcript leaves your laptop.
+                The model runs inside a TEE; the message gets there over HTTPS through 0G&apos;s router, which is not end-to-end sealed today.
+              </p>
+              <pre className="quote">{preview}</pre>
+            </div>
           </details>
         </section>
       )}
 
       {j && (
-        <section>
-          <h2 className="text-lg font-semibold">Private AI record</h2>
-          <dl className="mt-2 space-y-1 text-sm">
-            <Item k="Engine" v={j.judge.engine === "0g-tee" ? "0G Private Computer (TEE)" : j.judge.engine === "heuristic" ? "Offline rules" : "Local model"} />
-            {j.judge.model && <Item k="Model" v={j.judge.model} />}
-            {j.judge.provider && <Item k="Provider" v={j.judge.provider} />}
-            {j.judge.requestId && <Item k="Request id" v={j.judge.requestId} />}
-            {j.judge.trustMode && <Item k="Trust mode" v={j.judge.trustMode} />}
-            {j.judge.sealed !== undefined && <Item k="Sealed end to end" v={j.judge.sealed ? "yes" : "no"} />}
-            {j.judge.teeVerified !== undefined && <Item k="Router checked TEE signature" v={j.judge.teeVerified ? "yes" : "no"} />}
-            {j.judge.selfVerified !== undefined && <Item k="We checked TEE signature" v={j.judge.selfVerified ? "yes" : "no"} />}
-            {j.judge.payer && <Item k="Paid by" v={j.judge.payer === "app key" ? "the app's own 0G key" : `your 0G account ${j.judge.payer}`} />}
-            {j.judge.costUsd !== undefined && <Item k="Cost of this call" v={`$${j.judge.costUsd.toFixed(4)}`} />}
-            {j.judge.requestHash && <Item k="Hash of what was sent" v={shortHash(j.judge.requestHash, 10)} />}
-            {j.judge.responseHash && <Item k="Hash of the answer" v={shortHash(j.judge.responseHash, 10)} />}
-          </dl>
-          <p className="mt-3 max-w-[70ch] text-sm text-muted-foreground">
-            The private AI sees trimmed prompts, the AI&apos;s last answers, a tool-use summary, the GitHub outcome and the cost. Only the category,
-            title, difficulty, a generic reason and these hashes are kept. The prompts are never written anywhere.
-          </p>
+        <section className="mw-sec">
+          <h2 className="h-sub mb-3.5">Private AI record</h2>
+          <div className="card card-pad">
+            <dl className="kv text-sm">
+              <Item k="Engine" v={j.judge.engine === "0g-tee" ? "0G Private Computer (TEE)" : j.judge.engine === "heuristic" ? "Offline rules" : "Local model"} />
+              {j.judge.model && <Item k="Model" v={j.judge.model} />}
+              {j.judge.provider && <Item k="Provider" v={j.judge.provider} mono />}
+              {j.judge.requestId && <Item k="Request id" v={j.judge.requestId} mono />}
+              {j.judge.trustMode && <Item k="Trust mode" v={j.judge.trustMode} />}
+              {j.judge.sealed !== undefined && <Item k="Sealed end to end" v={j.judge.sealed ? "yes" : "no"} />}
+              {j.judge.teeVerified !== undefined && <Item k="Router checked TEE signature" v={j.judge.teeVerified ? "yes" : "no"} />}
+              {j.judge.selfVerified !== undefined && <Item k="We checked TEE signature" v={j.judge.selfVerified ? "yes" : "no"} />}
+              {j.judge.payer && <Item k="Paid by" v={j.judge.payer === "app key" ? "the app's own 0G key" : `your 0G account ${j.judge.payer}`} />}
+              {j.judge.costUsd !== undefined && <Item k="Cost of this call" v={`$${j.judge.costUsd.toFixed(4)}`} />}
+              {j.judge.requestHash && <Item k="Hash of what was sent" v={shortHash(j.judge.requestHash, 10)} mono />}
+              {j.judge.responseHash && <Item k="Hash of the answer" v={shortHash(j.judge.responseHash, 10)} mono />}
+            </dl>
+            <p className="help">
+              The private AI sees trimmed prompts, the AI&apos;s last answers, a tool-use summary, the GitHub outcome and the cost. Only the category,
+              title, difficulty, a generic reason and these hashes are kept. The prompts are never written anywhere.
+            </p>
+          </div>
           {j.judge.engine === "0g-tee" && (
             <ProofLinks
-              className="mt-4 max-w-2xl"
+              className="mt-8"
               groups={[
                 {
                   service: "0G",
@@ -160,11 +169,11 @@ export default async function SessionDetail({ params }: { params: Promise<{ id: 
   );
 }
 
-function Item({ k, v }: { k: string; v: string }) {
+function Item({ k, v, mono }: { k: string; v: string; mono?: boolean }) {
   return (
-    <div className="flex gap-3">
-      <dt className="w-56 shrink-0 text-muted-foreground">{k}</dt>
-      <dd className="min-w-0 break-all">{v}</dd>
-    </div>
+    <>
+      <dt>{k}</dt>
+      <dd className={mono ? "mono" : "num"}>{v}</dd>
+    </>
   );
 }

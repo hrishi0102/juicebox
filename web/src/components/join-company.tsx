@@ -34,13 +34,13 @@ export function JoinCompany({ options, current }: { options: JoinOption[]; curre
 
   return (
     <div className="space-y-3">
-      <fieldset className="space-y-1.5">
+      <fieldset className="space-y-2">
         <legend className="sr-only">Your company and team</legend>
         {options.map((o) => (
-          <label key={o.team} className="flex cursor-pointer items-center gap-2.5 rounded-lg border border-border bg-background px-3 py-2 has-[:checked]:border-primary">
-            <input type="radio" name="team" value={o.team} checked={pick === o.team} onChange={() => setPick(o.team)} className="accent-[var(--primary)]" />
+          <label key={o.team} className="radio-opt">
+            <input type="radio" name="team" value={o.team} checked={pick === o.team} onChange={() => setPick(o.team)} />
             <span>
-              <span className="font-medium">{o.teamName}</span> at {o.org}
+              <span className="font-semibold text-[var(--ink)]">{o.teamName}</span> at {o.org}
             </span>
           </label>
         ))}

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { CategoryBadge } from "@/components/category-badge";
 import { plural, usd } from "@/lib/format";
 import { TOOL_NAMES, type AiTool, type WeekItem } from "@/lib/receipts/types";
@@ -39,36 +40,30 @@ export function WeekList({
   linkSessions?: boolean;
   timelines?: Record<string, ItemTimeline>;
 }) {
-  if (!items.length) return <p className="text-muted-foreground">No AI sessions this week yet.</p>;
+  if (!items.length) return <p className="text-[var(--mute)]">No AI sessions this week yet.</p>;
   return (
-    <ol className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
+    <ol className="items">
       {items.map((i) => (
-        <li key={i.id} className={`flex items-start gap-3 px-4 py-3.5 sm:gap-4 ${i.category === "Wasted" ? "bg-muted/40" : ""}`}>
-          <div className="hidden w-[104px] shrink-0 pt-0.5 sm:block">
-            <CategoryBadge category={i.category} />
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="mb-1.5 sm:hidden">
-              <CategoryBadge category={i.category} />
-            </div>
-            <div className="text-[16px] font-medium leading-snug text-balance">
+        <li key={i.id} className={`item ${i.category === "Wasted" ? "is-wasted" : ""}`}>
+          <CategoryBadge category={i.category} />
+          <div className="min-w-0">
+            <div className="it-t text-balance">
               {i.title}
-              {i.inProgress && <span className="ml-2 align-middle text-xs font-normal text-muted-foreground">in progress</span>}
+              {i.inProgress && <span className="it-prog">in progress</span>}
             </div>
-            <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+            <div className="it-meta">
               {i.sessions.length > 0 &&
                 (linkSessions && i.sessions.length === 1 ? (
-                  <Link href={`/me/sessions/${i.sessions[0]}`} className="hover:text-foreground hover:underline">
-                    1 session
-                  </Link>
+                  <Link href={`/me/sessions/${i.sessions[0]}`}>1 session</Link>
                 ) : (
                   <span>{plural(i.sessions.length, "session")}</span>
                 ))}
               {i.tools.length > 0 && <span>{i.tools.map((t) => TOOL_NAMES[t as AiTool] ?? t).join(" + ")}</span>}
               {i.prs.slice(0, 3).map((p) =>
                 p.url ? (
-                  <a key={p.key} href={p.url} target="_blank" rel="noreferrer" className="hover:text-foreground hover:underline" title={p.title}>
+                  <a key={p.key} href={p.url} target="_blank" rel="noreferrer" title={p.title}>
                     {prLabel(p)} {prState(p)}
+                    <ArrowUpRight className="size-3" aria-hidden="true" />
                   </a>
                 ) : (
                   <span key={p.key}>{prLabel(p)}</span>
@@ -76,9 +71,9 @@ export function WeekList({
               )}
               {i.prs.length > 3 && <span>+{i.prs.length - 3} more</span>}
             </div>
-            {timelineText(timelines?.[i.id]) && <div className="mt-0.5 text-xs text-muted-foreground">{timelineText(timelines?.[i.id])}</div>}
+            {timelineText(timelines?.[i.id]) && <div className="mt-0.5 text-xs text-[var(--mute)]">{timelineText(timelines?.[i.id])}</div>}
           </div>
-          {showCost && <div className="shrink-0 pt-0.5 text-right font-medium">{usd(i.costUsd, 2)}</div>}
+          {showCost ? <div className="it-cost">{usd(i.costUsd, 2)}</div> : <span />}
         </li>
       ))}
     </ol>

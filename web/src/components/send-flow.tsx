@@ -8,8 +8,8 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { createWalletClient, custom, type Address, type EIP1193Provider } from "viem";
-import { Check, Lock } from "lucide-react";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Building2, Check, Eye, Lock } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { ProofLinks } from "@/components/proof-links";
 import { arkivEntityUrl, arkivTxUrl, swarmProofPath } from "@/lib/proof-urls";
 import { typedDataFor, type SignedReceipt } from "@/lib/receipts/receipt";
@@ -92,79 +92,105 @@ export function SendFlow(p: SendFlowProps) {
   };
 
   return (
-    <div className="space-y-4">
-      <Step n={1} title="Sign it" done={p.signed}>
-        {p.signed ? (
-          <div className="space-y-2 text-sm">
-            <p>
-              Signed{p.signedAt ? ` on ${p.signedAt}` : ""} by <code>{p.signer ? `${p.signer.slice(0, 6)}…${p.signer.slice(-4)}` : "you"}</code>. Nobody,
-              including {org} or us, can change the list or the numbers now.
-            </p>
-            <div className="flex flex-wrap gap-x-4">
-              <button type="button" onClick={download} className="text-primary hover:underline">
-                Download the receipt file
-              </button>
-              {!sentOk && (
-                <button type="button" onClick={signLocal} disabled={!!busy} className="text-muted-foreground hover:text-foreground">
-                  Sign again
-                </button>
-              )}
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            <Button size="lg" onClick={signLocal} disabled={!!busy}>
-              {busy === "sign" ? "Signing" : p.demo ? "Sign it (demo key)" : "Sign it"}
-            </Button>
-            <p className="text-sm text-muted-foreground">
-              {p.stale ? "Your week changed since you last signed. Sign again to update it." : "Signing locks every line and every number. No wallet needed: the key was made on this laptop and never leaves it."}{" "}
-              <button type="button" onClick={signWallet} disabled={!!busy} className="text-primary hover:underline">
-                {busy === "wallet" ? "Waiting for wallet" : "Use a wallet instead"}
-              </button>
-            </p>
-          </div>
-        )}
-      </Step>
+    <div className="space-y-12">
+      <section className="mw-next" aria-label="Sign and send">
+        <ol className="space-y-6">
+          <Step n={1} title="Sign it" done={p.signed} sign>
+            {p.signed ? (
+              <div className="space-y-2">
+                <p>
+                  Signed{p.signedAt ? ` on ${p.signedAt}` : ""} by <span className="mono">{p.signer ? `${p.signer.slice(0, 6)}…${p.signer.slice(-4)}` : "you"}</span>. Nobody,
+                  including {org} or us, can change the list or the numbers now.
+                </p>
+                <div className="flex flex-wrap gap-x-5 gap-y-1 text-[15px]">
+                  <button type="button" onClick={download} className="quiet">
+                    Download the receipt file
+                  </button>
+                  {!sentOk && (
+                    <button type="button" onClick={signLocal} disabled={!!busy} className="quiet text-[var(--mute)]!">
+                      Sign again
+                    </button>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div>
+                <Button onClick={signLocal} disabled={!!busy} className="btn-sign h-11 px-[18px]">
+                  {busy === "sign" ? "Signing" : p.demo ? "Sign it (demo key)" : "Sign it"}
+                </Button>
+                <p className="help">
+                  {p.stale ? "Your week changed since you last signed. Sign again to update it." : "Signing locks every line and every number. No wallet needed: the key was made on this laptop and never leaves it."}{" "}
+                  <button type="button" onClick={signWallet} disabled={!!busy} className="quiet">
+                    {busy === "wallet" ? "Waiting for wallet" : "Use a wallet instead"}
+                  </button>
+                </p>
+              </div>
+            )}
+          </Step>
 
-      <Step n={2} title={`Send it to ${org}`} done={sentOk}>
-        {!p.company ? (
-          <p className="text-sm">
-            You have not joined your company yet.{" "}
-            <Link href="/me/setup" className="text-primary hover:underline">
-              Join it in Setup
-            </Link>{" "}
-            first.
-          </p>
-        ) : sentOk ? (
-          <div className="space-y-3 text-sm">
-            <p>
-              Sent to {p.company.teamName} at {p.company.orgName}
-              {p.sent?.publishedAt ? ` on ${p.sent.publishedAt}` : ""}.
-            </p>
-            <div className="flex flex-wrap gap-2">
-              <Link href={`/company/people?week=${p.week}${p.signer ? `&who=${p.signer}` : ""}`} className={buttonVariants({ variant: "outline", size: "sm" })}>
-                See it as {org} sees it
-              </Link>
-              <Link href={`/r/${p.sent!.arkivKey}`} className={buttonVariants({ variant: "outline", size: "sm" })}>
-                What anyone sees
-              </Link>
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            <Button size="lg" onClick={send} disabled={!!busy || !p.signed || !p.arkivReady}>
-              {busy === "send" ? "Sending" : `Send to ${p.company.orgName}`}
-            </Button>
-            <p className="text-sm text-muted-foreground">
-              {!p.arkivReady
-                ? `${p.company.orgName} has not turned on receipts in this copy yet (it needs the company wallet in .env.local). Ask whoever set up Receipts there.`
-                : !p.signed
-                  ? "Sign it first."
-                  : `Goes to ${p.company.teamName} at ${p.company.orgName}: one read-only record on Arkiv, owned by you. The company wallet only pays the fee.`}
-            </p>
-          </div>
-        )}
-      </Step>
+          <Step n={2} title={`Send it to ${org}`} done={sentOk}>
+            {!p.company ? (
+              <p>
+                You have not joined your company yet.{" "}
+                <Link href="/me/setup" className="quiet">
+                  Join it in Setup
+                </Link>{" "}
+                first.
+              </p>
+            ) : sentOk ? (
+              <div>
+                <p className="done-t">
+                  Sent to {p.company.teamName} at {p.company.orgName}
+                  {p.sent?.publishedAt ? ` on ${p.sent.publishedAt}` : ""}.
+                </p>
+                <div className="done-links">
+                  <Link href={`/company/people?week=${p.week}${p.signer ? `&who=${p.signer}` : ""}`} className="plink">
+                    See it as {org} sees it
+                  </Link>
+                  <Link href={`/r/${p.sent!.arkivKey}`} className="plink">
+                    What anyone sees
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <Button size="lg" onClick={send} disabled={!!busy || !p.signed || !p.arkivReady}>
+                  {busy === "send" ? "Sending" : `Send to ${p.company.orgName}`}
+                </Button>
+                <p className="help">
+                  {!p.arkivReady
+                    ? `${p.company.orgName} has not turned on receipts in this copy yet (it needs the company wallet in .env.local). Ask whoever set up Receipts there.`
+                    : !p.signed
+                      ? "Sign it first."
+                      : `Goes to ${p.company.teamName} at ${p.company.orgName}: one read-only record on Arkiv, owned by you. The company wallet only pays the fee.`}
+                </p>
+              </div>
+            )}
+          </Step>
+        </ol>
+
+        <ul className="gets">
+          <li>
+            <Building2 className="size-4" aria-hidden="true" />
+            <span>
+              <b>{org} gets</b> the whole receipt: every line, the pull requests and the totals.
+              {p.sealed ? ` The list is encrypted on this laptop and stored on Swarm, and only ${org}'s key opens it.` : ""}
+            </span>
+          </li>
+          <li>
+            <Eye className="size-4" aria-hidden="true" />
+            <span>
+              <b>Anyone can check</b> the signed totals on Arkiv: {p.totals.done} things done, {p.totals.spend} of AI, {p.totals.merged} shipped changes (merged PRs and pushes to main).
+            </span>
+          </li>
+          <li>
+            <Lock className="size-4" aria-hidden="true" />
+            <span>
+              <b>Stays on this laptop:</b> your prompts, the AI&apos;s answers, session titles and file names.
+            </span>
+          </li>
+        </ul>
+      </section>
 
       {sentOk && p.sent && (
         <ProofLinks
@@ -185,40 +211,23 @@ export function SendFlow(p: SendFlowProps) {
           ]}
         />
       )}
-
-      <ul className="space-y-1.5 rounded-xl border border-border p-4 text-sm text-muted-foreground">
-        <li>
-          <span className="font-medium text-foreground">{org} gets</span> the whole receipt: every line, the pull requests and the totals.
-          {p.sealed ? ` The list is encrypted on this laptop and stored on Swarm, and only ${org}'s key opens it.` : ""}
-        </li>
-        <li>
-          <span className="font-medium text-foreground">Anyone can check</span> the signed totals on Arkiv: {p.totals.done} things done, {p.totals.spend} of AI, {p.totals.merged} shipped changes (merged PRs and pushes to main).
-        </li>
-        <li className="inline-flex items-start gap-1.5">
-          <Lock className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
-          <span>
-            <span className="font-medium text-foreground">Stays on this laptop:</span> your prompts, the AI&apos;s answers, session titles and file names.
-          </span>
-        </li>
-      </ul>
     </div>
   );
 }
 
-function Step({ n, title, done, children }: { n: number; title: string; done: boolean; children: React.ReactNode }) {
+function Step({ n, title, done, sign, children }: { n: number; title: string; done: boolean; sign?: boolean; children: React.ReactNode }) {
   return (
-    <section className="rounded-xl border border-border bg-card p-4 sm:p-5" aria-labelledby={`step-${n}`}>
-      <h2 id={`step-${n}`} className="flex items-center gap-2.5 text-lg font-semibold tracking-tight">
-        <span
-          className={`inline-flex size-7 items-center justify-center rounded-full border text-sm ${done ? "border-transparent bg-[var(--c-built)] text-white" : "border-primary text-primary"}`}
-          aria-hidden="true"
-        >
-          {done ? <Check className="size-4" /> : n}
-        </span>
-        {title}
-        {done && <span className="sr-only">(done)</span>}
-      </h2>
-      <div className="mt-3">{children}</div>
-    </section>
+    <li className="grid grid-cols-[30px_minmax(0,1fr)] gap-3" aria-labelledby={`step-${n}`}>
+      <span className={`ok-dot ${done ? (sign ? "is-sign" : "") : "border-[1.5px] bg-[var(--paper)]! text-[var(--ink)]!"}`} style={done ? undefined : { borderColor: sign ? "var(--stamp)" : "var(--ink)", color: sign ? "var(--stamp)" : undefined }} aria-hidden="true">
+        {done ? <Check className="size-4" strokeWidth={2.6} /> : <span className="text-[13px] font-semibold">{n}</span>}
+      </span>
+      <div className="min-w-0 text-[16px]">
+        <h2 id={`step-${n}`} className="h-small mb-2 mt-0.5">
+          {title}
+          {done && <span className="sr-only"> (done)</span>}
+        </h2>
+        {children}
+      </div>
+    </li>
   );
 }

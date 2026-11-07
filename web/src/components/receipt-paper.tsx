@@ -17,6 +17,10 @@ export type ReceiptPaperProps = {
   compact?: boolean;
   animate?: boolean;
   showCost?: boolean;
+  /** When it was signed, already formatted, for the stamp. */
+  signedAt?: string;
+  /** Once sent: the stub that tears off, saying where it went. */
+  stub?: { to: string; at?: string; record?: string };
 };
 
 /** The weekly receipt, drawn as a thermal-paper slip: what you got, then what it cost. */
@@ -26,35 +30,44 @@ export function ReceiptPaper(p: ReceiptPaperProps) {
   const showCost = p.showCost ?? true;
   // Without the list (private or totals only), the signed counts still say how much got done.
   const done = s.items.length ? s.items.filter((i) => i.category !== "Wasted").length : CATEGORIES.filter((c) => c !== "Wasted").reduce((a, c) => a + (s.categoryCounts[c] ?? 0), 0);
+  const who = p.ownerName ?? (p.owner ? shortAddr(p.owner) : undefined);
   return (
     <div className={`receipt-shadow ${p.animate ? "print-in" : ""}`}>
-      <article className="receipt-paper relative text-[13px] leading-[1.55]" aria-label={`Receipt for week ${week}`}>
-        <header className="text-center">
-          <div className="text-[15px] tracking-[0.18em]">RECEIPTS</div>
-          <div className="text-paper-faint">What did you get done this week?</div>
-          <div className="mt-2">
+      <article className="paper" aria-label={`Receipt for week ${week}`}>
+        {!p.signed && !p.sharedLevel && !p.compact && (
+          <span className="wm" aria-hidden="true">
+            {p.stale ? "Sign it again" : "Not signed yet"}
+          </span>
+        )}
+        <header className="r-head">
+          <div className="r-name">Receipts</div>
+          <div className="r-faint">What did you get done this week?</div>
+          <div style={{ marginTop: 8 }}>
             Week {week}, {weekRange(p.start, p.end)}
           </div>
-          {(p.ownerName || p.owner) && <div className="text-paper-faint">{p.ownerName ?? `Owner ${shortAddr(p.owner)}`}</div>}
+          {(p.ownerName || p.owner) && <div className="r-faint">{p.ownerName ?? `Owner ${shortAddr(p.owner)}`}</div>}
         </header>
 
-        <hr className="receipt-rule" />
+        <hr className="r-rule" />
 
         {s.items.length > 0 ? (
           <div className="space-y-2.5" aria-label="What you got">
             {CATEGORIES.filter((c) => s.items.some((i) => i.category === c)).map((c) => (
               <div key={c}>
-                <div className="text-paper-faint uppercase tracking-[0.12em]">{CATEGORY_COPY[c].name}</div>
-                <ul className="space-y-0.5">
+                <div className="r-gname">
+                  <span className="sq" style={{ background: `var(${CATEGORY_COPY[c].varName})` }} aria-hidden="true" />
+                  {CATEGORY_COPY[c].name}
+                </div>
+                <ul>
                   {s.items
                     .filter((i) => i.category === c)
                     .map((i) => (
-                      <li key={i.id} className="flex items-baseline">
-                        <span className="min-w-0">{i.title}</span>
+                      <li key={i.id} className="r-row">
+                        <span className="l">{i.title}</span>
                         {showCost && (
                           <>
                             <span className="leader" />
-                            <span>{usd(i.costUsd, 2)}</span>
+                            <span className="num">{usd(i.costUsd, 2)}</span>
                           </>
                         )}
                       </li>
@@ -65,12 +78,16 @@ export function ReceiptPaper(p: ReceiptPaperProps) {
           </div>
         ) : (
           <>
-            <div className="mb-1 text-paper-faint">{p.sharedLevel === "sealed" ? "The list is private. Signed counts:" : "Signed counts:"}</div>
-            <ul className="space-y-0.5" aria-label="Items per category">
+            <div className="r-faint" style={{ marginBottom: 4 }}>
+              {p.sharedLevel === "sealed" ? "The list is private. Signed counts:" : "Signed counts:"}
+            </div>
+            <ul aria-label="Items per category">
               {CATEGORIES.filter((c) => (s.categoryCounts[c] ?? 0) > 0).map((c) => (
-                <li key={c} className="flex items-baseline">
-                  <span>{CATEGORY_COPY[c].name}</span>
-                  <span className="ml-2 text-paper-faint">x{s.categoryCounts[c]}</span>
+                <li key={c} className="r-row">
+                  <span className="sq mr-[7px] translate-y-[-1px]" style={{ width: 7, height: 7, background: `var(${CATEGORY_COPY[c].varName})` }} aria-hidden="true" />
+                  <span>
+                    {CATEGORY_COPY[c].name} x{s.categoryCounts[c]}
+                  </span>
                   {showCost && (
                     <>
                       <span className="leader" />
@@ -83,9 +100,9 @@ export function ReceiptPaper(p: ReceiptPaperProps) {
           </>
         )}
 
-        <hr className="receipt-rule" />
+        <hr className="r-rule" />
 
-        <div className="space-y-0.5">
+        <div>
           <Row k="AI sessions" v={String(s.sessions)} />
           {showCost &&
             Object.entries(s.toolSpend ?? {})
@@ -99,31 +116,49 @@ export function ReceiptPaper(p: ReceiptPaperProps) {
           {showCost && s.efficiency && s.efficiency.waste.abandonedPlans.count > 0 && <Row k="Plans not acted on" v={usd(s.efficiency.waste.abandonedPlans.usd, 2)} />}
         </div>
 
-        {(s.items.length > 0 || done > 0) && (
-          <div className="mt-5 mb-2 flex justify-center">
-            <div className="stamp px-4 py-1.5 text-center leading-tight">
-              <div className="text-[24px]">{done}</div>
-              <div className="text-[11px]">{done === 1 ? "thing" : "things"} done</div>
-            </div>
+        {(s.items.length > 0 || done > 0 || p.signed) && (
+          <div className="mark-row">
+            {(s.items.length > 0 || done > 0) && (
+              <div className="mark" aria-label={`${done} ${done === 1 ? "thing" : "things"} done`}>
+                <b>{done}</b>
+                <span>{done === 1 ? "thing" : "things"} done</span>
+              </div>
+            )}
+            {p.signed && !p.compact && (
+              <div className={`stamp ${p.animate ? "stamp-in" : ""}`} aria-label={`Signed${who ? ` by ${who}` : ""}${p.signedAt ? ` on ${p.signedAt}` : ""}`}>
+                <span className="stamp-big">Signed</span>
+                {(p.ownerName || p.signedAt) && <span className="stamp-sm">{[p.ownerName, p.signedAt].filter(Boolean).join(", ")}</span>}
+                {p.owner && <span className="stamp-sm">{shortAddr(p.owner)}</span>}
+              </div>
+            )}
           </div>
         )}
 
-        <hr className="receipt-rule" />
+        <hr className="r-rule" />
 
-        <div className="space-y-0.5 text-[12px]">
+        <div style={{ fontSize: 12 }}>
           <Row k="Written by" v={p.judgeLine} />
           {!p.compact && <Row k="Signature" v={p.signed ? "signed (EIP-712)" : p.stale ? "out of date, sign again" : "not signed yet"} />}
           {p.sharedLevel && <Row k="Shared" v={p.sharedLevel === "full" ? "with company, incl. list" : p.sharedLevel === "sealed" ? "list encrypted on Swarm" : "totals only"} />}
         </div>
 
         {p.digest && !p.compact && (
-          <div className="mt-4">
+          <div>
             <Barcode hex={p.digest} />
-            <div className="mt-1 text-center text-[11px] text-paper-faint">{shortHash(p.digest, 10)}</div>
+            <div className="r-hash">{shortHash(p.digest, 10)}</div>
           </div>
         )}
-        {!p.compact && <div className="mt-3 text-center text-paper-faint">Prompts not included. Ever.</div>}
+        {!p.compact && <div className="r-foot">Prompts not included. Ever.</div>}
       </article>
+      {p.stub && (
+        <div className={`stub ${p.animate ? "tear-in" : ""}`} aria-label="Sent stub">
+          <div>
+            <b>Sent to {p.stub.to}</b>
+          </div>
+          {p.stub.at && <div>{p.stub.at}</div>}
+          {p.stub.record && <Row k="Arkiv record" v={shortHash(p.stub.record, 4)} />}
+        </div>
+      )}
     </div>
   );
 }
@@ -141,10 +176,10 @@ export function storyCalls(story: PeriodSummary["story"]) {
 
 function Row({ k, v, strong }: { k: string; v: string; strong?: boolean }) {
   return (
-    <div className={`flex items-baseline ${strong ? "text-[15px]" : ""}`}>
-      <span>{k}</span>
+    <div className={`r-row ${strong ? "strong" : ""}`}>
+      <span className="l">{k}</span>
       <span className="leader" />
-      <span className="text-right">{v}</span>
+      <span className="num text-right">{v}</span>
     </div>
   );
 }
@@ -163,7 +198,7 @@ function Barcode({ hex }: { hex: string }) {
     x += w + 1;
   });
   return (
-    <svg viewBox={`0 0 ${x} 34`} preserveAspectRatio="none" className="h-9 w-full" aria-hidden="true">
+    <svg viewBox={`0 0 ${x} 34`} preserveAspectRatio="none" className="barcode" aria-hidden="true">
       {bars.map((b, i) => (
         <rect key={i} x={b.x} y={0} width={b.w} height={34} fill="currentColor" />
       ))}

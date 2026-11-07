@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowUpRight, Check, ChevronLeft, ChevronRight } from "lucide-react";
 import { ReceiptPaper, storyCalls, writtenBy } from "@/components/receipt-paper";
 import { ScanButton } from "@/components/pipeline-controls";
 import { ReviewWeekButton, WriteWeekButton } from "@/components/ai-actions";
@@ -12,7 +12,6 @@ import { FlowSteps } from "@/components/flow-steps";
 import { ProofLinks, type ProofGroup } from "@/components/proof-links";
 import { EnterDemo } from "@/components/demo";
 import { arkivEntityUrl, arkivTxUrl, swarmProofPath, ZG_ACTIVITY, zgAddressUrl, zgProofPath } from "@/lib/proof-urls";
-import { buttonVariants } from "@/components/ui/button";
 import { readJson } from "@/lib/receipts/store";
 import type { WeeklyReview } from "@/lib/receipts/review";
 import { currentSource, getDataset, getDemoOrg, onLaptop, weekView, weeksWithData } from "@/lib/server/data";
@@ -22,7 +21,8 @@ import { loadSavedReceipt } from "@/lib/server/receipts-store";
 import { githubLogin } from "@/lib/receipts/identity";
 import { median } from "@/lib/receipts/heuristics";
 import { receiptStatus, weekFlow } from "@/lib/receipts/flow";
-import { CATEGORY_COPY, plural, usd, weekRange } from "@/lib/format";
+import { CATEGORY_COPY, dayTime, plural, usd, weekRange } from "@/lib/format";
+import { formatMinutes } from "@/lib/receipts/efficiency";
 import { CATEGORIES, TOOL_NAMES, type AiTool, type PeriodSummary, type Task } from "@/lib/receipts/types";
 import { providersFor } from "@/lib/server/zerog-providers";
 
@@ -55,126 +55,146 @@ export default async function MyWeek({ searchParams }: { searchParams: Promise<{
   const providers = recorded.length ? recorded : aiStory ? await providersFor(s.story.model) : [];
   const proofs = weekProofs(providers, s.story.payer, rc.sent);
 
+  const week = wv.id.split("-W")[1];
+  const writeButton = (flow.next === "write" || aiStory) && (
+    <WriteWeekButton week={wv.id} variant={flow.next === "write" ? "default" : "outline"} label={!aiStory ? "Write my week" : s.story.stale ? "Update with new sessions" : "Write it again"} />
+  );
+  const sendLink = flow.next !== "done" && (
+    <Link href={sendHref} className={`btn ${flow.next === "write" ? "btn-secondary" : flow.next === "sign" ? "btn-sign" : "btn-primary"}`}>
+      {flow.next === "send" ? `Send to ${target.orgName}` : "Sign it"}
+    </Link>
+  );
+
   return (
-    <div className="space-y-8">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <div className="mw">
+      <div className="mw-id">
         <IdentityLine login={login} target={target} />
-        {source === "local" && <ScanButton label="Refresh from my logs" variant="outline" />}
       </div>
-
-      <section className="max-w-3xl">
-        <div className="mb-5 flex flex-wrap items-center gap-x-5 gap-y-3">
-          <div className="flex items-center gap-1 text-sm">
-            <WeekLink week={older?.id} label="Older week" dir="prev" />
-            <span className="px-1 font-medium">
-              Week {wv.id.split("-W")[1]}, {weekRange(wv.start, wv.end)}
-            </span>
-            <WeekLink week={newer?.id} label="Newer week" dir="next" />
-          </div>
-          <FlowSteps
-            label={`Week ${wv.id.split("-W")[1]} steps`}
-            steps={[
-              { label: "Write", state: flow.write },
-              { label: "Sign", state: flow.sign, href: sendHref },
-              { label: "Send", state: flow.send, href: sendHref },
-            ]}
-          />
-        </div>
-        <h1 className="text-balance text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl">What did you get done this week?</h1>
-        <p className="mt-4 text-pretty text-xl leading-snug sm:text-2xl">{s.oneLiner}</p>
-        <p className="mt-2 text-[15px] text-muted-foreground">
-          {s.oneLiner !== s.countLine && `${s.countLine} `}
-          {plural(s.sessions, "AI session")}, {usd(s.spendUsd)}
-          {toolText(s)}.
-        </p>
-
-        <div className="mt-6 flex flex-wrap items-start gap-3">
-          {(flow.next === "write" || aiStory) && (
-            <WriteWeekButton week={wv.id} variant={flow.next === "write" ? "default" : "outline"} label={!aiStory ? "Write my week" : s.story.stale ? "Update with new sessions" : "Write it again"} />
-          )}
-          {flow.next === "done" ? (
-            <div className="flex flex-wrap items-center gap-3">
-              <span className="inline-flex h-10 items-center gap-1.5 rounded-lg bg-accent px-3 text-sm font-medium text-accent-foreground">
-                <Check className="size-4" aria-hidden="true" /> Sent to {target.orgName}
+      <div className="mw-grid">
+        <div className="min-w-0">
+          <div className="weekrow">
+            <div className="weeksw">
+              <WeekLink week={older?.id} label="Older week" dir="prev" />
+              <span className="weeklabel">
+                Week {week} <span>{weekRange(wv.start, wv.end)}</span>
               </span>
-              <Link href={sendHref} className="text-sm text-primary hover:underline">
-                See what they got
-              </Link>
+              <WeekLink week={newer?.id} label="Newer week" dir="next" />
             </div>
-          ) : (
-            <Link href={sendHref} className={buttonVariants({ variant: flow.next === "write" ? "outline" : "default", size: "lg" })}>
-              {flow.next === "send" ? `Send it to ${target.orgName}` : "Sign and send"}
-              <ArrowRight className="size-4" aria-hidden="true" />
-            </Link>
-          )}
-        </div>
+            <FlowSteps
+              label={`Week ${week} steps`}
+              steps={[
+                { label: "Write", state: flow.write },
+                { label: "Sign", state: flow.sign, href: sendHref },
+                { label: "Send", state: flow.send, href: sendHref },
+              ]}
+            />
+          </div>
 
-        <p className="mt-3 text-sm text-muted-foreground">
-          {aiStory ? (
-            <>
-              Written privately by {s.story.model} on 0G{s.story.verified ? ", TEE verified" : ""}
-              {s.story.payer ? `, ${payerText(s.story.payer)}` : ""}.{" "}
-              {s.story.stale ? `${plural(s.story.newSessions, "new session")} since then, shown below with simple rules.` : ""}
-            </>
-          ) : (
-            "Simple rules drafted this list. Write my week has the private AI on 0G read each session and write a better one. Only a trimmed summary of each session goes to 0G, where the model runs in a hardware enclave."
-          )}
-        </p>
-        <ProofLinks className="mt-5" groups={proofs} />
-      </section>
+          <h1 className="disp mw-q">What did you get done this week?</h1>
+          <p className={`mw-one ${aiStory ? "" : "is-rules"}`}>{s.oneLiner}</p>
+          <div className="mw-stats num">
+            <p>
+              {s.oneLiner !== s.countLine && `${s.countLine} `}
+              {plural(s.sessions, "AI session")}, {usd(s.spendUsd)}
+              {toolText(s)}.
+            </p>
+            {source === "local" && <ScanButton label="Refresh from my logs" variant="outline" />}
+          </div>
 
-      <div className="grid gap-10 lg:grid-cols-[1fr_360px]">
-        <div className="min-w-0 space-y-6">
-          <section aria-labelledby="got">
-            <div className="mb-3 flex items-baseline justify-between gap-3">
-              <h2 id="got" className="text-xl font-semibold tracking-tight">
+          <section className="mw-next" aria-label="Next step">
+            {flow.next === "done" && (
+              <div className="done-line mb-5">
+                <span className="ok-dot" aria-hidden="true">
+                  <Check className="size-4" strokeWidth={2.6} />
+                </span>
+                <div>
+                  <p className="done-t">Sent to {target.orgName}.</p>
+                  <div className="done-links">
+                    <Link href={sendHref} className="plink">
+                      See what they got
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            )}
+            <div className="mw-next-row">
+              {flow.next === "write" ? (
+                <>
+                  {writeButton}
+                  {sendLink}
+                </>
+              ) : (
+                <>
+                  {sendLink}
+                  {writeButton}
+                </>
+              )}
+            </div>
+            <p className="help">
+              {aiStory ? (
+                <>
+                  Written privately by {s.story.model} on 0G{s.story.verified ? ", TEE verified" : ""}
+                  {s.story.payer ? `, ${payerText(s.story.payer)}` : ""}.{" "}
+                  {s.story.stale ? `${plural(s.story.newSessions, "new session")} since then, shown below with simple rules.` : ""}
+                </>
+              ) : (
+                "Simple rules drafted this list. Write my week has the private AI on 0G read each session and write a better one. Only a trimmed summary of each session goes to 0G, where the model runs in a hardware enclave."
+              )}
+            </p>
+          </section>
+
+          <ProofLinks className="mw-sec" groups={proofs} />
+
+          <section className="mw-sec" aria-labelledby="got">
+            <div className="mw-sec-h">
+              <h2 id="got" className="h-sub">
                 What you got
               </h2>
-              <span className="text-sm text-muted-foreground">{plural(s.items.length, "item")}</span>
+              <span className="mw-count num">
+                {plural(s.items.length, "item")}, {usd(s.spendUsd)}
+              </span>
             </div>
             <WeekList items={s.items} timelines={s.efficiency?.items} />
             {s.spendUsd > 0 && (
-              <div className="mt-4 space-y-2">
+              <div className="mt-[18px]">
                 <CategoryBar spend={s.categorySpend} total={s.spendUsd} />
-                <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
+                <ul className="legend num">
                   {CATEGORIES.filter((c) => s.categorySpend[c] > 0).map((c) => (
-                    <span key={c} className="inline-flex items-center gap-1.5">
-                      <span className="size-2 rounded-full" style={{ background: `var(${CATEGORY_COPY[c].varName})` }} aria-hidden="true" />
+                    <li key={c}>
+                      <span className="sq" style={{ background: `var(${CATEGORY_COPY[c].varName})` }} aria-hidden="true" />
                       {c} {usd(s.categorySpend[c])}
-                    </span>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
             )}
           </section>
 
-          {s.efficiency && <EfficiencyPanel e={s.efficiency} />}
-
-          <div className="space-y-3">
-            <Collapsible title="Pull requests" hint={prHint(s.tasks)}>
+          <div className="disc mw-sec">
+            <Collapsible grouped title="Pull requests" hint={prHint(s.tasks)}>
               <PrList tasks={s.tasks} />
             </Collapsible>
 
-            <Collapsible title="How this was written" hint={aiStory ? `Private AI on 0G, ${storyCalls(s.story)}` : "Simple rules"}>
+            <Collapsible grouped title="How this was written" hint={aiStory ? `Private AI on 0G, ${storyCalls(s.story)}` : "Simple rules"}>
               <HowWritten s={s} firstSession={wv.sessions[0]?.id} />
             </Collapsible>
 
-            <Collapsible title="Where money leaked" hint={review ? "Private review ready" : s.wasteUsd > 0 ? `${usd(s.wasteUsd)} went in circles` : plural(s.tips.length, "tip")}>
+            <Collapsible grouped title="Where money leaked" hint={review ? "Private review ready" : s.wasteUsd > 0 ? `${usd(s.wasteUsd)} went in circles` : plural(s.tips.length, "tip")}>
               {review && (
-                <div className="mb-4 rounded-lg border border-primary/30 bg-accent/40 p-4">
-                  <p className="text-[15px]">{review.summary}</p>
-                  <ul className="mt-3 list-disc space-y-1.5 pl-5 text-[15px]">
+                <div className="panel-soft mb-4 p-4">
+                  <p>{review.summary}</p>
+                  <ul className="mt-3 list-disc space-y-1.5 pl-5">
                     {review.tips.map((t, i) => (
                       <li key={i}>{t}</li>
                     ))}
                   </ul>
-                  <p className="mt-3 text-xs text-muted-foreground">
+                  <p className="mt-3 text-[13px] text-[var(--mute)]">
                     Private review by {review.judge.model} on 0G ({review.judge.trustMode ?? "private"} mode{review.judge.verified ? ", TEE verified" : ""}
-                    {review.judge.payer ? `, ${payerText(review.judge.payer)}` : ""}). Request {review.judge.requestId ?? "n/a"}.
+                    {review.judge.payer ? `, ${payerText(review.judge.payer)}` : ""}). Request <span className="req">{review.judge.requestId ?? "n/a"}</span>.
                   </p>
                 </div>
               )}
-              <ul className="max-w-[70ch] list-disc space-y-2 pl-5 text-[15px]">
+              <ul className="max-w-[68ch] list-disc space-y-2 pl-5">
                 {s.tips.map((t, i) => (
                   <li key={i}>{t}</li>
                 ))}
@@ -186,15 +206,15 @@ export default async function MyWeek({ searchParams }: { searchParams: Promise<{
               )}
             </Collapsible>
 
-            <Collapsible title="Cost by difficulty" hint={teamBuckets ? "Compared with your team" : "Small, medium and hard work kept apart"}>
-              <p className="text-sm text-muted-foreground">Work is only compared with work of the same difficulty, never across people.</p>
-              <table className="mt-3 w-full max-w-xl text-sm">
-                <thead className="text-left text-muted-foreground">
+            <Collapsible grouped title="Cost by difficulty" hint={teamBuckets ? "Compared with your team" : "Small, medium and hard work kept apart"}>
+              <p className="text-[var(--mute)]">Work is only compared with work of the same difficulty, never across people.</p>
+              <table className="diff">
+                <thead>
                   <tr>
-                    <th className="py-1.5 font-normal">Difficulty</th>
-                    <th className="py-1.5 font-normal">PRs</th>
-                    <th className="py-1.5 font-normal">You, per shipped change</th>
-                    {teamBuckets && <th className="py-1.5 font-normal">Team median</th>}
+                    <th scope="col">Difficulty</th>
+                    <th scope="col">PRs</th>
+                    <th scope="col">You, per shipped change</th>
+                    {teamBuckets && <th scope="col">Team median</th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -203,13 +223,13 @@ export default async function MyWeek({ searchParams }: { searchParams: Promise<{
                     .map((b) => {
                       const team = teamBuckets?.[b.difficulty];
                       return (
-                        <tr key={b.difficulty} className="border-t border-border">
-                          <td className="py-2">
+                        <tr key={b.difficulty}>
+                          <td>
                             <Difficulty value={b.difficulty} />
                           </td>
-                          <td className="py-2">{b.tasks}</td>
-                          <td className="py-2 font-medium">{b.costPerKept === null ? "nothing merged" : usd(b.costPerKept)}</td>
-                          {teamBuckets && <td className="py-2 text-muted-foreground">{team ? usd(team) : "n/a"}</td>}
+                          <td>{b.tasks}</td>
+                          <td className="font-medium">{b.costPerKept === null ? "nothing merged" : usd(b.costPerKept)}</td>
+                          {teamBuckets && <td className="text-[var(--mute)]">{team ? usd(team) : "n/a"}</td>}
                         </tr>
                       );
                     })}
@@ -217,13 +237,23 @@ export default async function MyWeek({ searchParams }: { searchParams: Promise<{
               </table>
             </Collapsible>
 
-            <Collapsible title="What the categories mean">
+            {s.efficiency && (
+              <Collapsible
+                grouped
+                title="How the week went"
+                hint={s.efficiency.stages.ideaToMerge.n ? `Idea to merged in ${formatMinutes(s.efficiency.stages.ideaToMerge.medianMin)}` : "From log and GitHub timestamps"}
+              >
+                <EfficiencyPanel e={s.efficiency} bare />
+              </Collapsible>
+            )}
+
+            <Collapsible grouped title="What the categories mean">
               <CategoryLegend />
             </Collapsible>
           </div>
         </div>
 
-        <aside className="space-y-6">
+        <aside className="mw-side" aria-label="Your receipt">
           <ReceiptPaper
             weekId={wv.id}
             start={wv.start}
@@ -235,22 +265,24 @@ export default async function MyWeek({ searchParams }: { searchParams: Promise<{
             signed={rc.signed}
             stale={rc.stale}
             sharedLevel={rc.sent?.level}
+            signedAt={rc.saved?.signedAt ? dayTime(rc.saved.signedAt) : undefined}
+            stub={rc.sent?.arkivKey ? { to: target.from === "default" ? target.orgName : `${target.teamName} at ${target.orgName}`, at: rc.sent.publishedAt ? dayTime(rc.sent.publishedAt) : undefined, record: rc.sent.arkivKey } : undefined}
             animate
           />
-          <section aria-labelledby="past">
-            <h2 id="past" className="text-sm font-medium">
+          <section aria-labelledby="past" className={rc.sent?.arkivKey ? "mt-3" : ""}>
+            <h2 id="past" className="hist-h">
               Your receipts
             </h2>
-            <ul className="mt-2 divide-y divide-border rounded-lg border border-border bg-card text-sm">
+            <ul className="hist">
               {weeks.slice(0, 8).map((w) => {
                 const st = w.id === wv.id ? (flow.next === "done" ? "sent" : rc.signed ? "signed" : "not signed") : receiptStatus(loadSavedReceipt(source, w.id));
                 return (
                   <li key={w.id}>
-                    <Link href={`/me?week=${w.id}`} className={`flex items-center justify-between gap-3 px-3 py-2 hover:bg-accent/50 ${w.id === wv.id ? "font-medium" : ""}`}>
+                    <Link href={`/me?week=${w.id}`} className={w.id === wv.id ? "is-cur" : ""} aria-current={w.id === wv.id ? "page" : undefined}>
                       <span>
-                        Week {w.id.split("-W")[1]} <span className="font-normal text-muted-foreground">{weekRange(w.start, w.end)}</span>
+                        Week {w.id.split("-W")[1]} <span className="d">{weekRange(w.start, w.end)}</span>
                       </span>
-                      <span className={st === "sent" ? "text-[var(--c-built)]" : "text-muted-foreground"}>{st === "sent" ? `Sent` : st === "signed" ? "Signed, not sent" : "Not sent"}</span>
+                      <span className={st === "sent" ? "st-sent" : st === "signed" ? "st-signed" : "st-wait"}>{st === "sent" ? `Sent` : st === "signed" ? "Signed, not sent" : "Not sent"}</span>
                     </Link>
                   </li>
                 );
@@ -304,66 +336,70 @@ function prHint(tasks: Task[]) {
 }
 
 function PrList({ tasks }: { tasks: Task[] }) {
-  if (!tasks.length) return <p className="text-sm text-muted-foreground">No pull requests or commits linked to this week&apos;s sessions.</p>;
+  if (!tasks.length) return <p className="text-[var(--mute)]">No pull requests or commits linked to this week&apos;s sessions.</p>;
   return (
-    <ul className="divide-y divide-border">
-      {tasks.map((t) => (
-        <li key={t.changeKey} className="flex items-center gap-3 py-2.5">
-          <div className="min-w-0 flex-1">
-            <a href={t.url} target="_blank" rel="noreferrer" className="font-medium hover:underline">
+    <>
+      <ul className="prs-list">
+        {tasks.map((t) => (
+          <li key={t.changeKey}>
+            <a href={t.url} target="_blank" rel="noreferrer" className="plink">
               {t.title}
+              <ArrowUpRight className="size-3.5" aria-hidden="true" />
             </a>
-            <div className="text-sm text-muted-foreground">
+            <span className="it-cost">{usd(t.costUsd, 2)}</span>
+            <span className="k">
               {t.changeKey}, {t.reverted ? "reverted" : t.state === "direct" ? "pushed to main" : t.state}
-            </div>
-          </div>
-          <div className="shrink-0 text-right font-medium">{usd(t.costUsd, 2)}</div>
-        </li>
-      ))}
-    </ul>
+            </span>
+          </li>
+        ))}
+      </ul>
+      <p className="help">Each one opens on github.com.</p>
+    </>
   );
 }
 
 function HowWritten({ s, firstSession }: { s: PeriodSummary; firstSession?: string }) {
   if (s.story.engine === "rules")
     return (
-      <div className="max-w-[70ch] space-y-2 text-[15px]">
+      <div className="max-w-[70ch] space-y-2.5">
         <p>
           This list comes from simple rules: one item per pull request, named after it, and the biggest other sessions on their own. Categories come
           from signals in the logs (edits, web searches, failing commands).
         </p>
-        <p className="text-muted-foreground">
+        <p className="text-[var(--mute)]">
           The private AI does better: it reads what you asked and what the AI answered on 0G, where the model runs inside a hardware enclave (TEE),
           and writes one line per session. A second call merges the lines into this list. It is paid from your own 0G account with Sign in with 0G.
         </p>
       </div>
     );
   return (
-    <div className="max-w-[70ch] space-y-3 text-[15px]">
+    <div className="max-w-[70ch] space-y-3">
       <p>
         Written by <span className="font-medium">{s.story.model}</span> on the 0G Private Computer, in private mode: only providers running the model
-        inside a TEE could answer{s.story.verified ? ", and every answer's TEE signature was checked" : ""}. The requests reach 0G over HTTPS
-        through its router and are not end-to-end sealed today, so the router could read them in transit.
+        inside a TEE could answer{s.story.verified ? ", and every answer's TEE signature was checked" : ""}.
         {s.story.payer ? ` It was ${payerText(s.story.payer)}.` : ""}
       </p>
-      <ol className="list-decimal space-y-1 pl-5 text-muted-foreground">
+      <p className="text-[var(--mute)]">The requests reach 0G over HTTPS through its router and are not end-to-end sealed today, so the router could read them in transit.</p>
+      <ol className="list-decimal space-y-1 pl-5 text-[var(--mute)]">
         <li>Each session went in as a private digest: what you asked, what the AI said at the end, tool counts, the GitHub outcome and the cost.</li>
         <li>The AI answered with a category and a short title. Only those are kept, never the prompts.</li>
         <li>One more call saw only the titles and merged them into this list and its one sentence.</li>
       </ol>
       {s.story.requestIds.length > 0 && (
         <div className="text-sm">
-          <div className="text-muted-foreground">0G request ids ({s.story.requestIds.length}):</div>
-          <ul className="mt-1 space-y-0.5 font-mono text-xs">
+          <div className="text-[var(--mute)]">0G request ids ({s.story.requestIds.length}):</div>
+          <ul className="mt-1.5 flex flex-wrap gap-1.5">
             {s.story.requestIds.slice(0, 5).map((id) => (
-              <li key={id}>{id}</li>
+              <li key={id} className="req">
+                {id}
+              </li>
             ))}
-            {s.story.requestIds.length > 5 && <li>and {s.story.requestIds.length - 5} more</li>}
+            {s.story.requestIds.length > 5 && <li className="self-center text-[var(--mute)]">and {s.story.requestIds.length - 5} more</li>}
           </ul>
         </div>
       )}
       {firstSession && (
-        <Link href={`/me/sessions/${firstSession}`} className="text-sm text-primary hover:underline">
+        <Link href={`/me/sessions/${firstSession}`} className="quiet inline-block">
           See exactly what was sent for one session
         </Link>
       )}
@@ -372,16 +408,16 @@ function HowWritten({ s, firstSession }: { s: PeriodSummary; firstSession?: stri
 }
 
 function WeekLink({ week, label, dir }: { week?: string; label: string; dir: "prev" | "next" }) {
-  const glyph = dir === "prev" ? "‹" : "›";
+  const Glyph = dir === "prev" ? ChevronLeft : ChevronRight;
   if (!week)
     return (
-      <span className="rounded-md px-2 py-1 text-muted-foreground/40" aria-hidden="true">
-        {glyph}
+      <span className="icon-btn off" aria-hidden="true">
+        <Glyph className="size-[18px]" />
       </span>
     );
   return (
-    <Link href={`/me?week=${week}`} aria-label={label} className="rounded-md px-2 py-1 text-lg leading-none hover:bg-accent">
-      {glyph}
+    <Link href={`/me?week=${week}`} aria-label={label} className="icon-btn">
+      <Glyph className="size-[18px]" aria-hidden="true" />
     </Link>
   );
 }
@@ -398,48 +434,48 @@ function teamMedians() {
 /** No logs read yet: set up first. On a hosted copy there are no logs, so it points at the demo. */
 function FirstRun({ laptop }: { laptop: boolean }) {
   return (
-    <div className="mx-auto max-w-2xl py-10">
-      <p className="text-sm font-medium text-muted-foreground">For employees</p>
-      <h1 className="mt-1 text-balance text-5xl font-semibold leading-[1.05] tracking-tight">Your weekly receipt</h1>
-      <p className="mt-5 text-lg text-muted-foreground">
+    <div className="mx-auto max-w-2xl py-14">
+      <p className="text-sm font-semibold text-[var(--mute)]">For employees</p>
+      <h1 className="disp h-page mt-2">Your weekly receipt</h1>
+      <p className="lede mt-5">
         Receipts reads your Claude Code and Codex sessions on this laptop and writes down what they got done: what you built, fixed, figured out and
         researched, and what it cost. You check it, sign it with a key that stays here, and send it to your company. Your prompts never leave the
         laptop.
       </p>
       {laptop ? (
         <>
-          <div className="mt-8 rounded-xl border border-border bg-card p-5">
-            <h2 className="font-semibold">Set up once</h2>
-            <ol className="mt-3 list-decimal space-y-1.5 pl-5 text-[15px]">
+          <div className="card card-pad mt-8">
+            <h2 className="h-small">Set up once</h2>
+            <ol className="mt-3 list-decimal space-y-1.5 pl-5 text-[15px] text-[var(--ink-2)]">
               <li>Connect GitHub (the GitHub CLI you already use)</li>
               <li>Join your company: your GitHub org and team</li>
               <li>Sign in with 0G: the private AI is paid from your own 0G credits</li>
               <li>Read your logs. Nothing leaves your laptop for this step</li>
             </ol>
-            <div className="mt-4 flex flex-wrap gap-3">
-              <Link href="/me/setup" className={buttonVariants({ size: "lg" })}>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link href="/me/setup" className="btn btn-primary">
                 Start setup
               </Link>
               <ScanButton label="Just read my logs" variant="outline" />
             </div>
           </div>
-          <p className="mt-6 text-sm text-muted-foreground">
+          <p className="mt-6 text-sm text-[var(--mute)]">
             Just looking?{" "}
-            <EnterDemo href="/me" className="text-primary hover:underline">
+            <EnterDemo href="/me" className="quiet">
               Be an engineer at the demo company
             </EnterDemo>
             .
           </p>
         </>
       ) : (
-        <div className="mt-8 rounded-xl border border-border bg-card p-5">
-          <h2 className="font-semibold">This part runs on your laptop</h2>
-          <p className="mt-2 text-[15px] text-muted-foreground">
+        <div className="card card-pad mt-8">
+          <h2 className="h-small">This part runs on your laptop</h2>
+          <p className="mt-2 text-[15px] text-[var(--ink-2)]">
             Your logs are on your laptop, so is this app: clone the repo, then <code>npm install</code> and <code>npm run dev</code> in <code>web</code>, and
             open http://localhost:3000.
           </p>
-          <div className="mt-4">
-            <EnterDemo href="/me" className={buttonVariants({ size: "lg" })}>
+          <div className="mt-5">
+            <EnterDemo href="/me" className="btn btn-primary">
               Try it as an engineer at the demo company
             </EnterDemo>
           </div>
