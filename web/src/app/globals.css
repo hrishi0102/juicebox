@@ -830,7 +830,7 @@ a.icon-btn:hover, button.icon-btn:hover { background: var(--panel); border-color
 @media (max-width: 760px) {
   .cl-main { padding: 28px 20px 24px; }
   .cl-side { padding: 36px 16px 28px; }
-  .cstamp { right: -6px; top: -26px; width: 96px; height: 96px; }
+  .cstamp { right: 16px; top: -30px; width: 92px; height: 92px; }
 }
 
 /* ================= public: shared link, check a receipt, proofs ================= */
@@ -1034,3 +1034,5 @@ a.icon-btn:hover, button.icon-btn:hover { background: var(--panel); border-color
   .fpanel { padding: 20px; }
   .sg-blurb { display: none; }
 }
+
+@media print { *, *::before, *::after { animation: none !important; } }

@@ -5,7 +5,7 @@ import type { Viewer } from "@/lib/server/viewer";
 
 /** Who you are on the company side: your GitHub account, signed in here or on this laptop. */
 export function CompanyIdentity({ v }: { v: Viewer }) {
-  if (v.kind === "demo") return <span className="t-who">Viewing as Acme&apos;s lead</span>;
+  if (v.kind === "demo") return <span className="text-sm text-[var(--mute)]">Viewing as Acme&apos;s lead</span>;
   if (v.kind === "github")
     return (
       <span className="inline-flex min-w-0 items-center gap-3 text-sm">
@@ -24,7 +24,7 @@ export function CompanyIdentity({ v }: { v: Viewer }) {
     );
   if (v.kind === "laptop")
     return (
-      <span className="t-who" title="The GitHub login this laptop already uses (GitHub CLI or GITHUB_TOKEN)">
+      <span className="text-sm text-[var(--mute)]" title="The GitHub login this laptop already uses (GitHub CLI or GITHUB_TOKEN)">
         @{v.login}, from this laptop
       </span>
     );

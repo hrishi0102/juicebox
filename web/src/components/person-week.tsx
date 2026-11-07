@@ -161,7 +161,7 @@ export function PersonWeek({
                   <div className="mini-proof">
                     <span className="svc">Link</span>
                     <div className="min-w-0">
-                      <p className="text-[var(--ink-2)]">What anyone with the link sees: the totals and the checks, never the list.</p>
+                      <p className="text-[var(--ink-2)]">What anyone with the link sees: the signed totals and the checks.</p>
                       <ProofAnchor href={`/r/${arkivKey}`}>What anyone sees</ProofAnchor>
                     </div>
                   </div>

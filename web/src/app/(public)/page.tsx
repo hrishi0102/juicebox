@@ -110,6 +110,11 @@ export default async function FrontDoor() {
                 </Link>
               </div>
             </div>
+            <div className="fd-monthly">
+              <span className="svc">Just for fun</span>
+              <p>AI Wrapped: how you talk to AI, for anyone. Nothing to do with receipts, never sent to a company.</p>
+              <ProofAnchor href="/wrapped">Open AI Wrapped</ProofAnchor>
+            </div>
           </div>
         </section>
 

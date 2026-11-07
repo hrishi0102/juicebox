@@ -198,7 +198,7 @@ export function ZeroGAccount() {
         <span className="t-hide-s">{shortWallet(zg.wallet)}</span>
         {zg.balance ? <span className="t-sub">{zg.balance.text}</span> : null}
       </span>
-      <button type="button" className="quiet t-hide-s" onClick={zg.signOut}>
+      <button type="button" className="quiet" onClick={zg.signOut}>
         Sign out
       </button>
     </span>
